@@ -3,6 +3,21 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.0-alpha.1] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Craft-Bewertung (`/bof craft`, Tab „Craft“): hergestellter Gegenstand gegen deine angelegte
+  Ausrüstung nach deinen Gewichten, Beschaffungskosten und Farmzeit, Kosten pro Wertungspunkt,
+  Wert vorhandener Zutaten.
+- Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
+- Alternativen zum Craft: eingeplant oder möglicher Drop, mit Notiz (`/bof alt`).
+- `/bof craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
+
+### Geändert
+
+- Der Fenstertitel steht rechts, damit die Tab-Knöpfe ihn nicht verdecken.
+
 ## [0.2.0] – 2026-10-18 (noch nicht veröffentlicht)
 
 Materialbeschaffung. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.

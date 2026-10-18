@@ -22,6 +22,7 @@ local ClassicEra = {
 		-- Only used to note the time of a running farm run; item counts are not read at logout.
 		PLAYER_LOGOUT = "LOGOUT",
 		PLAYER_MONEY = "MONEY_CHANGED",
+		PLAYER_EQUIPMENT_CHANGED = "EQUIPMENT_CHANGED",
 	},
 }
 
@@ -188,6 +189,23 @@ end
 -- Copper the character carries (GetMoney, used by Blizzard_AuctionUI in 70003), or nil.
 function ClassicEra:GetMoney()
 	return GetMoney and GetMoney() or nil
+end
+
+-- Item stats and equipment: Adapters/ClassicEraGear.lua.
+function ClassicEra:GetItemStats(itemID)
+	return ns.ClassicEraGear.GetItemStats(itemID)
+end
+
+function ClassicEra:GetEquipSlots(itemID)
+	return ns.ClassicEraGear.GetEquipSlots(itemID)
+end
+
+function ClassicEra:GetEquippedItemID(slot)
+	return ns.ClassicEraGear.GetEquippedItemID(slot)
+end
+
+function ClassicEra:GetSellPrice(itemID)
+	return ns.ClassicEraGear.GetSellPrice(itemID)
 end
 
 -- Bags and map: Adapters/ClassicEraBags.lua.

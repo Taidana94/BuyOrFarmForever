@@ -36,12 +36,16 @@ Adapter.REQUIRED = {
 	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
 	"GetMapName", -- (uiMapID) -> localized map name, or nil
 	"GetMoney", -- () -> copper the character carries, or nil
+	"GetItemStats", -- (itemID) -> { STR, AGI, STA, INT, SPI, ARMOR }, or nil while loading
+	"GetEquipSlots", -- (itemID) -> { slot, ... } (.sum = replaces all together), or nil if not equippable
+	"GetEquippedItemID", -- (slot) -> item id in that inventory slot, or nil
+	"GetSellPrice", -- (itemID) -> vendor sell price per unit in copper, or nil while loading
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
 -- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
 -- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
--- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED.
+-- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED, EQUIPMENT_CHANGED.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

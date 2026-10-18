@@ -1,6 +1,7 @@
 # Kaufen oder farmen?
 
-**Version 0.2.0 – Materialbeschaffung. Getestet in WoW Classic Era. Nicht in Forever getestet.**
+**Entwicklungsversion 0.3.0-alpha.1 – Materialbeschaffung (getestet in WoW Classic Era) und neu:
+Craft-Bewertung (noch nicht im Spiel getestet). Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -18,7 +19,12 @@ Diese Version enthält die **Materialbeschaffung**:
 - **Vergleich Kaufen/Farmen:** wie viel du kaufen und wie viel du farmen solltest, mit Kosten,
   Farmzeit und Budget – nach der Strategie „Zeit sparen“, „Gold sparen“ oder „Selbst farmen“.
 
-Die Bewertung von Crafts („Lohnt sich der Craft?“) und der Goldpuffer folgen in späteren Versionen.
+Neu in 0.3.0-alpha.1: **Lohnt sich der Craft?** – der hergestellte Gegenstand eines Rezept-Ziels wird
+mit deiner angelegten Ausrüstung verglichen (nach deinen Gewichten für Stärke, Beweglichkeit,
+Ausdauer, Intelligenz und Willenskraft), dazu Beschaffungskosten und Farmzeit pro
+Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen.
+
+Der Goldpuffer folgt in einer späteren Version.
 
 ## Unterstützte Spielversion
 
@@ -101,6 +107,18 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien |
 | `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen |
 
+**Craft-Bewertung**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof craft` | Bewertung des ausgewählten Ziels (Rezept mit Gegenstand) |
+| `/bof craft <Gegenstand>` | einen beliebigen Gegenstand mit deiner Ausrüstung vergleichen |
+| `/bof weights` | deine Gewichte anzeigen |
+| `/bof weights str\|agi\|sta\|int\|spi <Zahl>` | Gewicht setzen (0 bis 10, z. B. `/bof weights int 2`) |
+| `/bof alt` | deine Alternativen |
+| `/bof alt add <Gegenstand> planned\|drop [Notiz]` | Alternative: eingeplant (z. B. Questbelohnung) oder möglicher Drop |
+| `/bof alt remove <Nr.>` | Alternative entfernen |
+
 **Beschaffung**
 
 | Befehl | Wirkung |
@@ -135,6 +153,13 @@ deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als **geplündert
 `keep` mit oder lässt es weg. Nach `/reload` läuft eine Runde weiter; nach Ausloggen ist sie
 pausiert, die Zeit offline zählt nicht.
 
+**Fenster, Tab „Craft“:** die Craft-Bewertung des ausgewählten Ziels: Wertung des hergestellten
+Gegenstands gegen das, was du an diesem Platz trägst (bei Ringen und Schmuck gegen den schwächeren,
+Zweihandwaffen gegen Haupt- und Nebenhand zusammen), Beschaffungskosten und Farmzeit, Kosten pro
+Wertungspunkt, Wert vorhandener Zutaten (beim Händler und nach deinen Preisen) und deine
+Alternativen. Die Wertung ist die Summe der fünf Grundwerte mal deinem Gewicht. Aktualisiert sich,
+wenn du Ausrüstung wechselst.
+
 Das Fenster lässt sich verschieben, merkt sich Position und Tab und schließt mit Escape.
 
 ## Abhängigkeiten
@@ -163,16 +188,19 @@ weist darauf hin.
   gestartete Farmrunde.
 - Der Zeitgegenwert von Käufen („2 Gold ≈ 20 Minuten Goldfarmen“) fehlt noch; er braucht
   Einnahmedaten aus dem späteren Goldpuffer. Gold für Sparziele wird vom Budget noch nicht abgezogen.
+- Die Craft-Bewertung rechnet nur mit Stärke, Beweglichkeit, Ausdauer, Intelligenz und
+  Willenskraft. Rüstung, Waffenschaden, Effekte und Setboni werden nicht bewertet. Einhandwaffen
+  werden nur mit der Haupthand verglichen. Gewichte und Alternativen gibt es nur per Chat-Befehl.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
+**Außerhalb des Spiels** (Version 0.3.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
-kein Speicherzuwachs bei Taschenänderungen) und 129 automatische Tests in einer nachgebauten
+kein Speicherzuwachs bei Taschenänderungen) und 139 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
-Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan).
+Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung).
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -187,11 +215,14 @@ nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zug�
 Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
 0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
+Version 0.3.0-alpha.1 (Craft-Bewertung) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
+nur, dass `GetItemStats` in Classic Era die Werte eines Gegenstands liefert.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.3.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
