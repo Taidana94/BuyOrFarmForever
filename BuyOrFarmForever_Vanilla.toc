@@ -1,0 +1,14 @@
+## Interface: 11509
+## Title: Kaufen oder farmen?
+## Notes: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
+## Notes-deDE: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
+## Version: 0.1.0
+## SavedVariables: BuyOrFarmForeverDB
+
+# Load order: namespace, localization, adapter interface, client adapter.
+# Only the Classic Era adapter is listed here. Forever gets its own TOC in phase B.
+Core\Init.lua
+Locales\Locale.lua
+Locales\deDE.lua
+Adapters\Adapter.lua
+Adapters\ClassicEra.lua
