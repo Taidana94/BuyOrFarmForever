@@ -11,6 +11,12 @@ local ClassicEra = {
 		BANKFRAME_CLOSED = "BANK_CLOSED",
 		BAG_UPDATE_DELAYED = "BAGS_CHANGED",
 		ITEM_DATA_LOAD_RESULT = "ITEM_LOADED",
+		MERCHANT_SHOW = "MERCHANT_OPENED",
+		MERCHANT_UPDATE = "MERCHANT_CHANGED",
+		MERCHANT_CLOSED = "MERCHANT_CLOSED",
+		AUCTION_HOUSE_SHOW = "AUCTION_OPENED",
+		AUCTION_HOUSE_CLOSED = "AUCTION_CLOSED",
+		AUCTION_ITEM_LIST_UPDATE = "AUCTION_RESULTS",
 	},
 }
 
@@ -146,6 +152,32 @@ end
 -- High-resolution time in milliseconds (debugprofilestop), or nil.
 function ClassicEra:GetTimeMs()
 	return debugprofilestop and debugprofilestop() or nil
+end
+
+-- Merchant and auction house: Adapters/ClassicEraTrade.lua.
+function ClassicEra:ReadMerchantPrices()
+	return ns.ClassicEraTrade.ReadMerchantPrices()
+end
+
+function ClassicEra:ReadAuctionResults()
+	return ns.ClassicEraTrade.ReadAuctionResults()
+end
+
+function ClassicEra:CanQueryAuction()
+	return ns.ClassicEraTrade.CanQueryAuction()
+end
+
+function ClassicEra:QueryAuction(itemName)
+	return ns.ClassicEraTrade.QueryAuction(itemName)
+end
+
+-- Item name if cached; otherwise requests the item data and returns nil.
+function ClassicEra:GetItemName(itemID)
+	local name = C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(itemID)
+	if not name and C_Item and C_Item.RequestLoadItemDataByID then
+		C_Item.RequestLoadItemDataByID(itemID)
+	end
+	return name
 end
 
 -- Profession windows: Adapters/ClassicEraProfessions.lua.

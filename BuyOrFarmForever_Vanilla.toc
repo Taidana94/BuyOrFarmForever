@@ -13,6 +13,7 @@ Core\Init.lua
 Locales\Locale.lua
 Locales\deDE.lua
 Core\Util.lua
+Core\Money.lua
 Core\Log.lua
 Core\DB.lua
 Core\Materials.lua
@@ -20,14 +21,18 @@ Core\MaterialsValidation.lua
 Core\Recipes.lua
 Adapters\Adapter.lua
 Adapters\ClassicEraProfessions.lua
+Adapters\ClassicEraTrade.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
 Core\Stock.lua
+Core\Prices.lua
+Core\PriceCapture.lua
 Core\Perf.lua
 Core\Slash.lua
 UI\Shared.lua
 UI\GoalCommands.lua
 UI\StockCommands.lua
+UI\PriceCommands.lua
 UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
 UI\MainWindow.lua

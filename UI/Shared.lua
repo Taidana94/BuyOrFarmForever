@@ -40,6 +40,18 @@ local ERRORS = {
 	invalid_recipe = function()
 		return L.RECIPE_INVALID
 	end,
+	invalid_money = function()
+		return L.ERR_INVALID_MONEY
+	end,
+	no_auction = function()
+		return L.SCAN_NO_AUCTION
+	end,
+	auction_busy = function()
+		return L.SCAN_BUSY
+	end,
+	scan_done = function()
+		return L.SCAN_DONE
+	end,
 }
 
 function UIShared.PrintError(code)

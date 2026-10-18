@@ -62,6 +62,14 @@ read_globals = {
 	"UISpecialFrames",
 	"BACKDROP_DIALOG_32_32",
 	C_Timer = { fields = { "After" } },
+	-- merchant and auction house (called by MerchantFrame.lua / Blizzard_AuctionUI, Vanilla, 70003)
+	"GetMerchantNumItems",
+	"GetMerchantItemInfo",
+	"GetMerchantItemLink",
+	"GetNumAuctionItems",
+	"GetAuctionItemInfo",
+	"CanSendAuctionQuery",
+	"QueryAuctionItems",
 	-- performance (/bof perf; documented in 70003, used by Blizzard_AddOnList)
 	"UpdateAddOnMemoryUsage",
 	"GetAddOnMemoryUsage",

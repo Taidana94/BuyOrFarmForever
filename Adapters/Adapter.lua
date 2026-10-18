@@ -27,10 +27,16 @@ Adapter.REQUIRED = {
 	"GetCPUMetrics", -- (addonName) -> { recent, average, peak = { addon, app, overall } }, or nil if off
 	"GetTimeMs", -- () -> high-resolution time in ms, or nil
 	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
+	"GetItemName", -- (itemID) -> localized name, or nil while loading (load is requested)
+	"ReadMerchantPrices", -- () -> { { itemID, copper per unit } } of the open merchant (gold prices only)
+	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page
+	"CanQueryAuction", -- () -> bool: an auction search can be sent now
+	"QueryAuction", -- (itemName) -> bool: exact-name search sent (call only from a click or command)
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
--- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success).
+-- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
+-- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

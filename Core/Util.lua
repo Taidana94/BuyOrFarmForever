@@ -54,6 +54,13 @@ function Util.ParseLink(link)
 	return linkType, tonumber(id)
 end
 
+local HALF = 0.5
+
+-- Nearest whole number (halves round up).
+function Util.Round(value)
+	return math.floor(value + HALF)
+end
+
 -- Number with a fixed count of decimals and the locale's decimal separator ("1,25").
 function Util.FormatDecimal(value, decimals)
 	local text = string.format("%." .. decimals .. "f", value)
