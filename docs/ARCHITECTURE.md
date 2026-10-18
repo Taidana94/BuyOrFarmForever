@@ -65,9 +65,11 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
   order of first appearance.
 - `Materials.Shortfall(requirements, haveFn)` → adds `have` and `missing` (never below 0).
 - Have = bags + bank of the current character. Other characters follow in stage 2b.
-- Bank: live value = `GetBagAndBankCount - GetBagCount`. Whether it is correct with a closed bank is
-  open (plan Q-T6). `Stock` therefore stores `stock.bank[itemID]` and `stock.bankAt` for all tracked
-  items while the bank is open (`BANK_OPENED`, `BAGS_CHANGED` while open, `BANK_CLOSED`).
+- Bank: live value = `GetBagAndBankCount - GetBagCount`. Confirmed in game (Classic Era 70003) to be
+  correct with a closed bank, also after `/reload` and relog. `Stock` additionally stores
+  `stock.bank[itemID]` and `stock.bankAt` for all tracked items while the bank is open
+  (`BANK_OPENED`, `BAGS_CHANGED` while open, `BANK_CLOSED`); stage 2b uses this snapshot for the
+  bank stock of other characters.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` is registered in `DB.VALIDATORS` and repairs stored goals on load.
 

@@ -28,10 +28,15 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 
 ## In game
 
+Since 2026-10-18 the game folder `_classic_era_\Interface\AddOns\BuyOrFarmForever` is a junction to
+`outputs\BuyOrFarmForever` in the development folder: the client loads the files of the branch that
+is currently checked out. After a change, `/reload` is enough. Before a test, note the branch and
+commit (`git log -1 --oneline`).
+
 | Version | Client | Date | Result |
 |---|---|---|---|
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
-| 0.2.0-alpha.1 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -51,6 +56,18 @@ Setup: only this addon + BugSack/BugGrabber. Character `CharA-RealmA` (Alliance)
 | Full logout/login with debug on (checklist step 8) | – | not performed |
 
 Not tested: other client languages, interaction with other addons.
+
+### Result 0.2.0-alpha.1 (Classic Era, 2026-10-18)
+
+| Check | Evidence | Result |
+|---|---|---|
+| Goal created, item added via link, crafts | SavedVariables: goal 1 "Test", item 2589 × 4, crafts 3 | passed |
+| `/bof stock` bag and bank counts | confirmed by the user ("always correct") | passed |
+| Bank snapshot taken on bank visit | SavedVariables: `stock.bank[2589] = 1`, `bankAt` 17:38 | passed |
+| **Q-T6:** live bank count with closed bank after `/reload` and after a full relog | confirmed by the user | passed |
+| Lua errors | BugGrabber: none | passed |
+| Snapshot comparison line (debug mode) | debug mode was off | not performed |
+| `/bof goal delete` | goal still present | not performed |
 
 ### Checklist 0.1.0 (Classic Era)
 

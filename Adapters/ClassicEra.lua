@@ -82,7 +82,7 @@ function ClassicEra:GetBagCount(itemID)
 	return 0
 end
 
--- includeBank = true. Whether this is correct while the bank is closed is unverified (Q-T6).
+-- includeBank = true. Correct also while the bank is closed (confirmed in game, 70003).
 function ClassicEra:GetBagAndBankCount(itemID)
 	if C_Item and C_Item.GetItemCount then
 		return C_Item.GetItemCount(itemID, true)

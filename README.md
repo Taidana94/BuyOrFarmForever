@@ -83,7 +83,6 @@ das Addon sie nicht.
 - Noch kein Fenster; Materialziele nur über Chat-Befehle.
 - Noch nicht enthalten: Bestand anderer Charaktere, Rezeptimport, Preise, Farmmessung,
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
-- Ob der Bankbestand auch bei geschlossener Bank stimmt, wird noch im Spiel geprüft.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients wird das Addon nicht geladen bzw. meldet, dass es nicht passt.
 
@@ -103,7 +102,9 @@ das Addon sie nicht.
 - erster Start, `/reload`, alle Befehle, Debug-Modus, Zurücksetzen, Kampf: ohne Fehler
 - nicht getestet: andere Spielsprachen, Zusammenspiel mit anderen Addons
 
-Version 0.2.0-alpha.1 (Materialziele) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.1 (18.10.2026): Ziel anlegen, Gegenstand per Link hinzufügen, Bestand in
+Taschen und Bank (auch bei geschlossener Bank nach `/reload` und neuem Login): korrekt, ohne Fehler.
+Noch nicht im Spiel geprüft: Löschen von Zielen.
 
 **Nicht in Forever getestet.**
 

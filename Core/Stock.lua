@@ -1,6 +1,6 @@
 -- Stock of the current character: bag and bank counts per item, plus a bank snapshot that is
--- taken while the bank is open. Whether the live bank count is correct while the bank is
--- closed is still unverified (plan Q-T6); the snapshot is kept for comparison and as fallback.
+-- taken while the bank is open. The live bank count is correct with a closed bank (confirmed in
+-- game, Classic Era 70003); the snapshot serves as the bank stock of other characters (stage 2b).
 local _, ns = ...
 
 local Log = ns.Log
