@@ -54,6 +54,8 @@ local function onPlayerLogin(event)
 	ns.charKey = character.key
 	if ns.db and not ns.readOnly then
 		ns.DB.EnsureCharacter(ns.db, character.key, character.faction)
+		-- Internal signal for modules that need the character's data (e.g. a running farm run).
+		ns.Events.Emit("CHARACTER_READY")
 	end
 	local build = client:GetBuildInfo()
 	Log.Info(string.format(

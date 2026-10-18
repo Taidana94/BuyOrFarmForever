@@ -9,9 +9,9 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
+| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/FarmRuns.lua` + `Core/FarmRunsValidation.lua` (run state machine), `Core/FarmCapture.lua` (yield from bag changes), `Core/FarmEstimates.lua`, `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
-| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEra.lua` | all client-specific APIs |
+| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEraBags.lua` (bags, map), `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
 | Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTabLayout.lua` (widgets), `UI/MaterialTab.lua` (logic) | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
@@ -22,8 +22,8 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 ## Load order (TOC)
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
+`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Core/FarmRuns.lua` → `Core/FarmRunsValidation.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEraBags.lua` → `Adapters/ClassicEra.lua` →
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -36,7 +36,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 2e)
+### Adapter interface (stage 2f)
 
 | Function | Returns |
 |---|---|
@@ -59,14 +59,20 @@ printed and `Core/Main.lua` registers nothing.
 | `ReadMerchantPrices()` | `{ { itemID, copper per unit } }` of the open merchant; items with token costs skipped |
 | `ReadAuctionResults()` | `{ { itemID, count, buyout } }` of the current auction search page (rows without data skipped) |
 | `CanQueryAuction()` | bool |
+| `ScanBags(counts)` | fills and returns `{ [itemID] = count }` for backpack + equipped bags (table cleared first) |
+| `GetCurrentMapID()` | uiMapID of the player's map, or 0 |
+| `GetMapName(uiMapID)` | localized map name, or nil |
 | `QueryAuction(itemName)` | bool; exact-name search, first page, all qualities; only from a click or command |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
 | `events` (table) | WoW event name → client-neutral signal |
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
-`MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`. Internal
+`MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`, `LOOT_OPENED`,
+`LOOT_CLOSED`, `LOGOUT` (only the time of a running farm run is noted). Internal
 signals: `DATA_CHANGED` (raised by `Slash.Handle` after every registered command), `PRICES_CHANGED`
-(raised by `PriceCapture` after storing prices and when the auction house opens or closes). Core code subscribes with
+(raised by `PriceCapture` after storing prices and when the auction house opens or closes),
+`CHARACTER_READY` (raised by `Main` after `EnsureCharacter` at login), `FARM_CHANGED` (after a bag
+update was counted for a running run). Core code subscribes with
 `Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
 `Events.OffSignal(signal, fn)` removes a handler; when a signal has no handlers left, its WoW events
 are unregistered.
@@ -97,6 +103,30 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
+
+## Farm runs (stage 2f)
+
+- States: `FARM`, `TRAVEL`, `PAUSED`, `REVIEW`. Current run: `characters[charKey].currentRun`
+  (`state, activity, targetItemID, uiMapID, items = { [itemID] = { confirmed, unclear } },
+  activeSeconds, travelSeconds, startedAt, segmentStart, lastSeenAt, endedAt, resumeState`).
+  Saved runs: `db.farmRuns` (list, newest last, max. `FarmRuns.MAX_RUNS` = 500, oldest dropped):
+  `{ charKey, activity, targetItemID, uiMapID, items = { [itemID] = confirmed }, activeSeconds,
+  travelSeconds, startedAt, endedAt }`. Unclear amounts not kept in the review are dropped.
+- Times are server time. Login (`CHARACTER_READY`): a running run continues if its last sign of life
+  (`lastSeenAt`: start, bag updates, commands, logout) is at most 60 s old (a `/reload`); otherwise it
+  is paused at `lastSeenAt`, so offline time and crashes do not count.
+- Yield (`FarmCapture`): after every bag update the carried bags are compared with the previous
+  scan. Gains while a loot window is open or within 2 s after it closed (autoloot, gathering) are
+  confirmed, other gains unclear, decreases ignored. The first scan after a login only sets the
+  baseline. No chat messages are parsed (language-independent); the loot slot API was not used
+  because the Classic UI source contradicts itself on `GetLootSlotInfo`'s 4th return and does not use
+  `GetLootSlotLink`. The bank is not part of the comparison.
+- Location: uiMapID at the start, replaced by the map when arriving (travel → farm). Names come
+  from `C_Map.GetMapInfo` at display time.
+- Estimates (`FarmEstimates`): runs of the character (`settings.farmEstimateScope = "CHARACTER"`)
+  or of all characters (`"ACCOUNT"`) count for an item if it was the target or yielded it. Point
+  estimate = amount × total farm time / total yield; range = slowest and fastest run with yield
+  (at least two); travel = average per run. Target runs without yield lower the rate.
 
 ## Prices (stage 2e)
 
@@ -152,6 +182,7 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `MERCHANT_SHOW` / `MERCHANT_CLOSED` | `PriceCapture` | always | per merchant visit | reads the merchant list once, stores tracked items |
 | `MERCHANT_UPDATE` → `MERCHANT_CHANGED` | `PriceCapture` | only while a merchant is open | when merchant data changes | same as above |
 | `AUCTION_HOUSE_SHOW` / `AUCTION_HOUSE_CLOSED` | `PriceCapture` | always | per auction house visit | flags, scan list reset |
+| `BAGS_CHANGED`, `LOOT_OPENED`, `LOOT_CLOSED`, `LOGOUT` (signals) | `FarmCapture` | only while a farm run is running (start/resume/login-continue on; pause/stop/discard off) | per bag update / loot window | bag scan of the carried bags (about 100 slots), diff with reused count tables |
 | `AUCTION_ITEM_LIST_UPDATE` → `AUCTION_RESULTS` | `PriceCapture` | only while the auction house is open | per result page and when row data arrives | reads one page (max. 50 rows), stores the lowest unit buyout of tracked items |
 | `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED`, `DATA_CHANGED` (signals) | Material tab | handler added on show, removed on hide (the WoW events stay registered for `Stock`) | see above | requests one refresh |
 
@@ -192,7 +223,7 @@ only sets flags.
 ## SavedVariables (schema 1)
 
 One account-wide variable `BuyOrFarmForeverDB`. Defaults: `Core/DB.lua` (`DB.DEFAULTS`,
-`DB.CHARACTER_DEFAULTS`). Fields not used yet (farm runs, savings goals, income) already exist with
+`DB.CHARACTER_DEFAULTS`). Fields not used yet (savings goals, income) already exist with
 empty defaults so later stages need no migration.
 
 `DB.Load` statuses:

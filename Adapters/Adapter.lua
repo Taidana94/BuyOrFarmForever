@@ -32,11 +32,15 @@ Adapter.REQUIRED = {
 	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page
 	"CanQueryAuction", -- () -> bool: an auction search can be sent now
 	"QueryAuction", -- (itemName) -> bool: exact-name search sent (call only from a click or command)
+	"ScanBags", -- (counts) -> counts: fills { [itemID] = count } for the carried bags (table is cleared first)
+	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
+	"GetMapName", -- (uiMapID) -> localized map name, or nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
 -- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
--- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS.
+-- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
+-- LOOT_OPENED, LOOT_CLOSED, LOGOUT.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

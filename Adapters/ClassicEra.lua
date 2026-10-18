@@ -17,6 +17,10 @@ local ClassicEra = {
 		AUCTION_HOUSE_SHOW = "AUCTION_OPENED",
 		AUCTION_HOUSE_CLOSED = "AUCTION_CLOSED",
 		AUCTION_ITEM_LIST_UPDATE = "AUCTION_RESULTS",
+		LOOT_OPENED = "LOOT_OPENED",
+		LOOT_CLOSED = "LOOT_CLOSED",
+		-- Only used to note the time of a running farm run; item counts are not read at logout.
+		PLAYER_LOGOUT = "LOGOUT",
 	},
 }
 
@@ -178,6 +182,19 @@ function ClassicEra:GetItemName(itemID)
 		C_Item.RequestLoadItemDataByID(itemID)
 	end
 	return name
+end
+
+-- Bags and map: Adapters/ClassicEraBags.lua.
+function ClassicEra:ScanBags(counts)
+	return ns.ClassicEraBags.ScanBags(counts)
+end
+
+function ClassicEra:GetCurrentMapID()
+	return ns.ClassicEraBags.GetCurrentMapID()
+end
+
+function ClassicEra:GetMapName(uiMapID)
+	return ns.ClassicEraBags.GetMapName(uiMapID)
 end
 
 -- Profession windows: Adapters/ClassicEraProfessions.lua.

@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.7. Materialziele, Rezeptimport, Bestand und Preise, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.8. Materialziele, Rezeptimport, Bestand, Preise und Farmrunden, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -52,6 +52,16 @@ Statt `/bof` funktioniert auch `/kof`.
 | `/bof price <Gegenstand> <Preis>` | eigener Preis pro Stück, z. B. `1g 20s 5k`, `35s` oder `80k` |
 | `/bof price <Gegenstand> clear` | löscht den eigenen Preis |
 | `/bof price scan` | sucht im offenen Auktionshaus das nächste fehlende Material |
+| `/bof farm` | Stand der laufenden Farmrunde |
+| `/bof farm start [gather\|mobs\|other] [Gegenstand]` | startet eine Farmrunde (Sammeln, Gegner, Sonstiges; optional mit Zielmaterial) |
+| `/bof farm pause` / `resume` | pausiert bzw. setzt fort (Pausen zählen nicht) |
+| `/bof farm travel` | schaltet zwischen Anreise und Farmen um |
+| `/bof farm stop` | beendet die Runde; danach prüfen und speichern |
+| `/bof farm keep <Gegenstand>` | zählt unklare Zugänge eines Gegenstands doch mit |
+| `/bof farm save` / `discard` | speichert bzw. verwirft die beendete Runde |
+| `/bof farm list` | deine letzten 5 Runden |
+| `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien des ausgewählten Ziels |
+| `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen Charakteren |
 | `/bof stock` | Bedarf, Bestand (Taschen, Bank) und Fehlmenge des ausgewählten Ziels |
 | `/bof stock all` | dasselbe für alle Ziele zusammen |
 | `/bof stock others` | schaltet das Mitzählen deiner anderen Charaktere ein oder aus (Standard: an) |
@@ -114,24 +124,30 @@ das Addon sie nicht.
   deinen Zielen, getrennt nach Realm und Fraktion. AH- und eigene Preise gelten nach 7 Tagen als
   veraltet; Händlerpreise nicht. Das Auktionshaus zeigt pro Suche nur die erste Seite; bei sehr
   vielen Angeboten ist der günstigste Preis evtl. nicht darunter.
-- Noch nicht enthalten: Farmmessung,
+- Farmrunden messen den Ertrag über deine Taschen: Was bei offenem Beutefenster dazukommt, zählt als
+  geplündert; alles andere (Post, Handel, Bank, Kauf) als unklar – das prüfst du am Ende. Gezählt
+  werden nur die Taschen, nicht die Bank. Nach `/reload` läuft eine Runde weiter; nach Ausloggen
+  oder Absturz ist sie pausiert, die Zeit offline zählt nicht.
+- Farmrunden gibt es vorerst nur über Chat-Befehle, noch nicht im Fenster.
+- Noch nicht enthalten:
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients wird das Addon nicht geladen bzw. meldet, dass es nicht passt.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.7):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.8):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 112 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 121 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
-  Blättern, Tooltip, Position), Preise (Eingabe, Händler, Auktionshaus, veraltete Preise)
+  Blättern, Tooltip, Position), Preise (Eingabe, Händler, Auktionshaus, veraltete Preise),
+  Farmrunden (Ertrag, Pause, Anreise, Prüfen, `/reload`, Ausloggen, Schätzung)
 
 **Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
 
@@ -163,11 +179,13 @@ aus dem Verzauberungsfenster: korrekt, ohne Fehler.
 Version 0.2.0-alpha.7 (18.10.2026): mit beiden Berufsfenstern wird das zuletzt angeklickte Rezept
 übernommen: korrekt, ohne Fehler.
 
+Version 0.2.0-alpha.8 (Farmrunden) ist im Spiel noch nicht getestet.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.7 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.8 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

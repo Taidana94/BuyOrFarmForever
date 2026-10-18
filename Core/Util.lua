@@ -80,6 +80,23 @@ local SECONDS_PER_MINUTE = 60
 local SECONDS_PER_HOUR = 3600
 local SECONDS_PER_DAY = 86400
 
+-- "unter 1 Min.", "25 Min.", "1 Std. 10 Min." for a duration in seconds (localized, rounded).
+function Util.FormatDuration(seconds)
+	local L = ns.L
+	local minutes = Util.Round(math.max(0, seconds or 0) / SECONDS_PER_MINUTE)
+	if minutes < 1 then
+		return L.DURATION_UNDER_MINUTE
+	end
+	local hours = math.floor(minutes * SECONDS_PER_MINUTE / SECONDS_PER_HOUR)
+	minutes = minutes - hours * SECONDS_PER_HOUR / SECONDS_PER_MINUTE
+	if hours == 0 then
+		return Util.Format(L.DURATION_MINUTES, minutes)
+	elseif minutes == 0 then
+		return Util.Format(L.DURATION_HOURS, hours)
+	end
+	return Util.Format(L.DURATION_HOURS_MINUTES, hours, minutes)
+end
+
 -- "vor 5 Min." etc. for a duration in seconds (localized).
 function Util.FormatAge(seconds)
 	local L = ns.L

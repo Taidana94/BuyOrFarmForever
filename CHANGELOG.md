@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.8] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Farmrunden (`/bof farm`): starten, pausieren, fortsetzen, Anreise getrennt erfassen, beenden,
+  unklare Zugänge prüfen, speichern. Ertrag aus geplünderten Gegenständen, Farmzeit ohne Pausen.
+- Geschätzte Farmzeit für fehlende Materialien mit Spanne und Datenbasis (`/bof farm estimate`),
+  wahlweise nur aus diesem Charakter oder aus allen.
+
 ## [0.2.0-alpha.7] – noch nicht veröffentlicht
 
 ### Geändert

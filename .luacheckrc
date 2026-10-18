@@ -32,6 +32,10 @@ read_globals = {
 	-- items and bags (GetItemCount with includeBank: correct with closed bank, confirmed in game)
 	C_Item = { fields = { "GetItemCount", "GetItemIconByID", "GetItemInfo", "RequestLoadItemDataByID" } },
 	C_Spell = { fields = { "GetSpellName" } },
+	-- bags and map (documented in 70003; NUM_BAG_SLOTS from Blizzard_FrameXMLBase/Classic/Constants.lua)
+	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo" } },
+	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
+	"NUM_BAG_SLOTS",
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
 	"GetTradeSkillInfo",
@@ -78,7 +82,10 @@ read_globals = {
 	"GetAddOnMemoryUsage",
 	"debugprofilestop",
 	C_AddOnProfiler = { fields = { "IsEnabled", "GetAddOnMetric", "GetApplicationMetric", "GetOverallMetric" } },
-	Enum = { fields = { AddOnProfilerMetric = { fields = { "RecentAverageTime", "SessionAverageTime", "PeakTime" } } } },
+	Enum = { fields = {
+		AddOnProfilerMetric = { fields = { "RecentAverageTime", "SessionAverageTime", "PeakTime" } },
+		BagIndex = { fields = { "Backpack" } },
+	} },
 	"DEFAULT_CHAT_FRAME",
 	"geterrorhandler",
 }

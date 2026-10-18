@@ -52,6 +52,18 @@ local ERRORS = {
 	scan_done = function()
 		return L.SCAN_DONE
 	end,
+	run_exists = function()
+		return L.FARM_ERR_RUN_EXISTS
+	end,
+	no_run = function()
+		return L.FARM_NONE
+	end,
+	wrong_state = function()
+		return L.FARM_ERR_WRONG_STATE
+	end,
+	nothing_unclear = function()
+		return L.FARM_ERR_NOTHING_UNCLEAR
+	end,
 }
 
 function UIShared.PrintError(code)
