@@ -25,6 +25,7 @@ L.DEBUG_PREFIX = "[Debug]"
 L.RESET_CONFIRM_PROMPT = "Alle Einstellungen werden auf die Standardwerte gesetzt. Ziele, Preise und Messungen bleiben erhalten. Zum Bestätigen innerhalb von %1$d Sekunden „/bof reset confirm“ eingeben."
 L.RESET_DONE = "Die Einstellungen wurden zurückgesetzt."
 L.RESET_NOT_PENDING = "Es wartet kein Zurücksetzen auf Bestätigung. Gib zuerst „/bof reset“ ein."
+L.READ_ONLY_NO_ACCESS = "Nicht möglich: Die gespeicherten Daten haben ein Format, das diese Addon-Version nicht lesen kann. Bitte aktualisiere das Addon."
 L.READ_ONLY_REFUSED = "Nicht möglich: Die gespeicherten Daten stammen aus einer neueren Addon-Version und werden nicht verändert."
 
 -- Material goals (provisional chat commands)

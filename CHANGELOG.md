@@ -11,6 +11,11 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
   Twinks und Fehlmenge des ausgewählten Ziels oder aller Ziele; Ziel wechseln, Tooltip,
   Knopf „Rezept übernehmen“. Verschiebbar, Position wird gespeichert, schließt mit Escape.
 
+### Behoben
+
+- Stammen die gespeicherten Daten aus einer neueren Addon-Version, lösten `/bof stock` und
+  `/bof goal` einen Lua-Fehler aus. Jetzt erscheint ein Hinweis.
+
 ## [0.2.0-alpha.3] – noch nicht veröffentlicht
 
 ### Hinzugefügt

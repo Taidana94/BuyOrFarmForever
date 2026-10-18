@@ -78,7 +78,7 @@ function MainWindow.Toggle()
 	end
 	-- Data of a newer schema may have a different layout; the window does not read it.
 	if ns.readOnly then
-		ns.Log.Print(L.READ_ONLY_REFUSED)
+		ns.Log.Print(L.READ_ONLY_NO_ACCESS)
 		return
 	end
 	if not frame then

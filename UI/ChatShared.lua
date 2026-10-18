@@ -82,8 +82,13 @@ function Chat.PrintRecipeGoal(charData, id)
 	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, Chat.GoalName(goal), #goal.items, goal.crafts))
 end
 
--- Character data of the logged-in character, or nil with a message.
+-- Character data of the logged-in character, or nil with a message. In read-only mode the
+-- stored data may have an unknown layout (newer schema, failed migration), so it is not read.
 function Chat.Character()
+	if ns.readOnly then
+		Log.Print(L.READ_ONLY_NO_ACCESS)
+		return nil
+	end
 	if not (ns.db and ns.charKey and ns.db.characters[ns.charKey]) then
 		Log.Print(L.NOT_READY)
 		return nil
