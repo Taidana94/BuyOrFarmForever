@@ -14,6 +14,10 @@ Adapter.REQUIRED = {
 	"IsCurrentClient", -- () -> bool: true if this adapter matches the running client
 	"GetBuildInfo", -- () -> { version, build, date, interface }
 	"GetLocale", -- () -> locale code, e.g. "deDE"
+	"GetAddOnVersion", -- (addonName) -> version string from the TOC, or nil
+	"GetCharacterKey", -- () -> { key, name, realm, normalizedRealm, faction } or nil before login
+	"GetServerTime", -- () -> server time in seconds since the epoch
+	"GetUptime", -- () -> client uptime in seconds (for durations within a session)
 }
 
 -- Returns true, or false plus a list of missing field names.

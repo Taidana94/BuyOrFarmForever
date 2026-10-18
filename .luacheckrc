@@ -14,17 +14,37 @@ self = false
 globals = {
 	"BuyOrFarmForever", -- addon namespace (debugging)
 	"BuyOrFarmForeverDB", -- SavedVariables
+	"SLASH_BUYORFARMFOREVER1", -- /bof
+	"SLASH_BUYORFARMFOREVER2", -- /kof
+	SlashCmdList = { fields = { BUYORFARMFOREVER = { read_only = false } } },
 }
 
 -- WoW API and Blizzard UI globals the addon is allowed to read.
+-- Status for Classic Era 1.15.9 (70003): documented in Blizzard_APIDocumentationGenerated
+-- and/or used by Blizzard's own UI code in that build. GetBuildInfo is confirmed in game.
 read_globals = {
-	-- Classic Era: confirmed (build data 70003); GetBuildInfo also confirmed in game
+	-- client identity
 	"GetBuildInfo",
 	"GetLocale",
 	"WOW_PROJECT_ID",
 	"WOW_PROJECT_CLASSIC",
+	C_AddOns = { fields = { "GetAddOnMetadata" } },
+	-- character, time
+	"UnitName",
+	"GetRealmName",
+	"GetNormalizedRealmName",
+	"UnitFactionGroup",
+	"GetServerTime",
+	"GetTime",
+	"issecretvalue",
+	-- frames, chat, errors
+	"CreateFrame",
 	"DEFAULT_CHAT_FRAME",
+	"geterrorhandler",
 }
+
+-- Locale strings are full sentences on one line (required by the localization check).
+files["Locales/"] = { max_line_length = false }
 
 exclude_files = {
 	".git/",

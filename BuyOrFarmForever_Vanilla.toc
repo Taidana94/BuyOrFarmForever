@@ -6,10 +6,17 @@
 ## SavedVariables: BuyOrFarmForeverDB
 ## X-License: MIT
 
-# Load order: namespace, localization, adapter interface, client adapter.
+# Load order: namespace, localization, core helpers, adapter interface, client adapter,
+# events and slash commands, startup.
 # Only the Classic Era adapter is listed here. Forever gets its own TOC in phase B.
 Core\Init.lua
 Locales\Locale.lua
 Locales\deDE.lua
+Core\Util.lua
+Core\Log.lua
+Core\DB.lua
 Adapters\Adapter.lua
 Adapters\ClassicEra.lua
+Core\Events.lua
+Core\Slash.lua
+Core\Main.lua

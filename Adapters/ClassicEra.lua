@@ -27,4 +27,46 @@ function ClassicEra:GetLocale()
 	return GetLocale()
 end
 
+function ClassicEra:GetAddOnVersion(addonName)
+	if C_AddOns and C_AddOns.GetAddOnMetadata then
+		return C_AddOns.GetAddOnMetadata(addonName, "Version")
+	end
+	return nil
+end
+
+-- Returns the value, or nil if it is missing or a secret value.
+local function plain(value)
+	if value == nil then
+		return nil
+	end
+	if issecretvalue and issecretvalue(value) then
+		return nil
+	end
+	return value
+end
+
+-- Returns nil until name and realm are known. Call it on or after PLAYER_LOGIN.
+function ClassicEra:GetCharacterKey()
+	local name = plain(UnitName("player"))
+	local normalizedRealm = plain(GetNormalizedRealmName())
+	if type(name) ~= "string" or name == "" or type(normalizedRealm) ~= "string" or normalizedRealm == "" then
+		return nil
+	end
+	return {
+		key = name .. "-" .. normalizedRealm,
+		name = name,
+		realm = plain(GetRealmName()),
+		normalizedRealm = normalizedRealm,
+		faction = plain(UnitFactionGroup("player")),
+	}
+end
+
+function ClassicEra:GetServerTime()
+	return GetServerTime()
+end
+
+function ClassicEra:GetUptime()
+	return GetTime()
+end
+
 ns.Adapter.Register(ClassicEra)
