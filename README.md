@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.6. Materialziele, Rezeptimport, Bestand und Preise, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.7. Materialziele, Rezeptimport, Bestand und Preise, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -121,13 +121,13 @@ das Addon sie nicht.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.6):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.7):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 111 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 112 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
@@ -160,11 +160,13 @@ Taschenänderung, `/bof perf`): ohne Fehler.
 Version 0.2.0-alpha.6 (18.10.2026): Preise (eigene, Händler, Auktionshaus, AH-Scan), Rezeptimport
 aus dem Verzauberungsfenster: korrekt, ohne Fehler.
 
+Version 0.2.0-alpha.7 (zuletzt angeklicktes Rezept) ist im Spiel noch nicht getestet.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.7 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

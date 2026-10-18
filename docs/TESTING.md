@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0-alpha.7 | 2026-10-18 | 129 checks passed, 0 failed (112 unit tests); the new test fails without the selection hook |
 | 0.2.0-alpha.6 | 2026-10-18 | 128 checks passed, 0 failed (111 unit tests); mutation checks: no auction page merge fails 1, ignoring price age fails 2, no unregister of auction results fails 1 |
 | 0.2.0-alpha.5 | 2026-10-18 | 117 checks passed, 0 failed (100 unit tests; levels 0, 1, 1b, 1c, 2); 1c mutation check: injected OnUpdate, ticker, CreateFrame in a handler, magic numbers and deep nesting are all reported |
 | 0.2.0-alpha.4 | 2026-10-18 | 107 checks passed, 0 failed (95 unit tests); mutation checks: no unregister on hide fails 2, no coalescing fails 1, no colors fails 2 (after strengthening the color test) |
@@ -49,6 +50,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.4 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test) |
 | 0.2.0-alpha.6 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (confirmed by the user; details below) |
+| 0.2.0-alpha.7 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -277,3 +279,12 @@ Goal with a vendor reagent and a cloth, e.g. `/bof goal new Preistest`, `/bof go
 6. Close the AH → "AH-Scan" is disabled. Mouse over a row → tooltip lists all price sources.
 7. `/bof price 2589 clear` → own price removed.
 8. `/reload` → prices kept. BugSack: no errors.
+
+### Checklist 0.2.0-alpha.7 (Classic Era, last selected recipe)
+
+1. `/reload`, `/bof version` → `0.2.0-alpha.7`.
+2. Open Enchanting and Tailoring. Click a recipe in Tailoring, then one in Enchanting,
+   `/bof recipe` → goal from the enchantment.
+3. Click a recipe in Tailoring again (Enchanting stays open), `/bof recipe` → goal from the tailoring recipe.
+4. Close Tailoring, `/bof recipe` → enchantment again.
+5. `/reload` (so the results are saved), BugSack: no errors.

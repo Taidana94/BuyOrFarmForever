@@ -3,6 +3,13 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.7] – noch nicht veröffentlicht
+
+### Geändert
+
+- Sind Berufs- und Verzauberungsfenster gleichzeitig offen, übernimmt `/bof recipe` (und der Knopf
+  „Rezept übernehmen“) das zuletzt angeklickte Rezept statt des zuletzt geöffneten Fensters.
+
 ## [0.2.0-alpha.6] – noch nicht veröffentlicht
 
 ### Hinzugefügt

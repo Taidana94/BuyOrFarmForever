@@ -132,7 +132,8 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
   spell name (`GetSpellName`), else a placeholder. The goal copies the reagents, so later edits of the
   goal do not change the stored recipe.
 - Classic Era adapter: two windows, trade skill (`GetTradeSkill*`) and craft (`GetCraft*`,
-  Enchanting and Beast Training). Both can be open; the most recently opened one is used. Headers
+  Enchanting and Beast Training). Both can be open; the window in which a recipe was selected last is
+  used (user request, 0.2.0-alpha.7), otherwise the one opened last. Headers
   and recipes without reagents are refused; missing reagent links mean "loading" (item data not
   cached yet). `GetCraftItemLink` is expected to return an item link for crafts that create items
   and an enchant link otherwise (plan Q-T4, to be confirmed in game).
@@ -158,7 +159,11 @@ Window refreshes are coalesced: any number of refresh requests in one frame lead
 `C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
 created on first open and hidden, never destroyed; rows are a fixed pool of 10 frames.
 
-No `OnUpdate` scripts and no tickers; one-shot `C_Timer.After(0)` only for coalescing. The adapter's window frame is not routed through
+No `OnUpdate` scripts and no tickers; one-shot `C_Timer.After(0)` only for coalescing.
+
+Hooks: `hooksecurefunc("SelectTradeSkill")` and `hooksecurefunc("SelectCraft")` in
+`Adapters/ClassicEraProfessions.lua`, installed once at load. Secure post-hooks (no taint, Blizzard
+code unchanged); they run only when a recipe is selected and set one variable. The adapter's window frame is not routed through
 `Core/Events.lua` because the core does not need to know which kind of window is open; its handler
 only sets flags.
 

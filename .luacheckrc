@@ -47,6 +47,9 @@ read_globals = {
 	"GetCraftNumReagents",
 	"GetCraftReagentInfo",
 	"GetCraftReagentItemLink",
+	"SelectTradeSkill", -- hooked only (hooksecurefunc), to know where a recipe was selected last
+	"SelectCraft",
+	"hooksecurefunc", -- used by Blizzard UI code in 70003 (e.g. Blizzard_EditMode)
 	-- character, time
 	"UnitName",
 	"GetRealmName",

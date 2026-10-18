@@ -8,9 +8,10 @@ ns.ClassicEraProfessions = Professions
 
 -- Profession windows ------------------------------------------------------------------
 -- Classic Era has two: the trade skill window (most professions) and the craft window
--- (Enchanting; also Beast Training, which has no reagents). Both can be open at once; the most
--- recently opened one is used. Functions below are called by Blizzard's Vanilla UI code
--- (Blizzard_TradeSkillUI, Blizzard_CraftUI, build 70003); not in the generated docs.
+-- (Enchanting; also Beast Training, which has no reagents). Both can be open at once; the window
+-- in which a recipe was selected last is used (user request), else the one opened last.
+-- Functions below are called by Blizzard's Vanilla UI code (Blizzard_TradeSkillUI,
+-- Blizzard_CraftUI, build 70003); not in the generated docs.
 
 local openWindows = { trade = false, craft = false }
 local lastWindow -- "trade" | "craft" | nil
@@ -39,6 +40,29 @@ for event in pairs(WINDOW_EVENTS) do
 	windowFrame:RegisterEvent(event)
 end
 windowFrame:SetScript("OnEvent", onWindowEvent)
+
+-- Selecting a recipe calls SelectTradeSkill(id) / SelectCraft(id) (Blizzard's
+-- TradeSkillFrame_SetSelection and CraftFrame_SetSelection, also replacement UIs that use the
+-- API). A secure post-hook only records which window that was; it changes nothing and runs
+-- only on clicks. Selections in a closed window are ignored.
+local function selected(kind)
+	if openWindows[kind] then
+		lastWindow = kind
+	end
+end
+
+if hooksecurefunc then
+	if SelectTradeSkill then
+		hooksecurefunc("SelectTradeSkill", function()
+			selected("trade")
+		end)
+	end
+	if SelectCraft then
+		hooksecurefunc("SelectCraft", function()
+			selected("craft")
+		end)
+	end
+end
 
 local TRADE = {
 	selection = function()
