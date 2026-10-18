@@ -14,6 +14,7 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/ChatShared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
+| Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -22,7 +23,7 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
 `Core/DB.lua` → `Core/Materials.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `Core/Main.lua`
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -35,7 +36,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 2c)
+### Adapter interface (stage 2d)
 
 | Function | Returns |
 |---|---|
@@ -49,12 +50,16 @@ printed and `Core/Main.lua` registers nothing.
 | `GetBagCount(itemID)` | count in the bags |
 | `GetBagAndBankCount(itemID)` | count in bags + bank, or nil |
 | `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
+| `GetItemIcon(itemID)` | icon file id, or nil |
 | `GetSpellName(spellID)` | localized spell name, or nil |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`. Core code subscribes with
+Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`. Internal signal:
+`DATA_CHANGED` (raised by `Slash.Handle` after every registered command). Core code subscribes with
 `Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
+`Events.OffSignal(signal, fn)` removes a handler; when a signal has no handlers left, its WoW events
+are unregistered.
 
 The interface grows with each stage (plan section 6).
 
@@ -111,10 +116,31 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `BAG_UPDATE_DELAYED` → `BAGS_CHANGED` | `Stock` | always | once per bag-change burst (the client coalesces `BAG_UPDATE`) | snapshot of the tracked items only (`GetItemCount` per item) |
 | `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock` | always | per bank visit | snapshot of the tracked items |
 | `TRADE_SKILL_SHOW` / `_CLOSE`, `CRAFT_SHOW` / `_CLOSE` | Classic Era adapter (own frame) | always | per profession window open/close | sets two flags, no API calls |
+| `ITEM_DATA_LOAD_RESULT` → `ITEM_LOADED` | Material tab | only while the window is shown | per item whose data arrives | requests one refresh |
+| `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED`, `DATA_CHANGED` (signals) | Material tab | handler added on show, removed on hide (the WoW events stay registered for `Stock`) | see above | requests one refresh |
 
-No `OnUpdate` scripts and no tickers. The adapter's window frame is not routed through
+Window refreshes are coalesced: any number of refresh requests in one frame lead to one
+`C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
+created on first open and hidden, never destroyed; rows are a fixed pool of 10 frames.
+
+No `OnUpdate` scripts and no tickers; one-shot `C_Timer.After(0)` only for coalescing. The adapter's window frame is not routed through
 `Core/Events.lua` because the core does not need to know which kind of window is open; its handler
 only sets flags.
+
+## Main window (stage 2d)
+
+- `UI/MainWindow.lua` creates the frame on the first `/bof show` (`BackdropTemplate` with
+  `BACKDROP_DIALOG_32_32`, `UIPanelCloseButton`; both defined in Blizzard_SharedXML for Vanilla 70003).
+- Global frame name `BuyOrFarmForeverMainFrame`: required because `UISpecialFrames` (Escape closes
+  the window) holds frame names. It is the only global besides the namespace, SavedVariables and
+  slash globals, and it exists only after the window was opened once.
+- Position: `settings.window.point/x/y`, saved on drag stop, restored on creation (unknown points
+  fall back to `CENTER`). `settings.window.allGoals` (default false) stores the "all goals" view.
+- The Material tab reads `Stock.Rows` (shared with `/bof stock`) and uses `Chat.ItemText` /
+  `Chat.GoalName` for names. Buttons: previous/next goal (wraps), "all goals", recipe import
+  (`Recipes.ImportSelected`, 1 craft). Mouse wheel scrolls 1 row. Tooltip: item hyperlink plus one
+  line per other character.
+- Not protected, no secure templates; changing it in combat is allowed.
 
 ## Startup
 

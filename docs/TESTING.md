@@ -28,6 +28,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0-alpha.4 | 2026-10-18 | 107 checks passed, 0 failed (95 unit tests); mutation checks: no unregister on hide fails 2, no coalescing fails 1, no colors fails 2 (after strengthening the color test) |
 
 ## In game
 
@@ -42,6 +43,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
 | 0.2.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
+| 0.2.0-alpha.4 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -177,3 +179,19 @@ Needs a character with a crafting profession; Enchanting additionally tests the 
 8. With both windows open (e.g. Enchanting and Tailoring): `/bof recipe` uses the one opened last.
 9. `/reload`, `/bof goal` → the recipe goals are listed with the recipe name.
 10. Errors: `/bof recipe 0`, `/bof recipe abc` → message about the number of crafts.
+
+### Checklist 0.2.0-alpha.4 (Classic Era, main window)
+
+1. `/reload`, `/bof version` → `0.2.0-alpha.4`; `/bof` shows 9 help lines including `/bof show`.
+2. `/bof show` → window "Kaufen oder farmen?" in the middle of the screen. Header "Ziel n von m: … – k×
+   herstellen", columns Material, Bedarf, Taschen, Bank, Twinks, Fehlt; icons and item names.
+   Umlauts correct, no text cut off or overlapping (report what looks wrong).
+3. Numbers match `/bof stock`. "Fehlt" is red above 0, green at 0.
+4. Move an item of the goal between bags or buy/sell one → the window updates by itself.
+5. `<` / `>` switch the goal (also in `/bof goal` the `*` moves). "Alle Ziele zusammen" shows all.
+6. Mouse over a row → item tooltip, below it the lines for other characters (e.g. CharB).
+7. Open a profession window, select a recipe, click "Rezept übernehmen" → chat message, new goal shown.
+8. Drag the window elsewhere, `/reload`, `/bof show` → same position. Escape closes it; the X too.
+9. In combat: open/close the window and click buttons → no error, no "Aktion blockiert".
+10. `/bof goal add <Item> 1` while the window is open → new row appears.
+11. Performance: with the window closed nothing should happen; report anything unusual.

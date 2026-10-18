@@ -28,6 +28,7 @@ DB.DEFAULTS = {
 			x = 0,
 			y = 0,
 			tab = "MATERIAL",
+			allGoals = false,
 		},
 	},
 	prices = {},

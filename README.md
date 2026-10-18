@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.3. Materialziele, Rezeptimport und Bestand über Chat-Befehle, noch ohne Fenster.**
+**Status: Entwicklungsversion 0.2.0-alpha.4. Materialziele, Rezeptimport und Bestand, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -10,8 +10,8 @@ und deinen Vorhaben.
 Diese Version enthält das Grundgerüst (gespeicherte Einstellungen, Debug-Protokoll, Chat-Befehle)
 und den ersten Teil der Materialbeschaffung: Materialziele mit Zutaten und Anzahl Herstellungen
 (von Hand oder aus einem Rezept im Berufsfenster),
-dazu Bedarf, Bestand in Taschen und Bank – auch deiner anderen Charaktere auf dem Realm – und Fehlmenge. Bedient wird das vorläufig über
-Chat-Befehle, bis das Fenster fertig ist. Craft-Bewertung und Goldpuffer folgen später.
+dazu Bedarf, Bestand in Taschen und Bank – auch deiner anderen Charaktere auf dem Realm – und Fehlmenge. Anzeigen kannst du das im Fenster
+(`/bof show`); Ziele anlegen und bearbeiten geht vorläufig noch über Chat-Befehle. Craft-Bewertung und Goldpuffer folgen später.
 
 ## Unterstützte Spielversion
 
@@ -34,6 +34,7 @@ Statt `/bof` funktioniert auch `/kof`.
 | Befehl | Wirkung |
 |---|---|
 | `/bof` oder `/bof help` | zeigt die Befehlsliste |
+| `/bof show` | öffnet oder schließt das Fenster |
 | `/bof version` | zeigt Addon-Version, Interface-Version und Build des Spiels |
 | `/bof debug` | schaltet den Debug-Modus ein oder aus |
 | `/bof reset` | setzt die Einstellungen zurück; bestätigen mit `/bof reset confirm` innerhalb von 30 Sekunden. Ziele, Preise und Messungen bleiben erhalten. |
@@ -55,7 +56,12 @@ offen ist) oder die Item-ID.
 
 ## Bedienung
 
-Noch kein Fenster. Bedienung derzeit über die Befehle oben.
+`/bof show` öffnet das Fenster (Tab „Material“). Es zeigt das ausgewählte Ziel mit Bedarf, Bestand in
+Taschen und Bank, Bestand deiner anderen Charaktere („Twinks“) und Fehlmenge. Mit `<` und `>`
+wechselst du das Ziel, „Alle Ziele zusammen“ zeigt alles auf einmal. Fährst du mit der Maus über
+eine Zeile, siehst du den Gegenstand und welcher Twink wie viel hat. „Rezept übernehmen“ legt aus
+dem ausgewählten Rezept im offenen Berufsfenster ein Ziel an (1× herstellen). Das Fenster lässt
+sich verschieben und schließt mit Escape. Ziele anlegen und ändern geht noch über die Befehle oben.
 
 Aus einem Rezept: Berufsfenster öffnen (z. B. Schneiderei oder Verzauberkunst), das Rezept
 anklicken und `/bof recipe 5` eingeben. Das Ziel enthält dann die Zutaten für 5 Herstellungen
@@ -93,7 +99,7 @@ das Addon sie nicht.
 
 ## Bekannte Einschränkungen
 
-- Noch kein Fenster; Materialziele nur über Chat-Befehle.
+- Das Fenster zeigt Ziele nur an; anlegen und bearbeiten geht noch über Chat-Befehle.
 - Bestand anderer Charaktere ist ein gespeicherter Stand vom letzten Login dieses Charakters.
 - Rezeptimport nur für das ausgewählte Rezept im offenen Berufsfenster, nur feste Zutaten.
 - Noch nicht enthalten: Preise, Farmmessung,
@@ -103,15 +109,16 @@ das Addon sie nicht.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.3):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.4):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 83 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 95 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
-  (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster
+  (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
+  Blättern, Tooltip, Position)
 
 **Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
 
@@ -131,11 +138,13 @@ Version 0.2.0-alpha.3 (18.10.2026): Rezept aus dem Berufsfenster als Ziel übern
 fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Nicht im Spiel getestet:
 Verzauberkunst (Verzauberungsfenster).
 
+Version 0.2.0-alpha.4 (Fenster) ist im Spiel noch nicht getestet.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.4 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

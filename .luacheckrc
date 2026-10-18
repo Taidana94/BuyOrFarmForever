@@ -30,7 +30,7 @@ read_globals = {
 	"WOW_PROJECT_CLASSIC",
 	C_AddOns = { fields = { "GetAddOnMetadata" } },
 	-- items and bags (GetItemCount with includeBank: correct with closed bank, confirmed in game)
-	C_Item = { fields = { "GetItemCount", "GetItemInfo", "RequestLoadItemDataByID" } },
+	C_Item = { fields = { "GetItemCount", "GetItemIconByID", "GetItemInfo", "RequestLoadItemDataByID" } },
 	C_Spell = { fields = { "GetSpellName" } },
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
@@ -55,8 +55,13 @@ read_globals = {
 	"GetServerTime",
 	"GetTime",
 	"issecretvalue",
-	-- frames, chat, errors
+	-- frames, chat, errors (templates and constants: Blizzard_SharedXML, Vanilla, 70003)
 	"CreateFrame",
+	"UIParent",
+	"GameTooltip",
+	"UISpecialFrames",
+	"BACKDROP_DIALOG_32_32",
+	C_Timer = { fields = { "After" } },
 	"DEFAULT_CHAT_FRAME",
 	"geterrorhandler",
 }

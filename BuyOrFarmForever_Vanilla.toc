@@ -2,7 +2,7 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
 ## Notes-deDE: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
-## Version: 0.2.0-alpha.3
+## Version: 0.2.0-alpha.4
 ## SavedVariables: BuyOrFarmForeverDB
 ## X-License: MIT
 
@@ -25,4 +25,6 @@ Core\Slash.lua
 UI\ChatShared.lua
 UI\GoalCommands.lua
 UI\StockCommands.lua
+UI\MaterialTab.lua
+UI\MainWindow.lua
 Core\Main.lua

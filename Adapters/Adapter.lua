@@ -21,12 +21,14 @@ Adapter.REQUIRED = {
 	"GetBagCount", -- (itemID) -> count in the bags
 	"GetBagAndBankCount", -- (itemID) -> count in bags and bank, or nil if not available
 	"GetItemLink", -- (itemID) -> item link, or nil while item data is loading (load is requested)
+	"GetItemIcon", -- (itemID) -> icon file id, or nil
 	"GetSpellName", -- (spellID) -> localized name, or nil
 	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
--- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED.
+-- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success).
+-- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.
 function Adapter.Validate(adapter)

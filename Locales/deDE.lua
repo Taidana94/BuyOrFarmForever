@@ -63,6 +63,22 @@ L.RECIPE_NO_REAGENTS = "Dieses Rezept hat keine Zutaten und kann nicht als Ziel 
 L.RECIPE_INVALID = "Die Rezeptdaten sind unvollständig und wurden nicht übernommen."
 L.RECIPE_UNKNOWN = "Rezept %1$d"
 
+-- Main window
+L.HELP_LINE_SHOW = "/bof show – öffnet oder schließt das Fenster"
+L.COL_MATERIAL = "Material"
+L.COL_NEED = "Bedarf"
+L.COL_BAGS = "Taschen"
+L.COL_BANK = "Bank"
+L.COL_OTHERS = "Twinks"
+L.COL_MISSING = "Fehlt"
+L.WINDOW_PREV = "<"
+L.WINDOW_NEXT = ">"
+L.WINDOW_ALL_GOALS = "Alle Ziele zusammen"
+L.WINDOW_IMPORT_RECIPE = "Rezept übernehmen"
+L.WINDOW_NO_GOAL_SELECTED = "Kein Ziel ausgewählt. Wähle eines mit < und >."
+L.WINDOW_GOAL_LINE = "Ziel %1$d von %2$d: %3$s – %4$d× herstellen"
+L.WINDOW_OFF = "–"
+
 -- Stock
 L.STOCK_ALL_HEADER = "Alle Ziele zusammen:"
 L.STOCK_EMPTY = "Das Ziel enthält noch keine Zutaten. Füge welche hinzu mit /bof goal add <Gegenstand> <Menge>."

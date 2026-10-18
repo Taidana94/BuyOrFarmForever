@@ -96,3 +96,30 @@ function Events.OnSignal(signal, fn)
 	end
 	return count
 end
+
+-- Removes fn from a signal. When the signal has no handlers left, the WoW events that only feed
+-- this signal are unregistered (used by windows: register on show, unregister on hide).
+function Events.OffSignal(signal, fn)
+	local list = signalHandlers[signal]
+	if not list then
+		return
+	end
+	for i = #list, 1, -1 do
+		if list[i] == fn then
+			table.remove(list, i)
+		end
+	end
+	if #list > 0 then
+		return
+	end
+	signalHandlers[signal] = nil
+	local map = ns.Client and ns.Client.events
+	if type(map) ~= "table" then
+		return
+	end
+	for event, mapped in pairs(map) do
+		if mapped == signal then
+			Events.Off(event)
+		end
+	end
+end

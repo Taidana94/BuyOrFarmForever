@@ -10,6 +10,7 @@ local ClassicEra = {
 		BANKFRAME_OPENED = "BANK_OPENED",
 		BANKFRAME_CLOSED = "BANK_CLOSED",
 		BAG_UPDATE_DELAYED = "BAGS_CHANGED",
+		ITEM_DATA_LOAD_RESULT = "ITEM_LOADED",
 	},
 }
 
@@ -247,6 +248,14 @@ function ClassicEra:ReadSelectedRecipe()
 		outputMax = outputMax,
 		reagents = reagents,
 	}
+end
+
+-- File id of the item icon, or nil (C_Item.GetItemIconByID, documented in 70003).
+function ClassicEra:GetItemIcon(itemID)
+	if C_Item and C_Item.GetItemIconByID then
+		return C_Item.GetItemIconByID(itemID)
+	end
+	return nil
 end
 
 -- C_Item.GetItemInfo returns nil until the item is in the client cache.

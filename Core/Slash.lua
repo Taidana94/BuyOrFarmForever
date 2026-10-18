@@ -126,6 +126,8 @@ function Slash.Handle(message)
 		reset(string.lower(argument))
 	elseif commands[command] then
 		commands[command].handler(argument)
+		-- Lets open windows refresh after commands that changed goals or settings.
+		ns.Events.Emit("DATA_CHANGED")
 	else
 		Log.Print(Util.Format(L.UNKNOWN_COMMAND, command))
 	end
