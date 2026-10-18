@@ -127,7 +127,9 @@ derselben Fraktion wird mitgezählt und angezeigt, `/bof stock others` schaltet 
 ein und aus: korrekt, ohne Fehler. Nicht getestet: Charaktere der anderen Fraktion und auf
 anderen Realms (nur außerhalb des Spiels geprüft).
 
-Version 0.2.0-alpha.3 (Rezeptimport) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.3 (18.10.2026): Rezept aus dem Berufsfenster als Ziel übernehmen, Hinweise bei
+fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Nicht im Spiel getestet:
+Verzauberkunst (Verzauberungsfenster).
 
 **Nicht in Forever getestet.**
 

@@ -41,7 +41,7 @@ commit (`git log -1 --oneline`).
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
-| 0.2.0-alpha.3 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -90,6 +90,21 @@ Setup: this addon + BugSack/BugGrabber. Characters `CharA` and `CharB`, both
 
 Observation (own conclusion from the data, not measured directly): `C_Item.GetItemCount` returns 0
 during `PLAYER_LOGOUT` in Classic Era 70003.
+
+### Result 0.2.0-alpha.3 (Classic Era, 2026-10-18)
+
+Setup: this addon + BugSack/BugGrabber. Character `CharA-RealmA`.
+
+| Check | Evidence | Result |
+|---|---|---|
+| Recipe import from the trade skill window | SavedVariables: goal 3 with `recipeKey = "item:2852"`, reagent 2840 × 4; `db.recipes["item:2852"]` stored with `origin = "IMPORT"` | passed |
+| Messages (no window, header, crafts errors), name display, `/reload` | confirmed by the user ("passt") | passed |
+| Lua errors | `!BugGrabber.lua`: `errors` empty (session 25) | passed |
+| Recipe key from `GetTradeSkillRecipeLink` | the stored key is `item:`, so the trade skill recipe link gave no `enchant:`/`spell:` id (or nil) | observation |
+| Craft window (Enchanting), both windows open | no evidence in the data (no `spell:` recipe stored) | not performed |
+
+The stored goal has `crafts = 1`; the checklist asked for `/bof recipe 3`. The unit test covers the
+crafts argument; if the in-game command was entered with 3, this needs a recheck.
 
 ### Checklist 0.1.0 (Classic Era)
 
