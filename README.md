@@ -203,7 +203,8 @@ Fehler. Dabei fiel auf, dass der Anreise-Umschalter leicht im falschen Zustand b
 Version 0.2.0-alpha.9 (18.10.2026): Anreise und Farmzeit werden mit der neuen Meldung richtig
 getrennt, ohne Fehler.
 
-Version 0.2.0-alpha.10 (Beschaffung) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.10 (18.10.2026): Beschaffungsplan mit Strategien, Budget und Tab „Beschaffung“:
+korrekt, ohne Fehler.
 
 **Nicht in Forever getestet.**
 

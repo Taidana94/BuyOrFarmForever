@@ -55,7 +55,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.7 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (user: "gut"; SavedVariables below) |
 | 0.2.0-alpha.8 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)**, usability finding (details below) |
 | 0.2.0-alpha.9 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (travel/farm split; details below) |
-| 0.2.0-alpha.10 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.10 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -210,6 +210,18 @@ User remark: players rarely use `/reload`. SavedVariables are written by the cli
 and `/reload` only; an addon cannot trigger it. `/reload` at the end of a test is only needed so the
 results can be read from the file. Known limitation (README): after a client crash, changes since the
 last save are lost, including a run started in that session.
+
+### Result 0.2.0-alpha.10 (Classic Era, 2026-10-18)
+
+Character `CharC-RealmB`. Confirmed by the user ("passt"); SavedVariables (22:24):
+`settings.window.tab = "SOURCING"` (tab remembered), `settings.strategy = "FARM_SELF"` (last
+strategy of the checklist), `settings.budgetCopper = 0` (own budget cleared), own prices for coarse
+thread (10k) and linen cloth (50k) next to the merchant and auction prices. `!BugGrabber.lua`: no
+errors.
+
+User feedback during the test: the table's farm time (with travel) and the tooltip's farm time for
+everything (without travel) differed without explanation. Fixed in the same version: the tooltip
+splits farm time and travel for the planned part and for the whole amount.
 
 ### Checklist 0.1.0 (Classic Era)
 
