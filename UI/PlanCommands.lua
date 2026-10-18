@@ -37,6 +37,14 @@ function PlanCommands.BudgetText(budget, isOwn)
 	return Util.Format(isOwn and L.PLAN_BUDGET_OWN or L.PLAN_BUDGET_GOLD, Money.Format(budget))
 end
 
+-- Notes about the plan's cost: use of reserves and time value (gold buffer). Empty without cost.
+function PlanCommands.CostNotes(charData, plan)
+	if plan.cost <= 0 then
+		return {}
+	end
+	return { ns.GoldCommands.ReserveText(charData, plan.cost), ns.GoldCommands.TimeValueText(charData, plan.cost) }
+end
+
 function PlanCommands.SummaryText(plan)
 	return Util.Format(L.PLAN_SUMMARY, Money.Format(plan.cost), Util.FormatDuration(plan.farmSeconds),
 		Money.Format(plan.budgetLeft))
@@ -55,7 +63,9 @@ local function printPlan(charData, goals)
 		Log.Print(Util.Format(L.PLAN_LINE, UIShared.ItemText(line.itemID), line.missing, PlanCommands.DescribeLine(line)))
 	end
 	Log.Print(PlanCommands.SummaryText(plan))
-	Log.Print(L.PLAN_TIME_VALUE_NONE)
+	for _, note in ipairs(PlanCommands.CostNotes(charData, plan)) do
+		Log.Print(note)
+	end
 end
 
 local function planCommand(argument)

@@ -11,7 +11,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Farm tab in the window (buttons, live time, estimates), `/bof farm keep all` | 0.3.0-alpha.1, tested out of game only |
 | Craft evaluation: crafted item vs. equipped gear with stat weights, cost/time per point, owned material value, alternatives (`/bof craft`, Craft tab) | 0.3.0-alpha.1 (stage 3), tested out of game only |
 | Buy vs. farm vs. partial purchase, strategies, shared budget (`/bof plan`, Sourcing tab) | 0.2.0 (stage 2g), tested in Classic Era |
-| Time value of purchases | needs income data (gold buffer) |
+| Gold buffer: savings goals, distribution, overview, reserve check, net income, time value; Gold tab | 0.3.0-alpha.1 (stage 4), tested out of game only |
 | Farm runs (start/pause/resume/travel/stop, review of unclear gains, save) and farm time estimates with data basis | 0.2.0-alpha.9 (stage 2f, chat commands), tested in Classic Era |
 | Prices per unit from manual entry, merchants and the auction house; realm/faction, outdated flag | 0.2.0-alpha.6 (stage 2e), tested in Classic Era |
 | Main window with Material tab (`/bof show`; display, goal switch, recipe import button) | 0.2.0-alpha.4 (stage 2d), tested in Classic Era |

@@ -140,11 +140,17 @@ function Sourcing.Plan(inputs, strategy, budget)
 	return plan
 end
 
--- The budget to plan with: the own budget if set, else the character's current gold.
+-- The budget to plan with: the own budget if set, else the character's current gold. With
+-- settings.useReservesInSourcing = false it is limited to the gold not reserved for savings goals.
+-- Returns budget, isOwn.
 function Sourcing.Budget()
-	local own = ns.db.settings.budgetCopper
-	if own > 0 then
-		return own, true
+	local settings = ns.db.settings
+	local money = ns.Client:GetMoney() or 0
+	local isOwn = settings.budgetCopper > 0
+	local budget = isOwn and settings.budgetCopper or money
+	local charData = ns.charKey and ns.db.characters[ns.charKey]
+	if not settings.useReservesInSourcing and charData then
+		budget = math.min(budget, ns.SavingsGoals.Overview(charData, money).free)
 	end
-	return ns.Client:GetMoney() or 0, false
+	return budget, isOwn
 end

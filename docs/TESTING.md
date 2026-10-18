@@ -29,7 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
-| 0.3.0-alpha.1 | 2026-10-18 | 161 checks passed, 0 failed (144 unit tests); farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
+| 0.3.0-alpha.1 | 2026-10-18 | 169 checks passed, 0 failed (152 unit tests); gold buffer mutation checks: ignoring the gold limit, no login guard, reserves ignored, no gap cap each fail 1; farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
 | 0.2.0 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); only version and documentation changed against 0.2.0-alpha.10 |
 | 0.2.0-alpha.10 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); mutation checks: reversed buying order fails 3, ignoring the budget 5, SAVE_GOLD buying everything 1, no travel time 2 |
 | 0.2.0-alpha.8 | 2026-10-18 | 138 checks passed, 0 failed (121 unit tests); mutation checks: no loot grace, never pausing at login, ignoring zero-yield target runs, counting decreases (after strengthening the test) each fail 1 |
@@ -436,4 +436,10 @@ One command per line.
    button reads "Angekommen", click again; "Pause"/"Fortsetzen"; loot something; "Beenden" →
    "Unklare mitzählen", "Speichern" appear; "Speichern". Switch tabs/close the window during a run
    and reopen → time still right. Estimates for the selected goal are listed.
-10. `/reload` at the end; BugSack: no errors.
+10. Gold buffer: `/bof gold add 5g Reiten`, `/bof gold add 1g Training`, `/bof gold distribute`, `/bof gold`
+    → overview with reserves and free gold; `/bof gold check 3g` → reserve use. Tab "Goldpuffer":
+    same overview, buttons work, the 5 tab buttons do not overlap the title.
+11. Income: after login no fake income (`/bof gold` right after login: no big gain); sell something
+    → gain; repair/buy → spending. After 1 h of play: net per hour and the time value in the
+    Sourcing tab.
+12. `/reload` at the end; BugSack: no errors.

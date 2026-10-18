@@ -9,12 +9,12 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/FarmRuns.lua` + `Core/FarmRunsValidation.lua` (run state machine), `Core/FarmCapture.lua` (yield from bag changes), `Core/FarmEstimates.lua`, `Core/Sourcing.lua` (buy/farm plan), `Core/CraftEval.lua` (craft evaluation), `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
+| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/FarmRuns.lua` + `Core/FarmRunsValidation.lua` (run state machine), `Core/FarmCapture.lua` (yield from bag changes), `Core/FarmEstimates.lua`, `Core/Sourcing.lua` (buy/farm plan), `Core/CraftEval.lua` (craft evaluation), `Core/SavingsGoals.lua`, `Core/Income.lua` + `Core/IncomeCapture.lua` (gold buffer), `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
 | Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEraBags.lua` (bags, map), `Adapters/ClassicEraGear.lua` (item stats, equipment), `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
-| Window | `UI/Widgets.lua` (shared buttons, item tables, refresh mixin), `UI/MainWindow.lua` (frame, tabs, `/bof show`), `UI/MaterialTabLayout.lua` + `UI/MaterialTab.lua`, `UI/SourcingTabLayout.lua` + `UI/SourcingTab.lua`, `UI/FarmTab.lua`, `UI/CraftTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
+| Window | `UI/Widgets.lua` (shared buttons, item tables, refresh mixin), `UI/MainWindow.lua` (frame, tabs, `/bof show`), `UI/MaterialTabLayout.lua` + `UI/MaterialTab.lua`, `UI/SourcingTabLayout.lua` + `UI/SourcingTab.lua`, `UI/FarmTab.lua`, `UI/CraftTab.lua`, `UI/GoldTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -23,7 +23,7 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` →
 `Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Core/FarmRuns.lua` → `Core/FarmRunsValidation.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEraBags.lua` → `Adapters/ClassicEraGear.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Sourcing.lua` → `Core/CraftEval.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/PlanCommands.lua` → `UI/CraftCommands.lua` → `UI/Widgets.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/SourcingTabLayout.lua` → `UI/SourcingTab.lua` → `UI/FarmTab.lua` → `UI/CraftTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Sourcing.lua` → `Core/CraftEval.lua` → `Core/SavingsGoals.lua` → `Core/Income.lua` → `Core/IncomeCapture.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/PlanCommands.lua` → `UI/CraftCommands.lua` → `UI/GoldCommands.lua` → `UI/Widgets.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/SourcingTabLayout.lua` → `UI/SourcingTab.lua` → `UI/FarmTab.lua` → `UI/CraftTab.lua` → `UI/GoldTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -109,6 +109,21 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
+
+## Gold buffer (stage 4)
+
+- Savings goals: `characters[k].savingsGoals = { { label, copper, reserved, done, createdAt } }`,
+  list order = priority, max. 30. `Distribute(money)` assigns the current gold once in order;
+  reserves stay until the next distribution. `Overview(money)`: reserved (capped at the current
+  gold), free = gold − reserved, uncovered = open targets − reserved. `ReserveUse(cost)` =
+  max(0, cost − free).
+- Income: `characters[k].income[day] = { gained, spent, seconds }` (day = server time / 86400, max.
+  60 days). Every `PLAYER_MONEY` delta counts (no source distinction). Online time is added between
+  checkpoints (login, gold change, bag change, logout), each gap capped at 30 min. Net per hour over
+  14 days, shown from 1 h online. Assumption to confirm in game: `GetMoney()` is valid at
+  `PLAYER_LOGIN`; guard: a gain within 30 s after a login that read 0 gold is not counted.
+- Sourcing: `settings.useReservesInSourcing = false` limits the budget to the free gold. The plan
+  shows the reserve use of its cost and the time value (cost / net per hour).
 
 ## Farm tab
 
@@ -231,7 +246,8 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `AUCTION_HOUSE_SHOW` / `AUCTION_HOUSE_CLOSED` | `PriceCapture` | always | per auction house visit | flags, scan list reset |
 | `BAGS_CHANGED`, `LOOT_OPENED`, `LOOT_CLOSED`, `LOGOUT` (signals) | `FarmCapture` | only while a farm run is running (start/resume/login-continue on; pause/stop/discard off) | per bag update / loot window | bag scan of the carried bags (about 100 slots), diff with reused count tables |
 | `PLAYER_EQUIPMENT_CHANGED` → `EQUIPMENT_CHANGED` | Craft tab | only while the Craft tab is shown | per equipment change | requests one refresh |
-| `PLAYER_MONEY` → `MONEY_CHANGED` | Sourcing tab | only while the Sourcing tab is shown | per gold change | requests one refresh |
+| `PLAYER_MONEY` → `MONEY_CHANGED` | `IncomeCapture` (always), Sourcing and Gold tab (while shown) | always | per gold change | one income record update (no allocation once the day exists); tabs request a refresh |
+| `BAGS_CHANGED`, `LOGOUT` (signals) | `IncomeCapture` | always | per bag-change burst / logout | online-time checkpoint (two number updates) |
 | `AUCTION_ITEM_LIST_UPDATE` → `AUCTION_RESULTS` | `PriceCapture` | only while the auction house is open | per result page and when row data arrives | reads one page (max. 50 rows), stores the lowest unit buyout of tracked items |
 | `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED`, `DATA_CHANGED` (signals) | Material tab | handler added on show, removed on hide (the WoW events stay registered for `Stock`) | see above | requests one refresh |
 

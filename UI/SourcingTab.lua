@@ -69,7 +69,7 @@ function Tab:Refresh()
 	end
 	self.goalText:SetText(headerText)
 	if not goals then
-		self:Show({}, emptyText, "")
+		self:Show({}, emptyText, "", {})
 		return
 	end
 	local inputs = Sourcing.Inputs(charData, goals)
@@ -78,17 +78,19 @@ function Tab:Refresh()
 		line.tooltipLines = tooltipLines(line, inputs[i])
 	end
 	if #plan.lines == 0 then
-		self:Show({}, L.FARM_NOTHING_MISSING, "")
+		self:Show({}, L.FARM_NOTHING_MISSING, "", {})
 		return
 	end
-	self:Show(plan.lines, "", PlanCommands.SummaryText(plan))
+	self:Show(plan.lines, "", PlanCommands.SummaryText(plan), PlanCommands.CostNotes(charData, plan))
 end
 
-function Tab:Show(lines, emptyText, summary)
+-- notes = { reserve text, time value text } (PlanCommands.CostNotes), may be empty.
+function Tab:Show(lines, emptyText, summary, notes)
 	self.lines = lines
 	self.emptyText:SetText(emptyText)
 	self.summaryText:SetText(summary)
-	self.timeValueText:SetText(#lines > 0 and L.PLAN_TIME_VALUE_NONE or "")
+	self.reserveText:SetText(notes[1] or "")
+	self.timeValueText:SetText(notes[2] or "")
 	self:Scroll(0)
 end
 

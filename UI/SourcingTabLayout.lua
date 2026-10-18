@@ -25,7 +25,7 @@ local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
 local BUDGET_GAP = 12
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, TEXT_WIDTH = -84, 560
-local SUMMARY_Y, TIME_VALUE_Y = 40, 22
+local SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 42, 26, 10
 
 local function showTooltip(row)
 	local line = row.data
@@ -88,6 +88,7 @@ function Layout.Build(tab, parent)
 	end
 	tab.emptyText = createText(frame, "GameFontDisableSmall", EMPTY_TEXT_Y, "TOPLEFT")
 	tab.summaryText = createText(frame, "GameFontHighlightSmall", SUMMARY_Y, "BOTTOMLEFT")
+	tab.reserveText = createText(frame, "GameFontHighlightSmall", RESERVE_Y, "BOTTOMLEFT")
 	tab.timeValueText = createText(frame, "GameFontDisableSmall", TIME_VALUE_Y, "BOTTOMLEFT")
 	frame:EnableMouseWheel(true)
 	frame:SetScript("OnMouseWheel", function(_, delta)

@@ -35,6 +35,9 @@ Core\FarmCapture.lua
 Core\FarmEstimates.lua
 Core\Sourcing.lua
 Core\CraftEval.lua
+Core\SavingsGoals.lua
+Core\Income.lua
+Core\IncomeCapture.lua
 Core\Perf.lua
 Core\Slash.lua
 UI\Shared.lua
@@ -44,6 +47,7 @@ UI\PriceCommands.lua
 UI\FarmCommands.lua
 UI\PlanCommands.lua
 UI\CraftCommands.lua
+UI\GoldCommands.lua
 UI\Widgets.lua
 UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
@@ -51,6 +55,7 @@ UI\SourcingTabLayout.lua
 UI\SourcingTab.lua
 UI\FarmTab.lua
 UI\CraftTab.lua
+UI\GoldTab.lua
 UI\MainWindow.lua
 UI\PerfCommand.lua
 Core\Main.lua

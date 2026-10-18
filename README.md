@@ -1,7 +1,7 @@
 # Kaufen oder farmen?
 
 **Entwicklungsversion 0.3.0-alpha.1 – Materialbeschaffung (getestet in WoW Classic Era) und neu:
-Craft-Bewertung (noch nicht im Spiel getestet). Nicht in Forever getestet.**
+Craft-Bewertung, Goldpuffer, Tab „Farmen“ (noch nicht im Spiel getestet). Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -24,7 +24,10 @@ mit deiner angelegten Ausrüstung verglichen (nach deinen Gewichten für Stärke
 Ausdauer, Intelligenz und Willenskraft), dazu Beschaffungskosten und Farmzeit pro
 Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen.
 
-Der Goldpuffer folgt in einer späteren Version.
+Ebenfalls neu: der **Goldpuffer** – Sparziele (Reiten, Training, Berufsausbau, ein weiterer Craft)
+mit Priorität, einmaliges Verteilen deines Golds, Übersicht über Rücklagen, freies Gold und
+ungedeckte Ziele, Hinweis, ob ein Einkauf deine Rücklagen angreift, dein Nettoerlös pro Stunde und
+daraus der **Zeitgegenwert** eines Einkaufs („2g entsprechen etwa 30 Min. Spielzeit“).
 
 ## Unterstützte Spielversion
 
@@ -119,6 +122,19 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof alt add <Gegenstand> planned\|drop [Notiz]` | Alternative: eingeplant (z. B. Questbelohnung) oder möglicher Drop |
 | `/bof alt remove <Nr.>` | Alternative entfernen |
 
+**Goldpuffer**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof gold` | Übersicht: Gold, Rücklagen, frei, ungedeckt, Sparziele, Nettoerlös |
+| `/bof gold add <Betrag> <Name>` | Sparziel anlegen, z. B. `/bof gold add 90g Reiten` |
+| `/bof gold set <Nr.> <Betrag>` | Betrag ändern |
+| `/bof gold up <Nr.>` | Priorität erhöhen (eine Stelle nach oben) |
+| `/bof gold done <Nr.>` / `delete <Nr.>` | Sparziel erreicht (Rücklage wird frei) / löschen |
+| `/bof gold distribute` | dein aktuelles Gold einmalig nach Priorität auf die Sparziele verteilen |
+| `/bof gold reserves` | ob die Beschaffung Rücklagen verwenden darf (Standard: ja) |
+| `/bof gold check <Betrag>` | greift ein Einkauf dieser Höhe deine Rücklagen an? Zeitgegenwert |
+
 **Beschaffung**
 
 | Befehl | Wirkung |
@@ -165,6 +181,16 @@ Wertungspunkt, Wert vorhandener Zutaten (beim Händler und nach deinen Preisen) 
 Alternativen. Die Wertung ist die Summe der fünf Grundwerte mal deinem Gewicht. Aktualisiert sich,
 wenn du Ausrüstung wechselst.
 
+**Fenster, Tab „Goldpuffer“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele mit
+zurückgelegtem Betrag, dein Nettoerlös und Knöpfe für „Gold verteilen“ und „Rücklagen an/aus“.
+Sparziele legst du per Chat an. Der Tab „Beschaffung“ zeigt unter dem Plan, ob die Käufe deine
+Rücklagen angreifen, und den Zeitgegenwert der Kosten.
+
+**Nettoerlös:** Jede Änderung deines Golds, während du online bist, zählt – Beute, Quests,
+Verkäufe ebenso wie Einkäufe, Reparaturen, Post und Handel. Dazu zählt die Spielzeit (Pausen ohne
+Aktivität höchstens 30 Minuten am Stück). Aus den letzten 14 Tagen ergibt sich der Nettoerlös pro
+Stunde; ab einer Stunde Spielzeit gibt es den Zeitgegenwert.
+
 Das Fenster lässt sich verschieben, merkt sich Position und Tab und schließt mit Escape.
 
 ## Abhängigkeiten
@@ -191,8 +217,9 @@ weist darauf hin.
 - Farmrunden zählen nur die Taschen, nicht die Bank.
 - Stürzt das Spiel ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung
   gestartete Farmrunde.
-- Der Zeitgegenwert von Käufen („2 Gold ≈ 20 Minuten Goldfarmen“) fehlt noch; er braucht
-  Einnahmedaten aus dem späteren Goldpuffer. Gold für Sparziele wird vom Budget noch nicht abgezogen.
+- Der Nettoerlös unterscheidet nicht, woher Gold kommt; Gold, das du per Post zwischen deinen
+  Charakteren schickst, zählt beim einen als Einnahme, beim anderen als Ausgabe. Sparziele und
+  Nettoerlös gelten pro Charakter.
 - Die Craft-Bewertung rechnet nur mit Stärke, Beweglichkeit, Ausdauer, Intelligenz und
   Willenskraft. Rüstung, Waffenschaden, Effekte und Setboni werden nicht bewertet. Einhandwaffen
   werden nur mit der Haupthand verglichen. Gewichte und Alternativen gibt es nur per Chat-Befehl.
@@ -203,9 +230,9 @@ weist darauf hin.
 
 **Außerhalb des Spiels** (Version 0.3.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
-kein Speicherzuwachs bei Taschenänderungen) und 144 automatische Tests in einer nachgebauten
+kein Speicherzuwachs bei Taschenänderungen) und 152 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
-Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung, Farm-Tab).
+Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung, Farm-Tab, Goldpuffer).
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -220,7 +247,7 @@ nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zug�
 Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
 0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
-Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
+Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
 nur, dass `GetItemStats` in Classic Era die Werte eines Gegenstands liefert.
 
 **Nicht in Forever getestet.**

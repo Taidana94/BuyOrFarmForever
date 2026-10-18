@@ -49,6 +49,28 @@ function Money.Parse(text)
 	return total
 end
 
+-- Reads an amount at the start of the input ("100g Reiten", "1g 20s Training"): returns copper and
+-- the rest of the text, or nil plus "invalid_money" if the input does not start with an amount.
+function Money.ParseLeading(text)
+	local amountWords, rest = {}, ns.Util.Trim(text)
+	while true do
+		local word, after = rest:match("^(%d+%s*%a)%f[%s%z]%s*(.*)$")
+		if not word then
+			break
+		end
+		amountWords[#amountWords + 1] = word
+		rest = after
+	end
+	if #amountWords == 0 then
+		return nil, "invalid_money"
+	end
+	local copper, err = Money.Parse(table.concat(amountWords, " "))
+	if not copper then
+		return nil, err
+	end
+	return copper, rest
+end
+
 -- "1g 20s 5k"; zero parts are left out, 0 is shown as "0k".
 function Money.Format(copper)
 	local L = ns.L

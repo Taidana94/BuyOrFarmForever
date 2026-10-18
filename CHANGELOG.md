@@ -16,6 +16,11 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 - Tab „Farmen“ im Fenster: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden,
   prüfen und speichern; laufende Zeit und geschätzte Farmzeit.
 - `/bof farm keep all` zählt alle unklaren Zugänge mit.
+- Goldpuffer (`/bof gold`, Tab „Goldpuffer“): Sparziele mit Priorität, Gold einmalig verteilen,
+  Rücklagen, freies Gold und ungedeckte Ziele, Prüfung eines Einkaufs gegen die Rücklagen,
+  Nettoerlös pro Stunde (inklusive Verlusten).
+- Beschaffung: Zeitgegenwert der Kosten aus deinem Nettoerlös, Hinweis auf Rücklagen-Nutzung;
+  wahlweise nur mit freiem Gold planen (`/bof gold reserves`).
 
 ### Geändert
 
