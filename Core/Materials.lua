@@ -122,6 +122,15 @@ function Materials.DeleteGoal(charData, id)
 	return true
 end
 
+-- All goals in id order (for "all goals together").
+function Materials.AllGoals(charData)
+	local goals = {}
+	for _, id in ipairs(Materials.ListGoalIDs(charData)) do
+		goals[#goals + 1] = charData.materialGoals[id]
+	end
+	return goals
+end
+
 -- Goal ids in ascending order.
 function Materials.ListGoalIDs(charData)
 	local ids = {}

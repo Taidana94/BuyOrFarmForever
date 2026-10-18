@@ -108,6 +108,27 @@ function Recipes.Get(db, key)
 	return db.recipes[key]
 end
 
+-- Reads the recipe selected in the client's profession window, stores it and creates a goal
+-- for charData with the given number of crafts. Returns the goal id, or nil plus an error code
+-- (from the adapter, Recipes.Normalize or Materials.CreateRecipeGoal).
+function Recipes.ImportSelected(charData, crafts)
+	if not ns.Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local raw, readError = ns.Client:ReadSelectedRecipe()
+	if not raw then
+		return nil, readError
+	end
+	local recipe, err = Recipes.Normalize(raw)
+	if not recipe then
+		ns.Log.Debug("recipe rejected (" .. tostring(err) .. "): " .. tostring(raw.key))
+		return nil, err
+	end
+	local now = ns.Client:GetServerTime()
+	Recipes.Store(ns.db, recipe, now)
+	return ns.Materials.CreateRecipeGoal(charData, recipe, crafts, now)
+end
+
 -- Validation of stored recipes (registered with DB.ROOT_VALIDATORS).
 function Recipes.Sanitize(db, repairs)
 	for key, stored in pairs(db.recipes) do

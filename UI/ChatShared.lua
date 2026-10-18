@@ -76,6 +76,12 @@ function Chat.GoalName(goal)
 	return L.GOAL_UNNAMED
 end
 
+-- Confirmation after a goal was created from a recipe (chat command and window button).
+function Chat.PrintRecipeGoal(charData, id)
+	local goal = charData.materialGoals[id]
+	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, Chat.GoalName(goal), #goal.items, goal.crafts))
+end
+
 -- Character data of the logged-in character, or nil with a message.
 function Chat.Character()
 	if not (ns.db and ns.charKey and ns.db.characters[ns.charKey]) then

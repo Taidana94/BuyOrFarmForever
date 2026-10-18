@@ -11,37 +11,25 @@ local Chat = ns.Chat
 
 -- /bof stock [all] ----------------------------------------------------------------------
 
--- Other characters' stock of one item: counted total (same faction) and detail rows.
-local function others(charData, itemID)
-	if not ns.db.settings.countOtherCharacters then
-		return 0, {}
-	end
-	return Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID)
-end
-
 local function printStock(charData, goals)
 	local countOthers = ns.db.settings.countOtherCharacters
-	local rows = Materials.Shortfall(Materials.Requirements(goals), function(itemID)
-		local bags, bank = Stock.Count(itemID)
-		return bags + (bank or 0) + (others(charData, itemID))
-	end)
+	local rows = Stock.Rows(charData, goals)
 	if #rows == 0 then
 		Log.Print(L.STOCK_EMPTY)
 		return
 	end
 	local now = ns.Client:GetServerTime()
 	for _, row in ipairs(rows) do
-		local bags, bank = Stock.Count(row.itemID)
-		local bankText = bank and tostring(bank) or L.UNKNOWN_SHORT
-		local counted, details = others(charData, row.itemID)
+		local bankText = row.bank and tostring(row.bank) or L.UNKNOWN_SHORT
+		local name = Chat.ItemText(row.itemID)
 		if countOthers then
 			local template = row.missing > 0 and L.STOCK_LINE_ALTS or L.STOCK_LINE_ALTS_DONE
-			Log.Print(Util.Format(template, Chat.ItemText(row.itemID), row.need, bags, bankText, counted, row.missing))
+			Log.Print(Util.Format(template, name, row.need, row.bags, bankText, row.others, row.missing))
 		else
 			local template = row.missing > 0 and L.STOCK_LINE or L.STOCK_LINE_DONE
-			Log.Print(Util.Format(template, Chat.ItemText(row.itemID), row.need, bags, bankText, row.missing))
+			Log.Print(Util.Format(template, name, row.need, row.bags, bankText, row.missing))
 		end
-		for _, d in ipairs(details) do
+		for _, d in ipairs(row.details) do
 			local template = d.sameFaction and L.STOCK_ALT_DETAIL or L.STOCK_ALT_OTHER_FACTION
 			Log.Print(Util.Format(template, d.name, d.total, d.bags, d.bank, Util.FormatAge(now - d.at)))
 		end
@@ -70,10 +58,7 @@ local function stockCommand(argument)
 	-- Lets an alt without bag changes this session store its stock with one command.
 	Stock.CaptureCurrent("stock command")
 	if option == "all" then
-		local goals = {}
-		for _, id in ipairs(Materials.ListGoalIDs(charData)) do
-			goals[#goals + 1] = charData.materialGoals[id]
-		end
+		local goals = Materials.AllGoals(charData)
 		if #goals == 0 then
 			Log.Print(L.GOAL_LIST_EMPTY)
 			return

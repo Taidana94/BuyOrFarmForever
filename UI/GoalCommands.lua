@@ -177,26 +177,12 @@ local function recipeCommand(argument)
 	if Util.Trim(argument) ~= "" then
 		crafts = Util.ParseInteger(Util.Trim(argument))
 	end
-	if not Materials.IsValidCrafts(crafts) then
-		Chat.PrintError("invalid_crafts")
-		return
-	end
-	local raw, readError = ns.Client:ReadSelectedRecipe()
-	if not raw then
-		Chat.PrintError(readError)
-		return
-	end
-	local recipe, err = Recipes.Normalize(raw)
-	if not recipe then
-		Log.Debug("recipe rejected (" .. tostring(err) .. "): " .. tostring(raw.key))
+	local id, err = Recipes.ImportSelected(charData, crafts)
+	if not id then
 		Chat.PrintError(err)
 		return
 	end
-	local now = ns.Client:GetServerTime()
-	Recipes.Store(ns.db, recipe, now)
-	local id = Materials.CreateRecipeGoal(charData, recipe, crafts, now)
-	local goal = charData.materialGoals[id]
-	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, Chat.GoalName(goal), #goal.items, goal.crafts))
+	Chat.PrintRecipeGoal(charData, id)
 end
 
 if ns.Client then

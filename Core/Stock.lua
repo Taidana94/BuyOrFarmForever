@@ -81,6 +81,28 @@ function Stock.OthersFor(db, currentKey, currentFaction, itemID)
 	return counted, rows
 end
 
+-- Counted stock of other characters, or 0 and no rows when counting is switched off.
+local function othersOf(charData, itemID)
+	if not ns.db.settings.countOtherCharacters then
+		return 0, {}
+	end
+	return Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID)
+end
+
+-- Requirement rows of the given goals for the current character:
+-- { itemID, need, bags, bank (nil = unknown), others (counted), details (OthersFor rows), missing }.
+function Stock.Rows(charData, goals)
+	local rows = ns.Materials.Shortfall(ns.Materials.Requirements(goals), function(itemID)
+		local bags, bank = Stock.Count(itemID)
+		return bags + (bank or 0) + (othersOf(charData, itemID))
+	end)
+	for _, row in ipairs(rows) do
+		row.bags, row.bank = Stock.Count(row.itemID)
+		row.others, row.details = othersOf(charData, row.itemID)
+	end
+	return rows
+end
+
 -- Validation of stored snapshots (registered with DB.VALIDATORS).
 local function cleanCounts(counts)
 	local changed = false
