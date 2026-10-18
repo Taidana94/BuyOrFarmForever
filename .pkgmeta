@@ -1,0 +1,11 @@
+package-as: BuyOrFarmForever
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - docs
+  - .luacheckrc
+  - .gitattributes
+  - .github
