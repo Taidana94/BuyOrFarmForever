@@ -14,7 +14,7 @@ Chat-Befehle. Materialbeschaffung, Craft-Bewertung und Goldpuffer folgen in den 
 
 | Client | Version | Status |
 |---|---|---|
-| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | in Entwicklung, **noch nicht im Spiel getestet** |
+| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | in Entwicklung, Grundgerüst im Spiel getestet (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
 ## Installation
@@ -69,7 +69,12 @@ das Addon sie nicht.
 - 43 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle
 
-**Im Spiel:** noch keine. Nicht in Forever getestet.
+**Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
+
+- erster Start, `/reload`, alle Befehle, Debug-Modus, Zurücksetzen, Kampf: ohne Fehler
+- nicht getestet: andere Spielsprachen, Zusammenspiel mit anderen Addons
+
+**Nicht in Forever getestet.**
 
 ## Version
 

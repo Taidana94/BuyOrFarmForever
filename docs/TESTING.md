@@ -29,8 +29,26 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 
 | Version | Client | Date | Result |
 |---|---|---|---|
-| 0.1.0 | Classic Era 1.15.9 | – | **not tested yet** |
+| 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | – | Forever | – | **not tested in Forever** |
+
+### Result 0.1.0 (Classic Era, 2026-10-18)
+
+Setup: only this addon + BugSack/BugGrabber. Character `CharA-RealmA` (Alliance).
+
+| Check | Evidence | Result |
+|---|---|---|
+| First start without SavedVariables | SavedVariables: `meta.createdAt` 2026-10-18 17:10, schema 1, client `classic_era` | passed |
+| Client detection in the real client | debug log: `client classic_era 1.15.9 (70003), interface 11509, locale deDE` | passed |
+| Character data on `PLAYER_LOGIN` | SavedVariables: character entry with defaults and faction | passed |
+| Debug mode persists over `/reload` | debug log: debug on, then load with status `ok` and login entries | passed |
+| `/bof debug` off/on, `/bof reset` + `confirm` | debug log + settings back to defaults, character data kept | passed |
+| Help, version line, reset prompt and timeout, unknown command, umlauts | confirmed by the user (chat output) | passed |
+| Combat (no `ADDON_ACTION_BLOCKED`) | confirmed by the user | passed |
+| Lua errors | BugGrabber: no errors recorded (session 7) | passed |
+| Full logout/login with debug on (checklist step 8) | – | not performed |
+
+Not tested: other client languages, interaction with other addons.
 
 ### Checklist 0.1.0 (Classic Era)
 
