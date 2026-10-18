@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.10] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Vergleich Kaufen/Farmen: Beschaffungsplan mit Kauf-, Farm- und Teilkaufmengen, Kosten, Farmzeit
+  und Restbudget (`/bof plan`, Tab „Beschaffung“ im Fenster).
+- Strategien „Zeit sparen“, „Gold sparen“, „Selbst farmen“ (`/bof strategy`), gemeinsames Budget
+  für alle Zutaten (`/bof budget`, sonst dein aktuelles Gold).
+- Das Fenster hat jetzt Tabs; der gewählte Tab wird gespeichert.
+
 ## [0.2.0-alpha.9] – noch nicht veröffentlicht
 
 ### Geändert

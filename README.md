@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.9. Materialziele, Rezeptimport, Bestand, Preise und Farmrunden, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.10. Materialbeschaffung vollständig: Ziele, Rezeptimport, Bestand, Preise, Farmrunden und Vergleich Kaufen/Farmen, mit Fenster.**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -62,6 +62,9 @@ Statt `/bof` funktioniert auch `/kof`.
 | `/bof farm list` | deine letzten 5 Runden |
 | `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien des ausgewählten Ziels |
 | `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen Charakteren |
+| `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes Ziel bzw. alle Ziele) |
+| `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen oder selbst farmen |
+| `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget wird mit deinem aktuellen Gold gerechnet |
 | `/bof stock` | Bedarf, Bestand (Taschen, Bank) und Fehlmenge des ausgewählten Ziels |
 | `/bof stock all` | dasselbe für alle Ziele zusammen |
 | `/bof stock others` | schaltet das Mitzählen deiner anderen Charaktere ein oder aus (Standard: an) |
@@ -77,7 +80,16 @@ wechselst du das Ziel, „Alle Ziele zusammen“ zeigt alles auf einmal. Fährst
 eine Zeile, siehst du den Gegenstand und welcher Twink wie viel hat. „Rezept übernehmen“ legt aus
 dem ausgewählten Rezept im offenen Berufsfenster ein Ziel an (1× herstellen). Die Spalte
 „Preis/Stück“ zeigt den günstigsten aktuellen Preis; grau heißt veraltet. „AH-Scan“ (nur am
-Auktionshaus) sucht pro Klick das nächste fehlende Material. Das Fenster lässt
+Auktionshaus) sucht pro Klick das nächste fehlende Material. Der Tab „Beschaffung“ zeigt für jedes fehlende Material, wie viel du kaufen
+und wie viel du farmen solltest, mit Kosten und Farmzeit, und darunter die Summe. Oben wählst du
+die Strategie:
+
+- **Zeit sparen:** kaufen, was einen Preis hat. Reicht das Budget nicht, wird zuerst gekauft, was
+  pro Gold am meisten Farmzeit spart (auch Teilkäufe); der Rest wird gefarmt.
+- **Gold sparen:** farmen, was du schon einmal gefarmt hast; kaufen nur, was du nicht farmen kannst.
+- **Selbst farmen:** nichts kaufen.
+
+Was weder einen Preis im Budget noch eine Farmmessung hat, steht als „offen“ (rot). Das Fenster lässt
 sich verschieben und schließt mit Escape. Ziele anlegen und ändern geht noch über die Befehle oben.
 
 Aus einem Rezept: Berufsfenster öffnen (z. B. Schneiderei oder Verzauberkunst), das Rezept
@@ -131,6 +143,8 @@ das Addon sie nicht.
 - Farmrunden gibt es vorerst nur über Chat-Befehle, noch nicht im Fenster.
 - WoW speichert die Daten aller Addons beim Ausloggen, Beenden und bei `/reload`. Stürzt das Spiel
   ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung gestartete Farmrunde.
+- Der Zeitgegenwert von Käufen (z. B. „2 Gold ≈ 20 Minuten deines Goldfarmens“) fehlt noch; er
+  braucht Einnahmedaten aus dem Goldpuffer.
 - Noch nicht enthalten:
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
@@ -138,18 +152,19 @@ das Addon sie nicht.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.9):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.10):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 121 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 129 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
   Blättern, Tooltip, Position), Preise (Eingabe, Händler, Auktionshaus, veraltete Preise),
-  Farmrunden (Ertrag, Pause, Anreise, Prüfen, `/reload`, Ausloggen, Schätzung)
+  Farmrunden (Ertrag, Pause, Anreise, Prüfen, `/reload`, Ausloggen, Schätzung),
+  Beschaffungsplan (Strategien, Budget, Teilkauf, Tab „Beschaffung“)
 
 **Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
 
@@ -188,11 +203,13 @@ Fehler. Dabei fiel auf, dass der Anreise-Umschalter leicht im falschen Zustand b
 Version 0.2.0-alpha.9 (18.10.2026): Anreise und Farmzeit werden mit der neuen Meldung richtig
 getrennt, ohne Fehler.
 
+Version 0.2.0-alpha.10 (Beschaffung) ist im Spiel noch nicht getestet.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.9 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.10 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

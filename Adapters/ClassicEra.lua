@@ -21,6 +21,7 @@ local ClassicEra = {
 		LOOT_CLOSED = "LOOT_CLOSED",
 		-- Only used to note the time of a running farm run; item counts are not read at logout.
 		PLAYER_LOGOUT = "LOGOUT",
+		PLAYER_MONEY = "MONEY_CHANGED",
 	},
 }
 
@@ -182,6 +183,11 @@ function ClassicEra:GetItemName(itemID)
 		C_Item.RequestLoadItemDataByID(itemID)
 	end
 	return name
+end
+
+-- Copper the character carries (GetMoney, used by Blizzard_AuctionUI in 70003), or nil.
+function ClassicEra:GetMoney()
+	return GetMoney and GetMoney() or nil
 end
 
 -- Bags and map: Adapters/ClassicEraBags.lua.

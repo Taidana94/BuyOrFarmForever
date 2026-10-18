@@ -36,6 +36,7 @@ read_globals = {
 	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo" } },
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
 	"NUM_BAG_SLOTS",
+	"GetMoney", -- used by Blizzard_AuctionUI (Classic) in 70003
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
 	"GetTradeSkillInfo",

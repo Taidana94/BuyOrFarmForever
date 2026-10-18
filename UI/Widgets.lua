@@ -104,3 +104,51 @@ Widgets.COLOR_NORMAL = { 1, 1, 1 }
 Widgets.COLOR_MISSING = { 1, 0.35, 0.35 }
 Widgets.COLOR_DONE = { 0.4, 1, 0.4 }
 Widgets.COLOR_GRAY = { 0.6, 0.6, 0.6 }
+
+-- Refresh behavior shared by the tabs: signal handlers only while the tab is shown, and any
+-- number of refresh requests in one frame lead to one Refresh on the next frame (only if the
+-- tab is still visible). A tab class gets the methods with Widgets.MixRefresh(Tab); each tab
+-- object calls Widgets.InitRefresh(tab, signals) and provides tab.frame and tab:Refresh().
+local RefreshMixin = {}
+
+function RefreshMixin:Activate()
+	for _, signal in ipairs(self.refreshSignals) do
+		ns.Events.OnSignal(signal, self.refreshHandler)
+	end
+	self:Refresh()
+end
+
+function RefreshMixin:Deactivate()
+	for _, signal in ipairs(self.refreshSignals) do
+		ns.Events.OffSignal(signal, self.refreshHandler)
+	end
+end
+
+function RefreshMixin:RequestRefresh()
+	if self.refreshPending then
+		return
+	end
+	self.refreshPending = true
+	C_Timer.After(0, self.runRefresh)
+end
+
+function Widgets.MixRefresh(class)
+	for name, fn in pairs(RefreshMixin) do
+		class[name] = fn
+	end
+end
+
+-- One handler and one timer callback per tab object, so OffSignal removes exactly what
+-- Activate added and no closure is created per request.
+function Widgets.InitRefresh(tab, signals)
+	tab.refreshSignals = signals
+	tab.refreshHandler = function()
+		tab:RequestRefresh()
+	end
+	tab.runRefresh = function()
+		tab.refreshPending = false
+		if tab.frame:IsVisible() then
+			tab:Refresh()
+		end
+	end
+end

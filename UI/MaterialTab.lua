@@ -5,11 +5,9 @@
 local _, ns = ...
 
 local L = ns.L
-local Util = ns.Util
 local Materials = ns.Materials
 local Recipes = ns.Recipes
 local Stock = ns.Stock
-local Events = ns.Events
 local UIShared = ns.UIShared
 local Prices = ns.Prices
 local Money = ns.Money
@@ -29,6 +27,7 @@ local COLOR_OUTDATED = Widgets.COLOR_GRAY
 
 local Tab = {}
 Tab.__index = Tab
+Widgets.MixRefresh(Tab)
 
 local setEnabled = Widgets.SetEnabled
 local function currentCharacter()
@@ -42,40 +41,8 @@ end
 function MaterialTab.Create(parent)
 	local tab = setmetatable({ offset = 0, data = {}, rows = {} }, Tab)
 	Layout.Build(tab, parent)
-	-- One handler object, so OffSignal can remove exactly what Activate added.
-	tab.refreshHandler = function()
-		tab:RequestRefresh()
-	end
+	Widgets.InitRefresh(tab, REFRESH_SIGNALS)
 	return tab
-end
-
--- Activation and refresh -----------------------------------------------------------------
-
-function Tab:Activate()
-	for _, signal in ipairs(REFRESH_SIGNALS) do
-		Events.OnSignal(signal, self.refreshHandler)
-	end
-	self:Refresh()
-end
-
-function Tab:Deactivate()
-	for _, signal in ipairs(REFRESH_SIGNALS) do
-		Events.OffSignal(signal, self.refreshHandler)
-	end
-end
-
--- Coalesces bursts (e.g. many ITEM_LOADED events) into one refresh on the next frame.
-function Tab:RequestRefresh()
-	if self.refreshPending then
-		return
-	end
-	self.refreshPending = true
-	C_Timer.After(0, function()
-		self.refreshPending = false
-		if self.frame:IsVisible() then
-			self:Refresh()
-		end
-	end)
 end
 
 -- Adds the planning price (Prices.Best) and the tooltip lines of all price sources to each row.
@@ -95,35 +62,13 @@ local function addPrices(rows)
 	end
 end
 
--- Goals to show and the header line; nil goals means "show emptyText".
-local function selection(charData)
-	local ids = Materials.ListGoalIDs(charData)
-	if #ids == 0 then
-		return nil, "", L.GOAL_LIST_EMPTY
-	end
-	if ns.db.settings.window.allGoals then
-		return Materials.AllGoals(charData), L.STOCK_ALL_HEADER
-	end
-	local goal, id = Materials.GetActiveGoal(charData)
-	if not goal then
-		return nil, "", L.WINDOW_NO_GOAL_SELECTED
-	end
-	local position = 1
-	for i, goalID in ipairs(ids) do
-		if goalID == id then
-			position = i
-		end
-	end
-	return { goal }, Util.Format(L.WINDOW_GOAL_LINE, position, #ids, UIShared.GoalName(goal), goal.crafts)
-end
-
 function Tab:Refresh()
 	local charData = currentCharacter()
 	if not charData then
 		self:ShowEmpty("", L.NOT_READY)
 		return
 	end
-	local goals, headerText, emptyText = selection(charData)
+	local goals, headerText, emptyText = UIShared.GoalSelection(charData)
 	local all = ns.db.settings.window.allGoals
 	self.allGoals:SetChecked(all)
 	local hasGoals = #Materials.ListGoalIDs(charData) > 0

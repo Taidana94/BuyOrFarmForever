@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0-alpha.10 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); mutation checks: reversed buying order fails 3, ignoring the budget 5, SAVE_GOLD buying everything 1, no travel time 2 |
 | 0.2.0-alpha.8 | 2026-10-18 | 138 checks passed, 0 failed (121 unit tests); mutation checks: no loot grace, never pausing at login, ignoring zero-yield target runs, counting decreases (after strengthening the test) each fail 1 |
 | 0.2.0-alpha.7 | 2026-10-18 | 129 checks passed, 0 failed (112 unit tests); the new test fails without the selection hook |
 | 0.2.0-alpha.6 | 2026-10-18 | 128 checks passed, 0 failed (111 unit tests); mutation checks: no auction page merge fails 1, ignoring price age fails 2, no unregister of auction results fails 1 |
@@ -54,6 +55,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.7 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (user: "gut"; SavedVariables below) |
 | 0.2.0-alpha.8 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)**, usability finding (details below) |
 | 0.2.0-alpha.9 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (travel/farm split; details below) |
+| 0.2.0-alpha.10 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -344,3 +346,22 @@ CharA (Mining) near copper veins, e.g. Dun Morogh. One command per line.
 10. Optional: start a run, log out, log in after a few minutes → `/bof farm` "pausiert", the offline
     minutes are not counted. `/bof farm discard`.
 11. `/bof perf` during a run (memory) and BugSack: no errors. `/reload` at the end.
+
+### Checklist 0.2.0-alpha.10 (Classic Era, sourcing plan)
+
+CharC: goal "Stofftest" (40 linen cloth, farm runs with linen exist). One command per line.
+
+1. `/reload`, `/bof version` → `0.2.0-alpha.10`; `/bof` lists `/bof plan`, `/bof strategy`, `/bof budget`.
+2. Add a second material with a price, e.g. `/bof goal add 2320 5` and `/bof price 2320 10k`;
+   set a linen price, e.g. `/bof price 2589 50k`.
+3. `/bof plan` → header with strategy and budget (your gold), one line per missing material
+   (buy/farm amounts), sum line, time value note.
+4. `/bof budget 10s` → `/bof plan`: with the small budget part of the linen is bought, the rest farmed.
+   `/bof budget clear`.
+5. `/bof strategy gold` → `/bof plan`: linen farmed (there are runs), thread bought (no runs).
+   `/bof strategy farm` → nothing bought, thread "offen".
+6. `/bof show` → tabs "Material" and "Beschaffung" at the top left; the title is not covered.
+   "Beschaffung": strategy buttons (active one greyed), budget, table, sum. Click the strategies.
+7. Spend or receive a little gold with the tab open → the plan updates.
+8. Mouse over a row → price per piece and farm time for all of it.
+9. Close and reopen the window → the last tab is shown again. `/reload` at the end; BugSack empty.

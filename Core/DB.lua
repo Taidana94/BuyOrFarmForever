@@ -23,6 +23,7 @@ DB.DEFAULTS = {
 		farmEstimateScope = "CHARACTER",
 		countOtherCharacters = true,
 		priceMaxAgeDays = 7,
+		budgetCopper = 0, -- 0: plan with the character's current gold
 		window = {
 			point = "CENTER",
 			x = 0,
@@ -61,7 +62,7 @@ DB.CHARACTER_DEFAULTS = {
 DB.ENUMS = {
 	["settings.strategy"] = { SAVE_TIME = true, SAVE_GOLD = true, FARM_SELF = true },
 	["settings.farmEstimateScope"] = { CHARACTER = true, ACCOUNT = true },
-	["settings.window.tab"] = { MATERIAL = true, FARM = true, CRAFT = true, GOLD_BUFFER = true, HELP = true },
+	["settings.window.tab"] = { MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, GOLD_BUFFER = true, HELP = true },
 }
 
 -- Minimum values for numeric fields, by path.

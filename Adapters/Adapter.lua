@@ -35,12 +35,13 @@ Adapter.REQUIRED = {
 	"ScanBags", -- (counts) -> counts: fills { [itemID] = count } for the carried bags (table is cleared first)
 	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
 	"GetMapName", -- (uiMapID) -> localized map name, or nil
+	"GetMoney", -- () -> copper the character carries, or nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
 -- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
 -- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
--- LOOT_OPENED, LOOT_CLOSED, LOGOUT.
+-- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

@@ -1,5 +1,5 @@
--- Main window: a movable frame with the Material tab (more tabs follow in later stages).
--- Created lazily on first open; closing hides it and unregisters the tab's events.
+-- Main window: a movable frame with tabs (Material, Sourcing). Created lazily on first open;
+-- only the shown tab has its events registered, closing the window unregisters them.
 -- Uses only widely stable frame APIs and templates that exist in Classic Era 70003
 -- (BackdropTemplate, UIPanelCloseButton; see docs/ARCHITECTURE.md).
 local _, ns = ...
@@ -18,7 +18,72 @@ local VALID_POINTS = {
 	TOPLEFT = true, TOPRIGHT = true, BOTTOMLEFT = true, BOTTOMRIGHT = true,
 }
 
+-- Tabs in button order; settings.window.tab stores the key of the selected one.
+local TABS = {
+	{ key = "MATERIAL", label = "TAB_MATERIAL", field = "material", module = "MaterialTab" },
+	{ key = "SOURCING", label = "TAB_SOURCING", field = "sourcing", module = "SourcingTab" },
+}
+local TAB_BUTTON_WIDTH, TAB_BUTTON_GAP = 96, 4
+local TAB_BUTTON_X, TAB_BUTTON_Y = 18, -14
+
 local frame
+local currentKey
+
+local function tabByKey(key)
+	for _, tab in ipairs(TABS) do
+		if tab.key == key then
+			return tab
+		end
+	end
+	return TABS[1]
+end
+
+-- Shows one tab and hides the others; the old tab stops listening, the new one refreshes.
+local function selectTab(key)
+	local selected = tabByKey(key)
+	for _, tab in ipairs(TABS) do
+		local object = frame[tab.field]
+		if tab == selected then
+			object.frame:Show()
+		else
+			if currentKey == tab.key and frame:IsShown() then
+				object:Deactivate()
+			end
+			object.frame:Hide()
+		end
+		ns.Widgets.SetEnabled(frame.tabButtons[tab.key], tab ~= selected)
+	end
+	currentKey = selected.key
+	if ns.db and not ns.readOnly then
+		ns.db.settings.window.tab = selected.key
+	end
+	if frame:IsShown() then
+		frame[selected.field]:Activate()
+	end
+end
+
+local function buildTabs()
+	frame.tabButtons = {}
+	local previous
+	for _, tab in ipairs(TABS) do
+		frame[tab.field] = ns[tab.module].Create(frame)
+		local button = ns.Widgets.CreateButton(frame, L[tab.label], TAB_BUTTON_WIDTH)
+		if previous then
+			button:SetPoint("LEFT", previous, "RIGHT", TAB_BUTTON_GAP, 0)
+		else
+			button:SetPoint("TOPLEFT", TAB_BUTTON_X, TAB_BUTTON_Y)
+		end
+		button:SetScript("OnClick", function()
+			selectTab(tab.key)
+		end)
+		frame.tabButtons[tab.key] = button
+		previous = button
+	end
+end
+
+local function currentTab()
+	return frame[tabByKey(currentKey).field]
+end
 
 local function savePosition(self)
 	self:StopMovingOrSizing()
@@ -60,13 +125,14 @@ local function create()
 	local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
 	close:SetPoint("TOPRIGHT", -6, -6)
 
-	frame.material = ns.MaterialTab.Create(frame)
+	buildTabs()
 	frame:SetScript("OnShow", function()
-		frame.material:Activate()
+		currentTab():Activate()
 	end)
 	frame:SetScript("OnHide", function()
-		frame.material:Deactivate()
+		currentTab():Deactivate()
 	end)
+	selectTab(ns.db.settings.window.tab)
 	table.insert(UISpecialFrames, FRAME_NAME)
 	restorePosition(frame)
 end
@@ -88,6 +154,13 @@ function MainWindow.Toggle()
 		frame:Hide()
 	else
 		frame:Show()
+	end
+end
+
+-- Switches to a tab ("MATERIAL" | "SOURCING"); used by the tab buttons and tests.
+function MainWindow.SelectTab(key)
+	if frame then
+		selectTab(key)
 	end
 end
 

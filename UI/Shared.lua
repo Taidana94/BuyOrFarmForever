@@ -120,6 +120,29 @@ function UIShared.DescribePrice(source, record, now)
 	return Util.Format(template, amount, name, Util.FormatAge(now - record.at))
 end
 
+-- Goals shown by the window tabs (selected goal, or all goals with settings.window.allGoals) and
+-- the header line. Returns goals, headerText, emptyText; goals is nil when there is nothing to show.
+function UIShared.GoalSelection(charData)
+	local ids = Materials.ListGoalIDs(charData)
+	if #ids == 0 then
+		return nil, "", L.GOAL_LIST_EMPTY
+	end
+	if ns.db.settings.window.allGoals then
+		return Materials.AllGoals(charData), L.STOCK_ALL_HEADER
+	end
+	local goal, id = Materials.GetActiveGoal(charData)
+	if not goal then
+		return nil, "", L.WINDOW_NO_GOAL_SELECTED
+	end
+	local position = 1
+	for i, goalID in ipairs(ids) do
+		if goalID == id then
+			position = i
+		end
+	end
+	return { goal }, Util.Format(L.WINDOW_GOAL_LINE, position, #ids, UIShared.GoalName(goal), goal.crafts)
+end
+
 -- Character data of the logged-in character, or nil with a message. In read-only mode the
 -- stored data may have an unknown layout (newer schema, failed migration), so it is not read.
 function UIShared.Character()
