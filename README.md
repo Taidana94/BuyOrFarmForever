@@ -148,8 +148,8 @@ ein und aus: korrekt, ohne Fehler. Nicht getestet: Charaktere der anderen Frakti
 anderen Realms (nur außerhalb des Spiels geprüft).
 
 Version 0.2.0-alpha.3 (18.10.2026): Rezept aus dem Berufsfenster als Ziel übernehmen, Hinweise bei
-fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Nicht im Spiel getestet:
-Verzauberkunst (Verzauberungsfenster).
+fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Verzauberkunst
+(Verzauberungsfenster) mit 0.2.0-alpha.6 getestet.
 
 Version 0.2.0-alpha.4 (18.10.2026): Fenster mit allen Funktionen (Anzeige, Aktualisierung, Ziele
 wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohne Fehler.
@@ -157,7 +157,8 @@ wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohn
 Version 0.2.0-alpha.5 (18.10.2026): Kurztest nach dem Umbau (Fenster, `/bof stock`,
 Taschenänderung, `/bof perf`): ohne Fehler.
 
-Version 0.2.0-alpha.6 (Preise) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.6 (18.10.2026): Preise (eigene, Händler, Auktionshaus, AH-Scan), Rezeptimport
+aus dem Verzauberungsfenster: korrekt, ohne Fehler.
 
 **Nicht in Forever getestet.**
 
