@@ -41,6 +41,26 @@ function Events.On(event, fn)
 	list[#list + 1] = fn
 end
 
+-- Registers fn(signal, ...) for a client-neutral signal (e.g. "BANK_OPENED"). The adapter's
+-- events table maps WoW event names to signals, so core code never names WoW events.
+-- Returns the number of WoW events that were registered for the signal.
+function Events.OnSignal(signal, fn)
+	local map = ns.Client and ns.Client.events
+	local count = 0
+	if type(map) ~= "table" then
+		return count
+	end
+	for event, mapped in pairs(map) do
+		if mapped == signal then
+			Events.On(event, function(_, ...)
+				fn(signal, ...)
+			end)
+			count = count + 1
+		end
+	end
+	return count
+end
+
 -- Removes all handlers for an event.
 function Events.Off(event)
 	if handlers[event] then

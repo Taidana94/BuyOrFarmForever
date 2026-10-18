@@ -9,9 +9,11 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
+| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/Stock.lua` (bag/bank counts via adapter, bank snapshot) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
+| Chat UI (provisional) | `UI/ChatCommands.lua` (`/bof goal`, `/bof stock`) | none (prints via `Log.Print`) |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -19,8 +21,11 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 ## Load order (TOC)
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` → `Core/Events.lua` →
-`Core/Slash.lua` → `Core/Main.lua`
+`Core/DB.lua` → `Core/Materials.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatCommands.lua` → `Core/Main.lua`
+
+Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
+subcommands (`ChatCommands.lua`) load after `Slash.lua`.
 
 ## Adapter selection
 
@@ -30,7 +35,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 1)
+### Adapter interface (stage 2a)
 
 | Function | Returns |
 |---|---|
@@ -41,8 +46,30 @@ printed and `Core/Main.lua` registers nothing.
 | `GetCharacterKey()` | `{ key = "Name-NormalizedRealm", name, realm, normalizedRealm, faction }` or nil before login / for secret values |
 | `GetServerTime()` | seconds since the epoch |
 | `GetUptime()` | client uptime in seconds |
+| `GetBagCount(itemID)` | count in the bags |
+| `GetBagAndBankCount(itemID)` | count in bags + bank, or nil |
+| `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
+| `events` (table) | WoW event name → client-neutral signal |
+
+Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`. Core code subscribes with
+`Events.OnSignal(signal, fn)` and never names WoW events.
 
 The interface grows with each stage (plan section 6).
+
+## Material goals and stock (stage 2a)
+
+Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, items = { { itemID, count } }, createdAt }`,
+`activeGoalID` (0 = none), `nextGoalID` (ids are never reused).
+
+- `Materials.Requirements(goals)` → `{ { itemID, need } }`, need = count × crafts, merged over goals in
+  order of first appearance.
+- `Materials.Shortfall(requirements, haveFn)` → adds `have` and `missing` (never below 0).
+- Have = bags + bank of the current character. Other characters follow in stage 2b.
+- Bank: live value = `GetBagAndBankCount - GetBagCount`. Whether it is correct with a closed bank is
+  open (plan Q-T6). `Stock` therefore stores `stock.bank[itemID]` and `stock.bankAt` for all tracked
+  items while the bank is open (`BANK_OPENED`, `BAGS_CHANGED` while open, `BANK_CLOSED`).
+- Labels are user text: control characters and `|` removed, max. 50 characters.
+- `Materials.Sanitize` is registered in `DB.VALIDATORS` and repairs stored goals on load.
 
 ## Startup
 

@@ -13,12 +13,28 @@ Slash.RESET_CONFIRM_SECONDS = 30
 
 local resetPendingUntil = nil
 
+-- Subcommands registered by other modules: name -> { handler = fn(argument), helpLine = text }
+local commands = {}
+local commandOrder = {}
+
+function Slash.AddCommand(name, handler, helpLine)
+	if not commands[name] then
+		commandOrder[#commandOrder + 1] = name
+	end
+	commands[name] = { handler = handler, helpLine = helpLine }
+end
+
 local function printHelp()
 	Log.Print(L.HELP_HEADER)
 	Log.Print(L.HELP_LINE_HELP)
 	Log.Print(L.HELP_LINE_VERSION)
 	Log.Print(L.HELP_LINE_DEBUG)
 	Log.Print(L.HELP_LINE_RESET)
+	for _, name in ipairs(commandOrder) do
+		if commands[name].helpLine then
+			Log.Print(commands[name].helpLine)
+		end
+	end
 end
 
 local function clientName(client)
@@ -43,7 +59,7 @@ local function printVersion()
 end
 
 -- Returns true if the database may be changed; prints the reason otherwise.
-local function canWrite()
+function Slash.CanWrite()
 	if not ns.db then
 		Log.Print(L.NOT_READY)
 		return false
@@ -54,6 +70,8 @@ local function canWrite()
 	end
 	return true
 end
+
+local canWrite = Slash.CanWrite
 
 local function toggleDebug()
 	if not canWrite() then
@@ -90,9 +108,14 @@ local function reset(argument)
 	Log.Print(Util.Format(L.RESET_CONFIRM_PROMPT, Slash.RESET_CONFIRM_SECONDS))
 end
 
+-- Splits "word rest" and lowercases only the word, so item links and names keep their case.
+function Slash.SplitCommand(text)
+	local word, rest = Util.Trim(text or ""):match("^(%S*)%s*(.-)$")
+	return string.lower(word), rest
+end
+
 function Slash.Handle(message)
-	local input = Util.Trim(string.lower(message or ""))
-	local command, argument = input:match("^(%S*)%s*(.-)$")
+	local command, argument = Slash.SplitCommand(message)
 	if command == "" or command == "help" then
 		printHelp()
 	elseif command == "version" then
@@ -100,7 +123,9 @@ function Slash.Handle(message)
 	elseif command == "debug" then
 		toggleDebug()
 	elseif command == "reset" then
-		reset(argument)
+		reset(string.lower(argument))
+	elseif commands[command] then
+		commands[command].handler(argument)
 	else
 		Log.Print(Util.Format(L.UNKNOWN_COMMAND, command))
 	end

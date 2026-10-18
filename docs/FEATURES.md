@@ -6,7 +6,11 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Area | Status |
 |---|---|
 | Foundation: SavedVariables, debug log, slash commands (`help`, `version`, `debug`, `reset`) | 0.1.0, tested out of game only |
-| Material sourcing (goals, recipe import, stock incl. bank and other characters, shortfall, prices, farm runs, sourcing comparison) | planned (stage 2) |
+| Material goals, requirements, bag + bank stock, shortfall (chat commands) | 0.2.0-alpha.1 (stage 2a), tested out of game only |
+| Stock of other characters | planned (stage 2b) |
+| Recipe import from the profession / craft window | planned (stage 2c) |
+| Main window, Material tab | planned (stage 2d) |
+| Prices, farm runs, sourcing comparison | planned (stage 2e) |
 | Craft evaluation (all professions, stat weights, tooltip-based stats if `GetItemStats` is missing) | planned (stage 3) |
 | Gold buffer (savings goals, priorities, reserve check) | planned (stage 4) |
 | Main window with tabs Material, Farm, Craft, Goldpuffer, Hilfe | planned |

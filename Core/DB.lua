@@ -46,6 +46,8 @@ DB.CHARACTER_DEFAULTS = {
 		bankAt = 0,
 	},
 	materialGoals = {},
+	activeGoalID = 0,
+	nextGoalID = 1,
 	craftEval = {
 		weights = { STR = 1, AGI = 1, STA = 1, INT = 1, SPI = 1 },
 		alternatives = {},
@@ -67,7 +69,12 @@ DB.MIN = {
 }
 
 -- DB.MIGRATIONS[n](db) upgrades a database from schema n to n + 1 in place.
+-- New fields with defaults need no migration: mergeDefaults adds them on load.
 DB.MIGRATIONS = {}
+
+-- Deeper checks of character data, registered by the modules that own the data:
+-- fn(charData, path, repairs). They run after the defaults were merged.
+DB.VALIDATORS = {}
 
 -- Fills missing fields from defaults and replaces values of the wrong type or outside the
 -- allowed values. Unknown fields are kept. Records the path of every replaced value.
@@ -99,7 +106,11 @@ local function validateCharacters(db, repairs)
 			repairs[#repairs + 1] = "characters." .. tostring(key)
 			db.characters[key] = nil
 		else
-			mergeDefaults(data, DB.CHARACTER_DEFAULTS, "characters." .. key, repairs)
+			local path = "characters." .. key
+			mergeDefaults(data, DB.CHARACTER_DEFAULTS, path, repairs)
+			for _, validate in ipairs(DB.VALIDATORS) do
+				validate(data, path, repairs)
+			end
 		end
 	end
 end

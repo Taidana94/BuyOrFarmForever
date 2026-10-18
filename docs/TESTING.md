@@ -24,12 +24,14 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | Version | Date | Result |
 |---|---|---|
 | 0.1.0 | 2026-10-18 | 55 checks passed, 0 failed (43 unit tests) |
+| 0.2.0-alpha.1 | 2026-10-18 | 77 checks passed, 0 failed (65 unit tests); mutation check: breaking the craft multiplier or the bank count fails 5 tests |
 
 ## In game
 
 | Version | Client | Date | Result |
 |---|---|---|---|
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
+| 0.2.0-alpha.1 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -68,3 +70,21 @@ Setup: only this addon + BugSack/BugGrabber enabled. `/console scriptErrors 1`.
 
 Report back: BugSack content (if any), and the file
 `WTF/Account/<ACCOUNT>/SavedVariables/BuyOrFarmForever.lua` (or read access to the folder).
+
+### Checklist 0.2.0-alpha.1 (Classic Era, material goals)
+
+Use a character that has some linen cloth (or any item) in bags and bank. `/bof debug` on.
+
+1. `/bof goal new Test` → "Ziel 1 „Test“ angelegt …".
+2. Open the chat line, type `/bof goal add `, shift-click linen cloth in the bags, type ` 4`, Enter →
+   link shown, "jetzt 4 pro Herstellung".
+3. `/bof goal add 2592 2` (wool cloth by id) → link or "Gegenstand 2592" if not cached yet.
+4. `/bof goal crafts 3`, then `/bof stock` → need 12 / 6, bags and bank counts match what you see.
+5. `/bof stock` before any bank visit → "Bank seit Anlegen des Ziels noch nicht besucht."
+6. Visit the bank, close it, `/bof stock` → snapshot line "Bank beim letzten Besuch (gerade eben): …".
+7. **Bank check (Q-T6):** move some linen from bags into the bank (bank open), close the bank,
+   `/reload`, `/bof stock` **without** opening the bank. Is the live bank value equal to the snapshot?
+   Then log out completely, log in, `/bof stock` again (still without the bank).
+8. `/bof goal`, `/bof goal set 2589 0`, `/bof goal delete 1`, `/bof goal delete 1 confirm`.
+9. Errors: `/bof goal add Leinenstoff 2`, `/bof goal add 2589 0`, `/bof goal crafts 0`.
+10. `/bof` shows 7 help lines; `/bof version` shows `0.2.0-alpha.1`.

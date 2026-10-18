@@ -2,12 +2,12 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
 ## Notes-deDE: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
-## Version: 0.1.0
+## Version: 0.2.0-alpha.1
 ## SavedVariables: BuyOrFarmForeverDB
 ## X-License: MIT
 
-# Load order: namespace, localization, core helpers, adapter interface, client adapter,
-# events and slash commands, startup.
+# Load order: namespace, localization, core logic, adapter interface, client adapter,
+# events, modules that listen to events, slash commands, chat commands, startup.
 # Only the Classic Era adapter is listed here. Forever gets its own TOC in phase B.
 Core\Init.lua
 Locales\Locale.lua
@@ -15,8 +15,11 @@ Locales\deDE.lua
 Core\Util.lua
 Core\Log.lua
 Core\DB.lua
+Core\Materials.lua
 Adapters\Adapter.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
+Core\Stock.lua
 Core\Slash.lua
+UI\ChatCommands.lua
 Core\Main.lua

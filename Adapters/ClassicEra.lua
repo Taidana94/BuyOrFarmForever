@@ -5,6 +5,12 @@ local _, ns = ...
 local ClassicEra = {
 	id = "classic_era",
 	caps = {},
+	-- WoW event -> client-neutral signal (all documented in Classic Era 70003)
+	events = {
+		BANKFRAME_OPENED = "BANK_OPENED",
+		BANKFRAME_CLOSED = "BANK_CLOSED",
+		BAG_UPDATE_DELAYED = "BAGS_CHANGED",
+	},
 }
 
 -- WOW_PROJECT_CLASSIC (2) and WOW_PROJECT_ID are defined by Blizzard's
@@ -67,6 +73,36 @@ end
 
 function ClassicEra:GetUptime()
 	return GetTime()
+end
+
+function ClassicEra:GetBagCount(itemID)
+	if C_Item and C_Item.GetItemCount then
+		return C_Item.GetItemCount(itemID, false)
+	end
+	return 0
+end
+
+-- includeBank = true. Whether this is correct while the bank is closed is unverified (Q-T6).
+function ClassicEra:GetBagAndBankCount(itemID)
+	if C_Item and C_Item.GetItemCount then
+		return C_Item.GetItemCount(itemID, true)
+	end
+	return nil
+end
+
+-- C_Item.GetItemInfo returns nil until the item is in the client cache.
+function ClassicEra:GetItemLink(itemID)
+	if not (C_Item and C_Item.GetItemInfo) then
+		return nil
+	end
+	local _, link = C_Item.GetItemInfo(itemID)
+	if link then
+		return link
+	end
+	if C_Item.RequestLoadItemDataByID then
+		C_Item.RequestLoadItemDataByID(itemID)
+	end
+	return nil
 end
 
 ns.Adapter.Register(ClassicEra)

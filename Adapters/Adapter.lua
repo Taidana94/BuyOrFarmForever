@@ -18,7 +18,13 @@ Adapter.REQUIRED = {
 	"GetCharacterKey", -- () -> { key, name, realm, normalizedRealm, faction } or nil before login
 	"GetServerTime", -- () -> server time in seconds since the epoch
 	"GetUptime", -- () -> client uptime in seconds (for durations within a session)
+	"GetBagCount", -- (itemID) -> count in the bags
+	"GetBagAndBankCount", -- (itemID) -> count in bags and bank, or nil if not available
+	"GetItemLink", -- (itemID) -> item link, or nil while item data is loading (load is requested)
 }
+
+-- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
+-- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED.
 
 -- Returns true, or false plus a list of missing field names.
 function Adapter.Validate(adapter)
@@ -33,6 +39,9 @@ function Adapter.Validate(adapter)
 		if type(adapter[name]) ~= "function" then
 			missing[#missing + 1] = name
 		end
+	end
+	if type(adapter.events) ~= "table" then
+		missing[#missing + 1] = "events"
 	end
 	return #missing == 0, missing
 end

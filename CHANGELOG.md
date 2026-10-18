@@ -3,6 +3,21 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.1] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Materialziele pro Charakter: Zutaten pro Herstellung, Anzahl Herstellungen, gleiche Zutaten
+  werden zusammengefasst.
+- Bedarf, Bestand in Taschen und Bank und Fehlmenge für ein Ziel oder alle Ziele.
+- Bankstand wird beim Bankbesuch gespeichert.
+- Vorläufige Befehle `/bof goal …` und `/bof stock [all]`, Gegenstände per Link oder Item-ID.
+
+### Geändert
+
+- Groß-/Kleinschreibung wird nur noch beim Befehlswort ignoriert; Namen und Gegenstandslinks
+  bleiben unverändert.
+
 ## [0.1.0] – noch nicht veröffentlicht
 
 ### Hinzugefügt

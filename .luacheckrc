@@ -29,6 +29,8 @@ read_globals = {
 	"WOW_PROJECT_ID",
 	"WOW_PROJECT_CLASSIC",
 	C_AddOns = { fields = { "GetAddOnMetadata" } },
+	-- items and bags (GetItemCount with includeBank: semantics with closed bank unverified, Q-T6)
+	C_Item = { fields = { "GetItemCount", "GetItemInfo", "RequestLoadItemDataByID" } },
 	-- character, time
 	"UnitName",
 	"GetRealmName",
