@@ -14,7 +14,7 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEraBags.lua` (bags, map), `Adapters/ClassicEraGear.lua` (item stats, equipment), `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
-| Window | `UI/Widgets.lua` (shared buttons, item tables, refresh mixin), `UI/MainWindow.lua` (frame, tabs, `/bof show`), `UI/MaterialTabLayout.lua` + `UI/MaterialTab.lua`, `UI/SourcingTabLayout.lua` + `UI/SourcingTab.lua`, `UI/CraftTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
+| Window | `UI/Widgets.lua` (shared buttons, item tables, refresh mixin), `UI/MainWindow.lua` (frame, tabs, `/bof show`), `UI/MaterialTabLayout.lua` + `UI/MaterialTab.lua`, `UI/SourcingTabLayout.lua` + `UI/SourcingTab.lua`, `UI/FarmTab.lua`, `UI/CraftTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -23,7 +23,7 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` →
 `Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Core/FarmRuns.lua` → `Core/FarmRunsValidation.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEraBags.lua` → `Adapters/ClassicEraGear.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Sourcing.lua` → `Core/CraftEval.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/PlanCommands.lua` → `UI/CraftCommands.lua` → `UI/Widgets.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/SourcingTabLayout.lua` → `UI/SourcingTab.lua` → `UI/CraftTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Sourcing.lua` → `Core/CraftEval.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/PlanCommands.lua` → `UI/CraftCommands.lua` → `UI/Widgets.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/SourcingTabLayout.lua` → `UI/SourcingTab.lua` → `UI/FarmTab.lua` → `UI/CraftTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -110,6 +110,12 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
 
+## Farm tab
+
+The buttons call `Slash.Handle("farm …")`, so the window and the chat share one code path (and the
+chat confirms every action). Status, item and estimate lines come from `FarmCommands.StatusLine`,
+`ItemLines`, `EstimateLines`. The status line is rewritten by the 1 s ticker (see Events and timers).
+
 ## Craft evaluation (stage 3)
 
 - Stats: `GetItemStats(link)` (global function, confirmed in game in Classic Era 70003; no
@@ -140,7 +146,8 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - Budget (`Sourcing.Budget`): `settings.budgetCopper` if > 0, else `GetMoney()`. Gold reserved for
   savings goals is not subtracted yet (gold buffer, later stage).
 - Time value of purchases needs income data (gold buffer) and is shown as not available.
-- Window tabs: `UI/MainWindow.lua` keeps one object per tab (`frame.material`, `frame.sourcing`) with
+- Window tabs: `UI/MainWindow.lua` keeps one object per tab (`frame.material`, `frame.sourcing`,
+  `frame.farm`, `frame.craft`) with
   `frame`, `Activate`, `Deactivate`, `Refresh`. Only the shown tab is activated; the selection is
   stored in `settings.window.tab` (`SOURCING` added to the enum; no migration needed).
 
@@ -232,7 +239,11 @@ Window refreshes are coalesced: any number of refresh requests in one frame lead
 `C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
 created on first open and hidden, never destroyed; rows are a fixed pool of 10 frames.
 
-No `OnUpdate` scripts and no tickers; one-shot `C_Timer.After(0)` only for coalescing.
+No `OnUpdate` scripts. One-shot `C_Timer.After(0)` only for coalescing. One ticker:
+
+| Ticker | File | Why no event | Interval | Runs while | Cost |
+|---|---|---|---|---|---|
+| Farm time display | `UI/FarmTab.lua` | passing time has no event | 1 s | the Farm tab is visible **and** a run is running; cancelled on stop, pause, hide | rewrites one font string (status line) |
 
 Hooks: `hooksecurefunc("SelectTradeSkill")` and `hooksecurefunc("SelectCraft")` in
 `Adapters/ClassicEraProfessions.lua`, installed once at load. Secure post-hooks (no taint, Blizzard

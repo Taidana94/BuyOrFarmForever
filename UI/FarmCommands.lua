@@ -122,6 +122,15 @@ local function step(charData, name)
 end
 
 local function keep(charData, argument)
+	if string.lower(Util.Trim(argument)) == "all" then
+		local changed, err = FarmRuns.KeepAllUnclear(charData)
+		if not changed then
+			UIShared.PrintError(err)
+			return
+		end
+		Log.Print(Util.Format(L.FARM_KEPT_ALL, changed))
+		return
+	end
 	local itemID = Util.ParseItemArg(argument)
 	if not itemID then
 		UIShared.PrintError("invalid_item")

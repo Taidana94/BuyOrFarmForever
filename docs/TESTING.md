@@ -29,7 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
-| 0.3.0-alpha.1 | 2026-10-18 | 156 checks passed, 0 failed (139 unit tests); mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
+| 0.3.0-alpha.1 | 2026-10-18 | 161 checks passed, 0 failed (144 unit tests); farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
 | 0.2.0 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); only version and documentation changed against 0.2.0-alpha.10 |
 | 0.2.0-alpha.10 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); mutation checks: reversed buying order fails 3, ignoring the budget 5, SAVE_GOLD buying everything 1, no travel time 2 |
 | 0.2.0-alpha.8 | 2026-10-18 | 138 checks passed, 0 failed (121 unit tests); mutation checks: no loot grace, never pausing at login, ignoring zero-yield target runs, counting decreases (after strengthening the test) each fail 1 |
@@ -432,4 +432,8 @@ One command per line.
    shows both alternatives; `/bof alt remove 1`.
 7. `/bof show`, tab "Craft" → the same lines. Equip a different item in that slot → the tab updates.
 8. Owned materials: carry some reagents of the recipe → "Schon vorhanden: …" line with vendor value.
-9. `/reload` at the end; BugSack: no errors.
+9. Tab "Farmen": "Start: Gegner" → chat confirms, the time counts up every second; "Anreise" →
+   button reads "Angekommen", click again; "Pause"/"Fortsetzen"; loot something; "Beenden" →
+   "Unklare mitzählen", "Speichern" appear; "Speichern". Switch tabs/close the window during a run
+   and reopen → time still right. Estimates for the selected goal are listed.
+10. `/reload` at the end; BugSack: no errors.

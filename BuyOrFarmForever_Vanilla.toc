@@ -49,6 +49,7 @@ UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
 UI\SourcingTabLayout.lua
 UI\SourcingTab.lua
+UI\FarmTab.lua
 UI\CraftTab.lua
 UI\MainWindow.lua
 UI\PerfCommand.lua

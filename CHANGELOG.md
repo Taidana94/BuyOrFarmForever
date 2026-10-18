@@ -13,6 +13,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 - Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
 - Alternativen zum Craft: eingeplant oder möglicher Drop, mit Notiz (`/bof alt`).
 - `/bof craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
+- Tab „Farmen“ im Fenster: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden,
+  prüfen und speichern; laufende Zeit und geschätzte Farmzeit.
+- `/bof farm keep all` zählt alle unklaren Zugänge mit.
 
 ### Geändert
 

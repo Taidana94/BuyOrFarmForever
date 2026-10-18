@@ -1,4 +1,4 @@
--- Main window: a movable frame with tabs (Material, Sourcing, Craft). Created lazily on first open;
+-- Main window: a movable frame with tabs (Material, Sourcing, Farm, Craft). Created lazily on first open;
 -- only the shown tab has its events registered, closing the window unregisters them.
 -- Uses only widely stable frame APIs and templates that exist in Classic Era 70003
 -- (BackdropTemplate, UIPanelCloseButton; see docs/ARCHITECTURE.md).
@@ -22,9 +22,10 @@ local VALID_POINTS = {
 local TABS = {
 	{ key = "MATERIAL", label = "TAB_MATERIAL", field = "material", module = "MaterialTab" },
 	{ key = "SOURCING", label = "TAB_SOURCING", field = "sourcing", module = "SourcingTab" },
+	{ key = "FARM", label = "TAB_FARM", field = "farm", module = "FarmTab" },
 	{ key = "CRAFT", label = "TAB_CRAFT", field = "craft", module = "CraftTab" },
 }
-local TAB_BUTTON_WIDTH, TAB_BUTTON_GAP = 96, 4
+local TAB_BUTTON_WIDTH, TAB_BUTTON_GAP = 90, 4
 local TAB_BUTTON_X, TAB_BUTTON_Y = 18, -14
 local TITLE_X, TITLE_Y = -40, -18
 
@@ -160,7 +161,7 @@ function MainWindow.Toggle()
 	end
 end
 
--- Switches to a tab ("MATERIAL" | "SOURCING" | "CRAFT"); used by the tab buttons and tests.
+-- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT"); used by the tab buttons and tests.
 function MainWindow.SelectTab(key)
 	if frame then
 		selectTab(key)

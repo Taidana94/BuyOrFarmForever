@@ -101,7 +101,7 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof farm travel` | zwischen Anreise und Farmen umschalten (der Chat sagt, was gerade zählt) |
 | `/bof farm pause` / `resume` | pausieren / fortsetzen (Pausen zählen nicht) |
 | `/bof farm stop` | Runde beenden, danach prüfen |
-| `/bof farm keep <Gegenstand>` | unklare Zugänge eines Gegenstands doch mitzählen |
+| `/bof farm keep <Gegenstand>` / `keep all` | unklare Zugänge eines bzw. aller Gegenstände doch mitzählen |
 | `/bof farm save` / `discard` | beendete Runde speichern / verwerfen |
 | `/bof farm list` | deine letzten 5 Runden |
 | `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien |
@@ -153,6 +153,11 @@ deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als **geplündert
 `keep` mit oder lässt es weg. Nach `/reload` läuft eine Runde weiter; nach Ausloggen ist sie
 pausiert, die Zeit offline zählt nicht.
 
+**Fenster, Tab „Farmen“:** Knöpfe für die Farmrunde (Start mit Sammeln, Gegner oder Sonstiges,
+Pause/Fortsetzen, Anreise/Angekommen, Beenden; nach dem Beenden „Unklare mitzählen“, Speichern,
+Verwerfen), der Stand der Runde mit laufender Zeit und den Gegenständen und die geschätzte Farmzeit
+für die fehlenden Materialien des ausgewählten Ziels. Die Knöpfe tun dasselbe wie die Chat-Befehle.
+
 **Fenster, Tab „Craft“:** die Craft-Bewertung des ausgewählten Ziels: Wertung des hergestellten
 Gegenstands gegen das, was du an diesem Platz trägst (bei Ringen und Schmuck gegen den schwächeren,
 Zweihandwaffen gegen Haupt- und Nebenhand zusammen), Beschaffungskosten und Farmzeit, Kosten pro
@@ -176,7 +181,7 @@ weist darauf hin.
 ## Bekannte Einschränkungen
 
 - Ziele werden im Fenster angezeigt, angelegt und bearbeitet aber über Chat-Befehle (außer
-  „Rezept übernehmen“). Farmrunden gibt es nur über Chat-Befehle.
+  „Rezept übernehmen“). Ein Zielmaterial für eine Farmrunde geht nur per Chat (`/bof farm start …`).
 - Der Bestand anderer Charaktere ist der Stand von deren letzter Taschenänderung, ihrem letzten
   Bankbesuch oder `/bof stock`. Neue Zutaten kennen sie erst nach ihrem nächsten Login.
 - Rezeptimport nur für das ausgewählte Rezept, nur feste Zutaten.
@@ -198,9 +203,9 @@ weist darauf hin.
 
 **Außerhalb des Spiels** (Version 0.3.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
-kein Speicherzuwachs bei Taschenänderungen) und 139 automatische Tests in einer nachgebauten
+kein Speicherzuwachs bei Taschenänderungen) und 144 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
-Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung).
+Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung, Farm-Tab).
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -215,7 +220,7 @@ nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zug�
 Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
 0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
-Version 0.3.0-alpha.1 (Craft-Bewertung) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
+Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
 nur, dass `GetItemStats` in Classic Era die Werte eines Gegenstands liefert.
 
 **Nicht in Forever getestet.**

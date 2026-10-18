@@ -172,6 +172,23 @@ function FarmRuns.KeepUnclear(charData, itemID)
 	return entry.confirmed
 end
 
+-- In REVIEW: counts all unclear amounts as confirmed. Returns the number of items changed.
+function FarmRuns.KeepAllUnclear(charData)
+	local run, err = requireState(charData, { REVIEW = true })
+	if not run then
+		return nil, err
+	end
+	local changed = 0
+	for _, entry in pairs(run.items) do
+		if entry.unclear > 0 then
+			entry.confirmed = entry.confirmed + entry.unclear
+			entry.unclear = 0
+			changed = changed + 1
+		end
+	end
+	return changed
+end
+
 -- Saves a reviewed run: unclear amounts are dropped, the run goes to db.farmRuns.
 function FarmRuns.Save(db, charKey, charData)
 	local run, err = requireState(charData, { REVIEW = true })
