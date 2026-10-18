@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.4. Materialziele, Rezeptimport und Bestand, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.5. Materialziele, Rezeptimport und Bestand, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -110,12 +110,13 @@ das Addon sie nicht.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.4):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.5):
 
 - Struktur der Addon-Dateien und der TOC-Datei
+- Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 95 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 99 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
@@ -139,13 +140,16 @@ Version 0.2.0-alpha.3 (18.10.2026): Rezept aus dem Berufsfenster als Ziel übern
 fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Nicht im Spiel getestet:
 Verzauberkunst (Verzauberungsfenster).
 
-Version 0.2.0-alpha.4 (Fenster) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.4 (18.10.2026): Fenster mit allen Funktionen (Anzeige, Aktualisierung, Ziele
+wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohne Fehler.
+
+Version 0.2.0-alpha.5 (`/bof perf`, weniger Speicherverbrauch) ist im Spiel noch nicht getestet.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.4 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.5 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

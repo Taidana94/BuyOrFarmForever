@@ -11,7 +11,7 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
 | Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
-| Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
+| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
 | Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTabLayout.lua` (widgets), `UI/MaterialTab.lua` (logic) | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
@@ -22,8 +22,8 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 ## Load order (TOC)
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
+`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEra.lua` →
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.

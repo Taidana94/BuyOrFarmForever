@@ -8,7 +8,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Foundation: SavedVariables, debug log, slash commands (`help`, `version`, `debug`, `reset`) | 0.1.0, tested out of game only |
 | Material goals, requirements, bag + bank stock, shortfall (chat commands) | 0.2.0-alpha.1 (stage 2a), tested out of game only |
 | Stock of other characters (same realm, same faction counted) | 0.2.0-alpha.2 (stage 2b), tested in Classic Era (same faction); other faction/realm out of game only |
-| Main window with Material tab (`/bof show`; display, goal switch, recipe import button) | 0.2.0-alpha.4 (stage 2d), tested out of game only |
+| Main window with Material tab (`/bof show`; display, goal switch, recipe import button) | 0.2.0-alpha.4 (stage 2d), tested in Classic Era |
 | Recipe import from the profession / craft window (selected recipe, `/bof recipe`) | 0.2.0-alpha.3 (stage 2c), trade skill window tested in Classic Era; craft window (Enchanting) out of game only |
 | Main window, Material tab | planned (stage 2d) |
 | Prices, farm runs, sourcing comparison | planned (stage 2e) |

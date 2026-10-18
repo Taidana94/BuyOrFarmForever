@@ -2,7 +2,7 @@
 
 ## Out of game (development folder)
 
-One command runs levels 0, 1, 1b and 2:
+One command runs levels 0, 1, 1b, 1c and 2:
 
 ```text
 py -3 -I work/tools/check.py outputs/BuyOrFarmForever
@@ -13,7 +13,8 @@ py -3 -I work/tools/check.py outputs/BuyOrFarmForever
 | 0 | TOC naming, required TOC fields, interface 11509 for `_Vanilla`, SemVer, listed files exist with exact case, no unlisted files, UTF-8 without BOM |
 | 1 | `luac5.1 -p` for all Lua files, luacheck with the addon's `.luacheckrc` (warnings fail) |
 | 1b | used locale keys exist in deDE, other locales have the same keys and placeholders, no hardcoded user text |
-| 2 | unit tests in a mock client environment (`work/tests/`) |
+| 1c | cleanliness and performance (`work/tools/lua_static.py`): every `OnUpdate` script and ticker has `-- PERF-OK:` and is named in ARCHITECTURE.md; `CreateFrame` only at file level or in create/build functions; no magic numbers in `Core/` and `Adapters/` (0, 1, 2 allowed; constants are UPPER_SNAKE); functions at most 40 lines and nesting 3; files at most 300 lines |
+| 2 | unit tests in a mock client environment (`work/tests/`), including an allocation test: 10000 bag events must not allocate memory beyond a constant |
 
 The mock environment models Classic Era 1.15.9 (70003) and provides only the APIs in `.luacheckrc`.
 It simulates startup (`ADDON_LOADED`, `PLAYER_LOGIN`), `/reload` (SavedVariables are serialized like
@@ -28,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0-alpha.5 | 2026-10-18 | 117 checks passed, 0 failed (99 unit tests, levels 0-2 including the new 1c); 1c mutation check: injected OnUpdate, ticker, CreateFrame in a handler, magic numbers and deep nesting are all reported |
 | 0.2.0-alpha.4 | 2026-10-18 | 107 checks passed, 0 failed (95 unit tests); mutation checks: no unregister on hide fails 2, no coalescing fails 1, no colors fails 2 (after strengthening the color test) |
 
 ## In game
@@ -43,7 +45,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
 | 0.2.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
-| 0.2.0-alpha.4 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.4 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -107,6 +109,28 @@ Setup: this addon + BugSack/BugGrabber. Character `CharA-RealmA`.
 
 The stored goal has `crafts = 1`; the checklist asked for `/bof recipe 3`. The unit test covers the
 crafts argument; if the in-game command was entered with 3, this needs a recheck.
+
+### Result 0.2.0-alpha.4 (Classic Era, 2026-10-18)
+
+Checklist 0.2.0-alpha.4 (main window) confirmed by the user ("alles gepasst"): layout, numbers,
+automatic refresh, goal switching, all goals, tooltip with the other character, recipe import
+button, position after `/reload`, Escape and X, combat. SavedVariables: `settings.window` =
+CENTER 150/49 (position saved), recipe `item:2862` imported via the button. `!BugGrabber.lua`:
+no errors (session 27). Not tested: `/bof perf` (added after this test).
+
+### Performance review (2026-10-18, before 0.2.0-alpha.5)
+
+| Item | Finding | Action |
+|---|---|---|
+| Event dispatch | created an argument table and two closures per handler and event | reused contexts per nesting depth; measured: 10000 bag events now allocate a constant ~2.5 KB instead of ~1 KB per event |
+| Trace messages | strings built for every event even with debug off | built only in debug mode |
+| Stock snapshot on `BAG_UPDATE_DELAYED` | new tables per event (tracked list per character, snapshot tables) | reused scratch set, snapshot tables updated in place |
+| `OnUpdate` / tickers | none | – |
+| Events while idle | `BAG_UPDATE_DELAYED`, bank, profession window open/close (rare, cheap) | window events only while shown |
+| Window | refresh coalesced to one per frame, only while visible; frames created once | – |
+| `UpdateAddOnMemoryUsage` | expensive (walks all addons) | only on `/bof perf`, at most every 15 s |
+
+In-game numbers from `/bof perf` (idle and with the window open) are still to be recorded.
 
 ### Checklist 0.1.0 (Classic Era)
 
