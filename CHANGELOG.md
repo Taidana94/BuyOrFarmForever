@@ -12,6 +12,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 - Strategien „Zeit sparen“, „Gold sparen“, „Selbst farmen“ (`/bof strategy`), gemeinsames Budget
   für alle Zutaten (`/bof budget`, sonst dein aktuelles Gold).
 - Das Fenster hat jetzt Tabs; der gewählte Tab wird gespeichert.
+- Tooltip im Tab „Beschaffung“: Farmzeit und Anreise getrennt, für den geplanten Teil und für die
+  ganze Fehlmenge (die Spalte „Farmzeit“ enthält die Anreise).
 
 ## [0.2.0-alpha.9] – noch nicht veröffentlicht
 

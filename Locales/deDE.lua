@@ -175,7 +175,8 @@ L.PLAN_SUMMARY = "Summe: Kosten %1$s, Farmzeit etwa %2$s, vom Budget übrig %3$s
 L.PLAN_TIP_PRICE = "Preis pro Stück: %1$s"
 L.PLAN_TIP_PRICE_OUTDATED = "Preis pro Stück: %1$s (veraltet)"
 L.PLAN_TIP_NO_PRICE = "kein Preis bekannt"
-L.PLAN_TIP_FARM = "alles selbst farmen: etwa %1$s"
+L.PLAN_TIP_PLANNED = "im Plan: %1$d farmen = etwa %2$s Farmzeit + %3$s Anreise"
+L.PLAN_TIP_FARM = "alle %1$d selbst farmen: etwa %2$s Farmzeit + %3$s Anreise"
 L.PLAN_TIME_VALUE_NONE = "Zeitgegenwert der Kosten: noch keine Einnahmedaten (folgt mit dem Goldpuffer)."
 
 -- Performance

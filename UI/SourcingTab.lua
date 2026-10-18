@@ -30,7 +30,8 @@ function SourcingTab.Create(parent)
 	return tab
 end
 
--- Tooltip: price per unit and farm time per unit behind the plan line.
+-- Tooltip: price per unit, the farm time of the planned part (as in the table, split into farm
+-- time and travel) and the farm time for the whole missing amount.
 local function tooltipLines(line, input)
 	local lines = {}
 	if input.unitPrice then
@@ -40,7 +41,13 @@ local function tooltipLines(line, input)
 		lines[#lines + 1] = L.PLAN_TIP_NO_PRICE
 	end
 	if input.secondsPerUnit then
-		lines[#lines + 1] = Util.Format(L.PLAN_TIP_FARM, Util.FormatDuration(input.secondsPerUnit * line.missing))
+		local travel = Util.FormatDuration(input.travelSeconds)
+		if line.farm > 0 then
+			lines[#lines + 1] = Util.Format(L.PLAN_TIP_PLANNED, line.farm,
+				Util.FormatDuration(input.secondsPerUnit * line.farm), travel)
+		end
+		lines[#lines + 1] = Util.Format(L.PLAN_TIP_FARM, line.missing,
+			Util.FormatDuration(input.secondsPerUnit * line.missing), travel)
 	else
 		lines[#lines + 1] = L.FARM_ESTIMATE_NONE
 	end
