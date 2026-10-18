@@ -1,120 +1,141 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.10. Materialbeschaffung vollständig: Ziele, Rezeptimport, Bestand, Preise, Farmrunden und Vergleich Kaufen/Farmen, mit Fenster.**
+**Version 0.2.0 – Materialbeschaffung. Getestet in WoW Classic Era. Nicht in Forever getestet.**
 
-„Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
-beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
-Die Empfehlungen sollen auf deinen eigenen Messungen beruhen: deinem Farmtempo, deinen Einnahmen
-und deinen Vorhaben.
+„Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
+kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
+Bestand, den Preisen, die du siehst, und deinem gemessenen Farmtempo.
 
-Diese Version enthält das Grundgerüst (gespeicherte Einstellungen, Debug-Protokoll, Chat-Befehle)
-und den ersten Teil der Materialbeschaffung: Materialziele mit Zutaten und Anzahl Herstellungen
-(von Hand oder aus einem Rezept im Berufsfenster),
-dazu Bedarf, Bestand in Taschen und Bank – auch deiner anderen Charaktere auf dem Realm – und Fehlmenge. Anzeigen kannst du das im Fenster
-(`/bof show`); Ziele anlegen und bearbeiten geht vorläufig noch über Chat-Befehle. Craft-Bewertung und Goldpuffer folgen später.
+Diese Version enthält die **Materialbeschaffung**:
+
+- **Materialziele:** Zutaten und Anzahl Herstellungen, von Hand oder aus einem Rezept im
+  Berufsfenster (auch Verzauberkunst).
+- **Bestand:** Taschen und Bank, auch deiner anderen Charaktere auf dem Realm.
+- **Preise:** eigene Eingabe, Händler und Auktionshaus (mit AH-Scan), getrennt nach Realm und
+  Fraktion, veraltete Preise markiert.
+- **Farmrunden:** Farmzeit, Anreise und Ertrag messen; daraus schätzt das Addon, wie lange du für
+  die fehlenden Materialien brauchst.
+- **Vergleich Kaufen/Farmen:** wie viel du kaufen und wie viel du farmen solltest, mit Kosten,
+  Farmzeit und Budget – nach der Strategie „Zeit sparen“, „Gold sparen“ oder „Selbst farmen“.
+
+Die Bewertung von Crafts („Lohnt sich der Craft?“) und der Goldpuffer folgen in späteren Versionen.
 
 ## Unterstützte Spielversion
 
 | Client | Version | Status |
 |---|---|---|
-| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | in Entwicklung, Grundgerüst im Spiel getestet (deutscher Client) |
+| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
 ## Installation
 
 1. ZIP entpacken.
-2. Den Ordner `BuyOrFarmForever` nach
-   `World of Warcraft\_classic_era_\Interface\AddOns\` kopieren.
+2. Den Ordner `BuyOrFarmForever` nach `World of Warcraft\_classic_era_\Interface\AddOns\` kopieren.
 3. Spiel starten bzw. `/reload` eingeben und das Addon in der Addon-Liste aktivieren.
+
+## Schnellstart
+
+1. `/bof show` öffnet das Fenster.
+2. Ziel anlegen: Berufsfenster öffnen, Rezept anklicken, im Fenster „Rezept übernehmen“ – oder
+   `/bof recipe 5` für 5 Herstellungen.
+3. Tab „Material“: Bedarf, Bestand, Fehlmenge und Preise. Am Händler und im Auktionshaus sammelt
+   das Addon Preise automatisch; „AH-Scan“ sucht fehlende Materialien.
+4. Farmen messen: `/bof farm start` (für Gegner: `/bof farm start mobs`), farmen, `/bof farm stop`,
+   `/bof farm save`.
+5. Tab „Beschaffung“: was du kaufen und was du farmen solltest.
 
 ## Befehle
 
-Statt `/bof` funktioniert auch `/kof`.
+Statt `/bof` funktioniert auch `/kof`. `<Gegenstand>` ist ein Gegenstandslink (Umschalt+Klick auf
+den Gegenstand, während die Chatzeile offen ist) oder die Item-ID. Gib Befehle einzeln ein; mehrere
+eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
+
+**Allgemein**
 
 | Befehl | Wirkung |
 |---|---|
-| `/bof` oder `/bof help` | zeigt die Befehlsliste |
+| `/bof` oder `/bof help` | Befehlsliste |
 | `/bof show` | öffnet oder schließt das Fenster |
-| `/bof version` | zeigt Addon-Version, Interface-Version und Build des Spiels |
-| `/bof debug` | schaltet den Debug-Modus ein oder aus |
-| `/bof perf` | zeigt Speicher, CPU-Anteil an der Frame-Zeit und Rechenzeit des Addons |
-| `/bof reset` | setzt die Einstellungen zurück; bestätigen mit `/bof reset confirm` innerhalb von 30 Sekunden. Ziele, Preise und Messungen bleiben erhalten. |
-| `/bof goal` | listet deine Materialziele (vorläufig) |
+| `/bof version` | Addon-Version, Interface-Version und Build des Spiels |
+| `/bof debug` | Debug-Modus ein/aus |
+| `/bof perf` | Speicher, Anteil an der Frame-Zeit und Rechenzeit des Addons |
+| `/bof reset` | setzt die Einstellungen zurück (bestätigen mit `/bof reset confirm` innerhalb von 30 Sekunden); Ziele, Preise und Messungen bleiben |
+
+**Ziele und Bestand**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof goal` | listet deine Ziele |
 | `/bof goal new <Name>` | legt ein Ziel an und wählt es aus |
 | `/bof goal select <Nr.>` | wählt ein Ziel aus |
-| `/bof goal add <Gegenstand> [Menge]` | fügt eine Zutat pro Herstellung hinzu (Menge wird addiert, ohne Angabe 1) |
-| `/bof goal set <Gegenstand> <Menge>` | setzt die Menge pro Herstellung (0 entfernt die Zutat) |
-| `/bof goal remove <Gegenstand>` | entfernt eine Zutat |
+| `/bof goal add <Gegenstand> [Menge]` | Zutat pro Herstellung hinzufügen (Menge wird addiert, ohne Angabe 1) |
+| `/bof goal set <Gegenstand> <Menge>` | Menge pro Herstellung setzen (0 entfernt die Zutat) |
+| `/bof goal remove <Gegenstand>` | Zutat entfernen |
 | `/bof goal crafts <Anzahl>` | wie oft du herstellen willst |
-| `/bof goal delete <Nr.>` | löscht ein Ziel; bestätigen mit `/bof goal delete <Nr.> confirm` |
-| `/bof recipe [Anzahl]` | legt aus dem Rezept, das im offenen Berufsfenster ausgewählt ist, ein neues Ziel an (ohne Anzahl: 1× herstellen) |
-| `/bof price` | Preise der Zutaten des ausgewählten Ziels (Händler, Auktionshaus, eigener Preis) |
-| `/bof price <Gegenstand> <Preis>` | eigener Preis pro Stück, z. B. `1g 20s 5k`, `35s` oder `80k` |
-| `/bof price <Gegenstand> clear` | löscht den eigenen Preis |
-| `/bof price scan` | sucht im offenen Auktionshaus das nächste fehlende Material |
-| `/bof farm` | Stand der laufenden Farmrunde |
-| `/bof farm start [gather\|mobs\|other] [Gegenstand]` | startet eine Farmrunde (Sammeln, Gegner, Sonstiges; optional mit Zielmaterial) |
-| `/bof farm pause` / `resume` | pausiert bzw. setzt fort (Pausen zählen nicht) |
-| `/bof farm travel` | schaltet zwischen Anreise und Farmen um |
-| `/bof farm stop` | beendet die Runde; danach prüfen und speichern |
-| `/bof farm keep <Gegenstand>` | zählt unklare Zugänge eines Gegenstands doch mit |
-| `/bof farm save` / `discard` | speichert bzw. verwirft die beendete Runde |
-| `/bof farm list` | deine letzten 5 Runden |
-| `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien des ausgewählten Ziels |
-| `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen Charakteren |
-| `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes Ziel bzw. alle Ziele) |
-| `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen oder selbst farmen |
-| `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget wird mit deinem aktuellen Gold gerechnet |
-| `/bof stock` | Bedarf, Bestand (Taschen, Bank) und Fehlmenge des ausgewählten Ziels |
-| `/bof stock all` | dasselbe für alle Ziele zusammen |
-| `/bof stock others` | schaltet das Mitzählen deiner anderen Charaktere ein oder aus (Standard: an) |
+| `/bof goal delete <Nr.>` | Ziel löschen (bestätigen mit `/bof goal delete <Nr.> confirm`) |
+| `/bof recipe [Anzahl]` | neues Ziel aus dem im Berufsfenster ausgewählten Rezept (ohne Anzahl: 1×) |
+| `/bof stock` / `/bof stock all` | Bedarf, Bestand und Fehlmenge des ausgewählten bzw. aller Ziele |
+| `/bof stock others` | Mitzählen deiner anderen Charaktere ein/aus (Standard: an) |
 
-`<Gegenstand>` ist ein Gegenstandslink (Umschalt+Klick auf den Gegenstand, während die Chatzeile
-offen ist) oder die Item-ID.
+**Preise**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof price` | Preise der Zutaten des ausgewählten Ziels |
+| `/bof price <Gegenstand> <Preis>` | eigener Preis pro Stück, z. B. `1g 20s 5k`, `35s`, `80k` |
+| `/bof price <Gegenstand> clear` | eigenen Preis löschen |
+| `/bof price scan` | im offenen Auktionshaus das nächste fehlende Material suchen |
+
+**Farmrunden**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof farm` | Stand der Runde |
+| `/bof farm start [gather\|mobs\|other] [Gegenstand]` | Runde starten (Sammeln, Gegner, Sonstiges; optional mit Zielmaterial) |
+| `/bof farm travel` | zwischen Anreise und Farmen umschalten (der Chat sagt, was gerade zählt) |
+| `/bof farm pause` / `resume` | pausieren / fortsetzen (Pausen zählen nicht) |
+| `/bof farm stop` | Runde beenden, danach prüfen |
+| `/bof farm keep <Gegenstand>` | unklare Zugänge eines Gegenstands doch mitzählen |
+| `/bof farm save` / `discard` | beendete Runde speichern / verwerfen |
+| `/bof farm list` | deine letzten 5 Runden |
+| `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien |
+| `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen |
+
+**Beschaffung**
+
+| Befehl | Wirkung |
+|---|---|
+| `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes bzw. alle Ziele) |
+| `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen, selbst farmen |
+| `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget zählt dein aktuelles Gold |
 
 ## Bedienung
 
-`/bof show` öffnet das Fenster (Tab „Material“). Es zeigt das ausgewählte Ziel mit Bedarf, Bestand in
-Taschen und Bank, Bestand deiner anderen Charaktere („Twinks“) und Fehlmenge. Mit `<` und `>`
-wechselst du das Ziel, „Alle Ziele zusammen“ zeigt alles auf einmal. Fährst du mit der Maus über
-eine Zeile, siehst du den Gegenstand und welcher Twink wie viel hat. „Rezept übernehmen“ legt aus
-dem ausgewählten Rezept im offenen Berufsfenster ein Ziel an (1× herstellen). Die Spalte
-„Preis/Stück“ zeigt den günstigsten aktuellen Preis; grau heißt veraltet. „AH-Scan“ (nur am
-Auktionshaus) sucht pro Klick das nächste fehlende Material. Der Tab „Beschaffung“ zeigt für jedes fehlende Material, wie viel du kaufen
-und wie viel du farmen solltest, mit Kosten und Farmzeit, und darunter die Summe. Oben wählst du
-die Strategie:
+**Fenster, Tab „Material“:** das ausgewählte Ziel mit Bedarf, Bestand in Taschen und Bank, Bestand
+deiner anderen Charaktere („Twinks“), Fehlmenge (rot/grün) und Preis pro Stück (grau = veraltet).
+`<` und `>` wechseln das Ziel, „Alle Ziele zusammen“ zeigt alles. Der Tooltip einer Zeile zeigt, welcher
+Twink wie viel hat und alle Preisquellen. „Rezept übernehmen“ legt ein Ziel aus dem zuletzt
+angeklickten Rezept an; „AH-Scan“ (nur am Auktionshaus) sucht pro Klick ein fehlendes Material.
+
+**Fenster, Tab „Beschaffung“:** pro fehlendem Material, wie viel du kaufen und wie viel du farmen
+solltest, mit Kosten und Farmzeit (inklusive Anreise), darunter die Summe und das Restbudget.
+Strategien:
 
 - **Zeit sparen:** kaufen, was einen Preis hat. Reicht das Budget nicht, wird zuerst gekauft, was
   pro Gold am meisten Farmzeit spart (auch Teilkäufe); der Rest wird gefarmt.
 - **Gold sparen:** farmen, was du schon einmal gefarmt hast; kaufen nur, was du nicht farmen kannst.
 - **Selbst farmen:** nichts kaufen.
 
-Was weder einen Preis im Budget noch eine Farmmessung hat, steht als „offen“ (rot). Das Fenster lässt
-sich verschieben und schließt mit Escape. Ziele anlegen und ändern geht noch über die Befehle oben.
+Was weder einen Preis im Budget noch eine Farmmessung hat, steht als „offen“ (rot). Der Tooltip
+zeigt Farmzeit und Anreise getrennt.
 
-Aus einem Rezept: Berufsfenster öffnen (z. B. Schneiderei oder Verzauberkunst), das Rezept
-anklicken und `/bof recipe 5` eingeben. Das Ziel enthält dann die Zutaten für 5 Herstellungen
-und heißt wie das Rezept.
+**Farmrunden:** Während einer Runde vergleicht das Addon nach jeder Taschenänderung den Inhalt
+deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als **geplündert**; alles andere
+(Post, Handel, Bank, Kauf) als **unklar** – das prüfst du nach `/bof farm stop` und zählst es mit
+`keep` mit oder lässt es weg. Nach `/reload` läuft eine Runde weiter; nach Ausloggen ist sie
+pausiert, die Zeit offline zählt nicht.
 
-Von Hand, Beispiel:
-
-```
-/bof goal new Leinenhemd
-/bof goal add [Leinenstoff] 4
-/bof goal crafts 3
-/bof stock
-```
-
-Ziele gehören zum jeweiligen Charakter. Damit die anderen Charaktere mitgezählt werden, merkt sich
-das Addon bei jedem Charakter, wie viel er von den Zielmaterialien in Taschen und Bank hat
-(bei Taschenänderungen, Bankbesuch und bei `/bof stock`). Mitgezählt werden Charaktere auf demselben Realm
-und derselben Fraktion; Charaktere der anderen Fraktion werden nur angezeigt. Neue Zutaten kennt ein
-anderer Charakter erst, wenn du ihn wieder einloggst und dort `/bof stock` eingibst oder etwas in
-den Taschen änderst.
-
-Im Debug-Modus erscheinen technische Meldungen (englisch) im Chat. Zusätzlich speichert das Addon
-ein kurzes Protokoll (höchstens 200 Einträge) in seinen gespeicherten Daten. Fehler werden immer
-protokolliert und an BugSack bzw. die Fehleranzeige des Spiels weitergegeben.
+Das Fenster lässt sich verschieben, merkt sich Position und Tab und schließt mit Escape.
 
 ## Abhängigkeiten
 
@@ -123,94 +144,54 @@ Keine. Für Tests wird BugSack mit BugGrabber empfohlen.
 ## Gespeicherte Daten
 
 `WTF\Account\<Account>\SavedVariables\BuyOrFarmForever.lua` (eine Datei für alle Charaktere).
-Die Daten enthalten eine Schema-Version. Stammen sie aus einer neueren Addon-Version, verändert
-das Addon sie nicht.
+WoW schreibt sie beim Ausloggen, Beenden und bei `/reload`. Die Daten enthalten eine
+Schema-Version; stammen sie aus einer neueren Addon-Version, verändert das Addon sie nicht und
+weist darauf hin.
 
 ## Bekannte Einschränkungen
 
-- Das Fenster zeigt Ziele nur an; anlegen und bearbeiten geht noch über Chat-Befehle.
-- Bestand anderer Charaktere ist ein gespeicherter Stand vom letzten Login dieses Charakters.
-- Rezeptimport nur für das ausgewählte Rezept im offenen Berufsfenster, nur feste Zutaten.
-- Preise kommen von dir, von Händlern (beim Öffnen des Händlerfensters) und aus dem Auktionshaus
-  (was du dort suchst, und der AH-Scan). Gespeichert werden automatisch nur Materialien aus
-  deinen Zielen, getrennt nach Realm und Fraktion. AH- und eigene Preise gelten nach 7 Tagen als
-  veraltet; Händlerpreise nicht. Das Auktionshaus zeigt pro Suche nur die erste Seite; bei sehr
-  vielen Angeboten ist der günstigste Preis evtl. nicht darunter.
-- Farmrunden messen den Ertrag über deine Taschen: Was bei offenem Beutefenster dazukommt, zählt als
-  geplündert; alles andere (Post, Handel, Bank, Kauf) als unklar – das prüfst du am Ende. Gezählt
-  werden nur die Taschen, nicht die Bank. Nach `/reload` läuft eine Runde weiter; nach Ausloggen
-  oder Absturz ist sie pausiert, die Zeit offline zählt nicht.
-- Farmrunden gibt es vorerst nur über Chat-Befehle, noch nicht im Fenster.
-- WoW speichert die Daten aller Addons beim Ausloggen, Beenden und bei `/reload`. Stürzt das Spiel
-  ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung gestartete Farmrunde.
-- Der Zeitgegenwert von Käufen (z. B. „2 Gold ≈ 20 Minuten deines Goldfarmens“) fehlt noch; er
-  braucht Einnahmedaten aus dem Goldpuffer.
-- Noch nicht enthalten:
-  Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
-- Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
-- Nur Classic Era. Auf anderen Clients wird das Addon nicht geladen bzw. meldet, dass es nicht passt.
+- Ziele werden im Fenster angezeigt, angelegt und bearbeitet aber über Chat-Befehle (außer
+  „Rezept übernehmen“). Farmrunden gibt es nur über Chat-Befehle.
+- Der Bestand anderer Charaktere ist der Stand von deren letzter Taschenänderung, ihrem letzten
+  Bankbesuch oder `/bof stock`. Neue Zutaten kennen sie erst nach ihrem nächsten Login.
+- Rezeptimport nur für das ausgewählte Rezept, nur feste Zutaten.
+- Automatisch erfasst werden nur Preise von Materialien aus deinen Zielen. AH- und eigene Preise
+  gelten nach 7 Tagen als veraltet, Händlerpreise nicht. Pro AH-Suche wird nur die erste Seite
+  gelesen; bei sehr vielen Angeboten kann der günstigste Preis fehlen.
+- Farmrunden zählen nur die Taschen, nicht die Bank.
+- Stürzt das Spiel ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung
+  gestartete Farmrunde.
+- Der Zeitgegenwert von Käufen („2 Gold ≈ 20 Minuten Goldfarmen“) fehlt noch; er braucht
+  Einnahmedaten aus dem späteren Goldpuffer. Gold für Sparziele wird vom Budget noch nicht abgezogen.
+- Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
+- Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.10):
+**Außerhalb des Spiels** (Version 0.2.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
+Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
+kein Speicherzuwachs bei Taschenänderungen) und 129 automatische Tests in einer nachgebauten
+Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
+Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan).
 
-- Struktur der Addon-Dateien und der TOC-Datei
-- Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
-- Lua-Syntax (Lua 5.1) und luacheck
-- Prüfung der Übersetzungsschlüssel
-- 129 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
-  beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
-  Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
-  (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
-  Blättern, Tooltip, Position), Preise (Eingabe, Händler, Auktionshaus, veraltete Preise),
-  Farmrunden (Ertrag, Pause, Anreise, Prüfen, `/reload`, Ausloggen, Schätzung),
-  Beschaffungsplan (Strategien, Budget, Teilkauf, Tab „Beschaffung“)
+**Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
+beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
+getestet, ohne Lua-Fehler: Grundgerüst und Befehle, Kampf, Ziele, Bestand mit Bank und Twinks,
+Rezeptimport (Schmiedekunst, Schneiderei, Verzauberkunst, zwei offene Fenster), Fenster, Preise
+(eigene, Händler, Auktionshaus, AH-Scan), Farmrunden (Plündern, Anreise, Speichern, `/reload`),
+Beschaffungsplan mit Strategien und Budget, `/bof perf` (259 KB Speicher, Spitze 0,13 % der
+Frame-Zeit).
 
-**Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
-
-- erster Start, `/reload`, alle Befehle, Debug-Modus, Zurücksetzen, Kampf: ohne Fehler
-- nicht getestet: andere Spielsprachen, Zusammenspiel mit anderen Addons
-
-Version 0.2.0-alpha.1 (18.10.2026): Ziel anlegen, Gegenstand per Link hinzufügen, Bestand in
-Taschen und Bank (auch bei geschlossener Bank nach `/reload` und neuem Login): korrekt, ohne Fehler.
-Löschen von Zielen: ohne Fehler.
-
-Version 0.2.0-alpha.2 (18.10.2026): Bestand eines anderen Charakters auf demselben Realm und
-derselben Fraktion wird mitgezählt und angezeigt, `/bof stock others` schaltet das Mitzählen
-ein und aus: korrekt, ohne Fehler. Nicht getestet: Charaktere der anderen Fraktion und auf
-anderen Realms (nur außerhalb des Spiels geprüft).
-
-Version 0.2.0-alpha.3 (18.10.2026): Rezept aus dem Berufsfenster als Ziel übernehmen, Hinweise bei
-fehlendem Fenster, Überschrift und falscher Anzahl: korrekt, ohne Fehler. Verzauberkunst
-(Verzauberungsfenster) mit 0.2.0-alpha.6 getestet.
-
-Version 0.2.0-alpha.4 (18.10.2026): Fenster mit allen Funktionen (Anzeige, Aktualisierung, Ziele
-wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohne Fehler.
-
-Version 0.2.0-alpha.5 (18.10.2026): Kurztest nach dem Umbau (Fenster, `/bof stock`,
-Taschenänderung, `/bof perf`): ohne Fehler.
-
-Version 0.2.0-alpha.6 (18.10.2026): Preise (eigene, Händler, Auktionshaus, AH-Scan), Rezeptimport
-aus dem Verzauberungsfenster: korrekt, ohne Fehler.
-
-Version 0.2.0-alpha.7 (18.10.2026): mit beiden Berufsfenstern wird das zuletzt angeklickte Rezept
-übernommen: korrekt, ohne Fehler.
-
-Version 0.2.0-alpha.8 (18.10.2026): Farmrunde mit Gegnern, Plündern, Beenden, Speichern: ohne
-Fehler. Dabei fiel auf, dass der Anreise-Umschalter leicht im falschen Zustand bleibt (geändert in
-0.2.0-alpha.9). Noch nicht im Spiel geprüft: unklare Zugänge, Pause nach Ausloggen.
-
-Version 0.2.0-alpha.9 (18.10.2026): Anreise und Farmzeit werden mit der neuen Meldung richtig
-getrennt, ohne Fehler.
-
-Version 0.2.0-alpha.10 (18.10.2026): Beschaffungsplan mit Strategien, Budget und Tab „Beschaffung“:
-korrekt, ohne Fehler.
+Nicht im Spiel geprüft: andere Spielsprachen, Zusammenspiel mit anderen Addons; als „getestet“
+nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zugänge mit `keep`,
+Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
+0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.10 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

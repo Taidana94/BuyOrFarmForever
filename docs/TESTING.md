@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); only version and documentation changed against 0.2.0-alpha.10 |
 | 0.2.0-alpha.10 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); mutation checks: reversed buying order fails 3, ignoring the budget 5, SAVE_GOLD buying everything 1, no travel time 2 |
 | 0.2.0-alpha.8 | 2026-10-18 | 138 checks passed, 0 failed (121 unit tests); mutation checks: no loot grace, never pausing at login, ignoring zero-yield target runs, counting decreases (after strengthening the test) each fail 1 |
 | 0.2.0-alpha.7 | 2026-10-18 | 129 checks passed, 0 failed (112 unit tests); the new test fails without the selection hook |
@@ -222,6 +223,39 @@ errors.
 User feedback during the test: the table's farm time (with travel) and the tooltip's farm time for
 everything (without travel) differed without explanation. Fixed in the same version: the tooltip
 splits farm time and travel for the planned part and for the whole amount.
+
+### Release check 0.2.0 (2026-10-18)
+
+| Step (CLAUDE.md section 9) | Result |
+|---|---|
+| Checks levels 0, 1, 1b, 1c, 2 | 146 passed, 0 failed |
+| In-game test (Classic Era) | every feature tested in the alpha versions (results above); 0.2.0 = 0.2.0-alpha.10 code |
+| In-game test (Forever) | none – the release must not be called Forever-compatible |
+| Version in TOC, CHANGELOG, README | 0.2.0 |
+| Interface version | 11509 = client 1.15.9 (70003), confirmed in game (`/dump GetBuildInfo()`, debug log) |
+| ZIP | built and inspected (see below) |
+| Tag | `v0.2.0` local only; push/publication only after the user's approval |
+
+### Performance review before 0.2.0 (2026-10-18)
+
+| Handler | Registered | Frequency | Cost | Verdict |
+|---|---|---|---|---|
+| `ADDON_LOADED`, `PLAYER_LOGIN` (Main) | until handled once | once | load and validate the database | ok |
+| `BAG_UPDATE_DELAYED` → `Stock` snapshot | always | per bag-change burst | tracked items only, no allocation in steady state (unit test: 10000 events, constant ~2.5 KB) | ok |
+| `BAG_UPDATE_DELAYED` → `FarmCapture` | only while a farm run is running | per bag-change burst | scan of the carried bags (~100 slots); our code allocates nothing (two reused count tables), the client returns one info table per slot | ok, run-only |
+| `BANKFRAME_OPENED/CLOSED` | always | per bank visit | snapshot | ok |
+| `MERCHANT_SHOW/CLOSED`, `MERCHANT_UPDATE` | show/close always, update only while open | per merchant visit | one table per offer, once per visit | ok |
+| `AUCTION_HOUSE_SHOW/CLOSED`, `AUCTION_ITEM_LIST_UPDATE` | list update only while the AH is open | per result page (user-driven) | up to 50 small tables per page | ok, AH-only |
+| `LOOT_OPENED/CLOSED`, `PLAYER_LOGOUT` | only while a farm run is running | per loot window | flag/time only | ok |
+| `PLAYER_MONEY` | only while the Sourcing tab is shown | per gold change | one coalesced refresh | ok |
+| `ITEM_DATA_LOAD_RESULT` | only while the window is shown | per loaded item | one coalesced refresh per frame | ok |
+| `TRADE_SKILL_SHOW/CLOSE`, `CRAFT_SHOW/CLOSE` | always | per profession window | two flags | ok |
+| Hooks `SelectTradeSkill`, `SelectCraft` | once at load | per recipe click | one variable | ok |
+| `OnUpdate`, tickers | none | – | – | ok (level 1c) |
+| `C_Timer.After(0)` | per coalesced refresh | at most once per frame while the window is visible | – | ok |
+
+In game (0.2.0-alpha.5): 259 KB memory, peak 0.13 % of frame time. Open: memory over a long session
+(several hours, with farm runs and the window open) was not measured.
 
 ### Checklist 0.1.0 (Classic Era)
 

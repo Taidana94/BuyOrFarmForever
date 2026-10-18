@@ -8,7 +8,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Foundation: SavedVariables, debug log, slash commands (`help`, `version`, `debug`, `reset`) | 0.1.0, tested out of game only |
 | Material goals, requirements, bag + bank stock, shortfall (chat commands) | 0.2.0-alpha.1 (stage 2a), tested out of game only |
 | Stock of other characters (same realm, same faction counted) | 0.2.0-alpha.2 (stage 2b), tested in Classic Era (same faction); other faction/realm out of game only |
-| Buy vs. farm vs. partial purchase, strategies, shared budget (`/bof plan`, Sourcing tab) | 0.2.0-alpha.10 (stage 2g), tested in Classic Era |
+| Buy vs. farm vs. partial purchase, strategies, shared budget (`/bof plan`, Sourcing tab) | 0.2.0 (stage 2g), tested in Classic Era |
 | Time value of purchases | needs income data (gold buffer) |
 | Farm runs (start/pause/resume/travel/stop, review of unclear gains, save) and farm time estimates with data basis | 0.2.0-alpha.9 (stage 2f, chat commands), tested in Classic Era |
 | Prices per unit from manual entry, merchants and the auction house; realm/faction, outdated flag | 0.2.0-alpha.6 (stage 2e), tested in Classic Era |
