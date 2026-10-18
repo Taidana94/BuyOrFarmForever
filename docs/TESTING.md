@@ -133,8 +133,19 @@ no errors (session 27). Not tested: `/bof perf` (added after this test).
 
 In-game smoke test of 0.2.0-alpha.5 (after the refactoring): confirmed by the user ("passt");
 SavedVariables: `lastAddonVersion = 0.2.0-alpha.5`, goal "Perftest" with items 6948, 2589, 159;
-`!BugGrabber.lua`: no errors (session 30). The `/bof perf` output itself was not reported, so the
-in-game numbers (idle and with the window open) are still to be recorded.
+`!BugGrabber.lua`: no errors (session 30).
+
+`/bof perf` in game (Classic Era 70003, 2026-10-18, reported by the user; window state not stated):
+
+| Metric | Value |
+|---|---|
+| Memory | 259 KB |
+| Share of frame time, peak | 0.13 % |
+| Share of frame time, recent / average | not reported |
+| Recount time | not reported |
+
+The addon profiler was active (a share was shown). Target "idle CPU effectively zero" is consistent
+with a peak of 0.13 %; a longer-session memory check is still open.
 
 ### Checklist 0.1.0 (Classic Era)
 
