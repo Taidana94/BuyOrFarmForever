@@ -50,7 +50,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.4 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test) |
 | 0.2.0-alpha.6 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (confirmed by the user; details below) |
-| 0.2.0-alpha.7 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.7 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (user: "gut"; SavedVariables below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -166,7 +166,12 @@ enchantment, plan Q-T4) and two open profession windows.
 | Enchanting recipe import, name, two windows | confirmed by the user | passed (user report) |
 | Lua errors | `!BugGrabber.lua`: no errors (session 33) | passed |
 
-Note: the last SavedVariables write (21:07) is older than CharC's tests (CharC's stock snapshot
+Update after the 0.2.0-alpha.7 test (SavedVariables 21:20): CharC has goals from enchantments
+(`spell:7779`, `spell:13378`) and tailoring (`item:5762`, `item:4238`); the last two were created
+6 s apart (tailoring, then enchantment), matching the checklist. `prices["RealmB-Horde"]` exists,
+separate from `RealmA-Alliance`. `!BugGrabber.lua`: no errors.
+
+Note: the earlier SavedVariables write (21:07) was older than CharC's tests (CharC's stock snapshot
 predates his goal), so CharC's prices and the enchantment goal are not in the file yet. Those
 results rest on the user's report only.
 

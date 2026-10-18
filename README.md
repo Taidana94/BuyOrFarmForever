@@ -160,7 +160,8 @@ Taschenänderung, `/bof perf`): ohne Fehler.
 Version 0.2.0-alpha.6 (18.10.2026): Preise (eigene, Händler, Auktionshaus, AH-Scan), Rezeptimport
 aus dem Verzauberungsfenster: korrekt, ohne Fehler.
 
-Version 0.2.0-alpha.7 (zuletzt angeklicktes Rezept) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.7 (18.10.2026): mit beiden Berufsfenstern wird das zuletzt angeklickte Rezept
+übernommen: korrekt, ohne Fehler.
 
 **Nicht in Forever getestet.**
 
