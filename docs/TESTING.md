@@ -27,6 +27,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.1 | 2026-10-18 | 77 checks passed, 0 failed (65 unit tests); mutation check: breaking the craft multiplier or the bank count fails 5 tests |
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
+| 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
 
 ## In game
 
@@ -40,6 +41,7 @@ commit (`git log -1 --oneline`).
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
+| 0.2.0-alpha.3 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -142,3 +144,21 @@ Uses the hearthstone (item 6948), which every character has.
 5. If available: an alt of the other faction on the same realm → listed with
    "andere Fraktion, nicht mitgezählt". An alt on another realm → not listed.
 6. `/bof goal remove 6948` to clean up.
+
+### Checklist 0.2.0-alpha.3 (Classic Era, recipe import)
+
+Needs a character with a crafting profession; Enchanting additionally tests the craft window.
+
+1. `/reload`, `/bof version` → `0.2.0-alpha.3`; `/bof` shows 8 help lines including `/bof recipe`.
+2. `/bof recipe` without a profession window → "Öffne zuerst ein Berufsfenster …".
+3. Open a profession (e.g. Tailoring), click a header line, `/bof recipe` → "… (keine Überschrift)".
+4. Click a recipe (e.g. a linen item), `/bof recipe 3` → "Ziel n „[Item]“ aus dem Rezept angelegt:
+   k Zutaten, 3× herstellen." The item name is a link (may be "Gegenstand <id>" if not cached yet).
+5. `/bof stock` → the reagents of the recipe with need = count × 3 and correct bag/bank counts.
+6. Compare the reagents and counts with the recipe in the window (report differences).
+7. Enchanting (if available): open it, click an enchantment, `/bof recipe` → goal named like the
+   enchantment (spell name). Report whether the name was the enchantment or a placeholder
+   "Rezept <id>" (plan Q-T4).
+8. With both windows open (e.g. Enchanting and Tailoring): `/bof recipe` uses the one opened last.
+9. `/reload`, `/bof goal` → the recipe goals are listed with the recipe name.
+10. Errors: `/bof recipe 0`, `/bof recipe abc` → message about the number of crafts.

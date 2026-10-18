@@ -9,11 +9,11 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/Stock.lua` (bag/bank counts via adapter, bank snapshot) | none |
+| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
-| Chat UI (provisional) | `UI/ChatCommands.lua` (`/bof goal`, `/bof stock`) | none (prints via `Log.Print`) |
+| Chat UI (provisional) | `UI/ChatCommands.lua` (`/bof goal`, `/bof recipe`, `/bof stock`) | none (prints via `Log.Print`) |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -21,7 +21,7 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 ## Load order (TOC)
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Core/Materials.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
+`Core/DB.lua` → `Core/Materials.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
 `Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatCommands.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
@@ -35,7 +35,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 2b)
+### Adapter interface (stage 2c)
 
 | Function | Returns |
 |---|---|
@@ -49,6 +49,8 @@ printed and `Core/Main.lua` registers nothing.
 | `GetBagCount(itemID)` | count in the bags |
 | `GetBagAndBankCount(itemID)` | count in bags + bank, or nil |
 | `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
+| `GetSpellName(spellID)` | localized spell name, or nil |
+| `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
 | `events` (table) | WoW event name → client-neutral signal |
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`. Core code subscribes with
@@ -79,6 +81,40 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` is registered in `DB.VALIDATORS` and repairs stored goals on load.
+
+## Recipes (stage 2c)
+
+`/bof recipe [crafts]` reads the recipe selected in the open profession window through
+`Client:ReadSelectedRecipe()`, validates it (`Recipes.Normalize`: key, ids, counts, at most
+`Recipes.MAX_REAGENTS`, duplicates merged), stores it in `db.recipes[key]` (account-wide; an import
+replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
+
+- Key: `spell:<id>` when the client gives a spell/enchant link, else `item:<outputItemID>`.
+- `db.recipes[key] = { outputItemID, outputMin, outputMax, reagents, origin = "IMPORT", at }`. No names
+  (localized). `Recipes.Sanitize` is registered in `DB.ROOT_VALIDATORS` (account-wide checks).
+- A recipe goal has `label = ""` and `recipeKey`; its display name is the output item link, else the
+  spell name (`GetSpellName`), else a placeholder. The goal copies the reagents, so later edits of the
+  goal do not change the stored recipe.
+- Classic Era adapter: two windows, trade skill (`GetTradeSkill*`) and craft (`GetCraft*`,
+  Enchanting and Beast Training). Both can be open; the most recently opened one is used. Headers
+  and recipes without reagents are refused; missing reagent links mean "loading" (item data not
+  cached yet). `GetCraftItemLink` is expected to return an item link for crafts that create items
+  and an enchant link otherwise (plan Q-T4, to be confirmed in game).
+- Only fixed reagents exist in Classic Era. Optional/quality reagents are a Forever topic.
+
+## Events and timers
+
+| Event | Handler | Registered | Frequency | Cost / effect |
+|---|---|---|---|---|
+| `ADDON_LOADED` | `Main.onAddonLoaded` | file load, unregistered after the own addon loaded | once per load | loads the database |
+| `PLAYER_LOGIN` | `Main.onPlayerLogin` | file load, unregistered after the first call | once | character key, `EnsureCharacter` |
+| `BAG_UPDATE_DELAYED` → `BAGS_CHANGED` | `Stock` | always | once per bag-change burst (the client coalesces `BAG_UPDATE`) | snapshot of the tracked items only (`GetItemCount` per item) |
+| `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock` | always | per bank visit | snapshot of the tracked items |
+| `TRADE_SKILL_SHOW` / `_CLOSE`, `CRAFT_SHOW` / `_CLOSE` | Classic Era adapter (own frame) | always | per profession window open/close | sets two flags, no API calls |
+
+No `OnUpdate` scripts and no tickers. The adapter's window frame is not routed through
+`Core/Events.lua` because the core does not need to know which kind of window is open; its handler
+only sets flags.
 
 ## Startup
 

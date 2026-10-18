@@ -72,6 +72,23 @@ function Materials.CreateGoal(charData, label, now)
 	return id
 end
 
+-- Creates and selects a goal from a normalized recipe (Recipes.Normalize): its reagents per
+-- craft, the given number of crafts and the recipe key (for the display name). The label stays
+-- empty because recipe names are localized. Returns the id, or nil, error code.
+function Materials.CreateRecipeGoal(charData, recipe, crafts, now)
+	if not Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local id = Materials.CreateGoal(charData, "", now)
+	local goal = charData.materialGoals[id]
+	goal.crafts = crafts
+	goal.recipeKey = recipe.key
+	for _, reagent in ipairs(recipe.reagents) do
+		goal.items[#goal.items + 1] = { itemID = reagent.itemID, count = reagent.count }
+	end
+	return id
+end
+
 function Materials.GetGoal(charData, id)
 	return charData.materialGoals[id]
 end
@@ -284,6 +301,11 @@ function Materials.Sanitize(charData, path, repairs)
 			end
 			if type(goal.createdAt) ~= "number" then
 				goal.createdAt = 0
+			end
+			-- Optional (goals created from a recipe). Validators run on load, after all modules exist.
+			if goal.recipeKey ~= nil and not ns.Recipes.IsValidKey(goal.recipeKey) then
+				goal.recipeKey = nil
+				repairs[#repairs + 1] = p .. ".recipeKey"
 			end
 			if type(goal.items) ~= "table" then
 				goal.items = {}

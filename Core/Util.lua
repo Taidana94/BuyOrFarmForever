@@ -42,6 +42,18 @@ function Util.ParseItemArg(text)
 	return tonumber(id), rest
 end
 
+-- Type and id of a client hyperlink ("|Hitem:2589:...|h", "|Henchant:7418|h"), or nil.
+function Util.ParseLink(link)
+	if type(link) ~= "string" then
+		return nil
+	end
+	local linkType, id = link:match("|H(%a+):(%d+)")
+	if not linkType then
+		return nil
+	end
+	return linkType, tonumber(id)
+end
+
 -- Reads a whole number from user input, or nil.
 function Util.ParseInteger(text)
 	local n = tonumber(text)

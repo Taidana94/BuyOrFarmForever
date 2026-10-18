@@ -1,4 +1,4 @@
--- Provisional chat commands for material goals and stock (/bof goal, /bof stock).
+-- Provisional chat commands for material goals, recipes and stock (/bof goal, /bof recipe, /bof stock).
 -- A bridge for in-game tests until the main window exists (plan stage 2d).
 local _, ns = ...
 
@@ -6,6 +6,7 @@ local L = ns.L
 local Log = ns.Log
 local Util = ns.Util
 local Materials = ns.Materials
+local Recipes = ns.Recipes
 local Stock = ns.Stock
 local Slash = ns.Slash
 
@@ -22,6 +23,21 @@ local ERRORS = {
 	invalid_crafts = function()
 		return Util.Format(L.ERR_INVALID_CRAFTS, Materials.MAX_CRAFTS)
 	end,
+	no_window = function()
+		return L.RECIPE_NO_WINDOW
+	end,
+	no_selection = function()
+		return L.RECIPE_NO_SELECTION
+	end,
+	loading = function()
+		return L.RECIPE_LOADING
+	end,
+	no_reagents = function()
+		return L.RECIPE_NO_REAGENTS
+	end,
+	invalid_recipe = function()
+		return L.RECIPE_INVALID
+	end,
 }
 
 local function printError(code)
@@ -34,11 +50,28 @@ local function itemText(itemID)
 	return ns.Client:GetItemLink(itemID) or Util.Format(L.ITEM_UNKNOWN, itemID)
 end
 
-local function goalName(goal)
-	if goal.label == "" then
-		return L.GOAL_UNNAMED
+-- Name of a recipe from the client: output item link, else spell name, else a placeholder.
+local function recipeName(key)
+	local recipe = Recipes.Get(ns.db, key)
+	if recipe and recipe.outputItemID ~= 0 then
+		return itemText(recipe.outputItemID)
 	end
-	return goal.label
+	local keyType, id = Recipes.SplitKey(key)
+	if keyType == "spell" then
+		return ns.Client:GetSpellName(id) or Util.Format(L.RECIPE_UNKNOWN, id)
+	end
+	return itemText(id)
+end
+
+-- The user's label; goals from a recipe have none and show the recipe name.
+local function goalName(goal)
+	if goal.label ~= "" then
+		return goal.label
+	end
+	if goal.recipeKey then
+		return recipeName(goal.recipeKey)
+	end
+	return L.GOAL_UNNAMED
 end
 
 -- Character data of the logged-in character, or nil with a message.
@@ -218,6 +251,39 @@ local function goalCommand(argument)
 	end
 end
 
+-- /bof recipe [crafts] ------------------------------------------------------------------
+
+local function recipeCommand(argument)
+	local charData = character(true)
+	if not charData then
+		return
+	end
+	local crafts = 1
+	if Util.Trim(argument) ~= "" then
+		crafts = Util.ParseInteger(Util.Trim(argument))
+	end
+	if not Materials.IsValidCrafts(crafts) then
+		printError("invalid_crafts")
+		return
+	end
+	local raw, readError = ns.Client:ReadSelectedRecipe()
+	if not raw then
+		printError(readError)
+		return
+	end
+	local recipe, err = Recipes.Normalize(raw)
+	if not recipe then
+		Log.Debug("recipe rejected (" .. tostring(err) .. "): " .. tostring(raw.key))
+		printError(err)
+		return
+	end
+	local now = ns.Client:GetServerTime()
+	Recipes.Store(ns.db, recipe, now)
+	local id = Materials.CreateRecipeGoal(charData, recipe, crafts, now)
+	local goal = charData.materialGoals[id]
+	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, goalName(goal), #goal.items, goal.crafts))
+end
+
 -- /bof stock [all] ----------------------------------------------------------------------
 
 -- Other characters' stock of one item: counted total (same faction) and detail rows.
@@ -301,5 +367,6 @@ end
 
 if ns.Client then
 	Slash.AddCommand("goal", goalCommand, L.HELP_LINE_GOAL)
+	Slash.AddCommand("recipe", recipeCommand, L.HELP_LINE_RECIPE)
 	Slash.AddCommand("stock", stockCommand, L.HELP_LINE_STOCK)
 end

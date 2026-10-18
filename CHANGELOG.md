@@ -3,6 +3,13 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.3] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- `/bof recipe [Anzahl]` übernimmt das ausgewählte Rezept aus dem offenen Berufsfenster
+  (auch Verzauberkunst) als neues Ziel; das Ziel trägt den Namen des Rezepts.
+
 ## [0.2.0-alpha.2] – noch nicht veröffentlicht
 
 ### Hinzugefügt

@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.2. Materialziele und Bestand über Chat-Befehle, noch ohne Fenster.**
+**Status: Entwicklungsversion 0.2.0-alpha.3. Materialziele, Rezeptimport und Bestand über Chat-Befehle, noch ohne Fenster.**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -8,7 +8,8 @@ Die Empfehlungen sollen auf deinen eigenen Messungen beruhen: deinem Farmtempo, 
 und deinen Vorhaben.
 
 Diese Version enthält das Grundgerüst (gespeicherte Einstellungen, Debug-Protokoll, Chat-Befehle)
-und den ersten Teil der Materialbeschaffung: Materialziele mit Zutaten und Anzahl Herstellungen,
+und den ersten Teil der Materialbeschaffung: Materialziele mit Zutaten und Anzahl Herstellungen
+(von Hand oder aus einem Rezept im Berufsfenster),
 dazu Bedarf, Bestand in Taschen und Bank – auch deiner anderen Charaktere auf dem Realm – und Fehlmenge. Bedient wird das vorläufig über
 Chat-Befehle, bis das Fenster fertig ist. Craft-Bewertung und Goldpuffer folgen später.
 
@@ -44,6 +45,7 @@ Statt `/bof` funktioniert auch `/kof`.
 | `/bof goal remove <Gegenstand>` | entfernt eine Zutat |
 | `/bof goal crafts <Anzahl>` | wie oft du herstellen willst |
 | `/bof goal delete <Nr.>` | löscht ein Ziel; bestätigen mit `/bof goal delete <Nr.> confirm` |
+| `/bof recipe [Anzahl]` | legt aus dem Rezept, das im offenen Berufsfenster ausgewählt ist, ein neues Ziel an (ohne Anzahl: 1× herstellen) |
 | `/bof stock` | Bedarf, Bestand (Taschen, Bank) und Fehlmenge des ausgewählten Ziels |
 | `/bof stock all` | dasselbe für alle Ziele zusammen |
 | `/bof stock others` | schaltet das Mitzählen deiner anderen Charaktere ein oder aus (Standard: an) |
@@ -53,7 +55,13 @@ offen ist) oder die Item-ID.
 
 ## Bedienung
 
-Noch kein Fenster. Bedienung derzeit über die Befehle oben. Beispiel:
+Noch kein Fenster. Bedienung derzeit über die Befehle oben.
+
+Aus einem Rezept: Berufsfenster öffnen (z. B. Schneiderei oder Verzauberkunst), das Rezept
+anklicken und `/bof recipe 5` eingeben. Das Ziel enthält dann die Zutaten für 5 Herstellungen
+und heißt wie das Rezept.
+
+Von Hand, Beispiel:
 
 ```
 /bof goal new Leinenhemd
@@ -87,22 +95,23 @@ das Addon sie nicht.
 
 - Noch kein Fenster; Materialziele nur über Chat-Befehle.
 - Bestand anderer Charaktere ist ein gespeicherter Stand vom letzten Login dieses Charakters.
-- Noch nicht enthalten: Rezeptimport, Preise, Farmmessung,
+- Rezeptimport nur für das ausgewählte Rezept im offenen Berufsfenster, nur feste Zutaten.
+- Noch nicht enthalten: Preise, Farmmessung,
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients wird das Addon nicht geladen bzw. meldet, dass es nicht passt.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.2):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.3):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 73 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 83 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
-  (Realm, Fraktion, später hinzugefügte Zutaten)
+  (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster
 
 **Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
 
@@ -118,11 +127,13 @@ derselben Fraktion wird mitgezählt und angezeigt, `/bof stock others` schaltet 
 ein und aus: korrekt, ohne Fehler. Nicht getestet: Charaktere der anderen Fraktion und auf
 anderen Realms (nur außerhalb des Spiels geprüft).
 
+Version 0.2.0-alpha.3 (Rezeptimport) ist im Spiel noch nicht getestet.
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

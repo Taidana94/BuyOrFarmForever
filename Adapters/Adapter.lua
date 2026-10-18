@@ -21,6 +21,8 @@ Adapter.REQUIRED = {
 	"GetBagCount", -- (itemID) -> count in the bags
 	"GetBagAndBankCount", -- (itemID) -> count in bags and bank, or nil if not available
 	"GetItemLink", -- (itemID) -> item link, or nil while item data is loading (load is requested)
+	"GetSpellName", -- (spellID) -> localized name, or nil
+	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.

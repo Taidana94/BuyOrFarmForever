@@ -31,6 +31,22 @@ read_globals = {
 	C_AddOns = { fields = { "GetAddOnMetadata" } },
 	-- items and bags (GetItemCount with includeBank: correct with closed bank, confirmed in game)
 	C_Item = { fields = { "GetItemCount", "GetItemInfo", "RequestLoadItemDataByID" } },
+	C_Spell = { fields = { "GetSpellName" } },
+	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
+	"GetTradeSkillSelectionIndex",
+	"GetTradeSkillInfo",
+	"GetTradeSkillItemLink",
+	"GetTradeSkillRecipeLink",
+	"GetTradeSkillNumMade",
+	"GetTradeSkillNumReagents",
+	"GetTradeSkillReagentInfo",
+	"GetTradeSkillReagentItemLink",
+	"GetCraftSelectionIndex",
+	"GetCraftInfo",
+	"GetCraftItemLink",
+	"GetCraftNumReagents",
+	"GetCraftReagentInfo",
+	"GetCraftReagentItemLink",
 	-- character, time
 	"UnitName",
 	"GetRealmName",

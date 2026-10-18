@@ -53,6 +53,16 @@ L.ERR_INVALID_CRAFTS = "Die Anzahl Herstellungen muss eine ganze Zahl von 1 bis 
 L.ITEM_UNKNOWN = "Gegenstand %1$d"
 L.UNKNOWN_SHORT = "?"
 
+-- Recipes
+L.HELP_LINE_RECIPE = "/bof recipe [Anzahl] – legt aus dem Rezept, das im Berufsfenster ausgewählt ist, ein neues Ziel an"
+L.RECIPE_GOAL_CREATED = "Ziel %1$d „%2$s“ aus dem Rezept angelegt: %3$d Zutaten, %4$d× herstellen."
+L.RECIPE_NO_WINDOW = "Öffne zuerst ein Berufsfenster und wähle dort ein Rezept aus."
+L.RECIPE_NO_SELECTION = "Wähle im Berufsfenster zuerst ein Rezept aus (keine Überschrift)."
+L.RECIPE_LOADING = "Die Rezeptdaten werden noch geladen. Bitte versuche es gleich noch einmal."
+L.RECIPE_NO_REAGENTS = "Dieses Rezept hat keine Zutaten und kann nicht als Ziel übernommen werden."
+L.RECIPE_INVALID = "Die Rezeptdaten sind unvollständig und wurden nicht übernommen."
+L.RECIPE_UNKNOWN = "Rezept %1$d"
+
 -- Stock
 L.STOCK_ALL_HEADER = "Alle Ziele zusammen:"
 L.STOCK_EMPTY = "Das Ziel enthält noch keine Zutaten. Füge welche hinzu mit /bof goal add <Gegenstand> <Menge>."

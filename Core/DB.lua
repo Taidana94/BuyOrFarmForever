@@ -76,6 +76,10 @@ DB.MIGRATIONS = {}
 -- fn(charData, path, repairs). They run after the defaults were merged.
 DB.VALIDATORS = {}
 
+-- Checks of account-wide data (e.g. recipes), registered by the owning modules:
+-- fn(db, repairs). They run after the defaults were merged.
+DB.ROOT_VALIDATORS = {}
+
 -- Fills missing fields from defaults and replaces values of the wrong type or outside the
 -- allowed values. Unknown fields are kept. Records the path of every replaced value.
 local function mergeDefaults(target, defaults, path, repairs)
@@ -190,6 +194,9 @@ function DB.Load(stored, context)
 	db.schemaVersion = DB.SCHEMA_VERSION
 	mergeDefaults(db, DB.DEFAULTS, "", info.repairs)
 	validateCharacters(db, info.repairs)
+	for _, validate in ipairs(DB.ROOT_VALIDATORS) do
+		validate(db, info.repairs)
+	end
 	validateDebugLog(db, info.repairs)
 
 	if db.meta.client == "" then
