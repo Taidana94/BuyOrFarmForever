@@ -20,23 +20,17 @@ local MaterialTab = {}
 ns.MaterialTab = MaterialTab
 
 local VISIBLE_ROWS = Layout.VISIBLE_ROWS
-local COLOR_MISSING = { 1, 0.35, 0.35 }
-local COLOR_DONE = { 0.4, 1, 0.4 }
-local COLOR_NORMAL = { 1, 1, 1 }
+local Widgets = ns.Widgets
+local COLOR_MISSING = Widgets.COLOR_MISSING
+local COLOR_DONE = Widgets.COLOR_DONE
+local COLOR_NORMAL = Widgets.COLOR_NORMAL
 local REFRESH_SIGNALS = { "BAGS_CHANGED", "BANK_OPENED", "BANK_CLOSED", "ITEM_LOADED", "DATA_CHANGED", "PRICES_CHANGED" }
-local COLOR_OUTDATED = { 0.6, 0.6, 0.6 }
+local COLOR_OUTDATED = Widgets.COLOR_GRAY
 
 local Tab = {}
 Tab.__index = Tab
 
-local function setEnabled(widget, enabled)
-	if enabled then
-		widget:Enable()
-	else
-		widget:Disable()
-	end
-end
-
+local setEnabled = Widgets.SetEnabled
 local function currentCharacter()
 	return ns.db and ns.charKey and ns.db.characters[ns.charKey]
 end
@@ -169,10 +163,7 @@ function Tab:Scroll(delta)
 	end
 end
 
-local function setNumber(text, value, color)
-	text:SetText(value)
-	text:SetTextColor(color[1], color[2], color[3])
-end
+local setNumber = Widgets.SetText
 
 function Tab:DrawRow(row, data)
 	row.data = data

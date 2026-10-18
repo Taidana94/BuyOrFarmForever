@@ -9,30 +9,21 @@ local Util = ns.Util
 local Layout = {}
 ns.MaterialTabLayout = Layout
 
+local Widgets = ns.Widgets
+
 Layout.VISIBLE_ROWS = 10
 local VISIBLE_ROWS = Layout.VISIBLE_ROWS
-local ROW_HEIGHT = 22
-local ICON_SIZE = 18
-local ICON_GAP = 6
 local NAME_WIDTH = 230
 -- Right-aligned columns after the name: row.numbers[key], header text L[header].
-local COLUMNS = {
+local TABLE = Widgets.TableLayout(NAME_WIDTH, {
 	{ key = "need", header = "COL_NEED", width = 48 },
 	{ key = "bags", header = "COL_BAGS", width = 48 },
 	{ key = "bank", header = "COL_BANK", width = 48 },
 	{ key = "others", header = "COL_OTHERS", width = 48 },
 	{ key = "missing", header = "COL_MISSING", width = 48 },
 	{ key = "price", header = "COL_PRICE", width = 84 },
-}
-local NAME_X = ICON_SIZE + ICON_GAP
-
--- x offset of each column and the total row width, computed once.
-local columnX, ROW_WIDTH = {}, NAME_X + NAME_WIDTH
-for i, column in ipairs(COLUMNS) do
-	columnX[i] = ROW_WIDTH
-	ROW_WIDTH = ROW_WIDTH + column.width
-end
-Layout.ROW_WIDTH = ROW_WIDTH
+})
+Layout.ROW_WIDTH = TABLE.rowWidth
 
 local function showTooltip(row)
 	if not row.data then
@@ -55,55 +46,13 @@ local function hideTooltip()
 	GameTooltip:Hide()
 end
 
-local function createRow(parent, index)
-	local row = CreateFrame("Button", nil, parent)
-	row:SetSize(ROW_WIDTH, ROW_HEIGHT)
-	row:SetPoint("TOPLEFT", 0, -(index - 1) * ROW_HEIGHT)
-	row.icon = row:CreateTexture(nil, "ARTWORK")
-	row.icon:SetSize(ICON_SIZE, ICON_SIZE)
-	row.icon:SetPoint("LEFT", 0, 0)
-	row.name = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	row.name:SetPoint("LEFT", NAME_X, 0)
-	row.name:SetWidth(NAME_WIDTH - ICON_GAP)
-	row.name:SetJustifyH("LEFT")
-	row.numbers = {}
-	for i, column in ipairs(COLUMNS) do
-		local text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-		text:SetPoint("LEFT", columnX[i], 0)
-		text:SetWidth(column.width)
-		text:SetJustifyH("RIGHT")
-		row.numbers[column.key] = text
-	end
-	row:SetScript("OnEnter", showTooltip)
-	row:SetScript("OnLeave", hideTooltip)
-	return row
-end
-
-local function createHeader(parent)
-	local name = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	name:SetPoint("TOPLEFT", NAME_X, 0)
-	name:SetText(L.COL_MATERIAL)
-	for i, column in ipairs(COLUMNS) do
-		local text = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		text:SetPoint("TOPLEFT", columnX[i], 0)
-		text:SetWidth(column.width)
-		text:SetJustifyH("RIGHT")
-		text:SetText(L[column.header])
-	end
-end
-
-local function createButton(parent, text, width)
-	local button = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-	button:SetSize(width, 22)
-	button:SetText(text)
-	return button
-end
+local createButton = Widgets.CreateButton
 
 -- Vertical layout inside the tab (pixels from the top) and fixed sizes.
 local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP = 26, 4, 8
 local CHECK_SIZE, CHECK_Y = 24, -28
-local HEADER_Y, HEADER_HEIGHT = -60, 16
+local HEADER_Y = -60
 local LIST_Y, EMPTY_TEXT_Y, EMPTY_TEXT_WIDTH = -78, -84, 500
 local IMPORT_BUTTON_WIDTH = 160
 local SCAN_BUTTON_WIDTH = 120
@@ -135,15 +84,10 @@ end
 
 -- Column header, the row pool, the empty-state text and mouse wheel scrolling.
 local function buildList(tab, frame)
-	local header = CreateFrame("Frame", nil, frame)
-	header:SetPoint("TOPLEFT", 0, HEADER_Y)
-	header:SetSize(1, HEADER_HEIGHT)
-	createHeader(header)
-	local list = CreateFrame("Frame", nil, frame)
-	list:SetPoint("TOPLEFT", 0, LIST_Y)
-	list:SetSize(1, VISIBLE_ROWS * ROW_HEIGHT)
-	for i = 1, VISIBLE_ROWS do
-		tab.rows[i] = createRow(list, i)
+	tab.rows = Widgets.CreateTable(frame, TABLE, VISIBLE_ROWS, HEADER_Y, LIST_Y)
+	for _, row in ipairs(tab.rows) do
+		row:SetScript("OnEnter", showTooltip)
+		row:SetScript("OnLeave", hideTooltip)
 	end
 	tab.emptyText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
 	tab.emptyText:SetPoint("TOPLEFT", 0, EMPTY_TEXT_Y)
