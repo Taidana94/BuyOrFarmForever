@@ -46,6 +46,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
 | 0.2.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.4 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
+| 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test; `/bof perf` numbers not reported yet) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -130,7 +131,10 @@ no errors (session 27). Not tested: `/bof perf` (added after this test).
 | Window | refresh coalesced to one per frame, only while visible; frames created once | – |
 | `UpdateAddOnMemoryUsage` | expensive (walks all addons) | only on `/bof perf`, at most every 15 s |
 
-In-game numbers from `/bof perf` (idle and with the window open) are still to be recorded.
+In-game smoke test of 0.2.0-alpha.5 (after the refactoring): confirmed by the user ("passt");
+SavedVariables: `lastAddonVersion = 0.2.0-alpha.5`, goal "Perftest" with items 6948, 2589, 159;
+`!BugGrabber.lua`: no errors (session 30). The `/bof perf` output itself was not reported, so the
+in-game numbers (idle and with the window open) are still to be recorded.
 
 ### Checklist 0.1.0 (Classic Era)
 

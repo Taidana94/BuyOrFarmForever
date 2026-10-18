@@ -143,7 +143,8 @@ Verzauberkunst (Verzauberungsfenster).
 Version 0.2.0-alpha.4 (18.10.2026): Fenster mit allen Funktionen (Anzeige, Aktualisierung, Ziele
 wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohne Fehler.
 
-Version 0.2.0-alpha.5 (`/bof perf`, weniger Speicherverbrauch) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.5 (18.10.2026): Kurztest nach dem Umbau (Fenster, `/bof stock`,
+Taschenänderung, `/bof perf`): ohne Fehler. Messwerte von `/bof perf` noch nicht ausgewertet.
 
 **Nicht in Forever getestet.**
 
