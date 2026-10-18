@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.5. Materialziele, Rezeptimport und Bestand, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.6. Materialziele, Rezeptimport, Bestand und Preise, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -48,6 +48,10 @@ Statt `/bof` funktioniert auch `/kof`.
 | `/bof goal crafts <Anzahl>` | wie oft du herstellen willst |
 | `/bof goal delete <Nr.>` | löscht ein Ziel; bestätigen mit `/bof goal delete <Nr.> confirm` |
 | `/bof recipe [Anzahl]` | legt aus dem Rezept, das im offenen Berufsfenster ausgewählt ist, ein neues Ziel an (ohne Anzahl: 1× herstellen) |
+| `/bof price` | Preise der Zutaten des ausgewählten Ziels (Händler, Auktionshaus, eigener Preis) |
+| `/bof price <Gegenstand> <Preis>` | eigener Preis pro Stück, z. B. `1g 20s 5k`, `35s` oder `80k` |
+| `/bof price <Gegenstand> clear` | löscht den eigenen Preis |
+| `/bof price scan` | sucht im offenen Auktionshaus das nächste fehlende Material |
 | `/bof stock` | Bedarf, Bestand (Taschen, Bank) und Fehlmenge des ausgewählten Ziels |
 | `/bof stock all` | dasselbe für alle Ziele zusammen |
 | `/bof stock others` | schaltet das Mitzählen deiner anderen Charaktere ein oder aus (Standard: an) |
@@ -61,7 +65,9 @@ offen ist) oder die Item-ID.
 Taschen und Bank, Bestand deiner anderen Charaktere („Twinks“) und Fehlmenge. Mit `<` und `>`
 wechselst du das Ziel, „Alle Ziele zusammen“ zeigt alles auf einmal. Fährst du mit der Maus über
 eine Zeile, siehst du den Gegenstand und welcher Twink wie viel hat. „Rezept übernehmen“ legt aus
-dem ausgewählten Rezept im offenen Berufsfenster ein Ziel an (1× herstellen). Das Fenster lässt
+dem ausgewählten Rezept im offenen Berufsfenster ein Ziel an (1× herstellen). Die Spalte
+„Preis/Stück“ zeigt den günstigsten aktuellen Preis; grau heißt veraltet. „AH-Scan“ (nur am
+Auktionshaus) sucht pro Klick das nächste fehlende Material. Das Fenster lässt
 sich verschieben und schließt mit Escape. Ziele anlegen und ändern geht noch über die Befehle oben.
 
 Aus einem Rezept: Berufsfenster öffnen (z. B. Schneiderei oder Verzauberkunst), das Rezept
@@ -103,24 +109,29 @@ das Addon sie nicht.
 - Das Fenster zeigt Ziele nur an; anlegen und bearbeiten geht noch über Chat-Befehle.
 - Bestand anderer Charaktere ist ein gespeicherter Stand vom letzten Login dieses Charakters.
 - Rezeptimport nur für das ausgewählte Rezept im offenen Berufsfenster, nur feste Zutaten.
-- Noch nicht enthalten: Preise, Farmmessung,
+- Preise kommen von dir, von Händlern (beim Öffnen des Händlerfensters) und aus dem Auktionshaus
+  (was du dort suchst, und der AH-Scan). Gespeichert werden automatisch nur Materialien aus
+  deinen Zielen, getrennt nach Realm und Fraktion. AH- und eigene Preise gelten nach 7 Tagen als
+  veraltet; Händlerpreise nicht. Das Auktionshaus zeigt pro Suche nur die erste Seite; bei sehr
+  vielen Angeboten ist der günstigste Preis evtl. nicht darunter.
+- Noch nicht enthalten: Farmmessung,
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients wird das Addon nicht geladen bzw. meldet, dass es nicht passt.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.5):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.6):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 100 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 111 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,
-  Blättern, Tooltip, Position)
+  Blättern, Tooltip, Position), Preise (Eingabe, Händler, Auktionshaus, veraltete Preise)
 
 **Im Spiel** (Version 0.1.0, Classic Era 1.15.9, deutscher Client, 18.10.2026):
 
@@ -144,13 +155,15 @@ Version 0.2.0-alpha.4 (18.10.2026): Fenster mit allen Funktionen (Anzeige, Aktua
 wechseln, Tooltip, Rezept übernehmen, Position, Escape, im Kampf): korrekt, ohne Fehler.
 
 Version 0.2.0-alpha.5 (18.10.2026): Kurztest nach dem Umbau (Fenster, `/bof stock`,
-Taschenänderung, `/bof perf`): ohne Fehler. Messwerte von `/bof perf` noch nicht ausgewertet.
+Taschenänderung, `/bof perf`): ohne Fehler.
+
+Version 0.2.0-alpha.6 (Preise) ist im Spiel noch nicht getestet.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.5 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

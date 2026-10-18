@@ -9,9 +9,9 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
+| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
-| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEra.lua` | all client-specific APIs |
+| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
 | Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTabLayout.lua` (widgets), `UI/MaterialTab.lua` (logic) | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
@@ -21,9 +21,9 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 ## Load order (TOC)
 
-`Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
+`Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` →
+`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEra.lua` →
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -36,7 +36,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 2d)
+### Adapter interface (stage 2e)
 
 | Function | Returns |
 |---|---|
@@ -55,11 +55,18 @@ printed and `Core/Main.lua` registers nothing.
 | `GetMemoryKB(addonName, refresh)` | memory in KB (`refresh` first calls `UpdateAddOnMemoryUsage`), or nil |
 | `GetCPUMetrics(addonName)` | `{ recent, average, peak }`, each `{ addon, app, overall }`, or nil while the addon profiler is off |
 | `GetTimeMs()` | high-resolution time in ms (`debugprofilestop`), or nil |
+| `GetItemName(itemID)` | localized name, or nil while loading (load requested) |
+| `ReadMerchantPrices()` | `{ { itemID, copper per unit } }` of the open merchant; items with token costs skipped |
+| `ReadAuctionResults()` | `{ { itemID, count, buyout } }` of the current auction search page (rows without data skipped) |
+| `CanQueryAuction()` | bool |
+| `QueryAuction(itemName)` | bool; exact-name search, first page, all qualities; only from a click or command |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`. Internal signal:
-`DATA_CHANGED` (raised by `Slash.Handle` after every registered command). Core code subscribes with
+Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
+`MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`. Internal
+signals: `DATA_CHANGED` (raised by `Slash.Handle` after every registered command), `PRICES_CHANGED`
+(raised by `PriceCapture` after storing prices and when the auction house opens or closes). Core code subscribes with
 `Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
 `Events.OffSignal(signal, fn)` removes a handler; when a signal has no handlers left, its WoW events
 are unregistered.
@@ -91,6 +98,26 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
 
+## Prices (stage 2e)
+
+- `db.prices["<NormalizedRealm>-<Alliance|Horde>"][itemID] = { MANUAL = { copper, at }, MERCHANT = ..., AUCTION = ... }`,
+  unit prices in copper (auction and merchant prices can be fractional), `at` = server time.
+  `Prices.Sanitize` (in `DB.ROOT_VALIDATORS`) removes invalid entries on load.
+- Planning price (`Prices.Best`): the cheapest price that is not outdated; if all are outdated, the
+  newest one, flagged. Outdated = older than `settings.priceMaxAgeDays` (default 7). Merchant prices
+  never become outdated (fixed prices).
+- Automatic capture only for tracked items (goals of any character). Merchant: unit price =
+  price / stack size, items with `extendedCost` (tokens) skipped. Auction: lowest buyout per unit of
+  one result page; pages within `Prices.AUCTION_MERGE_SECONDS` (600 s) are merged by minimum, a
+  later search replaces the price. Auctions without buyout are ignored.
+- Auction scan (`PriceCapture.ScanNext`, button and `/bof price scan`): one exact-name search per
+  click for the next missing material not yet searched during this auction house visit. One search
+  per click avoids automated query loops; whether `QueryAuctionItems` needs a hardware event in
+  Classic Era is not documented, so it is only called from a click or command. Only the first page
+  is read; the scan does not page through results.
+- Money input (`Money.Parse`): units required (`g`, `s`, `k`/`c`, from the locale); a plain number
+  is rejected because it is ambiguous.
+
 ## Recipes (stage 2c)
 
 `/bof recipe [crafts]` reads the recipe selected in the open profession window through
@@ -121,6 +148,10 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock` | always | per bank visit | snapshot of the tracked items |
 | `TRADE_SKILL_SHOW` / `_CLOSE`, `CRAFT_SHOW` / `_CLOSE` | Classic Era adapter (own frame) | always | per profession window open/close | sets two flags, no API calls |
 | `ITEM_DATA_LOAD_RESULT` → `ITEM_LOADED` | Material tab | only while the window is shown | per item whose data arrives | requests one refresh |
+| `MERCHANT_SHOW` / `MERCHANT_CLOSED` | `PriceCapture` | always | per merchant visit | reads the merchant list once, stores tracked items |
+| `MERCHANT_UPDATE` → `MERCHANT_CHANGED` | `PriceCapture` | only while a merchant is open | when merchant data changes | same as above |
+| `AUCTION_HOUSE_SHOW` / `AUCTION_HOUSE_CLOSED` | `PriceCapture` | always | per auction house visit | flags, scan list reset |
+| `AUCTION_ITEM_LIST_UPDATE` → `AUCTION_RESULTS` | `PriceCapture` | only while the auction house is open | per result page and when row data arrives | reads one page (max. 50 rows), stores the lowest unit buyout of tracked items |
 | `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED`, `DATA_CHANGED` (signals) | Material tab | handler added on show, removed on hide (the WoW events stay registered for `Stock`) | see above | requests one refresh |
 
 Window refreshes are coalesced: any number of refresh requests in one frame lead to one
@@ -156,7 +187,7 @@ only sets flags.
 ## SavedVariables (schema 1)
 
 One account-wide variable `BuyOrFarmForeverDB`. Defaults: `Core/DB.lua` (`DB.DEFAULTS`,
-`DB.CHARACTER_DEFAULTS`). Fields not used yet (prices, recipes, farm runs, goals) already exist with
+`DB.CHARACTER_DEFAULTS`). Fields not used yet (farm runs, savings goals, income) already exist with
 empty defaults so later stages need no migration.
 
 `DB.Load` statuses:

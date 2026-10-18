@@ -15,19 +15,6 @@ local UIShared = ns.UIShared
 local PriceCommands = {}
 ns.PriceCommands = PriceCommands
 
-local SOURCE_NAMES = { MERCHANT = "PRICE_SOURCE_MERCHANT", AUCTION = "PRICE_SOURCE_AUCTION", MANUAL = "PRICE_SOURCE_MANUAL" }
-
--- "25s (Händler)", "30s (AH, vor 2 Std., veraltet)"
-function PriceCommands.DescribeRecord(source, record, now)
-	local maxAge = ns.db.settings.priceMaxAgeDays
-	local name = L[SOURCE_NAMES[source]]
-	if source == "MERCHANT" then
-		return Util.Format(L.PRICE_PART, Money.Format(record.copper), name)
-	end
-	local template = Prices.IsOutdated(source, record, now, maxAge) and L.PRICE_PART_OUTDATED or L.PRICE_PART_AGED
-	return Util.Format(template, Money.Format(record.copper), name, Util.FormatAge(now - record.at))
-end
-
 local function describeItem(realmKey, itemID, now)
 	local item = Prices.Get(ns.db, realmKey, itemID)
 	if not item then
@@ -36,7 +23,7 @@ local function describeItem(realmKey, itemID, now)
 	local parts = {}
 	for _, source in ipairs(Prices.SOURCE_ORDER) do
 		if item[source] then
-			parts[#parts + 1] = PriceCommands.DescribeRecord(source, item[source], now)
+			parts[#parts + 1] = UIShared.DescribePrice(source, item[source], now)
 		end
 	end
 	return table.concat(parts, L.PRICE_SEPARATOR)

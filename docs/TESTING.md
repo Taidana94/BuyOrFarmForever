@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.2.0-alpha.6 | 2026-10-18 | 128 checks passed, 0 failed (111 unit tests); mutation checks: no auction page merge fails 1, ignoring price age fails 2, no unregister of auction results fails 1 |
 | 0.2.0-alpha.5 | 2026-10-18 | 117 checks passed, 0 failed (100 unit tests; levels 0, 1, 1b, 1c, 2); 1c mutation check: injected OnUpdate, ticker, CreateFrame in a handler, magic numbers and deep nesting are all reported |
 | 0.2.0-alpha.4 | 2026-10-18 | 107 checks passed, 0 failed (95 unit tests); mutation checks: no unregister on hide fails 2, no coalescing fails 1, no colors fails 2 (after strengthening the color test) |
 
@@ -46,7 +47,8 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
 | 0.2.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
 | 0.2.0-alpha.4 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
-| 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test; `/bof perf` numbers not reported yet) |
+| 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test) |
+| 0.2.0-alpha.6 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -234,3 +236,22 @@ Needs a character with a crafting profession; Enchanting additionally tests the 
 9. In combat: open/close the window and click buttons → no error, no "Aktion blockiert".
 10. `/bof goal add <Item> 1` while the window is open → new row appears.
 11. Performance: with the window closed nothing should happen; report anything unusual.
+
+### Checklist 0.2.0-alpha.6 (Classic Era, prices)
+
+Goal with a vendor reagent and a cloth, e.g. `/bof goal new Preistest`, `/bof goal add 2320 2`
+(Grobes Garn, sold by tailoring vendors), `/bof goal add 2589 5` (Leinenstoff).
+
+1. `/reload`, `/bof version` → `0.2.0-alpha.6`; `/bof show` → column "Preis/Stück" with "–".
+2. `/bof price 2589 1s 20k` → "eigener Preis 1s 20k pro Stück gespeichert"; window shows 1s 20k.
+   `/bof price 2589 120` → message about the unit.
+3. Open a merchant that sells Grobes Garn (no need to buy) → window: price of Grobes Garn appears;
+   `/bof price` → "… (Händler)". Compare with the merchant's price per piece.
+4. Auction house: search "Leinenstoff" yourself → price "(AH, gerade eben)"; compare with the
+   cheapest buyout per piece on the first page.
+5. Auction house: click "AH-Scan" in the window (and `/bof price scan`) → chat "suche …"; the AH shows
+   the search, the price updates. Clicking again after all missing items were searched → "schon gesucht".
+   Report whether the search worked or the client blocked it.
+6. Close the AH → "AH-Scan" is disabled. Mouse over a row → tooltip lists all price sources.
+7. `/bof price 2589 clear` → own price removed.
+8. `/reload` → prices kept. BugSack: no errors.

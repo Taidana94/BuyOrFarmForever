@@ -11,6 +11,9 @@ local Recipes = ns.Recipes
 local Stock = ns.Stock
 local Events = ns.Events
 local UIShared = ns.UIShared
+local Prices = ns.Prices
+local Money = ns.Money
+local PriceCapture = ns.PriceCapture
 local Layout = ns.MaterialTabLayout
 
 local MaterialTab = {}
@@ -20,7 +23,8 @@ local VISIBLE_ROWS = Layout.VISIBLE_ROWS
 local COLOR_MISSING = { 1, 0.35, 0.35 }
 local COLOR_DONE = { 0.4, 1, 0.4 }
 local COLOR_NORMAL = { 1, 1, 1 }
-local REFRESH_SIGNALS = { "BAGS_CHANGED", "BANK_OPENED", "BANK_CLOSED", "ITEM_LOADED", "DATA_CHANGED" }
+local REFRESH_SIGNALS = { "BAGS_CHANGED", "BANK_OPENED", "BANK_CLOSED", "ITEM_LOADED", "DATA_CHANGED", "PRICES_CHANGED" }
+local COLOR_OUTDATED = { 0.6, 0.6, 0.6 }
 
 local Tab = {}
 Tab.__index = Tab
@@ -80,6 +84,23 @@ function Tab:RequestRefresh()
 	end)
 end
 
+-- Adds the planning price (Prices.Best) and the tooltip lines of all price sources to each row.
+local function addPrices(rows)
+	local realmKey = PriceCapture.CurrentRealmKey()
+	local now = ns.Client:GetServerTime()
+	local maxAge = ns.db.settings.priceMaxAgeDays
+	for _, row in ipairs(rows) do
+		row.price, _, _, row.priceOutdated = Prices.Best(ns.db, realmKey, row.itemID, now, maxAge)
+		row.priceLines = {}
+		local item = Prices.Get(ns.db, realmKey, row.itemID)
+		for _, source in ipairs(Prices.SOURCE_ORDER) do
+			if item and item[source] then
+				row.priceLines[#row.priceLines + 1] = UIShared.DescribePrice(source, item[source], now)
+			end
+		end
+	end
+end
+
 -- Goals to show and the header line; nil goals means "show emptyText".
 local function selection(charData)
 	local ids = Materials.ListGoalIDs(charData)
@@ -116,11 +137,13 @@ function Tab:Refresh()
 	setEnabled(self.next, hasGoals and not all and canWrite())
 	setEnabled(self.allGoals, canWrite())
 	setEnabled(self.import, canWrite())
+	setEnabled(self.scan, canWrite() and PriceCapture.IsAuctionOpen())
 	if not goals then
 		self:ShowEmpty(headerText, emptyText)
 		return
 	end
 	self.data = Stock.Rows(charData, goals)
+	addPrices(self.data)
 	self.goalText:SetText(headerText)
 	if #self.data == 0 then
 		self:ShowEmpty(headerText, L.STOCK_EMPTY)
@@ -165,6 +188,11 @@ function Tab:DrawRow(row, data)
 	setNumber(row.numbers.bank, data.bank and tostring(data.bank) or L.UNKNOWN_SHORT, COLOR_NORMAL)
 	setNumber(row.numbers.others, countOthers and tostring(data.others) or L.WINDOW_OFF, COLOR_NORMAL)
 	setNumber(row.numbers.missing, tostring(data.missing), data.missing > 0 and COLOR_MISSING or COLOR_DONE)
+	if data.price then
+		setNumber(row.numbers.price, Money.Format(data.price), data.priceOutdated and COLOR_OUTDATED or COLOR_NORMAL)
+	else
+		setNumber(row.numbers.price, L.WINDOW_OFF, COLOR_OUTDATED)
+	end
 	row:Show()
 end
 
@@ -219,4 +247,8 @@ function Tab:ImportRecipe()
 	end
 	self.offset = 0
 	self:Refresh()
+end
+
+function Tab:ScanAuction()
+	ns.PriceCommands.Scan()
 end

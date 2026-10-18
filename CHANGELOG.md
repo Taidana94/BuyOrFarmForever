@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.6] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Preise pro Stück aus drei Quellen: eigene Eingabe (`/bof price`), Händler (automatisch beim
+  Händlerfenster) und Auktionshaus (automatisch bei deinen Suchen und per AH-Scan).
+- Getrennt nach Realm und Fraktion; veraltete Preise (älter als 7 Tage) werden markiert.
+- Fenster: Spalte „Preis/Stück“, Preise im Tooltip, Knopf „AH-Scan“.
+
 ## [0.2.0-alpha.5] – noch nicht veröffentlicht
 
 ### Hinzugefügt
