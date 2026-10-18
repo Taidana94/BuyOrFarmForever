@@ -25,6 +25,7 @@ Core\Slash.lua
 UI\ChatShared.lua
 UI\GoalCommands.lua
 UI\StockCommands.lua
+UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
 UI\MainWindow.lua
 Core\Main.lua

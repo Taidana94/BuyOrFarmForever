@@ -14,7 +14,7 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
 | Chat UI (provisional) | `UI/ChatShared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
-| Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
+| Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTabLayout.lua` (widgets), `UI/MaterialTab.lua` (logic) | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -23,7 +23,7 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
 `Core/DB.lua` → `Core/Materials.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
