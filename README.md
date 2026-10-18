@@ -116,7 +116,7 @@ das Addon sie nicht.
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 99 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 100 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten), Rezeptimport aus Berufs- und Verzauberungsfenster, Fenster (Anzeige, Aktualisierung, Ziele wechseln,

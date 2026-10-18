@@ -29,7 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
-| 0.2.0-alpha.5 | 2026-10-18 | 117 checks passed, 0 failed (99 unit tests, levels 0-2 including the new 1c); 1c mutation check: injected OnUpdate, ticker, CreateFrame in a handler, magic numbers and deep nesting are all reported |
+| 0.2.0-alpha.5 | 2026-10-18 | 117 checks passed, 0 failed (100 unit tests; levels 0, 1, 1b, 1c, 2); 1c mutation check: injected OnUpdate, ticker, CreateFrame in a handler, magic numbers and deep nesting are all reported |
 | 0.2.0-alpha.4 | 2026-10-18 | 107 checks passed, 0 failed (95 unit tests); mutation checks: no unregister on hide fails 2, no coalescing fails 1, no colors fails 2 (after strengthening the color test) |
 
 ## In game
