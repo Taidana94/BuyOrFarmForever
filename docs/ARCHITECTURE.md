@@ -64,8 +64,8 @@ printed and `Core/Main.lua` registers nothing.
 | `GetMapName(uiMapID)` | localized map name, or nil |
 | `GetMoney()` | copper the character carries, or nil |
 | `GetItemStats(itemID)` | `{ STR, AGI, STA, INT, SPI, ARMOR }` (0 if missing), or nil while loading |
-| `GetEquipSlots(itemID)` | `{ slot, ... }` with `.sum = true` for two-handers, or nil if not equippable |
-| `GetEquippedItemID(slot)` | item id in the inventory slot, or nil |
+| `GetEquipSlots(itemID)` | slot keys, e.g. `{ "CHEST" }`, `{ "FINGER1", "FINGER2" }`, with `.sum = true` for two-handers; nil if not equippable |
+| `GetEquippedItemID(slotKey)` | item id in that slot, or nil (the adapter maps keys to Classic inventory slot numbers) |
 | `GetSellPrice(itemID)` | vendor sell price per unit, or nil while loading |
 | `QueryAuction(itemName)` | bool; exact-name search, first page, all qualities; only from a click or command |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |

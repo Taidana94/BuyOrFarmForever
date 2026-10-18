@@ -13,7 +13,7 @@ py -3 -I work/tools/check.py outputs/BuyOrFarmForever
 | 0 | TOC naming, required TOC fields, interface 11509 for `_Vanilla`, SemVer, listed files exist with exact case, no unlisted files, UTF-8 without BOM |
 | 1 | `luac5.1 -p` for all Lua files, luacheck with the addon's `.luacheckrc` (warnings fail) |
 | 1b | used locale keys exist in deDE, other locales have the same keys and placeholders, no hardcoded user text |
-| 1c | cleanliness and performance (`work/tools/lua_static.py`): every `OnUpdate` script and ticker has `-- PERF-OK:` and is named in ARCHITECTURE.md; `CreateFrame` only at file level or in create/build functions; no magic numbers in `Core/` and `Adapters/` (0, 1, 2 allowed; constants are UPPER_SNAKE); functions at most 40 lines and nesting 3; files at most 300 lines |
+| 1c | cleanliness and performance (`work/tools/lua_static.py`): every `OnUpdate` script and ticker has `-- PERF-OK:` and is named in ARCHITECTURE.md; `CreateFrame` only at file level or in create/build functions; no magic numbers in `Core/` and `Adapters/` (0, 1, 2 allowed; constants are UPPER_SNAKE); functions at most 40 lines and nesting 3; files at most 300 lines (locale files excluded: one string per line, data) |
 | 2 | unit tests in a mock client environment (`work/tests/`), including an allocation test: 10000 bag events must not allocate memory beyond a constant |
 
 The mock environment models Classic Era 1.15.9 (70003) and provides only the APIs in `.luacheckrc`.

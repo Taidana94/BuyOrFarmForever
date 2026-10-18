@@ -18,7 +18,9 @@ local STAT_KEYS = {
 	RESISTANCE0_NAME = "ARMOR",
 }
 
--- Inventory slots (INVSLOT_* in Blizzard_FrameXMLBase/Classic/Constants.lua) per equip location.
+-- Slot keys per equip location; the core and the UI only see these keys (and show them with
+-- L.SLOT_<key>). INVSLOT holds the inventory slot numbers (INVSLOT_* in
+-- Blizzard_FrameXMLBase/Classic/Constants.lua).
 -- With several slots the item replaces the weaker one (rings, trinkets); with sum = true it replaces
 -- all of them together (a two-handed weapon replaces main and off hand). One-handed weapons are
 -- compared with the main hand only.
@@ -28,31 +30,31 @@ local INVSLOT = {
 	MAINHAND = 16, OFFHAND = 17, RANGED = 18, TABARD = 19,
 }
 local SLOTS = {
-	INVTYPE_HEAD = { INVSLOT.HEAD },
-	INVTYPE_NECK = { INVSLOT.NECK },
-	INVTYPE_SHOULDER = { INVSLOT.SHOULDER },
-	INVTYPE_BODY = { INVSLOT.BODY },
-	INVTYPE_CHEST = { INVSLOT.CHEST },
-	INVTYPE_ROBE = { INVSLOT.CHEST },
-	INVTYPE_WAIST = { INVSLOT.WAIST },
-	INVTYPE_LEGS = { INVSLOT.LEGS },
-	INVTYPE_FEET = { INVSLOT.FEET },
-	INVTYPE_WRIST = { INVSLOT.WRIST },
-	INVTYPE_HAND = { INVSLOT.HAND },
-	INVTYPE_FINGER = { INVSLOT.FINGER1, INVSLOT.FINGER2 },
-	INVTYPE_TRINKET = { INVSLOT.TRINKET1, INVSLOT.TRINKET2 },
-	INVTYPE_CLOAK = { INVSLOT.BACK },
-	INVTYPE_WEAPON = { INVSLOT.MAINHAND },
-	INVTYPE_WEAPONMAINHAND = { INVSLOT.MAINHAND },
-	INVTYPE_2HWEAPON = { INVSLOT.MAINHAND, INVSLOT.OFFHAND, sum = true },
-	INVTYPE_WEAPONOFFHAND = { INVSLOT.OFFHAND },
-	INVTYPE_SHIELD = { INVSLOT.OFFHAND },
-	INVTYPE_HOLDABLE = { INVSLOT.OFFHAND },
-	INVTYPE_RANGED = { INVSLOT.RANGED },
-	INVTYPE_RANGEDRIGHT = { INVSLOT.RANGED },
-	INVTYPE_THROWN = { INVSLOT.RANGED },
-	INVTYPE_RELIC = { INVSLOT.RANGED },
-	INVTYPE_TABARD = { INVSLOT.TABARD },
+	INVTYPE_HEAD = { "HEAD" },
+	INVTYPE_NECK = { "NECK" },
+	INVTYPE_SHOULDER = { "SHOULDER" },
+	INVTYPE_BODY = { "BODY" },
+	INVTYPE_CHEST = { "CHEST" },
+	INVTYPE_ROBE = { "CHEST" },
+	INVTYPE_WAIST = { "WAIST" },
+	INVTYPE_LEGS = { "LEGS" },
+	INVTYPE_FEET = { "FEET" },
+	INVTYPE_WRIST = { "WRIST" },
+	INVTYPE_HAND = { "HAND" },
+	INVTYPE_FINGER = { "FINGER1", "FINGER2" },
+	INVTYPE_TRINKET = { "TRINKET1", "TRINKET2" },
+	INVTYPE_CLOAK = { "BACK" },
+	INVTYPE_WEAPON = { "MAINHAND" },
+	INVTYPE_WEAPONMAINHAND = { "MAINHAND" },
+	INVTYPE_2HWEAPON = { "MAINHAND", "OFFHAND", sum = true },
+	INVTYPE_WEAPONOFFHAND = { "OFFHAND" },
+	INVTYPE_SHIELD = { "OFFHAND" },
+	INVTYPE_HOLDABLE = { "OFFHAND" },
+	INVTYPE_RANGED = { "RANGED" },
+	INVTYPE_RANGEDRIGHT = { "RANGED" },
+	INVTYPE_THROWN = { "RANGED" },
+	INVTYPE_RELIC = { "RANGED" },
+	INVTYPE_TABARD = { "TABARD" },
 }
 
 -- Position of sellPrice in the returns of C_Item.GetItemInfo (generated docs, 70003).
@@ -85,8 +87,8 @@ function Gear.GetItemStats(itemID)
 	return stats
 end
 
--- Inventory slots the item goes into: { slot, ... } with .sum = true when it replaces all of
--- them together; nil if the item cannot be equipped.
+-- Slot keys the item goes into: { "CHEST" } or { "FINGER1", "FINGER2" }, with .sum = true when
+-- it replaces all of them together; nil if the item cannot be equipped (bags, materials).
 function Gear.GetEquipSlots(itemID)
 	if not (C_Item and C_Item.GetItemInfoInstant) then
 		return nil
@@ -95,9 +97,10 @@ function Gear.GetEquipSlots(itemID)
 	return equipLoc and SLOTS[equipLoc] or nil
 end
 
--- Item id in an inventory slot of the player, or nil if the slot is empty.
-function Gear.GetEquippedItemID(slot)
-	if not GetInventoryItemLink then
+-- Item id in a slot ("HEAD", "FINGER1", …) of the player, or nil if the slot is empty.
+function Gear.GetEquippedItemID(slotKey)
+	local slot = INVSLOT[slotKey]
+	if not (slot and GetInventoryItemLink) then
 		return nil
 	end
 	local _, itemID = ns.Util.ParseLink(GetInventoryItemLink("player", slot))

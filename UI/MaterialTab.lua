@@ -136,27 +136,10 @@ end
 
 -- Selects the previous (-1) or next (1) goal, wrapping around.
 function Tab:StepGoal(step)
-	local charData = currentCharacter()
-	if not (charData and canWrite()) then
-		return
+	if UIShared.StepGoal(step) then
+		self.offset = 0
+		self:Refresh()
 	end
-	local ids = Materials.ListGoalIDs(charData)
-	if #ids == 0 then
-		return
-	end
-	local current = 0
-	for i, id in ipairs(ids) do
-		if id == charData.activeGoalID then
-			current = i
-		end
-	end
-	local nextIndex = (current - 1 + step) % #ids + 1
-	if current == 0 then
-		nextIndex = step > 0 and 1 or #ids
-	end
-	Materials.SelectGoal(charData, ids[nextIndex])
-	self.offset = 0
-	self:Refresh()
 end
 
 function Tab:SetAllGoals(all)

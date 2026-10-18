@@ -232,7 +232,7 @@ weist darauf hin.
 
 **Außerhalb des Spiels** (Version 0.3.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
-kein Speicherzuwachs bei Taschenänderungen) und 153 automatische Tests in einer nachgebauten
+kein Speicherzuwachs bei Taschenänderungen) und 154 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
 Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung, Farm-Tab, Goldpuffer).
 

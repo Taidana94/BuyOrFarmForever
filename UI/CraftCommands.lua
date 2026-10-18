@@ -33,7 +33,8 @@ local function equippedText(comparison)
 	local parts = {}
 	for _, entry in ipairs(comparison.equipped) do
 		local name = entry.itemID and UIShared.ItemText(entry.itemID) or L.CRAFT_SLOT_EMPTY
-		parts[#parts + 1] = Util.Format(L.CRAFT_EQUIPPED_PART, name, scoreText(entry.score))
+		parts[#parts + 1] = Util.Format(L.CRAFT_EQUIPPED_PART, L["SLOT_" .. entry.slot] or entry.slot, name,
+			scoreText(entry.score))
 	end
 	return table.concat(parts, L.PLAN_SEPARATOR)
 end

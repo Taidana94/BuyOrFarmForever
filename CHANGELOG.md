@@ -23,6 +23,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
   wahlweise nur mit freiem Gold planen (`/bof gold reserves`).
 
 - Tab „Hilfe“ mit allen Befehlen.
+- Craft-Bewertung nennt den verglichenen Platz (z. B. „Brust“, „Finger 1“); der Tab „Craft“ hat
+  eigene Knöpfe `<` und `>` zum Wechseln des Ziels und erklärt, warum ein Ziel nichts zu vergleichen hat.
 
 ### Geändert
 

@@ -143,6 +143,27 @@ function UIShared.GoalSelection(charData)
 	return { goal }, Util.Format(L.WINDOW_GOAL_LINE, position, #ids, UIShared.GoalName(goal), goal.crafts)
 end
 
+-- Selects the previous (-1) or next (1) goal of the current character, wrapping around.
+-- Returns true if the selection changed (window buttons; read-only data is not changed).
+function UIShared.StepGoal(step)
+	local charData = ns.db and not ns.readOnly and ns.charKey and ns.db.characters[ns.charKey]
+	local ids = charData and Materials.ListGoalIDs(charData) or {}
+	if #ids == 0 then
+		return false
+	end
+	local current = 0
+	for i, id in ipairs(ids) do
+		if id == charData.activeGoalID then
+			current = i
+		end
+	end
+	local nextIndex = (current - 1 + step) % #ids + 1
+	if current == 0 then
+		nextIndex = step > 0 and 1 or #ids
+	end
+	return Materials.SelectGoal(charData, ids[nextIndex])
+end
+
 -- Character data of the logged-in character, or nil with a message. In read-only mode the
 -- stored data may have an unknown layout (newer schema, failed migration), so it is not read.
 function UIShared.Character()

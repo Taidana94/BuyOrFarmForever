@@ -41,7 +41,8 @@ local function scoreOf(itemID, weights)
 end
 
 -- Compares an item with the equipped item(s) of its slot(s).
--- Returns { itemID, score, equipped = { { slot, itemID (or nil = empty), score } }, current, gain },
+-- Returns { itemID, score, equipped = { { slot (key from the adapter, e.g. "CHEST"), itemID (or nil
+-- = empty), score } }, current, gain },
 -- or nil plus "not_equippable" | "loading".
 function CraftEval.CompareWithEquipped(itemID, weights)
 	local slots = ns.Client:GetEquipSlots(itemID)
