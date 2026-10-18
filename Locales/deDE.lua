@@ -29,7 +29,7 @@ L.READ_ONLY_REFUSED = "Nicht möglich: Die gespeicherten Daten stammen aus einer
 
 -- Material goals (provisional chat commands)
 L.HELP_LINE_GOAL = "/bof goal – Materialziele anlegen und bearbeiten (vorläufig, bis das Fenster fertig ist)"
-L.HELP_LINE_STOCK = "/bof stock [all] – Bedarf, Bestand und Fehlmenge des ausgewählten Ziels bzw. aller Ziele"
+L.HELP_LINE_STOCK = "/bof stock [all] – Bedarf, Bestand und Fehlmenge des ausgewählten Ziels bzw. aller Ziele; /bof stock others schaltet das Mitzählen deiner anderen Charaktere ein oder aus"
 L.GOAL_USAGE = "Ziele: /bof goal new <Name> | list | select <Nr.> | add <Gegenstand> [Menge] | set <Gegenstand> <Menge> | remove <Gegenstand> | crafts <Anzahl> | delete <Nr.>"
 L.GOAL_UNNAMED = "ohne Namen"
 L.GOAL_CREATED = "Ziel %1$d „%2$s“ angelegt und ausgewählt."
@@ -58,8 +58,12 @@ L.STOCK_ALL_HEADER = "Alle Ziele zusammen:"
 L.STOCK_EMPTY = "Das Ziel enthält noch keine Zutaten. Füge welche hinzu mit /bof goal add <Gegenstand> <Menge>."
 L.STOCK_LINE = "%1$s: benötigt %2$d, Taschen %3$d, Bank %4$s – fehlt %5$d"
 L.STOCK_LINE_DONE = "%1$s: benötigt %2$d, Taschen %3$d, Bank %4$s – vollständig"
-L.STOCK_BANK_SNAPSHOT = "    Bank beim letzten Besuch (%2$s): %1$s"
-L.STOCK_BANK_NEVER = "    Bank seit Anlegen des Ziels noch nicht besucht."
+L.STOCK_LINE_ALTS = "%1$s: benötigt %2$d, Taschen %3$d, Bank %4$s, Twinks %5$d – fehlt %6$d"
+L.STOCK_LINE_ALTS_DONE = "%1$s: benötigt %2$d, Taschen %3$d, Bank %4$s, Twinks %5$d – vollständig"
+L.STOCK_ALT_DETAIL = "    %1$s: %2$d (Taschen %3$d, Bank %4$d, Stand %5$s)"
+L.STOCK_ALT_OTHER_FACTION = "    %1$s, andere Fraktion, nicht mitgezählt: %2$d (Taschen %3$d, Bank %4$d, Stand %5$s)"
+L.STOCK_OTHERS_ON = "Bestände deiner anderen Charaktere auf diesem Realm werden mitgezählt (gleiche Fraktion)."
+L.STOCK_OTHERS_OFF = "Bestände deiner anderen Charaktere werden nicht mehr mitgezählt."
 
 -- Time
 L.AGE_NOW = "gerade eben"

@@ -220,10 +220,19 @@ end
 
 -- /bof stock [all] ----------------------------------------------------------------------
 
+-- Other characters' stock of one item: counted total (same faction) and detail rows.
+local function others(charData, itemID)
+	if not ns.db.settings.countOtherCharacters then
+		return 0, {}
+	end
+	return Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID)
+end
+
 local function printStock(charData, goals)
+	local countOthers = ns.db.settings.countOtherCharacters
 	local rows = Materials.Shortfall(Materials.Requirements(goals), function(itemID)
 		local bags, bank = Stock.Count(itemID)
-		return bags + (bank or 0)
+		return bags + (bank or 0) + (others(charData, itemID))
 	end)
 	if #rows == 0 then
 		Log.Print(L.STOCK_EMPTY)
@@ -233,19 +242,28 @@ local function printStock(charData, goals)
 	for _, row in ipairs(rows) do
 		local bags, bank = Stock.Count(row.itemID)
 		local bankText = bank and tostring(bank) or L.UNKNOWN_SHORT
-		local template = row.missing > 0 and L.STOCK_LINE or L.STOCK_LINE_DONE
-		Log.Print(Util.Format(template, itemText(row.itemID), row.need, bags, bankText, row.missing))
-		-- Bank check (Q-T6): show the snapshot from the last bank visit next to the live value.
-		if Log.IsDebug() and not Stock.IsBankOpen() then
-			local snapshot, at = Stock.BankSnapshot(charData, row.itemID)
-			if at > 0 then
-				local snapshotText = snapshot and tostring(snapshot) or L.UNKNOWN_SHORT
-				Log.Print(Util.Format(L.STOCK_BANK_SNAPSHOT, snapshotText, Util.FormatAge(now - at)))
-			else
-				Log.Print(L.STOCK_BANK_NEVER)
-			end
+		local counted, details = others(charData, row.itemID)
+		if countOthers then
+			local template = row.missing > 0 and L.STOCK_LINE_ALTS or L.STOCK_LINE_ALTS_DONE
+			Log.Print(Util.Format(template, itemText(row.itemID), row.need, bags, bankText, counted, row.missing))
+		else
+			local template = row.missing > 0 and L.STOCK_LINE or L.STOCK_LINE_DONE
+			Log.Print(Util.Format(template, itemText(row.itemID), row.need, bags, bankText, row.missing))
+		end
+		for _, d in ipairs(details) do
+			local template = d.sameFaction and L.STOCK_ALT_DETAIL or L.STOCK_ALT_OTHER_FACTION
+			Log.Print(Util.Format(template, d.name, d.total, d.bags, d.bank, Util.FormatAge(now - d.at)))
 		end
 	end
+end
+
+local function toggleOthers()
+	if not Slash.CanWrite() then
+		return
+	end
+	local settings = ns.db.settings
+	settings.countOtherCharacters = not settings.countOtherCharacters
+	Log.Print(settings.countOtherCharacters and L.STOCK_OTHERS_ON or L.STOCK_OTHERS_OFF)
 end
 
 local function stockCommand(argument)
@@ -253,7 +271,12 @@ local function stockCommand(argument)
 	if not charData then
 		return
 	end
-	if string.lower(Util.Trim(argument)) == "all" then
+	local option = string.lower(Util.Trim(argument))
+	if option == "others" then
+		toggleOthers()
+		return
+	end
+	if option == "all" then
 		local goals = {}
 		for _, id in ipairs(Materials.ListGoalIDs(charData)) do
 			goals[#goals + 1] = charData.materialGoals[id]

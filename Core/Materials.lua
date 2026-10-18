@@ -227,6 +227,21 @@ function Materials.TrackedItemIDs(charData)
 	return ids
 end
 
+-- All item ids used in the goals of any character (for stock snapshots of every character).
+function Materials.TrackedItemIDsAll(db)
+	local ids, seen = {}, {}
+	for _, charData in pairs(db.characters) do
+		for _, itemID in ipairs(Materials.TrackedItemIDs(charData)) do
+			if not seen[itemID] then
+				seen[itemID] = true
+				ids[#ids + 1] = itemID
+			end
+		end
+	end
+	table.sort(ids)
+	return ids
+end
+
 -- Validation of stored data (registered with DB.VALIDATORS) ----------------------------
 
 local function sanitizeItems(items)

@@ -25,6 +25,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 |---|---|---|
 | 0.1.0 | 2026-10-18 | 55 checks passed, 0 failed (43 unit tests) |
 | 0.2.0-alpha.1 | 2026-10-18 | 77 checks passed, 0 failed (65 unit tests); mutation check: breaking the craft multiplier or the bank count fails 5 tests |
+| 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 
 ## In game
 
@@ -37,6 +38,7 @@ commit (`git log -1 --oneline`).
 |---|---|---|---|
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
+| 0.2.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -105,3 +107,19 @@ Use a character that has some linen cloth (or any item) in bags and bank. `/bof 
 8. `/bof goal`, `/bof goal set 2589 0`, `/bof goal delete 1`, `/bof goal delete 1 confirm`.
 9. Errors: `/bof goal add Leinenstoff 2`, `/bof goal add 2589 0`, `/bof goal crafts 0`.
 10. `/bof` shows 7 help lines; `/bof version` shows `0.2.0-alpha.1`.
+
+### Checklist 0.2.0-alpha.2 (Classic Era, other characters)
+
+Needs a second character on the same realm (ideally also one of the other faction or realm).
+
+1. Main character: goal with linen cloth (existing goal "Test" is fine). `/bof stock` → the line now
+   ends with "Twinks 0 – …". Log out to the character selection.
+2. Log in the alt, put some linen in its bags and/or bank (any bag change triggers the snapshot),
+   log out.
+3. Log in the main character, `/bof stock` → "Twinks <n>" and a line
+   "    <Alt>: <n> (Taschen …, Bank …, Stand vor …)". The missing amount is reduced by the alt's count.
+4. `/bof stock others` → "… nicht mehr mitgezählt", `/bof stock` without "Twinks";
+   `/bof stock others` again → on.
+5. If available: an alt of the other faction on the same realm → listed with
+   "andere Fraktion, nicht mitgezählt". An alt on another realm → not listed.
+6. `/bof version` → `0.2.0-alpha.2`.

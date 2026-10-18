@@ -24,7 +24,7 @@ Adapter.REQUIRED = {
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
--- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED.
+-- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, LOGOUT.
 
 -- Returns true, or false plus a list of missing field names.
 function Adapter.Validate(adapter)

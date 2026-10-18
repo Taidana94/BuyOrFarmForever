@@ -35,7 +35,7 @@ Each client has its own TOC file that lists only its adapter
 (`WOW_PROJECT_ID == WOW_PROJECT_CLASSIC`). On a mismatch, `ns.Client` stays nil, a German message is
 printed and `Core/Main.lua` registers nothing.
 
-### Adapter interface (stage 2a)
+### Adapter interface (stage 2b)
 
 | Function | Returns |
 |---|---|
@@ -51,12 +51,12 @@ printed and `Core/Main.lua` registers nothing.
 | `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`. Core code subscribes with
-`Events.OnSignal(signal, fn)` and never names WoW events.
+Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `LOGOUT`. Core code subscribes with
+`Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
 
 The interface grows with each stage (plan section 6).
 
-## Material goals and stock (stage 2a)
+## Material goals and stock (stages 2a, 2b)
 
 Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, items = { { itemID, count } }, createdAt }`,
 `activeGoalID` (0 = none), `nextGoalID` (ids are never reused).
@@ -64,12 +64,17 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - `Materials.Requirements(goals)` → `{ { itemID, need } }`, need = count × crafts, merged over goals in
   order of first appearance.
 - `Materials.Shortfall(requirements, haveFn)` → adds `have` and `missing` (never below 0).
-- Have = bags + bank of the current character. Other characters follow in stage 2b.
+- Have = bags + bank of the current character + snapshots of other characters on the same realm and
+  faction (`settings.countOtherCharacters`, default on). Other-faction characters are shown, not counted.
 - Bank: live value = `GetBagAndBankCount - GetBagCount`. Confirmed in game (Classic Era 70003) to be
-  correct with a closed bank, also after `/reload` and relog. `Stock` additionally stores
-  `stock.bank[itemID]` and `stock.bankAt` for all tracked items while the bank is open
-  (`BANK_OPENED`, `BAGS_CHANGED` while open, `BANK_CLOSED`); stage 2b uses this snapshot for the
-  bank stock of other characters.
+  correct with a closed bank, also after `/reload` and relog.
+- Snapshots (stage 2b): `stock.bags[itemID]`, `stock.bank[itemID]`, `bagsAt`, `bankAt` of every
+  character, for all items in the goals of *any* character (`Materials.TrackedItemIDsAll`), zeros
+  included so "0" and "unknown" differ. Taken on `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED` and
+  `LOGOUT` (also on `/reload`), deliberately not on login (bag data may not be loaded yet).
+  Items no longer tracked are dropped. Realm and name come from the character key
+  (`Name-NormalizedRealm`; normalized realm names have no hyphens).
+- `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
 - `Materials.Sanitize` is registered in `DB.VALIDATORS` and repairs stored goals on load.
 

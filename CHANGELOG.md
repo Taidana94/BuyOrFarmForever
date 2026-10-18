@@ -3,6 +3,19 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.2] – noch nicht veröffentlicht
+
+### Hinzugefügt
+
+- Bestand deiner anderen Charaktere auf demselben Realm wird mitgezählt (gleiche Fraktion) und
+  mit Stand angezeigt; Charaktere der anderen Fraktion werden nur angezeigt.
+- `/bof stock others` schaltet das Mitzählen ein oder aus.
+
+### Geändert
+
+- Der gespeicherte Bestand wird bei Taschenänderungen, Bankbesuch und Ausloggen aktualisiert,
+  nicht nur bei offener Bank.
+
 ## [0.2.0-alpha.1] – noch nicht veröffentlicht
 
 ### Hinzugefügt

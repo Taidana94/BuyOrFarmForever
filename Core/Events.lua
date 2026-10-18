@@ -1,6 +1,7 @@
--- One event frame for the whole addon. Handlers are called with (event, ...).
+-- One event frame for the whole addon, plus client-neutral signals.
+-- WoW event handlers are called with (event, ...), signal handlers with (signal, ...).
 -- An error in one handler is logged, passed to the client's error handler and does not
--- stop the other handlers for the same event.
+-- stop the other handlers.
 local _, ns = ...
 
 local Log = ns.Log
@@ -8,8 +9,23 @@ local Log = ns.Log
 local Events = {}
 ns.Events = Events
 
-local handlers = {}
+local handlers = {} -- WoW event -> list of fn
+local signalHandlers = {} -- signal -> list of fn
+local mappedEvents = {} -- WoW events already forwarded to their signal
 local frame = CreateFrame("Frame")
+
+local function callAll(list, name, ...)
+	local count = select("#", ...)
+	local args = { ... }
+	for i = 1, #list do
+		local fn = list[i]
+		xpcall(function()
+			fn(name, unpack(args, 1, count))
+		end, function(err)
+			return Log.ReportError("Error in " .. name .. " handler: " .. tostring(err))
+		end)
+	end
+end
 
 local function dispatch(_, event, ...)
 	local list = handlers[event]
@@ -17,16 +33,7 @@ local function dispatch(_, event, ...)
 		return
 	end
 	Log.Trace("event " .. event)
-	local count = select("#", ...)
-	local args = { ... }
-	for i = 1, #list do
-		local fn = list[i]
-		xpcall(function()
-			fn(event, unpack(args, 1, count))
-		end, function(err)
-			return Log.ReportError("Error in " .. event .. " handler: " .. tostring(err))
-		end)
-	end
+	callAll(list, event, ...)
 end
 
 frame:SetScript("OnEvent", dispatch)
@@ -41,10 +48,36 @@ function Events.On(event, fn)
 	list[#list + 1] = fn
 end
 
--- Registers fn(signal, ...) for a client-neutral signal (e.g. "BANK_OPENED"). The adapter's
--- events table maps WoW event names to signals, so core code never names WoW events.
--- Returns the number of WoW events that were registered for the signal.
+-- Removes all handlers for a WoW event.
+function Events.Off(event)
+	if handlers[event] then
+		handlers[event] = nil
+		mappedEvents[event] = nil
+		frame:UnregisterEvent(event)
+	end
+end
+
+-- Calls all handlers of a signal (used for the WoW events mapped by the adapter; core code may
+-- also raise its own signals).
+function Events.Emit(signal, ...)
+	local list = signalHandlers[signal]
+	if list then
+		callAll(list, signal, ...)
+	end
+end
+
+-- Registers fn(signal, ...) for a client-neutral signal. The adapter's events table maps WoW
+-- event names to signals, so core code never names WoW events. Signals without a WoW event
+-- (internal signals) are only raised by Events.Emit.
+-- Returns the number of WoW events that feed this signal.
 function Events.OnSignal(signal, fn)
+	local list = signalHandlers[signal]
+	if not list then
+		list = {}
+		signalHandlers[signal] = list
+	end
+	list[#list + 1] = fn
+
 	local map = ns.Client and ns.Client.events
 	local count = 0
 	if type(map) ~= "table" then
@@ -52,19 +85,14 @@ function Events.OnSignal(signal, fn)
 	end
 	for event, mapped in pairs(map) do
 		if mapped == signal then
-			Events.On(event, function(_, ...)
-				fn(signal, ...)
-			end)
 			count = count + 1
+			if not mappedEvents[event] then
+				mappedEvents[event] = true
+				Events.On(event, function(_, ...)
+					Events.Emit(signal, ...)
+				end)
+			end
 		end
 	end
 	return count
-end
-
--- Removes all handlers for an event.
-function Events.Off(event)
-	if handlers[event] then
-		handlers[event] = nil
-		frame:UnregisterEvent(event)
-	end
 end
