@@ -52,6 +52,9 @@ printed and `Core/Main.lua` registers nothing.
 | `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
 | `GetItemIcon(itemID)` | icon file id, or nil |
 | `GetSpellName(spellID)` | localized spell name, or nil |
+| `GetMemoryKB(addonName, refresh)` | memory in KB (`refresh` first calls `UpdateAddOnMemoryUsage`), or nil |
+| `GetCPUMetrics(addonName)` | `{ recent, average, peak }`, each `{ addon, app, overall }`, or nil while the addon profiler is off |
+| `GetTimeMs()` | high-resolution time in ms (`debugprofilestop`), or nil |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
 | `events` (table) | WoW event name → client-neutral signal |
 
@@ -172,6 +175,15 @@ Character entries that are not tables are removed. Debug log entries without a s
 
 Migrations: `DB.MIGRATIONS[n](db)` upgrades schema n to n + 1. They run on a deep copy; the stored
 table is only replaced when all steps succeed.
+
+## Performance measurement (`/bof perf`)
+
+- Memory: `GetAddOnMemoryUsage` after `UpdateAddOnMemoryUsage`, which walks all addons; refreshed
+  at most every 15 s (`Perf.MEMORY_UPDATE_SECONDS`, same as Blizzard's addon list).
+- CPU: `C_AddOnProfiler` (documented in Classic Era 70003). Share of frame time =
+  `addon / (app - overall + addon)`, the formula of Blizzard_AddOnList, for the recent average,
+  the session average and the peak. Without the profiler the command says so.
+- Timing: one `Stock.Rows` run over all goals, measured with `debugprofilestop`.
 
 ## Efficiency notes
 

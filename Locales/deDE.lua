@@ -80,6 +80,18 @@ L.WINDOW_NO_GOAL_SELECTED = "Kein Ziel ausgewählt. Wähle eines mit < und >."
 L.WINDOW_GOAL_LINE = "Ziel %1$d von %2$d: %3$s – %4$d× herstellen"
 L.WINDOW_OFF = "–"
 
+-- Performance
+L.HELP_LINE_PERF = "/bof perf – zeigt Speicher, CPU-Anteil und Rechenzeit des Addons"
+L.PERF_HEADER = "Leistung:"
+L.PERF_MEMORY = "Speicher: %1$s KB"
+L.PERF_CPU = "Anteil an der Frame-Zeit: aktuell %1$s %%, Durchschnitt %2$s %%, Spitze %3$s %%"
+L.PERF_CPU_OFF = "CPU-Anteil: nicht verfügbar, die Addon-Leistungsmessung des Spiels ist ausgeschaltet."
+L.PERF_TIMING = "Bestand aller Ziele neu berechnen: %1$s ms (%2$d Gegenstände)"
+L.PERF_UNAVAILABLE = "nicht verfügbar"
+
+-- Numbers
+L.DECIMAL_SEPARATOR = ","
+
 -- Stock
 L.STOCK_ALL_HEADER = "Alle Ziele zusammen:"
 L.STOCK_EMPTY = "Das Ziel enthält noch keine Zutaten. Füge welche hinzu mit /bof goal add <Gegenstand> <Menge>."

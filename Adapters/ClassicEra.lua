@@ -258,6 +258,47 @@ function ClassicEra:GetItemIcon(itemID)
 	return nil
 end
 
+-- Performance --------------------------------------------------------------------------
+-- All documented in Classic Era 70003 and used by Blizzard_AddOnList.
+
+-- Memory of the addon in KB. refresh = true first updates the numbers (walks all addons).
+function ClassicEra:GetMemoryKB(addonName, refresh)
+	if not GetAddOnMemoryUsage then
+		return nil
+	end
+	if refresh and UpdateAddOnMemoryUsage then
+		UpdateAddOnMemoryUsage()
+	end
+	return GetAddOnMemoryUsage(addonName)
+end
+
+local function metric(addonName, which)
+	return {
+		addon = C_AddOnProfiler.GetAddOnMetric(addonName, which),
+		app = C_AddOnProfiler.GetApplicationMetric(which),
+		overall = C_AddOnProfiler.GetOverallMetric(which),
+	}
+end
+
+-- { recent, average, peak } with { addon, app, overall } each, or nil if the profiler is off.
+function ClassicEra:GetCPUMetrics(addonName)
+	local profiler = C_AddOnProfiler
+	local metrics = Enum and Enum.AddOnProfilerMetric
+	if not (profiler and profiler.IsEnabled and metrics and profiler.IsEnabled()) then
+		return nil
+	end
+	return {
+		recent = metric(addonName, metrics.RecentAverageTime),
+		average = metric(addonName, metrics.SessionAverageTime),
+		peak = metric(addonName, metrics.PeakTime),
+	}
+end
+
+-- High-resolution time in milliseconds (debugprofilestop), or nil.
+function ClassicEra:GetTimeMs()
+	return debugprofilestop and debugprofilestop() or nil
+end
+
 -- C_Item.GetItemInfo returns nil until the item is in the client cache.
 function ClassicEra:GetItemLink(itemID)
 	if not (C_Item and C_Item.GetItemInfo) then

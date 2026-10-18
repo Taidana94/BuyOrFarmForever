@@ -22,6 +22,7 @@ Adapters\Adapter.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
 Core\Stock.lua
+Core\Perf.lua
 Core\Slash.lua
 UI\Shared.lua
 UI\GoalCommands.lua
@@ -29,4 +30,5 @@ UI\StockCommands.lua
 UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
 UI\MainWindow.lua
+UI\PerfCommand.lua
 Core\Main.lua

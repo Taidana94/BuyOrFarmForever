@@ -62,6 +62,12 @@ read_globals = {
 	"UISpecialFrames",
 	"BACKDROP_DIALOG_32_32",
 	C_Timer = { fields = { "After" } },
+	-- performance (/bof perf; documented in 70003, used by Blizzard_AddOnList)
+	"UpdateAddOnMemoryUsage",
+	"GetAddOnMemoryUsage",
+	"debugprofilestop",
+	C_AddOnProfiler = { fields = { "IsEnabled", "GetAddOnMetric", "GetApplicationMetric", "GetOverallMetric" } },
+	Enum = { fields = { AddOnProfilerMetric = { fields = { "RecentAverageTime", "SessionAverageTime", "PeakTime" } } } },
 	"DEFAULT_CHAT_FRAME",
 	"geterrorhandler",
 }

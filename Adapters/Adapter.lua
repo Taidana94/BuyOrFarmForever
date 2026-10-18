@@ -23,6 +23,9 @@ Adapter.REQUIRED = {
 	"GetItemLink", -- (itemID) -> item link, or nil while item data is loading (load is requested)
 	"GetItemIcon", -- (itemID) -> icon file id, or nil
 	"GetSpellName", -- (spellID) -> localized name, or nil
+	"GetMemoryKB", -- (addonName, refresh) -> memory in KB, or nil
+	"GetCPUMetrics", -- (addonName) -> { recent, average, peak = { addon, app, overall } }, or nil if off
+	"GetTimeMs", -- () -> high-resolution time in ms, or nil
 	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
 }
 

@@ -37,6 +37,7 @@ Statt `/bof` funktioniert auch `/kof`.
 | `/bof show` | öffnet oder schließt das Fenster |
 | `/bof version` | zeigt Addon-Version, Interface-Version und Build des Spiels |
 | `/bof debug` | schaltet den Debug-Modus ein oder aus |
+| `/bof perf` | zeigt Speicher, CPU-Anteil an der Frame-Zeit und Rechenzeit des Addons |
 | `/bof reset` | setzt die Einstellungen zurück; bestätigen mit `/bof reset confirm` innerhalb von 30 Sekunden. Ziele, Preise und Messungen bleiben erhalten. |
 | `/bof goal` | listet deine Materialziele (vorläufig) |
 | `/bof goal new <Name>` | legt ein Ziel an und wählt es aus |

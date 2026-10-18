@@ -11,6 +11,12 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
   Twinks und Fehlmenge des ausgewählten Ziels oder aller Ziele; Ziel wechseln, Tooltip,
   Knopf „Rezept übernehmen“. Verschiebbar, Position wird gespeichert, schließt mit Escape.
 
+- `/bof perf` zeigt Speicher, Anteil an der Frame-Zeit und die Rechenzeit für den Bestand.
+
+### Geändert
+
+- Weniger Speicherverbrauch bei Taschenänderungen (keine neuen Tabellen pro Ereignis).
+
 ### Behoben
 
 - Stammen die gespeicherten Daten aus einer neueren Addon-Version, lösten `/bof stock` und
