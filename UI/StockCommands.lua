@@ -7,7 +7,7 @@ local Util = ns.Util
 local Materials = ns.Materials
 local Stock = ns.Stock
 local Slash = ns.Slash
-local Chat = ns.Chat
+local UIShared = ns.UIShared
 
 -- /bof stock [all] ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ local function printStock(charData, goals)
 	local now = ns.Client:GetServerTime()
 	for _, row in ipairs(rows) do
 		local bankText = row.bank and tostring(row.bank) or L.UNKNOWN_SHORT
-		local name = Chat.ItemText(row.itemID)
+		local name = UIShared.ItemText(row.itemID)
 		if countOthers then
 			local template = row.missing > 0 and L.STOCK_LINE_ALTS or L.STOCK_LINE_ALTS_DONE
 			Log.Print(Util.Format(template, name, row.need, row.bags, bankText, row.others, row.missing))
@@ -46,7 +46,7 @@ local function toggleOthers()
 end
 
 local function stockCommand(argument)
-	local charData = Chat.Character()
+	local charData = UIShared.Character()
 	if not charData then
 		return
 	end
@@ -67,11 +67,11 @@ local function stockCommand(argument)
 		printStock(charData, goals)
 		return
 	end
-	local goal, id = Chat.ActiveGoal(charData)
+	local goal, id = UIShared.ActiveGoal(charData)
 	if not goal then
 		return
 	end
-	Log.Print(Util.Format(L.GOAL_HEADER, id, Chat.GoalName(goal), goal.crafts))
+	Log.Print(Util.Format(L.GOAL_HEADER, id, UIShared.GoalName(goal), goal.crafts))
 	printStock(charData, { goal })
 end
 

@@ -1,5 +1,5 @@
--- Shared helpers of the provisional chat commands: error texts, item and goal names, and the
--- current character's data. A bridge for in-game tests until the main window exists (plan stage 2d).
+-- Shared helpers of the chat commands and the main window: error texts, item and goal names,
+-- and the current character's data. Output goes to the chat (Log.Print).
 local _, ns = ...
 
 local L = ns.L
@@ -9,8 +9,8 @@ local Materials = ns.Materials
 local Recipes = ns.Recipes
 local Slash = ns.Slash
 
-local Chat = {}
-ns.Chat = Chat
+local UIShared = {}
+ns.UIShared = UIShared
 
 local ERRORS = {
 	invalid_item = function()
@@ -42,13 +42,13 @@ local ERRORS = {
 	end,
 }
 
-function Chat.PrintError(code)
+function UIShared.PrintError(code)
 	local message = ERRORS[code]
 	Log.Print(message and message() or tostring(code))
 end
 
 -- Item link if cached, otherwise a placeholder (the adapter requests the item data).
-function Chat.ItemText(itemID)
+function UIShared.ItemText(itemID)
 	return ns.Client:GetItemLink(itemID) or Util.Format(L.ITEM_UNKNOWN, itemID)
 end
 
@@ -56,17 +56,17 @@ end
 local function recipeName(key)
 	local recipe = Recipes.Get(ns.db, key)
 	if recipe and recipe.outputItemID ~= 0 then
-		return Chat.ItemText(recipe.outputItemID)
+		return UIShared.ItemText(recipe.outputItemID)
 	end
 	local keyType, id = Recipes.SplitKey(key)
 	if keyType == "spell" then
 		return ns.Client:GetSpellName(id) or Util.Format(L.RECIPE_UNKNOWN, id)
 	end
-	return Chat.ItemText(id)
+	return UIShared.ItemText(id)
 end
 
 -- The user's label; goals from a recipe have none and show the recipe name.
-function Chat.GoalName(goal)
+function UIShared.GoalName(goal)
 	if goal.label ~= "" then
 		return goal.label
 	end
@@ -77,14 +77,14 @@ function Chat.GoalName(goal)
 end
 
 -- Confirmation after a goal was created from a recipe (chat command and window button).
-function Chat.PrintRecipeGoal(charData, id)
+function UIShared.PrintRecipeGoal(charData, id)
 	local goal = charData.materialGoals[id]
-	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, Chat.GoalName(goal), #goal.items, goal.crafts))
+	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, UIShared.GoalName(goal), #goal.items, goal.crafts))
 end
 
 -- Character data of the logged-in character, or nil with a message. In read-only mode the
 -- stored data may have an unknown layout (newer schema, failed migration), so it is not read.
-function Chat.Character()
+function UIShared.Character()
 	if ns.readOnly then
 		Log.Print(L.READ_ONLY_NO_ACCESS)
 		return nil
@@ -97,15 +97,15 @@ function Chat.Character()
 end
 
 -- Same, but nil with a message in read-only mode (for commands that change data).
-function Chat.WritableCharacter()
+function UIShared.WritableCharacter()
 	if not Slash.CanWrite() then
 		return nil
 	end
-	return Chat.Character()
+	return UIShared.Character()
 end
 
 -- The selected goal and its id, or nil with a message.
-function Chat.ActiveGoal(charData)
+function UIShared.ActiveGoal(charData)
 	local goal, id = Materials.GetActiveGoal(charData)
 	if not goal then
 		Log.Print(L.GOAL_NONE_ACTIVE)

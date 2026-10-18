@@ -85,21 +85,22 @@ local function createButton(parent, text, width)
 	return button
 end
 
+-- Vertical layout inside the tab (pixels from the top) and fixed sizes.
+local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
+local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP = 26, 4, 8
+local CHECK_SIZE, CHECK_Y = 24, -28
+local HEADER_Y, HEADER_HEIGHT = -60, 16
+local LIST_Y, EMPTY_TEXT_Y, EMPTY_TEXT_WIDTH = -78, -84, 500
+local IMPORT_BUTTON_WIDTH = 160
 
--- Creates the widgets of a tab object and connects them to its methods
--- (StepGoal, SetAllGoals, Scroll, ImportRecipe, RequestRefresh).
-function Layout.Build(tab, parent)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", 22, -46)
-	frame:SetPoint("BOTTOMRIGHT", -22, 20)
-	tab.frame = frame
-
-	tab.prev = createButton(frame, L.WINDOW_PREV, 26)
+-- Goal line with previous/next buttons and the "all goals" check box.
+local function buildNavigation(tab, frame)
+	tab.prev = createButton(frame, L.WINDOW_PREV, NAV_BUTTON_WIDTH)
 	tab.prev:SetPoint("TOPLEFT", 0, 0)
-	tab.next = createButton(frame, L.WINDOW_NEXT, 26)
-	tab.next:SetPoint("LEFT", tab.prev, "RIGHT", 4, 0)
+	tab.next = createButton(frame, L.WINDOW_NEXT, NAV_BUTTON_WIDTH)
+	tab.next:SetPoint("LEFT", tab.prev, "RIGHT", NAV_GAP, 0)
 	tab.goalText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	tab.goalText:SetPoint("LEFT", tab.next, "RIGHT", 8, 0)
+	tab.goalText:SetPoint("LEFT", tab.next, "RIGHT", GOAL_TEXT_GAP, 0)
 	tab.goalText:SetJustifyH("LEFT")
 	tab.prev:SetScript("OnClick", function()
 		tab:StepGoal(-1)
@@ -107,44 +108,49 @@ function Layout.Build(tab, parent)
 	tab.next:SetScript("OnClick", function()
 		tab:StepGoal(1)
 	end)
-
 	tab.allGoals = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-	tab.allGoals:SetSize(24, 24)
-	tab.allGoals:SetPoint("TOPLEFT", 0, -28)
+	tab.allGoals:SetSize(CHECK_SIZE, CHECK_SIZE)
+	tab.allGoals:SetPoint("TOPLEFT", 0, CHECK_Y)
 	tab.allGoals.Text:SetText(L.WINDOW_ALL_GOALS)
 	tab.allGoals:SetScript("OnClick", function(self)
 		tab:SetAllGoals(self:GetChecked() and true or false)
 	end)
+end
 
+-- Column header, the row pool, the empty-state text and mouse wheel scrolling.
+local function buildList(tab, frame)
 	local header = CreateFrame("Frame", nil, frame)
-	header:SetPoint("TOPLEFT", 0, -60)
-	header:SetSize(1, 16)
+	header:SetPoint("TOPLEFT", 0, HEADER_Y)
+	header:SetSize(1, HEADER_HEIGHT)
 	createHeader(header)
-
 	local list = CreateFrame("Frame", nil, frame)
-	list:SetPoint("TOPLEFT", 0, -78)
+	list:SetPoint("TOPLEFT", 0, LIST_Y)
 	list:SetSize(1, VISIBLE_ROWS * ROW_HEIGHT)
 	for i = 1, VISIBLE_ROWS do
 		tab.rows[i] = createRow(list, i)
 	end
 	tab.emptyText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-	tab.emptyText:SetPoint("TOPLEFT", 0, -84)
-	tab.emptyText:SetWidth(500)
+	tab.emptyText:SetPoint("TOPLEFT", 0, EMPTY_TEXT_Y)
+	tab.emptyText:SetWidth(EMPTY_TEXT_WIDTH)
 	tab.emptyText:SetJustifyH("LEFT")
-
 	frame:EnableMouseWheel(true)
 	frame:SetScript("OnMouseWheel", function(_, delta)
 		tab:Scroll(-delta)
 	end)
+end
 
-	tab.import = createButton(frame, L.WINDOW_IMPORT_RECIPE, 160)
+-- Creates the widgets of a tab object and connects them to its methods
+-- (StepGoal, SetAllGoals, Scroll, ImportRecipe).
+function Layout.Build(tab, parent)
+	local frame = CreateFrame("Frame", nil, parent)
+	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
+	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	tab.frame = frame
+	buildNavigation(tab, frame)
+	buildList(tab, frame)
+	tab.import = createButton(frame, L.WINDOW_IMPORT_RECIPE, IMPORT_BUTTON_WIDTH)
 	tab.import:SetPoint("BOTTOMLEFT", 0, 0)
 	tab.import:SetScript("OnClick", function()
 		tab:ImportRecipe()
 	end)
-
-	tab.refreshHandler = function()
-		tab:RequestRefresh()
-	end
 end
-

@@ -10,7 +10,7 @@ local Materials = ns.Materials
 local Recipes = ns.Recipes
 local Stock = ns.Stock
 local Events = ns.Events
-local Chat = ns.Chat
+local UIShared = ns.UIShared
 local Layout = ns.MaterialTabLayout
 
 local MaterialTab = {}
@@ -25,6 +25,14 @@ local REFRESH_SIGNALS = { "BAGS_CHANGED", "BANK_OPENED", "BANK_CLOSED", "ITEM_LO
 local Tab = {}
 Tab.__index = Tab
 
+local function setEnabled(widget, enabled)
+	if enabled then
+		widget:Enable()
+	else
+		widget:Disable()
+	end
+end
+
 local function currentCharacter()
 	return ns.db and ns.charKey and ns.db.characters[ns.charKey]
 end
@@ -36,6 +44,10 @@ end
 function MaterialTab.Create(parent)
 	local tab = setmetatable({ offset = 0, data = {}, rows = {} }, Tab)
 	Layout.Build(tab, parent)
+	-- One handler object, so OffSignal can remove exactly what Activate added.
+	tab.refreshHandler = function()
+		tab:RequestRefresh()
+	end
 	return tab
 end
 
@@ -87,7 +99,7 @@ local function selection(charData)
 			position = i
 		end
 	end
-	return { goal }, Util.Format(L.WINDOW_GOAL_LINE, position, #ids, Chat.GoalName(goal), goal.crafts)
+	return { goal }, Util.Format(L.WINDOW_GOAL_LINE, position, #ids, UIShared.GoalName(goal), goal.crafts)
 end
 
 function Tab:Refresh()
@@ -100,10 +112,10 @@ function Tab:Refresh()
 	local all = ns.db.settings.window.allGoals
 	self.allGoals:SetChecked(all)
 	local hasGoals = #Materials.ListGoalIDs(charData) > 0
-	self:SetEnabled(self.prev, hasGoals and not all and canWrite())
-	self:SetEnabled(self.next, hasGoals and not all and canWrite())
-	self:SetEnabled(self.allGoals, canWrite())
-	self:SetEnabled(self.import, canWrite())
+	setEnabled(self.prev, hasGoals and not all and canWrite())
+	setEnabled(self.next, hasGoals and not all and canWrite())
+	setEnabled(self.allGoals, canWrite())
+	setEnabled(self.import, canWrite())
 	if not goals then
 		self:ShowEmpty(headerText, emptyText)
 		return
@@ -116,14 +128,6 @@ function Tab:Refresh()
 	end
 	self.emptyText:SetText("")
 	self:Scroll(0)
-end
-
-function Tab:SetEnabled(widget, enabled)
-	if enabled then
-		widget:Enable()
-	else
-		widget:Disable()
-	end
 end
 
 function Tab:ShowEmpty(headerText, text)
@@ -154,7 +158,7 @@ function Tab:DrawRow(row, data)
 		return
 	end
 	row.icon:SetTexture(ns.Client:GetItemIcon(data.itemID))
-	row.name:SetText(Chat.ItemText(data.itemID))
+	row.name:SetText(UIShared.ItemText(data.itemID))
 	local countOthers = ns.db.settings.countOtherCharacters
 	setNumber(row.numbers.need, tostring(data.need), COLOR_NORMAL)
 	setNumber(row.numbers.bags, tostring(data.bags), COLOR_NORMAL)
@@ -208,10 +212,10 @@ function Tab:ImportRecipe()
 	end
 	local id, err = Recipes.ImportSelected(charData, 1)
 	if id then
-		Chat.PrintRecipeGoal(charData, id)
+		UIShared.PrintRecipeGoal(charData, id)
 		ns.db.settings.window.allGoals = false
 	else
-		Chat.PrintError(err)
+		UIShared.PrintError(err)
 	end
 	self.offset = 0
 	self:Refresh()

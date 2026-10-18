@@ -9,6 +9,7 @@ local Stock = {}
 ns.Stock = Stock
 
 local bankOpen = false
+local trackedScratch = {} -- reused by CaptureCurrent
 
 function Stock.IsBankOpen()
 	return bankOpen
@@ -29,19 +30,24 @@ function Stock.Count(itemID)
 	return bags, bank
 end
 
--- Stores bag and bank counts of the given items (also zeros, so "0" and "never seen" differ).
--- Items that are no longer tracked are dropped from the snapshot.
-function Stock.Capture(charData, itemIDs, now)
-	local bags, bank = {}, {}
-	for _, itemID in ipairs(itemIDs) do
-		local b, k = Stock.Count(itemID)
-		bags[itemID] = b
-		if k then
-			bank[itemID] = k
+local function dropUntracked(counts, tracked)
+	for itemID in pairs(counts) do
+		if not tracked[itemID] then
+			counts[itemID] = nil
 		end
 	end
-	charData.stock.bags = bags
-	charData.stock.bank = bank
+end
+
+-- Stores bag and bank counts of the tracked items ({ [itemID] = true }) in the character's
+-- snapshot, also zeros, so "0" and "never seen" differ. Untracked items are dropped. Updates the
+-- stored tables in place (no new tables per bag event).
+function Stock.Capture(charData, tracked, now)
+	local bags, bank = charData.stock.bags, charData.stock.bank
+	dropUntracked(bags, tracked)
+	dropUntracked(bank, tracked)
+	for itemID in pairs(tracked) do
+		bags[itemID], bank[itemID] = Stock.Count(itemID)
+	end
 	charData.stock.bagsAt = now
 	charData.stock.bankAt = now
 end
@@ -49,35 +55,43 @@ end
 -- Other characters on the same realm that have a snapshot with this item.
 -- Returns counted (sum over characters of the same faction) and rows sorted by name:
 -- { key, name, bags, bank, total, at, sameFaction }. Characters with 0 are left out.
+-- Row for one other character's snapshot of the item, or nil if it has none (or 0).
+local function otherRow(key, name, data, currentFaction, itemID)
+	local bags = data.stock.bags[itemID]
+	local bank = data.stock.bank[itemID]
+	local total = (bags or 0) + (bank or 0)
+	if total <= 0 then
+		return nil
+	end
+	return {
+		key = key,
+		name = name,
+		bags = bags or 0,
+		bank = bank or 0,
+		total = total,
+		at = math.max(data.stock.bagsAt, data.stock.bankAt),
+		sameFaction = currentFaction ~= "" and data.faction == currentFaction,
+	}
+end
+
+local function byName(a, b)
+	return a.name < b.name
+end
+
 function Stock.OthersFor(db, currentKey, currentFaction, itemID)
 	local _, realm = Stock.SplitKey(currentKey)
 	local rows, counted = {}, 0
 	for key, data in pairs(db.characters) do
 		local name, otherRealm = Stock.SplitKey(key)
-		if key ~= currentKey and otherRealm == realm then
-			local bags = data.stock.bags[itemID]
-			local bank = data.stock.bank[itemID]
-			local total = (bags or 0) + (bank or 0)
-			if (bags or bank) and total > 0 then
-				local sameFaction = currentFaction ~= "" and data.faction == currentFaction
-				rows[#rows + 1] = {
-					key = key,
-					name = name,
-					bags = bags or 0,
-					bank = bank or 0,
-					total = total,
-					at = math.max(data.stock.bagsAt, data.stock.bankAt),
-					sameFaction = sameFaction,
-				}
-				if sameFaction then
-					counted = counted + total
-				end
+		local row = key ~= currentKey and otherRealm == realm and otherRow(key, name, data, currentFaction, itemID)
+		if row then
+			rows[#rows + 1] = row
+			if row.sameFaction then
+				counted = counted + row.total
 			end
 		end
 	end
-	table.sort(rows, function(a, b)
-		return a.name < b.name
-	end)
+	table.sort(rows, byName)
 	return counted, rows
 end
 
@@ -140,9 +154,11 @@ function Stock.CaptureCurrent(reason)
 	if not charData then
 		return
 	end
-	local ids = ns.Materials.TrackedItemIDsAll(ns.db)
-	Stock.Capture(charData, ids, ns.Client:GetServerTime())
-	Log.Trace("stock snapshot (" .. reason .. ") for " .. #ids .. " items")
+	ns.Materials.CollectTrackedItems(ns.db, trackedScratch)
+	Stock.Capture(charData, trackedScratch, ns.Client:GetServerTime())
+	if Log.IsDebug() then
+		Log.Trace("stock snapshot (" .. reason .. ")")
+	end
 end
 
 if ns.Client then

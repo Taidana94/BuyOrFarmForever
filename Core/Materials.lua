@@ -10,7 +10,7 @@ Materials.MAX_LABEL_CHARS = 50
 Materials.MAX_COUNT = 100000
 Materials.MAX_CRAFTS = 1000
 local MAX_ITEM_ID = 10000000
-local MAX_GOAL_ID = 1000000000
+Materials.MAX_GOAL_ID = 1000000000
 
 local function isPositiveInteger(value, max)
 	return type(value) == "number" and value >= 1 and value <= max and value == math.floor(value)
@@ -239,103 +239,19 @@ function Materials.Shortfall(requirements, haveFn)
 	return result
 end
 
--- All item ids used in a character's goals (for stock snapshots).
-function Materials.TrackedItemIDs(charData)
-	local ids, seen = {}, {}
-	for _, id in ipairs(Materials.ListGoalIDs(charData)) do
-		for _, entry in ipairs(charData.materialGoals[id].items) do
-			if not seen[entry.itemID] then
-				seen[entry.itemID] = true
-				ids[#ids + 1] = entry.itemID
-			end
-		end
+-- Fills `set` with { [itemID] = true } for every item in the goals of any character (the items
+-- whose stock is snapshotted for every character). `set` is cleared first; callers pass a reused
+-- table so frequent bag events create no garbage.
+function Materials.CollectTrackedItems(db, set)
+	for itemID in pairs(set) do
+		set[itemID] = nil
 	end
-	return ids
-end
-
--- All item ids used in the goals of any character (for stock snapshots of every character).
-function Materials.TrackedItemIDsAll(db)
-	local ids, seen = {}, {}
 	for _, charData in pairs(db.characters) do
-		for _, itemID in ipairs(Materials.TrackedItemIDs(charData)) do
-			if not seen[itemID] then
-				seen[itemID] = true
-				ids[#ids + 1] = itemID
+		for _, goal in pairs(charData.materialGoals) do
+			for _, entry in ipairs(goal.items) do
+				set[entry.itemID] = true
 			end
 		end
 	end
-	table.sort(ids)
-	return ids
+	return set
 end
-
--- Validation of stored data (registered with DB.VALIDATORS) ----------------------------
-
-local function sanitizeItems(items)
-	local clean, byID, changed = {}, {}, false
-	for _, entry in ipairs(items) do
-		local ok = type(entry) == "table" and Materials.IsValidItemID(entry.itemID) and Materials.IsValidCount(entry.count)
-		if not ok then
-			changed = true
-		elseif byID[entry.itemID] then
-			local merged = byID[entry.itemID]
-			merged.count = math.min(Materials.MAX_COUNT, merged.count + entry.count)
-			changed = true
-		else
-			local row = { itemID = entry.itemID, count = entry.count }
-			byID[entry.itemID] = row
-			clean[#clean + 1] = row
-		end
-	end
-	return clean, changed
-end
-
-function Materials.Sanitize(charData, path, repairs)
-	local goals = charData.materialGoals
-	local maxID = 0
-	for id, goal in pairs(goals) do
-		local p = path .. ".materialGoals." .. tostring(id)
-		if not isPositiveInteger(id, MAX_GOAL_ID) or type(goal) ~= "table" then
-			goals[id] = nil
-			repairs[#repairs + 1] = p
-		else
-			maxID = math.max(maxID, id)
-			local label = Materials.CleanLabel(goal.label)
-			if label ~= goal.label then
-				goal.label = label
-				repairs[#repairs + 1] = p .. ".label"
-			end
-			if not Materials.IsValidCrafts(goal.crafts) then
-				goal.crafts = 1
-				repairs[#repairs + 1] = p .. ".crafts"
-			end
-			if type(goal.createdAt) ~= "number" then
-				goal.createdAt = 0
-			end
-			-- Optional (goals created from a recipe). Validators run on load, after all modules exist.
-			if goal.recipeKey ~= nil and not ns.Recipes.IsValidKey(goal.recipeKey) then
-				goal.recipeKey = nil
-				repairs[#repairs + 1] = p .. ".recipeKey"
-			end
-			if type(goal.items) ~= "table" then
-				goal.items = {}
-				repairs[#repairs + 1] = p .. ".items"
-			else
-				local clean, changed = sanitizeItems(goal.items)
-				goal.items = clean
-				if changed then
-					repairs[#repairs + 1] = p .. ".items"
-				end
-			end
-		end
-	end
-	if not isPositiveInteger(charData.nextGoalID, MAX_GOAL_ID) or charData.nextGoalID <= maxID then
-		charData.nextGoalID = maxID + 1
-		repairs[#repairs + 1] = path .. ".nextGoalID"
-	end
-	if charData.activeGoalID ~= 0 and not goals[charData.activeGoalID] then
-		charData.activeGoalID = 0
-		repairs[#repairs + 1] = path .. ".activeGoalID"
-	end
-end
-
-ns.DB.VALIDATORS[#ns.DB.VALIDATORS + 1] = Materials.Sanitize

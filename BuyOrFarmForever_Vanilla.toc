@@ -16,13 +16,14 @@ Core\Util.lua
 Core\Log.lua
 Core\DB.lua
 Core\Materials.lua
+Core\MaterialsValidation.lua
 Core\Recipes.lua
 Adapters\Adapter.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
 Core\Stock.lua
 Core\Slash.lua
-UI\ChatShared.lua
+UI\Shared.lua
 UI\GoalCommands.lua
 UI\StockCommands.lua
 UI\MaterialTabLayout.lua

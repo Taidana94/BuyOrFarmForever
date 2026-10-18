@@ -63,18 +63,22 @@ function Util.ParseInteger(text)
 	return nil
 end
 
+local SECONDS_PER_MINUTE = 60
+local SECONDS_PER_HOUR = 3600
+local SECONDS_PER_DAY = 86400
+
 -- "vor 5 Min." etc. for a duration in seconds (localized).
 function Util.FormatAge(seconds)
 	local L = ns.L
 	seconds = math.max(0, seconds or 0)
-	if seconds < 60 then
+	if seconds < SECONDS_PER_MINUTE then
 		return L.AGE_NOW
-	elseif seconds < 3600 then
-		return Util.Format(L.AGE_MINUTES, math.floor(seconds / 60))
-	elseif seconds < 86400 then
-		return Util.Format(L.AGE_HOURS, math.floor(seconds / 3600))
+	elseif seconds < SECONDS_PER_HOUR then
+		return Util.Format(L.AGE_MINUTES, math.floor(seconds / SECONDS_PER_MINUTE))
+	elseif seconds < SECONDS_PER_DAY then
+		return Util.Format(L.AGE_HOURS, math.floor(seconds / SECONDS_PER_HOUR))
 	end
-	local days = math.floor(seconds / 86400)
+	local days = math.floor(seconds / SECONDS_PER_DAY)
 	if days == 1 then
 		return L.AGE_DAY
 	end

@@ -130,8 +130,8 @@ local function validateDebugLog(db, repairs)
 	if #clean ~= #db.debugLog then
 		repairs[#repairs + 1] = "debugLog"
 	end
-	local max = ns.Log and ns.Log.MAX_ENTRIES or 200
-	while #clean > max do
+	-- Log.lua loads before DB.lua (TOC order), so the limit is always defined.
+	while #clean > ns.Log.MAX_ENTRIES do
 		table.remove(clean, 1)
 	end
 	db.debugLog = clean
@@ -162,15 +162,36 @@ end
 --   status: "new" | "ok" | "migrated" | "newer" (stored schema is newer, data untouched)
 --           | "migration_failed" (data untouched)
 --   info: { repairs = { path, ... }, otherClient = <id or nil>, error = <message or nil> }
+local function newDatabase(context)
+	local db = Util.CopyTable(DB.DEFAULTS)
+	db.schemaVersion = DB.SCHEMA_VERSION
+	db.meta.client = context.client
+	db.meta.createdAt = context.now or 0
+	db.meta.lastAddonVersion = context.addonVersion or ""
+	return db
+end
+
+-- Defaults, type checks and module validators on a database of the current schema.
+local function validate(db, context, info)
+	db.schemaVersion = DB.SCHEMA_VERSION
+	mergeDefaults(db, DB.DEFAULTS, "", info.repairs)
+	validateCharacters(db, info.repairs)
+	for _, validateRoot in ipairs(DB.ROOT_VALIDATORS) do
+		validateRoot(db, info.repairs)
+	end
+	validateDebugLog(db, info.repairs)
+	if db.meta.client == "" then
+		db.meta.client = context.client
+	elseif db.meta.client ~= context.client then
+		info.otherClient = db.meta.client
+	end
+	db.meta.lastAddonVersion = context.addonVersion or db.meta.lastAddonVersion
+end
+
 function DB.Load(stored, context)
 	local info = { repairs = {} }
 	if type(stored) ~= "table" then
-		local db = Util.CopyTable(DB.DEFAULTS)
-		db.schemaVersion = DB.SCHEMA_VERSION
-		db.meta.client = context.client
-		db.meta.createdAt = context.now or 0
-		db.meta.lastAddonVersion = context.addonVersion or ""
-		return db, "new", info
+		return newDatabase(context), "new", info
 	end
 
 	local version = stored.schemaVersion
@@ -191,21 +212,7 @@ function DB.Load(stored, context)
 		end
 		db, status = result, "migrated"
 	end
-
-	db.schemaVersion = DB.SCHEMA_VERSION
-	mergeDefaults(db, DB.DEFAULTS, "", info.repairs)
-	validateCharacters(db, info.repairs)
-	for _, validate in ipairs(DB.ROOT_VALIDATORS) do
-		validate(db, info.repairs)
-	end
-	validateDebugLog(db, info.repairs)
-
-	if db.meta.client == "" then
-		db.meta.client = context.client
-	elseif db.meta.client ~= context.client then
-		info.otherClient = db.meta.client
-	end
-	db.meta.lastAddonVersion = context.addonVersion or db.meta.lastAddonVersion
+	validate(db, context, info)
 	return db, status, info
 end
 

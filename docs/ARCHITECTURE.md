@@ -9,11 +9,11 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua` | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
+| Core logic | `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
-| Chat UI (provisional) | `UI/ChatShared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
+| Chat UI (provisional) | `UI/Shared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
 | Window | `UI/MainWindow.lua` (frame, `/bof show`), `UI/MaterialTabLayout.lua` (widgets), `UI/MaterialTab.lua` (logic) | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
@@ -22,8 +22,8 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 ## Load order (TOC)
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
-`Core/DB.lua` → `Core/Materials.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
+`Core/DB.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MainWindow.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -76,7 +76,8 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
 - Bank: live value = `GetBagAndBankCount - GetBagCount`. Confirmed in game (Classic Era 70003) to be
   correct with a closed bank, also after `/reload` and relog.
 - Snapshots (stage 2b): `stock.bags[itemID]`, `stock.bank[itemID]`, `bagsAt`, `bankAt` of every
-  character, for all items in the goals of *any* character (`Materials.TrackedItemIDsAll`), zeros
+  character, for all items in the goals of *any* character (`Materials.CollectTrackedItems`, filled into a reused table; the snapshot
+  tables are updated in place), zeros
   included so "0" and "unknown" differ. Taken on `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED` and on
   `/bof stock`. Deliberately not on login (bag data may not be loaded yet) and not on `PLAYER_LOGOUT`:
   in game (Classic Era 70003) both characters stored 0 hearthstones at logout although each had one,
@@ -85,7 +86,7 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
   (`Name-NormalizedRealm`; normalized realm names have no hyphens).
 - `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
 - Labels are user text: control characters and `|` removed, max. 50 characters.
-- `Materials.Sanitize` is registered in `DB.VALIDATORS` and repairs stored goals on load.
+- `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
 
 ## Recipes (stage 2c)
 
@@ -136,8 +137,8 @@ only sets flags.
   slash globals, and it exists only after the window was opened once.
 - Position: `settings.window.point/x/y`, saved on drag stop, restored on creation (unknown points
   fall back to `CENTER`). `settings.window.allGoals` (default false) stores the "all goals" view.
-- The Material tab reads `Stock.Rows` (shared with `/bof stock`) and uses `Chat.ItemText` /
-  `Chat.GoalName` for names. Buttons: previous/next goal (wraps), "all goals", recipe import
+- The Material tab reads `Stock.Rows` (shared with `/bof stock`) and uses `UIShared.ItemText` /
+  `UIShared.GoalName` for names. Buttons: previous/next goal (wraps), "all goals", recipe import
   (`Recipes.ImportSelected`, 1 craft). Mouse wheel scrolls 1 row. Tooltip: item hyperlink plus one
   line per other character.
 - Not protected, no secure templates; changing it in combat is allowed.
@@ -171,6 +172,16 @@ Character entries that are not tables are removed. Debug log entries without a s
 
 Migrations: `DB.MIGRATIONS[n](db)` upgrades schema n to n + 1. They run on a deep copy; the stored
 table is only replaced when all steps succeed.
+
+## Efficiency notes
+
+- Event dispatch (`Core/Events.lua`) creates no tables or closures per event: handler arguments go
+  into a reused context per nesting depth, and `xpcall` gets a static function and error handler.
+- Debug-only strings (trace messages) are built only when debug mode is on.
+- Stock snapshots on `BAG_UPDATE_DELAYED` reuse one scratch set for the tracked items and update
+  the stored snapshot tables in place, so a bag change allocates nothing in steady state.
+- Window refreshes allocate row data, but only while the window is visible and at most once per
+  frame (coalesced).
 
 ## Errors
 

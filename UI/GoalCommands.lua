@@ -7,7 +7,7 @@ local Util = ns.Util
 local Materials = ns.Materials
 local Recipes = ns.Recipes
 local Slash = ns.Slash
-local Chat = ns.Chat
+local UIShared = ns.UIShared
 
 -- /bof goal ... -----------------------------------------------------------------------
 
@@ -21,21 +21,21 @@ local function listGoals(charData)
 	for _, id in ipairs(ids) do
 		local goal = charData.materialGoals[id]
 		local marker = (id == charData.activeGoalID) and "* " or "  "
-		Log.Print(Util.Format(L.GOAL_LIST_LINE, marker, id, Chat.GoalName(goal), #goal.items, goal.crafts))
+		Log.Print(Util.Format(L.GOAL_LIST_LINE, marker, id, UIShared.GoalName(goal), #goal.items, goal.crafts))
 	end
 end
 
 local function goalNew(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
 	local id = Materials.CreateGoal(charData, argument, ns.Client:GetServerTime())
-	Log.Print(Util.Format(L.GOAL_CREATED, id, Chat.GoalName(charData.materialGoals[id])))
+	Log.Print(Util.Format(L.GOAL_CREATED, id, UIShared.GoalName(charData.materialGoals[id])))
 end
 
 local function goalSelect(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
@@ -44,21 +44,21 @@ local function goalSelect(argument)
 		Log.Print(Util.Format(L.GOAL_NOT_FOUND, argument))
 		return
 	end
-	Log.Print(Util.Format(L.GOAL_SELECTED, id, Chat.GoalName(charData.materialGoals[id])))
+	Log.Print(Util.Format(L.GOAL_SELECTED, id, UIShared.GoalName(charData.materialGoals[id])))
 end
 
 local function goalAdd(argument, setExact)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
-	local goal = Chat.ActiveGoal(charData)
+	local goal = UIShared.ActiveGoal(charData)
 	if not goal then
 		return
 	end
 	local itemID, rest = Util.ParseItemArg(argument)
 	if not itemID then
-		Chat.PrintError("invalid_item")
+		UIShared.PrintError("invalid_item")
 		return
 	end
 	local count = 1
@@ -74,52 +74,52 @@ local function goalAdd(argument, setExact)
 		result, err = Materials.AddItem(goal, itemID, count)
 	end
 	if not result then
-		Chat.PrintError(err)
+		UIShared.PrintError(err)
 	elseif result == 0 then
-		Log.Print(Util.Format(L.GOAL_ITEM_REMOVED, Chat.ItemText(itemID)))
+		Log.Print(Util.Format(L.GOAL_ITEM_REMOVED, UIShared.ItemText(itemID)))
 	else
-		Log.Print(Util.Format(L.GOAL_ITEM_ADDED, Chat.ItemText(itemID), result))
+		Log.Print(Util.Format(L.GOAL_ITEM_ADDED, UIShared.ItemText(itemID), result))
 	end
 end
 
 local function goalRemove(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
-	local goal = Chat.ActiveGoal(charData)
+	local goal = UIShared.ActiveGoal(charData)
 	if not goal then
 		return
 	end
 	local itemID = Util.ParseItemArg(argument)
 	if not itemID then
-		Chat.PrintError("invalid_item")
+		UIShared.PrintError("invalid_item")
 	elseif Materials.RemoveItem(goal, itemID) then
-		Log.Print(Util.Format(L.GOAL_ITEM_REMOVED, Chat.ItemText(itemID)))
+		Log.Print(Util.Format(L.GOAL_ITEM_REMOVED, UIShared.ItemText(itemID)))
 	else
-		Log.Print(Util.Format(L.GOAL_ITEM_NOT_IN_GOAL, Chat.ItemText(itemID)))
+		Log.Print(Util.Format(L.GOAL_ITEM_NOT_IN_GOAL, UIShared.ItemText(itemID)))
 	end
 end
 
 local function goalCrafts(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
-	local goal = Chat.ActiveGoal(charData)
+	local goal = UIShared.ActiveGoal(charData)
 	if not goal then
 		return
 	end
 	local result, err = Materials.SetCrafts(goal, Util.ParseInteger(argument))
 	if not result then
-		Chat.PrintError(err)
+		UIShared.PrintError(err)
 		return
 	end
 	Log.Print(Util.Format(L.GOAL_CRAFTS_SET, result))
 end
 
 local function goalDelete(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
@@ -131,7 +131,7 @@ local function goalDelete(argument)
 		return
 	end
 	if string.lower(confirm) ~= "confirm" then
-		Log.Print(Util.Format(L.GOAL_DELETE_CONFIRM, id, Chat.GoalName(goal)))
+		Log.Print(Util.Format(L.GOAL_DELETE_CONFIRM, id, UIShared.GoalName(goal)))
 		return
 	end
 	Materials.DeleteGoal(charData, id)
@@ -155,7 +155,7 @@ local GOAL_SUBCOMMANDS = {
 local function goalCommand(argument)
 	local sub, rest = Slash.SplitCommand(argument)
 	if sub == "" or sub == "list" then
-		local charData = Chat.Character()
+		local charData = UIShared.Character()
 		if charData then
 			listGoals(charData)
 		end
@@ -169,7 +169,7 @@ end
 -- /bof recipe [crafts] ------------------------------------------------------------------
 
 local function recipeCommand(argument)
-	local charData = Chat.WritableCharacter()
+	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
@@ -179,10 +179,10 @@ local function recipeCommand(argument)
 	end
 	local id, err = Recipes.ImportSelected(charData, crafts)
 	if not id then
-		Chat.PrintError(err)
+		UIShared.PrintError(err)
 		return
 	end
-	Chat.PrintRecipeGoal(charData, id)
+	UIShared.PrintRecipeGoal(charData, id)
 end
 
 if ns.Client then

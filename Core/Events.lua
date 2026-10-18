@@ -14,17 +14,41 @@ local signalHandlers = {} -- signal -> list of fn
 local mappedEvents = {} -- WoW events already forwarded to their signal
 local frame = CreateFrame("Frame")
 
+-- Handlers run in xpcall without creating closures or argument tables per event: Lua 5.1's
+-- xpcall cannot pass arguments, so each call reads them from a reused context. Contexts are
+-- kept per nesting depth because a handler can raise a signal (Emit) while another runs.
+local contexts = {}
+local depth = 0
+
+local function invoke()
+	local c = contexts[depth]
+	c.fn(c.name, unpack(c.args, 1, c.count))
+end
+
+local function onError(err)
+	return Log.ReportError("Error in " .. contexts[depth].name .. " handler: " .. tostring(err))
+end
+
 local function callAll(list, name, ...)
-	local count = select("#", ...)
-	local args = { ... }
-	for i = 1, #list do
-		local fn = list[i]
-		xpcall(function()
-			fn(name, unpack(args, 1, count))
-		end, function(err)
-			return Log.ReportError("Error in " .. name .. " handler: " .. tostring(err))
-		end)
+	depth = depth + 1
+	local c = contexts[depth]
+	if not c then
+		c = { args = {} }
+		contexts[depth] = c
 	end
+	c.name, c.count = name, select("#", ...)
+	for i = 1, c.count do
+		c.args[i] = select(i, ...)
+	end
+	for i = 1, #list do
+		c.fn = list[i]
+		xpcall(invoke, onError)
+	end
+	for i = 1, c.count do
+		c.args[i] = nil
+	end
+	c.fn = nil
+	depth = depth - 1
 end
 
 local function dispatch(_, event, ...)
@@ -32,7 +56,9 @@ local function dispatch(_, event, ...)
 	if not list then
 		return
 	end
-	Log.Trace("event " .. event)
+	if Log.IsDebug() then
+		Log.Trace("event " .. event)
+	end
 	callAll(list, event, ...)
 end
 
