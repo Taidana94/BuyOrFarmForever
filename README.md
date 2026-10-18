@@ -99,7 +99,7 @@ das Addon sie nicht.
 - Struktur der Addon-Dateien und der TOC-Datei
 - Lua-Syntax (Lua 5.1) und luacheck
 - Prüfung der Übersetzungsschlüssel
-- 72 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
+- 73 automatische Tests in einer nachgebauten Spielumgebung: erster Start, `/reload`,
   beschädigte und neuere gespeicherte Daten, Debug-Protokoll, Fehlerweitergabe, alle Befehle,
   Materialziele, Bedarf und Fehlmenge, Bankstand, Gegenstandslinks, Bestand anderer Charaktere
   (Realm, Fraktion, später hinzugefügte Zutaten)
@@ -111,9 +111,12 @@ das Addon sie nicht.
 
 Version 0.2.0-alpha.1 (18.10.2026): Ziel anlegen, Gegenstand per Link hinzufügen, Bestand in
 Taschen und Bank (auch bei geschlossener Bank nach `/reload` und neuem Login): korrekt, ohne Fehler.
-Noch nicht im Spiel geprüft: Löschen von Zielen.
+Löschen von Zielen: ohne Fehler.
 
-Version 0.2.0-alpha.2 (Bestand anderer Charaktere) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.2 (18.10.2026): Bestand eines anderen Charakters auf demselben Realm und
+derselben Fraktion wird mitgezählt und angezeigt, `/bof stock others` schaltet das Mitzählen
+ein und aus: korrekt, ohne Fehler. Nicht getestet: Charaktere der anderen Fraktion und auf
+anderen Realms (nur außerhalb des Spiels geprüft).
 
 **Nicht in Forever getestet.**
 

@@ -26,6 +26,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.1.0 | 2026-10-18 | 55 checks passed, 0 failed (43 unit tests) |
 | 0.2.0-alpha.1 | 2026-10-18 | 77 checks passed, 0 failed (65 unit tests); mutation check: breaking the craft multiplier or the bank count fails 5 tests |
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
+| 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 
 ## In game
 
@@ -38,7 +39,7 @@ commit (`git log -1 --oneline`).
 |---|---|---|---|
 | 0.1.0 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.2.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)** (details below) |
-| 0.2.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **failed**, then **passed** after the logout fix (details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -69,7 +70,24 @@ Not tested: other client languages, interaction with other addons.
 | **Q-T6:** live bank count with closed bank after `/reload` and after a full relog | confirmed by the user | passed |
 | Lua errors | BugGrabber: none | passed |
 | Snapshot comparison line (debug mode) | debug mode was off | not performed |
-| `/bof goal delete` | goal still present | not performed |
+| `/bof goal delete` | later SavedVariables: `materialGoals` empty, `nextGoalID` 2 (done before the 0.2.0-alpha.2 test) | passed |
+
+### Result 0.2.0-alpha.2 (Classic Era, 2026-10-18)
+
+Setup: this addon + BugSack/BugGrabber. Characters `CharA` and `CharB`, both
+`RealmA`, Alliance. Test item: hearthstone (6948).
+
+| Check | Evidence | Result |
+|---|---|---|
+| First attempt: alt counted | "Twinks 0"; SavedVariables: both characters `stock.bags[6948] = 0` although each has one; snapshots were taken on `PLAYER_LOGOUT` | **failed** (bug) |
+| Fix: no logout snapshot, `/bof stock` stores a snapshot | SavedVariables: CharA `bags[6948] = 1`, CharB `bags[6948] = 1` | passed |
+| `/bof stock` on CharA shows "Twinks 1" and the detail line for CharB | confirmed by the user | passed |
+| `/bof stock others` off and on | confirmed by the user; SavedVariables: `countOtherCharacters = true` at the end | passed |
+| Lua errors | `!BugGrabber.lua`: `errors` empty (session 23) | passed |
+| Other-faction alt shown but not counted, other-realm alt hidden | no such characters | not performed (out of game only) |
+
+Observation (own conclusion from the data, not measured directly): `C_Item.GetItemCount` returns 0
+during `PLAYER_LOGOUT` in Classic Era 70003.
 
 ### Checklist 0.1.0 (Classic Era)
 
