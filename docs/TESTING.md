@@ -53,7 +53,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.6 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (confirmed by the user; details below) |
 | 0.2.0-alpha.7 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (user: "gut"; SavedVariables below) |
 | 0.2.0-alpha.8 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)**, usability finding (details below) |
-| 0.2.0-alpha.9 | Classic Era 1.15.9 | – | **not tested yet** (travel/farm message; checklist 0.2.0-alpha.8 steps 3–6) |
+| 0.2.0-alpha.9 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (travel/farm split; details below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -197,6 +197,12 @@ Character `CharC-RealmB` (Horde, Tailoring/Enchanting), linen cloth from humanoi
 Finding: the travel toggle is easy to leave in the wrong mode, and the status line said "läuft" for
 farming. 0.2.0-alpha.9 prints "Jetzt: Anreise …" / "Jetzt: Farmen …" after every toggle and calls the
 farming state "farmt".
+
+Retest with 0.2.0-alpha.9 (SavedVariables 21:53): saved run 3 = mobs, target linen cloth, 66 s farm
+time, 20 s travel, linen cloth 6 + 1 other item, location changed on arrival (uiMapID 1454 -> 1411).
+The split is now plausible. Unclear gains/keep and the logout pause were reported as tested by the
+user but leave no trace in this data (no kept unclear item, no paused run) -> user report only.
+`!BugGrabber.lua`: no errors.
 
 User remark: players rarely use `/reload`. SavedVariables are written by the client on logout, exit
 and `/reload` only; an addon cannot trigger it. `/reload` at the end of a test is only needed so the

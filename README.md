@@ -185,7 +185,8 @@ Version 0.2.0-alpha.8 (18.10.2026): Farmrunde mit Gegnern, Plündern, Beenden, S
 Fehler. Dabei fiel auf, dass der Anreise-Umschalter leicht im falschen Zustand bleibt (geändert in
 0.2.0-alpha.9). Noch nicht im Spiel geprüft: unklare Zugänge, Pause nach Ausloggen.
 
-Version 0.2.0-alpha.9 ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.9 (18.10.2026): Anreise und Farmzeit werden mit der neuen Meldung richtig
+getrennt, ohne Fehler.
 
 **Nicht in Forever getestet.**
 
