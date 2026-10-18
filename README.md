@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Status: Entwicklungsversion 0.2.0-alpha.8. Materialziele, Rezeptimport, Bestand, Preise und Farmrunden, mit erstem Fenster (Material).**
+**Status: Entwicklungsversion 0.2.0-alpha.9. Materialziele, Rezeptimport, Bestand, Preise und Farmrunden, mit erstem Fenster (Material).**
 
 „Kaufen oder farmen?“ soll dir helfen zu entscheiden, wie du fehlende Herstellungsmaterialien
 beschaffst, ob sich ein geplanter Craft lohnt und wie sich Ausgaben auf deine Sparziele auswirken.
@@ -129,6 +129,8 @@ das Addon sie nicht.
   werden nur die Taschen, nicht die Bank. Nach `/reload` läuft eine Runde weiter; nach Ausloggen
   oder Absturz ist sie pausiert, die Zeit offline zählt nicht.
 - Farmrunden gibt es vorerst nur über Chat-Befehle, noch nicht im Fenster.
+- WoW speichert die Daten aller Addons beim Ausloggen, Beenden und bei `/reload`. Stürzt das Spiel
+  ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung gestartete Farmrunde.
 - Noch nicht enthalten:
   Kauf-/Farmvergleich, Craft-Bewertung, Goldpuffer.
 - Nur deutsche Texte. Clients in anderen Sprachen zeigen ebenfalls Deutsch.
@@ -136,7 +138,7 @@ das Addon sie nicht.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.2.0-alpha.8):
+**Außerhalb des Spiels** (Version 0.2.0-alpha.9):
 
 - Struktur der Addon-Dateien und der TOC-Datei
 - Sauberkeit und Leistung (Funktionslänge, keine Frame-Skripte pro Bild, kein unnötiger Speicherverbrauch)
@@ -179,13 +181,17 @@ aus dem Verzauberungsfenster: korrekt, ohne Fehler.
 Version 0.2.0-alpha.7 (18.10.2026): mit beiden Berufsfenstern wird das zuletzt angeklickte Rezept
 übernommen: korrekt, ohne Fehler.
 
-Version 0.2.0-alpha.8 (Farmrunden) ist im Spiel noch nicht getestet.
+Version 0.2.0-alpha.8 (18.10.2026): Farmrunde mit Gegnern, Plündern, Beenden, Speichern: ohne
+Fehler. Dabei fiel auf, dass der Anreise-Umschalter leicht im falschen Zustand bleibt (geändert in
+0.2.0-alpha.9). Noch nicht im Spiel geprüft: unklare Zugänge, Pause nach Ausloggen.
+
+Version 0.2.0-alpha.9 ist im Spiel noch nicht getestet.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.2.0-alpha.8 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.2.0-alpha.9 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

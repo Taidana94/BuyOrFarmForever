@@ -52,7 +52,8 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.5 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (smoke test) |
 | 0.2.0-alpha.6 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (confirmed by the user; details below) |
 | 0.2.0-alpha.7 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (user: "gut"; SavedVariables below) |
-| 0.2.0-alpha.8 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.2.0-alpha.8 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)**, usability finding (details below) |
+| 0.2.0-alpha.9 | Classic Era 1.15.9 | – | **not tested yet** (travel/farm message; checklist 0.2.0-alpha.8 steps 3–6) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -179,6 +180,28 @@ results rest on the user's report only.
 
 User feedback: with two open profession windows, the recipe that was **clicked last** should be
 used, not the one of the window opened last (changed in 0.2.0-alpha.7).
+
+### Result 0.2.0-alpha.8 (Classic Era, 2026-10-18)
+
+Character `CharC-RealmB` (Horde, Tailoring/Enchanting), linen cloth from humanoids.
+
+| Check | Evidence | Result |
+|---|---|---|
+| Looted items confirmed | saved run: linen cloth 7 and three other items, all confirmed | passed |
+| stop → save, list, estimate goal | `farmRuns[2]` saved, no `currentRun` left, goal "Stofftest" created | passed |
+| Lua errors | `!BugGrabber.lua`: no errors | passed |
+| Travel/farm split | saved run: 10 s farm time, 300 s travel; the run stayed in travel mode while farming | **usability finding** |
+| Unclear gains, keep | no unclear gains in the saved run | not performed |
+| Logout pause | not in the data | not performed |
+
+Finding: the travel toggle is easy to leave in the wrong mode, and the status line said "läuft" for
+farming. 0.2.0-alpha.9 prints "Jetzt: Anreise …" / "Jetzt: Farmen …" after every toggle and calls the
+farming state "farmt".
+
+User remark: players rarely use `/reload`. SavedVariables are written by the client on logout, exit
+and `/reload` only; an addon cannot trigger it. `/reload` at the end of a test is only needed so the
+results can be read from the file. Known limitation (README): after a client crash, changes since the
+last save are lost, including a run started in that session.
 
 ### Checklist 0.1.0 (Classic Era)
 

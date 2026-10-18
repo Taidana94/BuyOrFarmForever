@@ -88,7 +88,12 @@ local STEPS = {
 		return run, err
 	end,
 	travel = function(charData)
-		return FarmRuns.ToggleTravel(charData, now(), ns.Client:GetCurrentMapID())
+		local run, err = FarmRuns.ToggleTravel(charData, now(), ns.Client:GetCurrentMapID())
+		-- A clear line first: the mode is easy to forget, and then farm time counts as travel.
+		if run then
+			Log.Print(run.state == "TRAVEL" and L.FARM_NOW_TRAVEL or L.FARM_NOW_FARM)
+		end
+		return run, err
 	end,
 	stop = function(charData)
 		local run, err = FarmRuns.Stop(charData, now())

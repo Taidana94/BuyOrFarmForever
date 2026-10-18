@@ -3,6 +3,13 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0-alpha.9] – noch nicht veröffentlicht
+
+### Geändert
+
+- Nach `/bof farm travel` steht klar im Chat, ob jetzt Anreise oder Farmzeit zählt; der Zustand
+  heißt in der Statuszeile „farmt“ statt „läuft“.
+
 ## [0.2.0-alpha.8] – noch nicht veröffentlicht
 
 ### Hinzugefügt
