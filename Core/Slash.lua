@@ -24,16 +24,21 @@ function Slash.AddCommand(name, handler, helpLine)
 	commands[name] = { handler = handler, helpLine = helpLine }
 end
 
-local function printHelp()
-	Log.Print(L.HELP_HEADER)
-	Log.Print(L.HELP_LINE_HELP)
-	Log.Print(L.HELP_LINE_VERSION)
-	Log.Print(L.HELP_LINE_DEBUG)
-	Log.Print(L.HELP_LINE_RESET)
+-- The help lines of the base commands and all registered commands (chat help and Help tab).
+function Slash.HelpLines()
+	local lines = { L.HELP_LINE_HELP, L.HELP_LINE_VERSION, L.HELP_LINE_DEBUG, L.HELP_LINE_RESET }
 	for _, name in ipairs(commandOrder) do
 		if commands[name].helpLine then
-			Log.Print(commands[name].helpLine)
+			lines[#lines + 1] = commands[name].helpLine
 		end
+	end
+	return lines
+end
+
+local function printHelp()
+	Log.Print(L.HELP_HEADER)
+	for _, line in ipairs(Slash.HelpLines()) do
+		Log.Print(line)
 	end
 end
 

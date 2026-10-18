@@ -442,4 +442,6 @@ One command per line.
 11. Income: after login no fake income (`/bof gold` right after login: no big gain); sell something
     → gain; repair/buy → spending. After 1 h of play: net per hour and the time value in the
     Sourcing tab.
-12. `/reload` at the end; BugSack: no errors.
+12. Tab "Hilfe": all commands, long lines wrap, mouse wheel scrolls. Window 720 px wide; the six
+    tab buttons do not overlap the title.
+13. `/reload` at the end; BugSack: no errors.

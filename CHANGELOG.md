@@ -22,9 +22,11 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 - Beschaffung: Zeitgegenwert der Kosten aus deinem Nettoerlös, Hinweis auf Rücklagen-Nutzung;
   wahlweise nur mit freiem Gold planen (`/bof gold reserves`).
 
+- Tab „Hilfe“ mit allen Befehlen.
+
 ### Geändert
 
-- Der Fenstertitel steht rechts, damit die Tab-Knöpfe ihn nicht verdecken.
+- Das Fenster ist breiter (sechs Tabs); der Titel steht rechts, damit die Tab-Knöpfe ihn nicht verdecken.
 
 ## [0.2.0] – 2026-10-18 (noch nicht veröffentlicht)
 
