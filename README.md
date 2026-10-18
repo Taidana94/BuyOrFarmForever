@@ -64,9 +64,10 @@ Noch kein Fenster. Bedienung derzeit über die Befehle oben. Beispiel:
 
 Ziele gehören zum jeweiligen Charakter. Damit die anderen Charaktere mitgezählt werden, merkt sich
 das Addon bei jedem Charakter, wie viel er von den Zielmaterialien in Taschen und Bank hat
-(bei Taschenänderungen, Bankbesuch und Ausloggen). Mitgezählt werden Charaktere auf demselben Realm
+(bei Taschenänderungen, Bankbesuch und bei `/bof stock`). Mitgezählt werden Charaktere auf demselben Realm
 und derselben Fraktion; Charaktere der anderen Fraktion werden nur angezeigt. Neue Zutaten kennt ein
-anderer Charakter erst, wenn du ihn wieder einloggst.
+anderer Charakter erst, wenn du ihn wieder einloggst und dort `/bof stock` eingibst oder etwas in
+den Taschen änderst.
 
 Im Debug-Modus erscheinen technische Meldungen (englisch) im Chat. Zusätzlich speichert das Addon
 ein kurzes Protokoll (höchstens 200 Einträge) in seinen gespeicherten Daten. Fehler werden immer

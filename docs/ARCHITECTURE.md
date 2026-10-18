@@ -51,7 +51,7 @@ printed and `Core/Main.lua` registers nothing.
 | `GetItemLink(itemID)` | item link, or nil while the item data loads (the load is requested) |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `LOGOUT`. Core code subscribes with
+Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`. Core code subscribes with
 `Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
 
 The interface grows with each stage (plan section 6).
@@ -70,8 +70,10 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
   correct with a closed bank, also after `/reload` and relog.
 - Snapshots (stage 2b): `stock.bags[itemID]`, `stock.bank[itemID]`, `bagsAt`, `bankAt` of every
   character, for all items in the goals of *any* character (`Materials.TrackedItemIDsAll`), zeros
-  included so "0" and "unknown" differ. Taken on `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED` and
-  `LOGOUT` (also on `/reload`), deliberately not on login (bag data may not be loaded yet).
+  included so "0" and "unknown" differ. Taken on `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED` and on
+  `/bof stock`. Deliberately not on login (bag data may not be loaded yet) and not on `PLAYER_LOGOUT`:
+  in game (Classic Era 70003) both characters stored 0 hearthstones at logout although each had one,
+  so counts at logout are treated as unreliable.
   Items no longer tracked are dropped. Realm and name come from the character key
   (`Name-NormalizedRealm`; normalized realm names have no hyphens).
 - `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.

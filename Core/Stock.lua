@@ -108,7 +108,9 @@ ns.DB.VALIDATORS[#ns.DB.VALIDATORS + 1] = Stock.Sanitize
 
 -- Snapshot of the current character ---------------------------------------------------
 
-local function captureCurrent(reason)
+-- Stores the current character's counts of all tracked items. Only call it while bag data is
+-- loaded (after a bag change, at the bank, or on a user command).
+function Stock.CaptureCurrent(reason)
 	if not (ns.db and not ns.readOnly and ns.charKey) then
 		return
 	end
@@ -122,20 +124,17 @@ local function captureCurrent(reason)
 end
 
 if ns.Client then
-	-- Not on login: bag data may not be loaded yet, and a snapshot of zeros would overwrite
-	-- good data. Bag changes after login, bank visits and logout (also /reload) are enough.
+	-- Not on login (bag data may not be loaded yet) and not on PLAYER_LOGOUT: in game the
+	-- counts were already 0 there (Classic Era 70003) and overwrote good snapshots.
 	ns.Events.OnSignal("BAGS_CHANGED", function()
-		captureCurrent("bags")
+		Stock.CaptureCurrent("bags")
 	end)
 	ns.Events.OnSignal("BANK_OPENED", function()
 		bankOpen = true
-		captureCurrent("bank opened")
+		Stock.CaptureCurrent("bank opened")
 	end)
 	ns.Events.OnSignal("BANK_CLOSED", function()
-		captureCurrent("bank closed")
+		Stock.CaptureCurrent("bank closed")
 		bankOpen = false
-	end)
-	ns.Events.OnSignal("LOGOUT", function()
-		captureCurrent("logout")
 	end)
 end

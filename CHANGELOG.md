@@ -13,7 +13,7 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 
 ### Geändert
 
-- Der gespeicherte Bestand wird bei Taschenänderungen, Bankbesuch und Ausloggen aktualisiert,
+- Der gespeicherte Bestand wird bei Taschenänderungen, Bankbesuch und `/bof stock` aktualisiert,
   nicht nur bei offener Bank.
 
 ## [0.2.0-alpha.1] – noch nicht veröffentlicht

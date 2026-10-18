@@ -110,16 +110,17 @@ Use a character that has some linen cloth (or any item) in bags and bank. `/bof 
 
 ### Checklist 0.2.0-alpha.2 (Classic Era, other characters)
 
-Needs a second character on the same realm (ideally also one of the other faction or realm).
+First attempt (2026-10-18) found a bug: snapshots taken on `PLAYER_LOGOUT` stored 0 for every
+item (both characters stored 0 hearthstones although each had one), so other characters always
+showed "Twinks 0". Logout snapshots were removed; `/bof stock` now also stores a snapshot.
 
-1. Main character: goal with linen cloth (existing goal "Test" is fine). `/bof stock` → the line now
-   ends with "Twinks 0 – …". Log out to the character selection.
-2. Log in the alt, put some linen in its bags and/or bank (any bag change triggers the snapshot),
-   log out.
-3. Log in the main character, `/bof stock` → "Twinks <n>" and a line
-   "    <Alt>: <n> (Taschen …, Bank …, Stand vor …)". The missing amount is reduced by the alt's count.
-4. `/bof stock others` → "… nicht mehr mitgezählt", `/bof stock` without "Twinks";
-   `/bof stock others` again → on.
+Uses the hearthstone (item 6948), which every character has.
+
+1. Main character: `/reload`, `/bof goal add 6948 5` (in a goal), `/bof stock`.
+2. Alt on the same realm: log in, `/bof stock` (stores its snapshot; "no goal selected" is fine), log out.
+3. Main character: `/bof stock` → "Ruhestein: benötigt 5, Taschen 1, Bank 0, Twinks 1 – fehlt 3" and
+   "    <Alt>: 1 (Taschen 1, Bank 0, Stand vor …)".
+4. `/bof stock others` → off, `/bof stock` → "fehlt 4" without "Twinks"; `/bof stock others` again → on.
 5. If available: an alt of the other faction on the same realm → listed with
    "andere Fraktion, nicht mitgezählt". An alt on another realm → not listed.
-6. `/bof version` → `0.2.0-alpha.2`.
+6. `/bof goal remove 6948` to clean up.

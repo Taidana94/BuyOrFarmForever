@@ -276,6 +276,8 @@ local function stockCommand(argument)
 		toggleOthers()
 		return
 	end
+	-- Lets an alt without bag changes this session store its stock with one command.
+	Stock.CaptureCurrent("stock command")
 	if option == "all" then
 		local goals = {}
 		for _, id in ipairs(Materials.ListGoalIDs(charData)) do
