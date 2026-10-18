@@ -13,7 +13,7 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
 | Client adapter | `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
-| Chat UI (provisional) | `UI/ChatCommands.lua` (`/bof goal`, `/bof recipe`, `/bof stock`) | none (prints via `Log.Print`) |
+| Chat UI (provisional) | `UI/ChatShared.lua` (helpers), `UI/GoalCommands.lua` (`/bof goal`, `/bof recipe`), `UI/StockCommands.lua` (`/bof stock`) | none (prints via `Log.Print`) |
 
 Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
@@ -22,10 +22,10 @@ WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 `Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Log.lua` →
 `Core/DB.lua` → `Core/Materials.lua` → `Core/Recipes.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEra.lua` →
-`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatCommands.lua` → `Core/Main.lua`
+`Core/Events.lua` → `Core/Stock.lua` → `Core/Slash.lua` → `UI/ChatShared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
-subcommands (`ChatCommands.lua`) load after `Slash.lua`.
+subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
 
 ## Adapter selection
 
