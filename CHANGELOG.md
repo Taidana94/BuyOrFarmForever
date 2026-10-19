@@ -3,7 +3,7 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.3.0-alpha.2] – noch nicht veröffentlicht
+## [0.3.0-alpha.3] – noch nicht veröffentlicht
 
 ### Hinzugefügt
 
@@ -11,7 +11,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
   Ausrüstung nach deinen Gewichten, Beschaffungskosten und Farmzeit, Kosten pro Wertungspunkt,
   Wert vorhandener Zutaten.
 - Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
-- Alternativen zum Craft: eingeplant oder möglicher Drop, mit Notiz (`/bof alt`).
+- Alternativen zum Craft: eingeplant oder möglicher Drop, mit Quelle/Notiz (`/bof alt`).
+- Alternativen mit Kosten, Zeitaufwand und Voraussetzung (`/bof alt cost|time|req <Nr.> …`,
+  `clear` löscht einen Wert); die Craft-Bewertung zeigt sie neben Kosten und Farmzeit des Crafts.
 - `/bof craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
 - Tab „Farmen“ im Fenster: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden,
   prüfen und speichern; laufende Zeit und geschätzte Farmzeit.

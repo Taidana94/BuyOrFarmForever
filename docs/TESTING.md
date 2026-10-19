@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.3.0-alpha.3 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); mutation check: no sanitizing of alternative details fails 1 |
 | 0.3.0-alpha.2 | 2026-10-19 | 172 checks passed, 0 failed (154 unit tests); new level 1b check for characters the game font draws (fails on the old `→` texts); the new stacking checks in the Craft and Gold tab tests fail without the fix |
 | 0.3.0-alpha.1 | 2026-10-18 | 169 checks passed, 0 failed (152 unit tests); gold buffer mutation checks: ignoring the gold limit, no login guard, reserves ignored, no gap cap each fail 1; farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
 | 0.2.0 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); only version and documentation changed against 0.2.0-alpha.10 |
@@ -60,7 +61,8 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.9 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (travel/farm split; details below) |
 | 0.2.0-alpha.10 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.3.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**, two display bugs (details below) |
-| 0.3.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (fix check: Craft tab lines, see result 0.3.0-alpha.1) |
+| 0.3.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: Craft tab lines no longer overlap, "Unterschied" instead of the box (user: "Passt") |
+| 0.3.0-alpha.3 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -240,9 +242,9 @@ problem (screenshot of the Craft tab). SavedVariables (11:26) and `!BugGrabber.l
 | Craft evaluation, weights (steps 3–4) | user confirmed; weights back to 1 | passed |
 | Alternatives (step 6) | old planned alternative removed, `POSSIBLE` 4338 stored | passed |
 | Craft tab (step 7) | screenshot: comparison names the slot ("Brust"), goal navigation shown | passed, but see bugs |
-| Farm tab (step 9) | user confirmed; **no new run in `farmRuns`** (last run from 2026-10-18), so saving from the tab is not confirmed by data | open |
+| Farm tab (step 9) | user confirmed (tested on 2026-10-18; the runs of 22:06–22:16 in `farmRuns`) | passed |
 | Gold buffer (step 10) | savings goals "Reiten" 5g and "Training" 1g, each fully `reserved` | passed |
-| Income after login (step 11) | session 20745: 1019 s, gained 0, spent 0: no fake gain at login. Selling/repairing not visible in the data | partly |
+| Income (step 11) | session 20745: 1019 s, gained 0, spent 0: no fake gain at login. Selling/repairing: user confirmed (tested on 2026-10-18), no gold change in the stored income records | passed (user) |
 | Help tab, window width (steps 1, 12) | user confirmed | passed |
 
 Bugs found (screenshot):
@@ -250,6 +252,18 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.3.0-alpha.3 (Classic Era, alternative details)
+
+1. `/reload`, `/bof version` → `0.3.0-alpha.3`. Select a goal from a wearable recipe.
+2. `/bof alt add <item link> planned Questbelohnung` → note the number n in the answer.
+3. `/bof alt cost n 1g 50s`, `/bof alt time n 1h 30m`, `/bof alt req n Stufe 20, Questreihe` → each
+   answer shows the alternative and below it "Aufwand: Kosten 1g 50s, Zeit 1 Std. 30 Min.; Voraussetzung: …".
+4. `/bof craft` and tab "Craft" → below the alternative: "Aufwand: … (Craft: Kosten …, Farmzeit …)".
+   Long lines wrap without overlapping.
+5. `/bof alt cost n clear` → "Kosten unbekannt". Errors: `/bof alt time n 90` (no unit),
+   `/bof alt cost 99 1g` (unknown number) → clear messages, nothing changes.
+6. `/reload` → the details are kept. BugSack: no errors.
 
 ### Release check 0.2.0 (2026-10-18)
 

@@ -135,6 +135,38 @@ function CraftEval.RemoveAlternative(charData, index)
 	return true
 end
 
+-- Optional details of an alternative, all set by the user: cost in copper, time effort in
+-- seconds and the requirements as text. Absent fields mean "unknown".
+local DETAIL_CHECKS = {
+	copper = function(value)
+		return type(value) == "number" and value >= 0 and value <= ns.Money.MAX_COPPER
+	end,
+	seconds = function(value)
+		return type(value) == "number" and value >= 0 and value <= ns.Util.MAX_DURATION_SECONDS
+	end,
+	requires = function(value)
+		return type(value) == "string" and value ~= ""
+	end,
+}
+
+-- Sets detail `field` ("copper", "seconds" or "requires") of alternative `index`; nil clears it.
+-- Returns true, or nil plus "alternative_not_found" / "invalid_value".
+function CraftEval.SetAlternativeDetail(charData, index, field, value)
+	local alt = charData.craftEval.alternatives[index]
+	if not alt then
+		return nil, "alternative_not_found"
+	end
+	assert(DETAIL_CHECKS[field], "unknown alternative detail")
+	if field == "requires" and value ~= nil then
+		value = CraftEval.CleanNote(value)
+	end
+	if value ~= nil and not DETAIL_CHECKS[field](value) then
+		return nil, "invalid_value"
+	end
+	alt[field] = value
+	return true
+end
+
 -- Notes are user text: same cleaning and length limit as goal labels.
 function CraftEval.CleanNote(note)
 	return ns.Materials.CleanLabel(note)
@@ -156,6 +188,18 @@ local function validAlternative(alt)
 		and type(alt.note) == "string" and type(alt.at) == "number"
 end
 
+-- Drops invalid optional details; returns true if something was dropped.
+local function sanitizeDetails(alt)
+	local repaired = false
+	for field, check in pairs(DETAIL_CHECKS) do
+		if alt[field] ~= nil and not check(alt[field]) then
+			alt[field] = nil
+			repaired = true
+		end
+	end
+	return repaired
+end
+
 function CraftEval.Sanitize(charData, path, repairs)
 	local eval = charData.craftEval
 	sanitizeWeights(eval.weights, path .. ".craftEval", repairs)
@@ -163,6 +207,9 @@ function CraftEval.Sanitize(charData, path, repairs)
 	for _, alt in ipairs(eval.alternatives) do
 		if validAlternative(alt) and #clean < CraftEval.MAX_ALTERNATIVES then
 			alt.note = CraftEval.CleanNote(alt.note)
+			if sanitizeDetails(alt) then
+				repairs[#repairs + 1] = path .. ".craftEval.alternatives[" .. (#clean + 1) .. "]"
+			end
 			clean[#clean + 1] = alt
 		end
 	end

@@ -1,6 +1,6 @@
 # Kaufen oder farmen?
 
-**Entwicklungsversion 0.3.0-alpha.2 – Materialbeschaffung, Craft-Bewertung, Goldpuffer und Tab „Farmen“
+**Entwicklungsversion 0.3.0-alpha.3 – Materialbeschaffung, Craft-Bewertung, Goldpuffer und Tab „Farmen“
 (getestet in WoW Classic Era). Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
@@ -119,8 +119,11 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof weights` | deine Gewichte anzeigen |
 | `/bof weights str\|agi\|sta\|int\|spi <Zahl>` | Gewicht setzen (0 bis 10, z. B. `/bof weights int 2`) |
 | `/bof alt` | deine Alternativen |
-| `/bof alt add <Gegenstand> planned\|drop [Notiz]` | Alternative: eingeplant (z. B. Questbelohnung) oder möglicher Drop |
+| `/bof alt add <Gegenstand> planned\|drop [Quelle/Notiz]` | Alternative: eingeplant (z. B. Questbelohnung) oder möglicher Drop |
 | `/bof alt remove <Nr.>` | Alternative entfernen |
+| `/bof alt cost <Nr.> <Betrag>` | Kosten der Alternative, z. B. `1g 50s` |
+| `/bof alt time <Nr.> <Dauer>` | Zeitaufwand der Alternative, z. B. `45m` oder `1h 30m` |
+| `/bof alt req <Nr.> <Text>` | Voraussetzung, z. B. `Stufe 20, Questreihe in Westfall` (`clear` löscht einen Wert) |
 
 **Goldpuffer**
 
@@ -230,9 +233,9 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.3.0-alpha.2): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
+**Außerhalb des Spiels** (Version 0.3.0-alpha.3): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
-kein Speicherzuwachs bei Taschenänderungen) und 154 automatische Tests in einer nachgebauten
+kein Speicherzuwachs bei Taschenänderungen) und 157 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
 Rezeptimport, Fenster, Preise, Farmrunden, Beschaffungsplan, Craft-Bewertung, Farm-Tab, Goldpuffer).
 
@@ -251,14 +254,14 @@ Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet
 
 Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) wurde am 19.10.2026 im Spiel
 getestet, ohne Lua-Fehler. Dabei fielen zwei Darstellungsfehler im Tab „Craft“ auf (überlappende
-Zeilen, Kästchen statt Pfeil); sie sind in 0.3.0-alpha.2 behoben, die Korrektur ist im Spiel noch
-nicht bestätigt. Einnahmen aus Verkäufen und Ausgaben wurden im Spiel noch nicht geprüft.
+Zeilen, Kästchen statt Pfeil); sie sind in 0.3.0-alpha.2 behoben und im Spiel bestätigt. Kosten,
+Zeitaufwand und Voraussetzung von Alternativen (0.3.0-alpha.3) sind im Spiel noch nicht getestet.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.3.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.3.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -43,6 +43,12 @@ local ERRORS = {
 	invalid_money = function()
 		return L.ERR_INVALID_MONEY
 	end,
+	invalid_duration = function()
+		return L.ERR_INVALID_DURATION
+	end,
+	invalid_requires = function()
+		return L.ERR_INVALID_REQUIRES
+	end,
 	no_auction = function()
 		return L.SCAN_NO_AUCTION
 	end,

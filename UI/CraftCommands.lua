@@ -17,6 +17,7 @@ ns.CraftCommands = CraftCommands
 local STAT_WORDS = { str = "STR", agi = "AGI", sta = "STA", int = "INT", spi = "SPI" }
 local KIND_WORDS = { planned = "PLANNED", drop = "POSSIBLE" }
 local KIND_NAMES = { PLANNED = "ALT_KIND_PLANNED", POSSIBLE = "ALT_KIND_POSSIBLE" }
+local CLEAR_WORD = "clear"
 local ERROR_TEXTS = { not_equippable = "CRAFT_NOT_EQUIPPABLE", loading = "CRAFT_LOADING" }
 
 -- Scores are whole numbers unless a weight has decimals.
@@ -48,9 +49,12 @@ function CraftCommands.CompareLine(itemID, comparison, err)
 		equippedText(comparison), gainText(comparison.gain))
 end
 
-local function sourcingLines(lines, charData, goal, comparison)
+local function sourcingPlan(charData, goal)
+	return Sourcing.Plan(Sourcing.Inputs(charData, { goal }), ns.db.settings.strategy, (Sourcing.Budget()))
+end
+
+local function sourcingLines(lines, plan, comparison)
 	local strategy = ns.db.settings.strategy
-	local plan = Sourcing.Plan(Sourcing.Inputs(charData, { goal }), strategy, (Sourcing.Budget()))
 	lines[#lines + 1] = Util.Format(L.CRAFT_COST, L[ns.PlanCommands.STRATEGY_NAMES[strategy]],
 		Money.Format(plan.cost), Util.FormatDuration(plan.farmSeconds))
 	if plan.open > 0 then
@@ -74,7 +78,26 @@ local function ownedLine(lines, charData, goal)
 	lines[#lines + 1] = Util.Format(template, owned.owned, Money.Format(owned.vendor), Money.Format(owned.market))
 end
 
-local function alternativeLines(lines, charData, comparison)
+local function detailText(value, format)
+	return value and format(value) or L.ALT_UNKNOWN
+end
+
+-- Extra line with the user's cost, time and requirements of an alternative (nil without details),
+-- next to the craft's sourcing cost and farm time when a plan is given.
+local function detailLine(alt, plan)
+	if not (alt.copper or alt.seconds or alt.requires) then
+		return nil
+	end
+	local requires = alt.requires and Util.Format(L.ALT_REQUIRES_PART, alt.requires) or ""
+	local cost, time = detailText(alt.copper, Money.Format), detailText(alt.seconds, Util.FormatDuration)
+	if not plan then
+		return Util.Format(L.ALT_DETAILS, cost, time, requires)
+	end
+	return Util.Format(L.ALT_DETAILS_VS_CRAFT, cost, time, Money.Format(plan.cost),
+		Util.FormatDuration(plan.farmSeconds), requires)
+end
+
+local function alternativeLines(lines, charData, comparison, plan)
 	local weights = charData.craftEval.weights
 	for index, alt in ipairs(charData.craftEval.alternatives) do
 		local altComparison, err = CraftEval.CompareWithEquipped(alt.itemID, weights)
@@ -87,6 +110,7 @@ local function alternativeLines(lines, charData, comparison)
 			lines[#lines + 1] = Util.Format(L.ALT_LINE_NO_COMPARE, index, kind,
 				CraftCommands.CompareLine(alt.itemID, altComparison, err), note)
 		end
+		lines[#lines + 1] = detailLine(alt, plan)
 	end
 end
 
@@ -98,9 +122,10 @@ function CraftCommands.EvaluationLines(charData, goal)
 	end
 	local comparison, err = CraftEval.CompareWithEquipped(itemID, charData.craftEval.weights)
 	local lines = { CraftCommands.CompareLine(itemID, comparison, err) }
-	sourcingLines(lines, charData, goal, comparison)
+	local plan = sourcingPlan(charData, goal)
+	sourcingLines(lines, plan, comparison)
 	ownedLine(lines, charData, goal)
-	alternativeLines(lines, charData, comparison)
+	alternativeLines(lines, charData, comparison, plan)
 	lines[#lines + 1] = L.CRAFT_LIMITS
 	return lines
 end
@@ -168,14 +193,22 @@ end
 
 -- /bof alt [add <item> planned|drop [note] | remove <nr>] ------------------------------------
 
+local function printAlternative(index, alt)
+	local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
+	Log.Print(Util.Format(L.ALT_LIST_LINE, index, L[KIND_NAMES[alt.kind]], UIShared.ItemText(alt.itemID), note))
+	local details = detailLine(alt)
+	if details then
+		Log.Print(details)
+	end
+end
+
 local function listAlternatives(charData)
 	if #charData.craftEval.alternatives == 0 then
 		Log.Print(L.ALT_LIST_EMPTY)
 		return
 	end
 	for index, alt in ipairs(charData.craftEval.alternatives) do
-		local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
-		Log.Print(Util.Format(L.ALT_LIST_LINE, index, L[KIND_NAMES[alt.kind]], UIShared.ItemText(alt.itemID), note))
+		printAlternative(index, alt)
 	end
 end
 
@@ -190,6 +223,55 @@ local function addAlternative(charData, argument)
 	Log.Print(Util.Format(L.ALT_ADDED, index, UIShared.ItemText(itemID)))
 end
 
+local function removeAlternative(charData, argument)
+	if CraftEval.RemoveAlternative(charData, Util.ParseInteger(Util.Trim(argument))) then
+		Log.Print(L.ALT_REMOVED)
+	else
+		Log.Print(Util.Format(L.ALT_NOT_FOUND, Util.Trim(argument)))
+	end
+end
+
+local function parseRequires(text)
+	local requires = Util.Trim(text)
+	if requires == "" then
+		return nil, "invalid_requires"
+	end
+	return requires
+end
+
+-- /bof alt cost|time|req <nr> <value|clear>: subcommand -> stored field and parser of the value.
+local DETAILS = {
+	cost = { field = "copper", parse = Money.Parse },
+	time = { field = "seconds", parse = Util.ParseDuration },
+	req = { field = "requires", parse = parseRequires },
+}
+
+local function setDetail(charData, detail, argument)
+	local indexText, valueText = Slash.SplitCommand(argument)
+	local value
+	if string.lower(Util.Trim(valueText)) ~= CLEAR_WORD then
+		local err
+		value, err = detail.parse(valueText)
+		if value == nil then
+			UIShared.PrintError(err)
+			return
+		end
+	end
+	local index = Util.ParseInteger(indexText)
+	if not CraftEval.SetAlternativeDetail(charData, index, detail.field, value) then
+		Log.Print(Util.Format(L.ALT_NOT_FOUND, indexText))
+		return
+	end
+	printAlternative(index, charData.craftEval.alternatives[index])
+end
+
+local WRITE_COMMANDS = { add = addAlternative, remove = removeAlternative }
+for word, detail in pairs(DETAILS) do
+	WRITE_COMMANDS[word] = function(charData, argument)
+		setDetail(charData, detail, argument)
+	end
+end
+
 local function altCommand(argument)
 	local sub, rest = Slash.SplitCommand(argument)
 	if sub == "" or sub == "list" then
@@ -199,20 +281,14 @@ local function altCommand(argument)
 		end
 		return
 	end
-	if sub ~= "add" and sub ~= "remove" then
+	local command = WRITE_COMMANDS[sub]
+	if not command then
 		Log.Print(L.ALT_USAGE)
 		return
 	end
 	local charData = UIShared.WritableCharacter()
-	if not charData then
-		return
-	end
-	if sub == "add" then
-		addAlternative(charData, rest)
-	elseif CraftEval.RemoveAlternative(charData, Util.ParseInteger(Util.Trim(rest))) then
-		Log.Print(L.ALT_REMOVED)
-	else
-		Log.Print(Util.Format(L.ALT_NOT_FOUND, Util.Trim(rest)))
+	if charData then
+		command(charData, rest)
 	end
 end
 

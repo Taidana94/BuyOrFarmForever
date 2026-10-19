@@ -97,6 +97,32 @@ function Util.FormatDuration(seconds)
 	return Util.Format(L.DURATION_HOURS_MINUTES, hours, minutes)
 end
 
+-- Upper limit for entered durations (no plan needs more than this).
+Util.MAX_DURATION_SECONDS = 1000 * SECONDS_PER_HOUR
+
+-- Parses durations like "1h 30m", "45m", "2h" (each unit once, unit letters from the locale).
+-- Returns seconds, or nil plus "invalid_duration" (plain numbers are ambiguous and rejected).
+function Util.ParseDuration(text)
+	local L = ns.L
+	local units = {
+		[string.lower(L.DURATION_HOUR_LETTER)] = SECONDS_PER_HOUR,
+		[string.lower(L.DURATION_MINUTE_LETTER)] = SECONDS_PER_MINUTE,
+	}
+	local seen, total = {}, 0
+	local rest = string.lower(Util.Trim(text)):gsub("(%d+)%s*(%a)", function(amount, unit)
+		if not units[unit] or seen[unit] then
+			return nil
+		end
+		seen[unit] = true
+		total = total + tonumber(amount) * units[unit]
+		return ""
+	end)
+	if rest:match("%S") or next(seen) == nil or total > Util.MAX_DURATION_SECONDS then
+		return nil, "invalid_duration"
+	end
+	return total
+end
+
 -- "vor 5 Min." etc. for a duration in seconds (localized).
 function Util.FormatAge(seconds)
 	local L = ns.L

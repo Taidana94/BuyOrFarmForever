@@ -145,9 +145,13 @@ chat confirms every action). Status, item and estimate lines come from `FarmComm
   craft item = output of the goal's recipe; comparison; sourcing plan of this goal (current
   strategy and budget) and cost/farm time per score point; value of owned materials (bags + bank
   of the character, capped at the need) at vendor price (`GetSellPrice`) and planning price;
-  alternatives (`craftEval.alternatives = { { itemID, kind = PLANNED|POSSIBLE, note, at } }`,
-  max. 20, note = cleaned user text) compared with the craft.
-- `CraftEval.Sanitize` (in `DB.VALIDATORS`) resets invalid weights to 1 and drops invalid alternatives.
+  alternatives (`craftEval.alternatives = { { itemID, kind = PLANNED|POSSIBLE, note, at, copper?,
+  seconds?, requires? } }`, max. 20, note and requires = cleaned user text; the optional cost,
+  time effort and requirements are user input, absent = unknown) compared with the craft; the
+  details are shown next to the craft's sourcing cost and farm time. Optional fields need no schema
+  change (old data has none).
+- `CraftEval.Sanitize` (in `DB.VALIDATORS`) resets invalid weights to 1, drops invalid alternatives and
+  invalid optional details (negative or too large cost/time, wrong types).
 
 ## Sourcing plan (stage 2g)
 
