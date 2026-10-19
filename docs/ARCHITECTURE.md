@@ -211,6 +211,29 @@ level.
   farm + travel. Routes need `MIN_SECONDS` (600). The best route's time to earn the cost of all
   priced missing materials is shown under the plan (`PlanCommands.RouteText`).
 
+### Gold planner (0.6.0)
+
+- Routes (`Core/GoldRoutes.lua`): a route is zone (`uiMapID` at the start) + activity + target
+  (`GoldRoutes.Key`); runs without a target form their own route. Value = loot at
+  `GoldRoutes.SaleParts` (vendor price = sure; auction after the 5 % cut on top = auction part) +
+  looted coins (`run.lootCopper`, recorded since 0.6.0; older runs have `nil` and are counted in
+  `runsWithoutCoins`). Rates per hour of farm time; travel = average per run, paid once per trip.
+  At least `MIN_SECONDS` (600) of farm time per route. Rating = sure + auction x (1 -
+  `settings.ahDiscountPercent` / 100), default 25 %.
+- Tasks: `Core/BagTasks.lua` (per stack the best of vendor / auction / disenchant; goal materials,
+  items without value and `characters[key].goldKeep` skipped; bound items not on the auction house),
+  `Core/CraftTasks.lua` (recipe book recipes: product value minus reagents at `PriceCapture.Best`,
+  5 crafts per recipe, cooldown recipes 1 craft when ready; best 5 tasks).
+- Plan (`Core/GoldPlan.lua`, pure): tasks by rating per second, each taken if it beats the best
+  method in the same time; the rest goes to the method with the highest rating x (rest - travel).
+- Recipe book (`Core/RecipeBook.lua`): `characters[key].recipeBook[recipeKey] = { cooldown?,
+  readyAt? }`, recipe data in `db.recipes`; at most 500 recipes per character; enchantments without
+  an item are skipped. A cooldown is known once the window showed a remaining cooldown.
+- Time constants (design assumptions): vendor 2 s per stack, auction 20 s per stack, disenchant
+  10 s per item, craft 5 s + post 20 s per craft, buying 20 s per reagent.
+- UI: `UI/GoldPlanCommands.lua` (`/bof goldplan`, `/bof goldsources`, `/bof goldkeep`),
+  `UI/GoldPlanPanel.lua` (planner view of the Gold buffer tab).
+
 ## Farm runs (stage 2f)
 
 - States: `FARM`, `TRAVEL`, `PAUSED`, `REVIEW`. Current run: `characters[charKey].currentRun`
@@ -309,6 +332,9 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `DATA_CHANGED`, `BAGS_CHANGED`, `BANK_CLOSED`, `EQUIPMENT_CHANGED`, `SETTINGS_CHANGED` (signals) | `TooltipLines` | always | per change | sets a dirty flag; the tooltip cache is rebuilt on the next item tooltip |
 | `PLAYER_MONEY` → `MONEY_CHANGED` | `ShopHints` (while a merchant is open), `GoldAuto` (always; acts only with `goldAutoDistribute`) | see column | per gold change | hint text and reserve check; `GoldAuto` distributes only after a gain |
 | `QUEST_DETAIL`, `QUEST_COMPLETE` | `QuestAlternatives` | always | per quest frame | reads the rewards, one slot check per reward item |
+| `TRADE_SKILL_SHOW`, `CRAFT_SHOW` → `PROFESSION_OPENED`; `TRADE_SKILL_UPDATE`, `CRAFT_UPDATE` → `PROFESSION_CHANGED` | `RecipeBook` | always | per window open; updates in bursts (casts, filters) | one `C_Timer.After(1)` per burst, then one read of all visible recipes (`ReadAllRecipes`) |
+| `PLAYER_MONEY` → `MONEY_CHANGED` with source `LOOT` | `IncomeCapture` → `FarmRuns.AddLootCopper` | always | per looted coin | one number added to the running run |
+| `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
 
 Window refreshes are coalesced: any number of refresh requests in one frame lead to one
 `C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
@@ -316,7 +342,7 @@ created on first open and hidden, never destroyed; rows are a fixed pool of 10 f
 
 No `OnUpdate` scripts. One-shot `C_Timer.After` callbacks: `0` for coalescing window refreshes; `1` s
 taxi check after control loss (`FarmAssist`); `5` s login summary; `10` s price cleanup after login;
-`30` s auto-hide of the prompt bars (each callback checks a sequence number, so an older timer does
+`1` s recipe book capture after profession window events; `30` s auto-hide of the prompt bars (each callback checks a sequence number, so an older timer does
 not hide a newer offer). One ticker:
 
 | Ticker | File | Why no event | Interval | Runs while | Cost |

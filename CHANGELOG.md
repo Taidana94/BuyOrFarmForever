@@ -3,6 +3,29 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.6.0-alpha.1] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Goldplaner** (`/bof goldplan [Dauer]`, Ansicht „Goldplaner“ im Tab „Goldpuffer“): was du in 1, 2,
+  4 Stunden oder einer eigenen Zeit am besten tust – Taschen beim Händler oder im Auktionshaus
+  verkaufen, entzaubern, mit Gewinn herstellen, Abklingzeiten nutzen, die beste Farmroute farmen.
+  Anreise wird verrechnet; Gold aus dem Auktionshaus steht getrennt und zählt für die Reihenfolge
+  mit einem Abschlag (Einstellung, Standard 25 %).
+- **Farmrouten** (`/bof goldsources`): Zone + Art + Zielmaterial, mit Gold pro Stunde (sicher und im
+  AH) und Anreise. Farmrunden erfassen jetzt auch das gelootete Gold.
+- **Behalten-Liste** (`/bof goldkeep`, Feld im Goldplaner): Gegenstände, die nie zum Verkauf
+  vorgeschlagen werden.
+- **Rezeptbuch:** Beim Öffnen eines Berufsfensters merkt sich das Addon alle Rezepte; bereite
+  Abklingzeiten stehen in der Login-Zusammenfassung.
+
+### Geändert
+
+- „Anderer Weg“ im Tab „Beschaffung“ nutzt die neuen Farmrouten (mit Beutegold und AH-Abschlag).
+- Im Tab „Goldpuffer“ steht „Einkauf prüfen“ jetzt rechts neben „Deine Sparziele“.
+
 ## [0.5.0] – 2026-10-19
 
 Ausbau für Classic Era: Zeitlimit, gemeinsame Auswertung, anderer Weg, Rüstung und Waffen-DPS,

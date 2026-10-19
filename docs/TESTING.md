@@ -258,6 +258,21 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.6.0-alpha.1 (Classic Era, gold planner)
+
+1. `/reload`, `/bof version` → `0.6.0-alpha.1`. BugSack empty.
+2. `/dump C_SpellBook.IsSpellKnown(13262)` (true on an enchanter, false otherwise) and, with
+   Auctionator, `/dump Auctionator.API.v1.GetDisenchantPriceByItemID("Test", <green item id>)`.
+3. Farm run with mobs (loot coins), save it: `/bof goldsources` shows the route "Gegner in <zone>"
+   with gold per hour (sure includes the coins). Runs from before 0.6.0 are marked "ohne Beutegold".
+4. Gold buffer tab: buttons "Goldpuffer" / "Goldplaner" top right; "Einkauf prüfen" now right of the
+   goal header; nothing overlaps. "Goldplaner": time buttons, duration box `1h 30m`, steps, routes.
+5. Bags with greys, a green item and stackable materials: steps "Beim Händler verkaufen", "Im AH
+   einstellen", (enchanter) "Entzaubern …". Drag an item onto the keep slot → no longer suggested.
+6. Open a profession window: `/bof goldplan` lists profitable crafts ("Herstellen und verkaufen")
+   when the product and reagents have prices; a recipe with a cooldown appears once ready.
+7. `/bof goldplan` without duration: plans for 1, 2 and 4 hours.
+
 ### Result 0.5.0-alpha.1 (Classic Era, 2026-10-19, partial)
 
 Reported by the user: Auctionator prices work. `GetItemStats` of the main hand returns

@@ -1,7 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.5.0 – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles im Fenster bedienbar,
-mit viel Automatik. Getestet in WoW Classic Era 1.15.9. Nicht in Forever getestet.**
+**Version 0.6.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer und
+Goldplaner. Die Version 0.5.0 ist in WoW Classic Era 1.15.9 getestet; der Goldplaner (neu in
+0.6.0) ist nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -42,6 +43,11 @@ Neu in 0.5.0: **Zeitlimit** für die Beschaffung, gemeinsame Auswertung von Mate
 Farmrunde („nebenbei“), der **andere Weg** (etwas anderes farmen, verkaufen und davon kaufen),
 **Rüstung und Waffen-DPS** in der Craft-Bewertung, Vergleich mit einem geplanten Ersatz, Hinweis auf
 die nötige Stufe und optional die Preise von **Auctionator**.
+
+Neu in 0.6.0: der **Goldplaner** – wie du in 1, 2, 4 Stunden oder einer beliebigen Zeit am meisten
+Gold machst: Taschen ausräumen (Händler, Auktionshaus oder Entzaubern), mit Gewinn herstellen,
+Abklingzeiten nutzen und die beste Farmroute aus deinen Farmrunden, mit der Anreise verrechnet.
+Gold aus dem Auktionshaus steht getrennt („bis zu“), weil Verkäufe dort nicht sicher sind.
 
 ## Unterstützte Spielversion
 
@@ -168,6 +174,9 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes bzw. alle Ziele) |
 | `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen, selbst farmen |
 | `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget zählt dein aktuelles Gold |
+| `/bof goldplan [Dauer]` | was du in der Zeit am besten tust, um Gold zu machen (ohne Dauer: 1, 2 und 4 Std.) |
+| `/bof goldsources` | deine Farmrouten mit Gold pro Stunde (sicher und im AH) und Anreise |
+| `/bof goldkeep [Gegenstand]` | Gegenstand auf die Behalten-Liste setzen oder davon nehmen; ohne Gegenstand: die Liste |
 | `/bof timelimit [Dauer\|clear]` | höchste Farmzeit im Plan, z. B. `2h` oder `1h 30m`; der Rest wird gekauft, soweit das Budget reicht |
 
 ## Bedienung
@@ -237,6 +246,21 @@ Zeilen (Name und Betrag direkt ändern, „hoch“, „erreicht“, „x“), ei
 „Rücklagen an/aus“. Der Tab „Beschaffung“ zeigt unter dem Plan, ob die Käufe deine Rücklagen
 angreifen, und den Zeitgegenwert der Kosten.
 
+**Fenster, Tab „Goldpuffer“, Ansicht „Goldplaner“** (Knopf oben rechts): Zeit wählen (1, 2, 4 Std.
+oder eigene Dauer), darunter der Plan Schritt für Schritt mit sicherem Gold und Gold „bis zu“ im AH,
+andere Möglichkeiten und deine Farmrouten. Ein Gegenstand, den du ins Feld unten links ziehst, kommt
+auf die Behalten-Liste (nochmal ziehen nimmt ihn herunter).
+
+So entsteht eine **Farmroute**: Jede gespeicherte Farmrunde gehört zu einer Route aus Zone (wo du
+startest), Art (Sammeln, Gegner, Sonstiges) und Zielmaterial. Ihr Wert ist die Beute zu aktuellen
+Preisen plus das gelootete Gold (seit 0.6.0 erfasst). Gold pro Stunde zählt auf die Farmzeit, die
+Anreise einmal pro Ausflug. Eine Route braucht mindestens 10 Minuten Messung.
+
+**Rezepte und Abklingzeiten:** Öffnest du ein Berufsfenster, merkt sich das Addon alle sichtbaren
+Rezepte dieses Charakters. Haben Produkt und Zutaten Preise, schlägt der Goldplaner gewinnbringende
+Crafts vor (höchstens 5 pro Rezept). Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
+Restzeit zeigt; ist sie vorbei, nennt der Login sie.
+
 **Fenster, Tab „Einstellungen“:** alle Einstellungen zum An- und Abschalten (Farm-Automatik,
 Preise, Goldpuffer, Anzeige), Debug-Modus, Leistung anzeigen und Zurücksetzen.
 
@@ -300,6 +324,11 @@ weist darauf hin.
 - Das Zeitlimit wird schrittweise eingehalten (erst das, was pro Gold am meisten Zeit spart), nicht
   mit der rechnerisch besten Kombination. Der andere Weg rechnet mit der AH-Gebühr von 5 %, nicht mit
   der Einstellgebühr, und nur mit aktuellen Preisen.
+- Goldplaner: Verkäufe im Auktionshaus sind nicht garantiert (Preis vom letzten Scan, Nachfrage
+  unbekannt, Einstellgebühr nicht abgezogen); die Anreise ist der Durchschnitt deiner Runden, nicht
+  der Weg von deinem Standort; der Weg in die Stadt zum Verkaufen ist nicht eingerechnet. Die
+  Zeiten pro Verkauf, Entzaubern und Craft sind Schätzungen des Addons. Rezepte kennt das Addon erst
+  nach dem Öffnen des Berufsfensters; Abklingzeiten erst, wenn das Fenster einmal eine Restzeit zeigte.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
@@ -345,7 +374,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.5.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.6.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
