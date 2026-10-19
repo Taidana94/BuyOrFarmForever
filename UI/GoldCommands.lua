@@ -77,12 +77,44 @@ function GoldCommands.ReserveText(charData, cost)
 	return Util.Format(L.GOLD_RESERVE_SAFE, Money.Format(cost))
 end
 
+-- "+3g" / "-50s" / "+3g/-50s" for the gained and spent amounts of a source.
+local function amountsText(entry)
+	local parts = {}
+	if entry.gained > 0 then
+		parts[#parts + 1] = "+" .. Money.Format(entry.gained)
+	end
+	if entry.spent > 0 then
+		parts[#parts + 1] = "-" .. Money.Format(entry.spent)
+	end
+	return table.concat(parts, "/")
+end
+
+-- "Quellen (14 Tage): Beute +3g · Händler +1g/-50s …", or nil without data by source.
+function GoldCommands.SourcesLine(charData)
+	local totals = Income.SourceTotals(charData, ns.Client:GetServerTime(), GoldCommands.INCOME_DAYS)
+	local parts = {}
+	for _, source in ipairs(ns.MoneyContext.SOURCES) do
+		local entry = totals[source]
+		if entry and (entry.gained > 0 or entry.spent > 0) then
+			parts[#parts + 1] = L["SOURCE_" .. source] .. " " .. amountsText(entry)
+		end
+	end
+	if #parts == 0 then
+		return nil
+	end
+	return Util.Format(L.GOLD_SOURCES, GoldCommands.INCOME_DAYS, table.concat(parts, L.PRICE_SEPARATOR))
+end
+
 local function printOverview(charData)
 	Log.Print(GoldCommands.OverviewLine(charData))
 	for _, line in ipairs(GoldCommands.GoalLines(charData)) do
 		Log.Print(line)
 	end
 	Log.Print(GoldCommands.IncomeLine(charData))
+	local sources = GoldCommands.SourcesLine(charData)
+	if sources then
+		Log.Print(sources)
+	end
 	Log.Print(ns.db.settings.useReservesInSourcing and L.GOLD_RESERVES_USED or L.GOLD_RESERVES_KEPT)
 end
 
@@ -139,9 +171,33 @@ WRITE.up = byIndex(SavingsGoals.MoveUp, "GOLD_MOVED")
 WRITE.done = byIndex(SavingsGoals.Complete, "GOLD_COMPLETED")
 WRITE.delete = byIndex(SavingsGoals.Delete, "GOLD_DELETED")
 
+-- Reserves before the last distribution (manual or automatic), for /bof gold undo. In memory only.
+local undoSnapshot
+
+-- Distributes the current gold and keeps the old reserves for undo. Returns the amount assigned.
+function GoldCommands.Distribute(charData)
+	undoSnapshot = SavingsGoals.SnapshotReserves(charData)
+	return SavingsGoals.Distribute(charData, money())
+end
+
+function GoldCommands.CanUndo()
+	return undoSnapshot ~= nil
+end
+
 function WRITE.distribute(charData)
-	local assigned = SavingsGoals.Distribute(charData, money())
+	local assigned = GoldCommands.Distribute(charData)
 	Log.Print(Util.Format(L.GOLD_DISTRIBUTED, Money.Format(assigned)))
+	Log.Print(GoldCommands.OverviewLine(charData))
+end
+
+function WRITE.undo(charData)
+	if not undoSnapshot then
+		Log.Print(L.GOLD_NOTHING_TO_UNDO)
+		return
+	end
+	SavingsGoals.RestoreReserves(charData, undoSnapshot)
+	undoSnapshot = nil
+	Log.Print(L.GOLD_UNDONE)
 	Log.Print(GoldCommands.OverviewLine(charData))
 end
 

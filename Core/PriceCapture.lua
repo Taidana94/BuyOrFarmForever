@@ -56,6 +56,20 @@ local function captureAuction()
 	Events.Emit("PRICES_CHANGED")
 end
 
+PriceCapture.PRUNE_DELAY_SECONDS = 10
+
+-- Removes captured prices older than the setting priceKeepDays. Returns the number removed.
+function PriceCapture.PruneOld()
+	if not ns.db or ns.readOnly then
+		return 0
+	end
+	local removed = Prices.Prune(ns.db, ns.Client:GetServerTime(), ns.db.settings.priceKeepDays)
+	if removed > 0 then
+		ns.Log.Debug("removed " .. removed .. " old prices")
+	end
+	return removed
+end
+
 function PriceCapture.IsAuctionOpen()
 	return auctionOpen
 end
@@ -126,5 +140,9 @@ if ns.Client then
 		auctionOpen = false
 		Events.OffSignal("AUCTION_RESULTS", captureAuction)
 		Events.Emit("PRICES_CHANGED")
+	end)
+	-- Old captured prices are removed after login (setting priceKeepDays), not during loading.
+	Events.OnSignal("CHARACTER_READY", function()
+		C_Timer.After(PriceCapture.PRUNE_DELAY_SECONDS, PriceCapture.PruneOld)
 	end)
 end

@@ -39,6 +39,9 @@ local ClassicEra = {
 		QUEST_DETAIL = "QUEST_OFFERED",
 		QUEST_COMPLETE = "QUEST_REWARDS",
 		QUEST_FINISHED = "QUEST_CLOSED",
+		-- Trainer window (gold spent on training).
+		TRAINER_SHOW = "TRAINER_OPENED",
+		TRAINER_CLOSED = "TRAINER_CLOSED",
 	},
 }
 

@@ -46,11 +46,13 @@ local function isForeignGain()
 	return ns.db.settings.farmAutoReview and next(openWindows) ~= nil
 end
 
+-- An open loot window decides first; then an open merchant/bank/mail/trade/auction window (the
+-- gain is left out); only then a loot window closed moments ago counts as loot.
 local function recordGains(run, counts, now)
-	local isLoot = isLootGain()
-	if not isLoot and isForeignGain() then
+	if not lootOpen and isForeignGain() then
 		return
 	end
+	local isLoot = isLootGain()
 	for itemID, count in pairs(counts) do
 		local gain = count - (baseline[itemID] or 0)
 		if gain > 0 then

@@ -42,6 +42,7 @@ Core\CraftEval.lua
 Core\WeightTemplates.lua
 Core\SavingsGoals.lua
 Core\Income.lua
+Core\MoneyContext.lua
 Core\Session.lua
 Core\IncomeCapture.lua
 Core\Perf.lua
@@ -79,5 +80,6 @@ UI\ShopHints.lua
 UI\QuestAlternatives.lua
 UI\MinimapButton.lua
 UI\LoginSummary.lua
+UI\GoldAuto.lua
 UI\PerfCommand.lua
 Core\Main.lua

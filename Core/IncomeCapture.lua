@@ -41,7 +41,7 @@ local function onMoneyChanged()
 	local delta = money - lastMoney
 	local initialValue = lastMoney == 0 and delta > 0 and now - loginAt <= IncomeCapture.LOGIN_GRACE_SECONDS
 	if not initialValue then
-		Income.RecordChange(charData, delta, now)
+		Income.RecordChange(charData, delta, now, ns.MoneyContext.Source())
 		Session.AddMoney(session, delta)
 	end
 	lastMoney = money

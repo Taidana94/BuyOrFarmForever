@@ -44,18 +44,44 @@ local function prune(charData)
 	end
 end
 
--- Records a change of the carried gold (positive = gained, negative = spent).
-function Income.RecordChange(charData, delta, now)
+local function addAmounts(target, delta)
+	if delta > 0 then
+		target.gained = target.gained + delta
+	else
+		target.spent = target.spent - delta
+	end
+end
+
+-- Records a change of the carried gold (positive = gained, negative = spent) and, if given, its
+-- source (MoneyContext.SOURCES) in record.bySource[source] = { gained, spent }. Older records have
+-- no bySource; it is optional, so no schema change was needed.
+function Income.RecordChange(charData, delta, now, source)
 	if delta == 0 then
 		return
 	end
 	local record = dayRecord(charData, dayOf(now))
-	if delta > 0 then
-		record.gained = record.gained + delta
-	else
-		record.spent = record.spent - delta
+	addAmounts(record, delta)
+	if source then
+		record.bySource = record.bySource or {}
+		local entry = record.bySource[source] or { gained = 0, spent = 0 }
+		record.bySource[source] = entry
+		addAmounts(entry, delta)
 	end
 	prune(charData)
+end
+
+-- Gained and spent per source over the last `days` days: { [source] = { gained, spent } }.
+function Income.SourceTotals(charData, now, days)
+	local first, totals = dayOf(now) - (days - 1), {}
+	for day, record in pairs(charData.income) do
+		for source, entry in pairs(day >= first and record.bySource or {}) do
+			local total = totals[source] or { gained = 0, spent = 0 }
+			totals[source] = total
+			total.gained = total.gained + entry.gained
+			total.spent = total.spent + entry.spent
+		end
+	end
+	return totals
 end
 
 -- Adds online time between two checkpoints (capped, see MAX_GAP_SECONDS). Returns the seconds
@@ -103,11 +129,29 @@ local function validRecord(record)
 		and record.seconds >= 0
 end
 
+-- bySource is optional; a broken one is dropped (the day totals stay).
+local function validSources(bySource)
+	if type(bySource) ~= "table" then
+		return false
+	end
+	for source, entry in pairs(bySource) do
+		local ok = type(source) == "string" and type(entry) == "table" and type(entry.gained) == "number"
+			and entry.gained >= 0 and type(entry.spent) == "number" and entry.spent >= 0
+		if not ok then
+			return false
+		end
+	end
+	return true
+end
+
 function Income.Sanitize(charData, path, repairs)
 	local changed = false
 	for day, record in pairs(charData.income) do
 		if type(day) ~= "number" or not validRecord(record) then
 			charData.income[day] = nil
+			changed = true
+		elseif record.bySource ~= nil and not validSources(record.bySource) then
+			record.bySource = nil
 			changed = true
 		end
 	end

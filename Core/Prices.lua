@@ -144,6 +144,38 @@ function Prices.RecordAuction(db, realmKey, results, tracked, now)
 	end
 end
 
+-- Removes captured prices (merchant, auction house) older than keepDays; own prices stay, the
+-- player typed them. keepDays 0 keeps everything. Returns the number of removed prices.
+local function pruneItem(item, limit)
+	local removed = 0
+	for source, record in pairs(item) do
+		if source ~= "MANUAL" and record.at < limit then
+			item[source] = nil
+			removed = removed + 1
+		end
+	end
+	return removed
+end
+
+function Prices.Prune(db, now, keepDays)
+	if keepDays <= 0 then
+		return 0
+	end
+	local limit, removed = now - keepDays * SECONDS_PER_DAY, 0
+	for realmKey, realm in pairs(db.prices) do
+		for itemID, item in pairs(realm) do
+			removed = removed + pruneItem(item, limit)
+			if next(item) == nil then
+				realm[itemID] = nil
+			end
+		end
+		if next(realm) == nil then
+			db.prices[realmKey] = nil
+		end
+	end
+	return removed
+end
+
 -- Validation of stored prices (registered with DB.ROOT_VALIDATORS).
 local function sanitizeItem(item)
 	local changed = false

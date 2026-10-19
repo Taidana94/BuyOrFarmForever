@@ -84,6 +84,24 @@ function SavingsGoals.Delete(charData, index)
 	return true
 end
 
+-- The reserves of all goals in list order (to undo a distribution).
+function SavingsGoals.SnapshotReserves(charData)
+	local snapshot = {}
+	for i, goal in ipairs(charData.savingsGoals) do
+		snapshot[i] = goal.reserved
+	end
+	return snapshot
+end
+
+-- Restores reserves from a snapshot; goals added since keep theirs. Reserves stay within targets.
+function SavingsGoals.RestoreReserves(charData, snapshot)
+	for i, goal in ipairs(charData.savingsGoals) do
+		if snapshot[i] then
+			goal.reserved = math.min(snapshot[i], goal.copper)
+		end
+	end
+end
+
 -- Assigns `money` once to the open goals in priority order. Returns the amount assigned.
 function SavingsGoals.Distribute(charData, money)
 	local left = math.max(0, money or 0)
