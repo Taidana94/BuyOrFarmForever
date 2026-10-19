@@ -1,77 +1,109 @@
--- Gold routes: "farm something else, sell it and buy the material instead". From saved farm runs,
--- the sale value per hour of each route (runs with the same target item), farm and travel time
--- together. List works on db.farmRuns with a value function from the caller; SaleValue reads the
--- prices (auction prices minus the auction house cut, or the vendor price, whichever is higher).
+-- Gold routes: what farming brings in gold. A route is one way of farming: the zone a run started
+-- in, its activity (gather, mobs, other) and its target material (0 = none). From the saved runs of
+-- a route: gold per hour of farm time, split into a sure part (vendor value of the loot plus looted
+-- coins) and an auction part (what the auction house brings on top, after its cut; not guaranteed),
+-- and the average travel per trip. Used by the gold planner and by "Anderer Weg" in the sourcing
+-- plan. List works on db.farmRuns with a value function from the caller; SaleParts reads the prices.
 local _, ns = ...
 
 local GoldRoutes = {}
 ns.GoldRoutes = GoldRoutes
 
--- Less time than this on a route is too little data to rate it.
+-- Less farm time than this on a route is too little data to rate it.
 GoldRoutes.MIN_SECONDS = 600
 -- Classic auction house cut on sales; the deposit is not counted.
 GoldRoutes.AUCTION_CUT = 0.05
 local SECONDS_PER_HOUR = 3600
+local PERCENT = 100
 -- Price sources a sale on the auction house can reach (merchant prices are buy prices).
 local SALE_SOURCES = { "AUCTION", "MANUAL" }
 
-local function runValue(run, valueOf)
-	local value = 0
-	for itemID, amount in pairs(run.items) do
-		value = value + amount * (valueOf(itemID) or 0)
-	end
-	return value
+function GoldRoutes.Key(run)
+	return run.uiMapID .. ":" .. run.activity .. ":" .. run.targetItemID
 end
 
-local function addRun(routes, run, valueOf)
-	local route = routes[run.targetItemID]
+-- Rating of gold with an uncertain auction part: sure + auction x (1 - discount%).
+function GoldRoutes.Rating(sure, auction, discountPercent)
+	return sure + auction * (1 - discountPercent / PERCENT)
+end
+
+local function addRun(routes, run, partsOf)
+	local key = GoldRoutes.Key(run)
+	local route = routes[key]
 	if not route then
-		route = { targetItemID = run.targetItemID, value = 0, seconds = 0, runs = 0 }
-		routes[run.targetItemID] = route
+		route = { key = key, uiMapID = run.uiMapID, activity = run.activity, targetItemID = run.targetItemID,
+			sure = 0, auction = 0, activeSeconds = 0, travelSeconds = 0, runs = 0, runsWithoutCoins = 0 }
+		routes[key] = route
 	end
-	route.value = route.value + runValue(run, valueOf)
-	route.seconds = route.seconds + run.activeSeconds + run.travelSeconds
+	for itemID, amount in pairs(run.items) do
+		local sure, auction = partsOf(itemID)
+		route.sure = route.sure + amount * sure
+		route.auction = route.auction + amount * auction
+	end
+	route.sure = route.sure + (run.lootCopper or 0)
+	if run.lootCopper == nil then
+		route.runsWithoutCoins = route.runsWithoutCoins + 1
+	end
+	route.activeSeconds = route.activeSeconds + run.activeSeconds
+	route.travelSeconds = route.travelSeconds + run.travelSeconds
 	route.runs = route.runs + 1
 end
 
--- Routes with enough data and a sale value, best first:
--- { { targetItemID, copperPerHour, value, seconds, runs } }. Runs without a target, of other
--- characters (scope "CHARACTER") and with a target in `excluded` ({ [itemID] = true }) are skipped.
-function GoldRoutes.List(db, scope, charKey, valueOf, excluded)
-	-- One value lookup per item, not per run (up to MAX_RUNS runs share few items).
-	local values = {}
-	local function cachedValue(itemID)
-		if values[itemID] == nil then
-			values[itemID] = valueOf(itemID) or false
+-- One lookup per item, not per run (up to MAX_RUNS runs share few items).
+local function cachedParts(partsOf)
+	local cache = {}
+	return function(itemID)
+		local entry = cache[itemID]
+		if not entry then
+			local sure, auction = partsOf(itemID)
+			entry = { sure or 0, auction or 0 }
+			cache[itemID] = entry
 		end
-		return values[itemID] or nil
+		return entry[1], entry[2]
 	end
+end
+
+local function rate(route, discountPercent)
+	local perSecond = SECONDS_PER_HOUR / route.activeSeconds
+	route.surePerHour = route.sure * perSecond
+	route.auctionPerHour = route.auction * perSecond
+	route.ratingPerHour = GoldRoutes.Rating(route.surePerHour, route.auctionPerHour, discountPercent)
+	route.travelSeconds = route.travelSeconds / route.runs
+end
+
+-- Routes with enough data and some value, best rating first. opts = { scope ("CHARACTER" |
+-- "ACCOUNT"), charKey, partsOf (itemID -> sure, auction copper per unit), excluded ({ [target
+-- itemID] = true }, optional), discountPercent }. Each route: { key, uiMapID, activity,
+-- targetItemID, surePerHour, auctionPerHour, ratingPerHour, travelSeconds (per trip),
+-- activeSeconds, runs, runsWithoutCoins }.
+function GoldRoutes.List(db, opts)
+	local partsOf, excluded = cachedParts(opts.partsOf), opts.excluded or {}
 	local routes = {}
 	for _, run in ipairs(db.farmRuns) do
-		local own = scope ~= "CHARACTER" or run.charKey == charKey
-		if own and run.targetItemID > 0 and not excluded[run.targetItemID] then
-			addRun(routes, run, cachedValue)
+		local own = opts.scope ~= "CHARACTER" or run.charKey == opts.charKey
+		if own and run.activeSeconds > 0 and not excluded[run.targetItemID] then
+			addRun(routes, run, partsOf)
 		end
 	end
 	local list = {}
 	for _, route in pairs(routes) do
-		if route.seconds >= GoldRoutes.MIN_SECONDS and route.value > 0 then
-			route.copperPerHour = route.value / route.seconds * SECONDS_PER_HOUR
+		if route.activeSeconds >= GoldRoutes.MIN_SECONDS and route.sure + route.auction > 0 then
+			rate(route, opts.discountPercent)
 			list[#list + 1] = route
 		end
 	end
 	table.sort(list, function(a, b)
-		if a.copperPerHour ~= b.copperPerHour then
-			return a.copperPerHour > b.copperPerHour
+		if a.ratingPerHour ~= b.ratingPerHour then
+			return a.ratingPerHour > b.ratingPerHour
 		end
-		return a.targetItemID < b.targetItemID
+		return a.key < b.key
 	end)
 	return list
 end
 
--- Seconds on a route to earn `copper`.
+-- Seconds to earn `copper` on a route: one trip plus farm time at its rating.
 function GoldRoutes.TimeToEarn(route, copper)
-	return copper / route.copperPerHour * SECONDS_PER_HOUR
+	return route.travelSeconds + copper / route.ratingPerHour * SECONDS_PER_HOUR
 end
 
 -- Lowest current auction-type price of an item (stored or from Auctionator), or nil.
@@ -91,13 +123,33 @@ local function auctionPrice(itemID, now)
 	return best
 end
 
--- What one unit brings when sold: the auction price minus the cut, or the vendor price if higher.
--- nil if neither is known.
-function GoldRoutes.SaleValue(itemID, now)
+-- What one unit brings when sold: the vendor price (sure) and what the auction house brings on top
+-- after its cut (0 if it brings less or no price is known). nil, nil if neither is known.
+function GoldRoutes.SaleParts(itemID, now)
 	local auction = auctionPrice(itemID, now)
 	local vendor = ns.Client:GetSellPrice(itemID)
 	if not (auction or vendor) then
-		return nil
+		return nil, nil
 	end
-	return math.max(auction and auction * (1 - GoldRoutes.AUCTION_CUT) or 0, vendor or 0)
+	local net = auction and auction * (1 - GoldRoutes.AUCTION_CUT) or 0
+	return vendor or 0, math.max(0, net - (vendor or 0))
+end
+
+-- The best price of one unit (vendor or auction after the cut), or nil if neither is known.
+function GoldRoutes.SaleValue(itemID, now)
+	local sure, auction = GoldRoutes.SaleParts(itemID, now)
+	return sure and sure + auction
+end
+
+-- The route list of the current character with the settings (scope, auction discount).
+function GoldRoutes.Current(excluded)
+	local now = ns.Client:GetServerTime()
+	local settings = ns.db.settings
+	return GoldRoutes.List(ns.db, {
+		scope = settings.farmEstimateScope, charKey = ns.charKey, excluded = excluded,
+		discountPercent = settings.ahDiscountPercent,
+		partsOf = function(itemID)
+			return GoldRoutes.SaleParts(itemID, now)
+		end,
+	})
 end

@@ -5,7 +5,6 @@
 --
 -- States: FARM (farming), TRAVEL (on the way), PAUSED, REVIEW (stopped, unclear gains can be
 -- kept before saving). Yield per item: confirmed (looted) and unclear (other bag gains).
---
 -- Idle time: with run.idleSeconds > 0, farm time without any activity (loot, bag change, combat;
 -- reported with NoteActivity) counts only up to idleSeconds. The gap is cut when the next
 -- activity arrives or the segment ends, so no timer is needed.
@@ -89,8 +88,16 @@ function FarmRuns.Start(charData, opts)
 		lastActivityAt = opts.now,
 		idleSeconds = opts.idleSeconds or 0,
 		endedAt = 0,
+		lootCopper = 0,
 	}
 	return charData.currentRun
+end
+
+-- Coins looted during a running run (from gold changes with an open loot window).
+function FarmRuns.AddLootCopper(run, copper)
+	if FarmRuns.IsRunning(run) and copper > 0 then
+		run.lootCopper = (run.lootCopper or 0) + copper
+	end
 end
 
 -- An activity (loot, bag change, combat) during the run. A farm gap longer than idleSeconds since
@@ -254,6 +261,7 @@ function FarmRuns.Save(db, charKey, charData)
 		travelSeconds = run.travelSeconds,
 		startedAt = run.startedAt,
 		endedAt = run.endedAt,
+		lootCopper = run.lootCopper or 0, -- nil in runs saved before 0.6.0 (coins not recorded)
 	}
 	while #db.farmRuns > FarmRuns.MAX_RUNS do
 		table.remove(db.farmRuns, 1)

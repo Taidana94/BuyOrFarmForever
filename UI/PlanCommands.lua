@@ -79,14 +79,11 @@ function PlanCommands.RouteText(inputs)
 			unpriced = unpriced + 1
 		end
 	end
-	local now = ns.Client:GetServerTime()
-	local route = cost > 0 and ns.GoldRoutes.List(ns.db, ns.db.settings.farmEstimateScope, ns.charKey, function(itemID)
-		return ns.GoldRoutes.SaleValue(itemID, now)
-	end, excluded)[1]
+	local route = cost > 0 and ns.GoldRoutes.Current(excluded)[1]
 	if not route then
 		return ""
 	end
-	local text = Util.Format(L.PLAN_ROUTE, UIShared.ItemText(route.targetItemID), Money.Format(route.copperPerHour),
+	local text = Util.Format(L.PLAN_ROUTE, ns.FarmCommands.RouteName(route), Money.Format(route.ratingPerHour),
 		Money.Format(cost), Util.FormatDuration(ns.GoldRoutes.TimeToEarn(route, cost)))
 	if unpriced > 0 then
 		text = text .. " " .. Util.Format(L.PLAN_ROUTE_UNPRICED, unpriced)

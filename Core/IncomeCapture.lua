@@ -41,8 +41,12 @@ local function onMoneyChanged()
 	local delta = money - lastMoney
 	local initialValue = lastMoney == 0 and delta > 0 and now - loginAt <= IncomeCapture.LOGIN_GRACE_SECONDS
 	if not initialValue then
-		Income.RecordChange(charData, delta, now, ns.MoneyContext.Source())
+		local source = ns.MoneyContext.Source()
+		Income.RecordChange(charData, delta, now, source)
 		Session.AddMoney(session, delta)
+		if source == "LOOT" then
+			ns.FarmRuns.AddLootCopper(charData.currentRun, delta)
+		end
 	end
 	lastMoney = money
 	checkpoint(charData, now)

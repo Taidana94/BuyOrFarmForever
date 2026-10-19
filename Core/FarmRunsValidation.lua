@@ -40,11 +40,20 @@ local function validSavedRun(run)
 		and validSavedItems(run.items)
 end
 
+-- Optional lootCopper (0.6.0): a wrong value is dropped, the run is kept.
+local function keepRun(clean, run, repairs)
+	if run.lootCopper ~= nil and not isCount(run.lootCopper) then
+		run.lootCopper = nil
+		repairs[#repairs + 1] = "farmRuns.lootCopper"
+	end
+	clean[#clean + 1] = run
+end
+
 function FarmRuns.SanitizeSaved(db, repairs)
 	local clean = {}
 	for _, run in ipairs(db.farmRuns) do
 		if validSavedRun(run) then
-			clean[#clean + 1] = run
+			keepRun(clean, run, repairs)
 		end
 	end
 	if #clean ~= #db.farmRuns then
@@ -81,6 +90,7 @@ end
 local OPTIONAL_RUN_FIELDS = {
 	idleSeconds = isCount,
 	lastActivityAt = isCount,
+	lootCopper = isCount,
 	targetNotified = function(value)
 		return type(value) == "boolean"
 	end,

@@ -27,6 +27,15 @@ local function mapName(uiMapID)
 	return uiMapID > 0 and ns.Client:GetMapName(uiMapID) or L.UNKNOWN_VALUE
 end
 
+-- Name of a farm route (GoldRoutes): "Gegner in Westfall – [Leinenstoff]" / "Sammeln in Brachland".
+function FarmCommands.RouteName(route)
+	local name = Util.Format(L.ROUTE_NAME, L[ACTIVITY_NAMES[route.activity]], mapName(route.uiMapID))
+	if route.targetItemID > 0 then
+		name = name .. Util.Format(L.ROUTE_TARGET_PART, ns.UIShared.ItemText(route.targetItemID))
+	end
+	return name
+end
+
 -- Items of the run in id order: { { itemID, unclear, line = "[Item]: 7 geplündert, 2 unklar" } }
 -- (shared with the Farm tab).
 function FarmCommands.ItemEntries(run)

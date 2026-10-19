@@ -33,6 +33,7 @@ Settings.SCHEMA = {
 	{ key = "useReservesInSourcing", type = "boolean", default = true, group = "GOLD", label = "SET_USE_RESERVES" },
 	{ key = "goldAutoDistribute", type = "boolean", default = false, group = "GOLD", label = "SET_AUTO_DISTRIBUTE" },
 	{ key = "goldMerchantHint", type = "boolean", default = true, group = "GOLD", label = "SET_MERCHANT_HINT" },
+	{ key = "ahDiscountPercent", type = "number", default = 25, min = 0, max = 100, group = "GOLD", label = "SET_AH_DISCOUNT" },
 	{ key = "goldReserveWarning", type = "boolean", default = true, group = "GOLD", label = "SET_RESERVE_WARNING" },
 	{ key = "tooltipEnabled", type = "boolean", default = true, group = "DISPLAY", label = "SET_TOOLTIP" },
 	{ key = "auctionHint", type = "boolean", default = true, group = "DISPLAY", label = "SET_AUCTION_HINT" },
