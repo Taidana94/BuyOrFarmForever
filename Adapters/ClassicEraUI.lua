@@ -49,6 +49,26 @@ function UI.HookItemTooltips(callback)
 	end
 end
 
+-- Calls callback(itemID) when the player shift-clicks an item while no chat input is open.
+-- Classic Era routes shift-clicks through ChatFrameUtil.InsertLink (Blizzard_ChatFrameBase/Classic/
+-- ChatFrameUtilOverrides.lua), which only fills an open chat box or the auction search box. A
+-- post-hook (hooksecurefunc) sees every link without changing Blizzard's behavior; whether it
+-- causes taint is unverified in game. Install once.
+function UI.HookLinkInsert(callback)
+	if not (hooksecurefunc and ChatFrameUtil and ChatFrameUtil.InsertLink) then
+		return
+	end
+	hooksecurefunc(ChatFrameUtil, "InsertLink", function(text)
+		if ChatFrameUtil.GetActiveWindow and ChatFrameUtil.GetActiveWindow() then
+			return
+		end
+		local itemID = type(text) == "string" and tonumber(text:match("|Hitem:(%d+)"))
+		if itemID then
+			callback(itemID)
+		end
+	end)
+end
+
 -- Blizzard's merchant frame (Blizzard_UIPanels_Game/Vanilla/MerchantFrame.xml), or nil.
 function UI.GetMerchantFrame()
 	return MerchantFrame

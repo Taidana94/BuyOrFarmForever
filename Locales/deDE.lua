@@ -56,8 +56,9 @@ L.ITEM_UNKNOWN = "Gegenstand %1$d"
 L.UNKNOWN_SHORT = "?"
 
 -- Recipes
-L.HELP_LINE_RECIPE = "/bof recipe [Anzahl] – legt aus dem Rezept, das im Berufsfenster ausgewählt ist, ein neues Ziel an"
+L.HELP_LINE_RECIPE = "/bof recipe [Anzahl] – Ziel aus dem Rezept, das im Berufsfenster ausgewählt ist (hat ein Ziel das Rezept schon, wird es erhöht); /bof recipe new [Anzahl] legt immer ein neues Ziel an"
 L.RECIPE_GOAL_CREATED = "Ziel %1$d „%2$s“ aus dem Rezept angelegt: %3$d Zutaten, %4$d× herstellen."
+L.RECIPE_GOAL_INCREASED = "Ziel %1$d „%2$s“ hatte dieses Rezept schon: jetzt %3$d× herstellen. Ein eigenes neues Ziel: /bof recipe new [Anzahl]."
 L.RECIPE_NO_WINDOW = "Öffne zuerst ein Berufsfenster und wähle dort ein Rezept aus."
 L.RECIPE_NO_SELECTION = "Wähle im Berufsfenster zuerst ein Rezept aus (keine Überschrift)."
 L.RECIPE_LOADING = "Die Rezeptdaten werden noch geladen. Bitte versuche es gleich noch einmal."

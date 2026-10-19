@@ -108,13 +108,9 @@ function Recipes.Get(db, key)
 	return db.recipes[key]
 end
 
--- Reads the recipe selected in the client's profession window, stores it and creates a goal
--- for charData with the given number of crafts. Returns the goal id, or nil plus an error code
--- (from the adapter, Recipes.Normalize or Materials.CreateRecipeGoal).
-function Recipes.ImportSelected(charData, crafts)
-	if not ns.Materials.IsValidCrafts(crafts) then
-		return nil, "invalid_crafts"
-	end
+-- Reads the recipe selected in the client's profession window and stores it. Returns the
+-- normalized recipe, or nil plus an error code (from the adapter or Recipes.Normalize).
+function Recipes.ReadSelected()
 	local raw, readError = ns.Client:ReadSelectedRecipe()
 	if not raw then
 		return nil, readError
@@ -124,9 +120,46 @@ function Recipes.ImportSelected(charData, crafts)
 		ns.Log.Debug("recipe rejected (" .. tostring(err) .. "): " .. tostring(raw.key))
 		return nil, err
 	end
-	local now = ns.Client:GetServerTime()
-	Recipes.Store(ns.db, recipe, now)
-	return ns.Materials.CreateRecipeGoal(charData, recipe, crafts, now)
+	Recipes.Store(ns.db, recipe, ns.Client:GetServerTime())
+	return recipe
+end
+
+-- Creates a new goal from the selected recipe with the given number of crafts. Returns the goal
+-- id, or nil plus an error code.
+function Recipes.ImportSelected(charData, crafts)
+	if not ns.Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local recipe, err = Recipes.ReadSelected()
+	if not recipe then
+		return nil, err
+	end
+	return ns.Materials.CreateRecipeGoal(charData, recipe, crafts, ns.Client:GetServerTime())
+end
+
+-- Like ImportSelected, but if a goal of the character already has this recipe, its crafts are
+-- increased (and it is selected) instead of creating a duplicate. Returns the goal id and true if
+-- an existing goal was increased (false if a goal was created), or nil plus an error code.
+function Recipes.ImportOrIncrease(charData, crafts)
+	if not ns.Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local recipe, err = Recipes.ReadSelected()
+	if not recipe then
+		return nil, err
+	end
+	local id = ns.Materials.FindRecipeGoal(charData, recipe.key)
+	if not id then
+		local newID, createError = ns.Materials.CreateRecipeGoal(charData, recipe, crafts, ns.Client:GetServerTime())
+		return newID, newID and false or createError
+	end
+	local goal = charData.materialGoals[id]
+	local _, setError = ns.Materials.SetCrafts(goal, goal.crafts + crafts)
+	if setError then
+		return nil, setError
+	end
+	ns.Materials.SelectGoal(charData, id)
+	return id, true
 end
 
 -- Validation of stored recipes (registered with DB.ROOT_VALIDATORS).

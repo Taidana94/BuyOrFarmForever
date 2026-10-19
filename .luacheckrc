@@ -68,6 +68,7 @@ read_globals = {
 	"SelectTradeSkill", -- hooked only (hooksecurefunc), to know where a recipe was selected last
 	"SelectCraft",
 	"hooksecurefunc", -- used by Blizzard UI code in 70003 (e.g. Blizzard_EditMode)
+	ChatFrameUtil = { fields = { "InsertLink", "GetActiveWindow" } }, -- Blizzard_ChatFrameBase (70003), post-hook only
 	-- character, time
 	"UnitName",
 	"GetRealmName",

@@ -95,6 +95,16 @@ function Materials.RenameGoal(goal, label)
 	return goal.label
 end
 
+-- Id of the lowest-numbered goal created from this recipe key, or nil.
+function Materials.FindRecipeGoal(charData, recipeKey)
+	for _, id in ipairs(Materials.ListGoalIDs(charData)) do
+		if charData.materialGoals[id].recipeKey == recipeKey then
+			return id
+		end
+	end
+	return nil
+end
+
 function Materials.GetGoal(charData, id)
 	return charData.materialGoals[id]
 end

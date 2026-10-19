@@ -72,8 +72,11 @@ local function hideTooltip()
 	GameTooltip:Hide()
 end
 
--- Item slot: drop an item from the bags on it (or click while holding one). onItem(itemID) is
--- called with the item; the item goes back to where it came from (the cursor is cleared).
+local slots = {}
+
+-- Item slot: drop an item from the bags on it (or click while holding one), or shift-click an item
+-- while the slot is visible. onItem(itemID) is called with the item; a dragged item goes back to
+-- where it came from (the cursor is cleared).
 function Inputs.CreateItemSlot(parent, onItem)
 	local slot = CreateFrame("Button", nil, parent)
 	slot:SetSize(Inputs.SLOT_SIZE, Inputs.SLOT_SIZE)
@@ -93,7 +96,19 @@ function Inputs.CreateItemSlot(parent, onItem)
 	slot:SetScript("OnClick", take)
 	slot:SetScript("OnEnter", showSlotTooltip)
 	slot:SetScript("OnLeave", hideTooltip)
+	slot.onItem = onItem
+	slots[#slots + 1] = slot
 	return slot
+end
+
+-- A shift-clicked item goes to the visible item slot (only one tab is shown at a time).
+local function onLinkInsert(itemID)
+	for _, slot in ipairs(slots) do
+		if slot:IsVisible() then
+			slot.onItem(itemID)
+			return
+		end
+	end
 end
 
 -- Shows an item in the slot (nil empties it).
@@ -143,4 +158,10 @@ end
 -- The dialog frame, or nil before the first question (for tests).
 function Inputs.GetDialog()
 	return dialog
+end
+
+if ns.Client then
+	ns.Events.OnSignal("CHARACTER_READY", function()
+		ns.Client:HookLinkInsert(onLinkInsert)
+	end)
 end

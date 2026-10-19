@@ -177,23 +177,34 @@ local function goalCommand(argument)
 	end
 end
 
--- /bof recipe [crafts] ------------------------------------------------------------------
+-- /bof recipe [new] [crafts] ------------------------------------------------------------
+-- Without "new", a recipe that already has a goal increases that goal's crafts.
+
+local function parseCrafts(text)
+	text = Util.Trim(text)
+	return text == "" and 1 or Util.ParseInteger(text)
+end
 
 local function recipeCommand(argument)
 	local charData = UIShared.WritableCharacter()
 	if not charData then
 		return
 	end
-	local crafts = 1
-	if Util.Trim(argument) ~= "" then
-		crafts = Util.ParseInteger(Util.Trim(argument))
+	local word, rest = Slash.SplitCommand(argument)
+	local id, result
+	if word == "new" then
+		id, result = Recipes.ImportSelected(charData, parseCrafts(rest))
+	else
+		id, result = Recipes.ImportOrIncrease(charData, parseCrafts(argument))
 	end
-	local id, err = Recipes.ImportSelected(charData, crafts)
 	if not id then
-		UIShared.PrintError(err)
-		return
+		UIShared.PrintError(result)
+	elseif result == true then
+		local goal = charData.materialGoals[id]
+		Log.Print(Util.Format(L.RECIPE_GOAL_INCREASED, id, UIShared.GoalName(goal), goal.crafts))
+	else
+		UIShared.PrintRecipeGoal(charData, id)
 	end
-	UIShared.PrintRecipeGoal(charData, id)
 end
 
 if ns.Client then
