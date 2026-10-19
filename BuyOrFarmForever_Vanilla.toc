@@ -79,6 +79,7 @@ UI\SourcingTab.lua
 UI\FarmTab.lua
 UI\CraftAltPanel.lua
 UI\CraftTab.lua
+UI\GoldPlanPanel.lua
 UI\GoldTab.lua
 UI\SettingsTab.lua
 UI\HelpTab.lua

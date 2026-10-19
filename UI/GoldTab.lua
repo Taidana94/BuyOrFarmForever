@@ -1,7 +1,8 @@
--- Gold buffer tab of the main window: budget overview (gold, reserves, free, uncovered), the
--- savings goals as editable rows (name, amount, reserved, up, reached, delete), a row to create a
--- goal, a purchase check, the net income and buttons to distribute the gold and to switch whether
--- the sourcing plan may use reserves. Every input runs the same /bof gold command as the chat.
+-- Gold buffer tab of the main window, two views (buttons at the top right): the gold buffer
+-- (budget overview, the savings goals as editable rows, a row to create a goal, a purchase check,
+-- the net income, buttons to distribute the gold and to switch whether the sourcing plan may use
+-- reserves) and the gold planner (UI/GoldPlanPanel.lua). Every input runs the same /bof command as
+-- the chat.
 local _, ns = ...
 
 local L = ns.L
@@ -18,12 +19,14 @@ local VISIBLE_ROWS = 8
 local ROW_HEIGHT, ROWS_Y, HEADER_Y, NEW_ROW_GAP = 24, -74, -56, 6
 local BUTTON_WIDTH, BUTTON_GAP, UNDO_WIDTH = 150, 6, 100
 local OVERVIEW_Y, SOURCES_Y, INCOME_Y, RESERVES_Y = -32, 44, 26, 8
+-- The purchase check sits right of the goal header; the view buttons take the top right.
+local CHECK_Y, HEADER_WIDTH, MODE_WIDTH = -50, 400, 110
 local TEXT_WIDTH = 690
 -- Row columns: number, name box, amount box, status text, up, reached, delete.
 local NUMBER_WIDTH, NAME_WIDTH, AMOUNT_WIDTH, STATUS_WIDTH = 24, 180, 90, 200
 local UP_WIDTH, DONE_WIDTH, REMOVE_WIDTH, CHECK_BOX_WIDTH = 50, 80, 22, 90
 local PERCENT = 100
-local REFRESH_SIGNALS = { "MONEY_CHANGED", "DATA_CHANGED" }
+local REFRESH_SIGNALS = { "MONEY_CHANGED", "DATA_CHANGED", "BAGS_CHANGED", "PRICES_CHANGED", "ITEM_LOADED" }
 
 local Tab = {}
 Tab.__index = Tab
@@ -124,7 +127,7 @@ local function buildTop(tab, frame)
 	tab.checkButton = button(frame, L.GOLD_BTN_CHECK, CHECK_BOX_WIDTH, function()
 		tab:CheckPurchase()
 	end)
-	tab.checkButton:SetPoint("TOPRIGHT", 0, 0)
+	tab.checkButton:SetPoint("TOPRIGHT", 0, CHECK_Y)
 	tab.checkAmount = Inputs.CreateBox(frame, { width = CHECK_BOX_WIDTH, onCommit = function()
 		tab:CheckPurchase()
 	end })
@@ -134,13 +137,30 @@ local function buildTop(tab, frame)
 	label:SetText(L.GOLD_CHECK_LABEL)
 end
 
+-- "[Goldpuffer] [Goldplaner]" at the top right of both views.
+local function buildModes(tab, frame)
+	tab.planMode = button(frame, L.GOLD_MODE_PLANNER, MODE_WIDTH, function()
+		tab:SetMode("PLANNER")
+	end)
+	tab.planMode:SetPoint("TOPRIGHT", 0, 0)
+	tab.bufferMode = button(frame, L.GOLD_MODE_BUFFER, MODE_WIDTH, function()
+		tab:SetMode("BUFFER")
+	end)
+	tab.bufferMode:SetPoint("RIGHT", tab.planMode, "LEFT", -BUTTON_GAP, 0)
+end
+
 function GoldTab.Create(parent)
-	local tab = setmetatable({ rows = {} }, Tab)
-	local frame = Widgets.CreateTabFrame(parent)
-	tab.frame = frame
+	local tab = setmetatable({ rows = {}, mode = "BUFFER" }, Tab)
+	tab.frame = Widgets.CreateTabFrame(parent)
+	buildModes(tab, tab.frame)
+	tab.planner = ns.GoldPlanPanel.Build(tab.frame)
+	local frame = CreateFrame("Frame", nil, tab.frame)
+	frame:SetAllPoints()
+	tab.buffer = frame
 	buildTop(tab, frame)
 	tab.overviewText = createText(frame, "GameFontHighlight", OVERVIEW_Y, "TOPLEFT")
 	tab.header = createText(frame, "GameFontNormalSmall", HEADER_Y, "TOPLEFT")
+	tab.header:SetWidth(HEADER_WIDTH)
 	for i = 1, VISIBLE_ROWS do
 		buildRow(tab, frame, i)
 	end
@@ -176,7 +196,25 @@ local function drawRow(row, index, goal, canWrite)
 	row:Show()
 end
 
+function Tab:SetMode(mode)
+	self.mode = mode
+	self:Refresh()
+end
+
 function Tab:Refresh()
+	local isPlanner = self.mode == "PLANNER"
+	Widgets.SetShown(self.planner.frame, isPlanner)
+	Widgets.SetShown(self.buffer, not isPlanner)
+	Widgets.SetEnabled(self.planMode, not isPlanner)
+	Widgets.SetEnabled(self.bufferMode, isPlanner)
+	if isPlanner then
+		ns.GoldPlanPanel.Refresh(self.planner)
+		return
+	end
+	self:RefreshBuffer()
+end
+
+function Tab:RefreshBuffer()
 	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
 	local canWrite = charData ~= nil and not ns.readOnly
 	Widgets.SetEnabled(self.distribute, canWrite)
