@@ -3,6 +3,25 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.1] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Ratgeber** (`/bof advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): Vorschläge als Karten –
+  Kram verkaufen, volle Taschen, Abklingzeiten, herstellbare Ziele, Material bei deinen Twinks, deine
+  beste Stunde, nächstes Sparziel. Öffnet sich nach dem Login, wenn etwas Wichtiges ansteht.
+- **Karten an den Spielfenstern:** Händler (fehlende Zutaten kaufen, Kram verkaufen), Auktionshaus
+  (laut Plan kaufen, einstellen, Preise scannen), Bank (Material für deine Ziele mitnehmen),
+  Briefkasten (Material an Twinks schicken, die es für ihre Ziele brauchen).
+- **Verkaufen und Kaufen auf Knopfdruck** beim Händler, jeweils nach Bestätigung.
+
+### Geändert
+
+- Goldplaner: Bleibt Zeit übrig, weil eine gemessene Farmroute fehlt, steht das im Plan („Übrige
+  Zeit … ohne Vorschlag“) – vorher sahen 1, 2 und 4 Stunden ohne Erklärung gleich aus.
+
 ## [0.6.0] – 2026-10-19
 
 Goldplaner: wie du in deiner verfügbaren Zeit am meisten Gold machst. Getestet in WoW Classic Era

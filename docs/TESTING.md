@@ -258,6 +258,21 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.7.0-alpha.1 (Classic Era, advisor)
+
+1. `/reload`, `/bof version` → `0.7.0-alpha.1`. BugSack empty.
+2. Shift+click on the minimap button (or `/bof advisor`): window "Ratgeber" with cards (stripe,
+   icon, title, gold line, grey line); hover shows the item or the item list. Nothing cut off.
+3. Merchant: cards "Mach hier:" right of the merchant window. "Verkaufen" asks, then sells the list
+   (check with the merchant's buyback tab). A missing goal material the merchant sells: "Kaufen"
+   asks, then buys (whole merchant stacks).
+4. Close the merchant during selling → stops with a message.
+5. Bank with goal materials: card "Mitnehmen …". Mailbox on a character whose materials another
+   character's goal needs: "An <Name> …". Auction house: purchases of the plan, "Scannen".
+6. Full bags (<= 3 free) and logging in → the advisor opens by itself after a few seconds.
+7. The two checkboxes at the bottom of the advisor switch the side cards and the login opening.
+8. In combat: no errors when cards appear (merchant cannot be open in combat anyway).
+
 ### Result 0.6.0-alpha.2 (Classic Era, 2026-10-19)
 
 User: new savings goal works again; everything else of the checklist passed ("Passt alles"). Farm

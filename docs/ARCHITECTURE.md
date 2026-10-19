@@ -234,6 +234,29 @@ level.
 - UI: `UI/GoldPlanCommands.lua` (`/bof goldplan`, `/bof goldsources`, `/bof goldkeep`),
   `UI/GoldPlanPanel.lua` (planner view of the Gold buffer tab).
 
+### Advisor (0.7.0)
+
+- `Core/AdvisorSources.lua`: sources per context return suggestions `{ kind, priority, itemID?,
+  count?, sure, auction, cost?, action?, ... }`. Context "ANY" (always): bag tasks, full bags
+  (<= 3 free slots), craftable recipe goals, ready cooldowns, materials other characters hold
+  (`MAIL_ASK`), best hour (`GoldPlan`), next savings goal. "MERCHANT": missing goal materials the
+  merchant sells. "BANK": goal materials in the bank. "AUCTION": sourcing plan purchases, missing or
+  outdated prices. "MAIL": materials other characters (same realm and faction) miss for their goals.
+  A kind gets +40 priority in the window where it can be done.
+- `Core/Advisor.lua`: `Advisor.Context()` from window signals (last opened window wins),
+  `ADVISOR_CONTEXT` signal on change, `Advisor.Collect` sorts by priority, then rating.
+- UI: `AdvisorText` (texts per kind), `AdvisorCard` (card widget, `BACKDROP_TOAST_12_12`),
+  `AdvisorWindow` (movable window, 6 cards, its two settings at the bottom; opens 7 s after login
+  if a suggestion has priority >= 80 and `advisorAtLogin`), `AdvisorSide` (cards next to
+  `MerchantFrame`, `AuctionFrame`, `BankFrame`, `MailFrame`; one retry a frame later because the
+  auction UI loads on demand), `AdvisorActions` (click actions).
+- Actions (user decision 2026-10-19: buy and sell on click; this changes the original description
+  "you do purchases and sales yourself" for the merchant only): sell the vendor task's stacks
+  (`C_Container.UseContainerItem`, batches of 6 every 0.3 s, stops when the merchant closes; each
+  slot is re-checked for the expected item) and buy missing materials (`BuyMerchantItem` in whole
+  merchant stacks, at most `GetMerchantItemMaxStack` per call). Both ask first
+  (`Inputs.Confirm`). Auction house and mail stay manual.
+
 ## Farm runs (stage 2f)
 
 - States: `FARM`, `TRAVEL`, `PAUSED`, `REVIEW`. Current run: `characters[charKey].currentRun`
@@ -333,6 +356,9 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `PLAYER_MONEY` → `MONEY_CHANGED` | `ShopHints` (while a merchant is open), `GoldAuto` (always; acts only with `goldAutoDistribute`) | see column | per gold change | hint text and reserve check; `GoldAuto` distributes only after a gain |
 | `QUEST_DETAIL`, `QUEST_COMPLETE` | `QuestAlternatives` | always | per quest frame | reads the rewards, one slot check per reward item |
 | `TRADE_SKILL_SHOW`, `CRAFT_SHOW` → `PROFESSION_OPENED`; `TRADE_SKILL_UPDATE`, `CRAFT_UPDATE` → `PROFESSION_CHANGED` | `RecipeBook` | always | per window open; updates in bursts (casts, filters) | one `C_Timer.After(1)` per burst, then one read of all visible recipes (`ReadAllRecipes`) |
+| `MERCHANT_*`, `AUCTION_*`, `BANK*`, `MAIL_*`, `PROFESSION_OPENED/CLOSED` (signals) | `Advisor` | always | per window | updates the open-window list; raises `ADVISOR_CONTEXT` on change |
+| `ADVISOR_CONTEXT`, `SETTINGS_CHANGED` (signals) | `AdvisorSide` | always | per window | shows/hides the side cards; refresh signals only while shown |
+| `BAGS_CHANGED`, `DATA_CHANGED`, `PRICES_CHANGED`, `MONEY_CHANGED`, `ITEM_LOADED`, `ADVISOR_CONTEXT`, `SETTINGS_CHANGED`, `MERCHANT_CHANGED` | `AdvisorWindow` | only while shown | see above | one coalesced refresh (`Advisor.Collect`) |
 | `PLAYER_MONEY` → `MONEY_CHANGED` with source `LOOT` | `IncomeCapture` → `FarmRuns.AddLootCopper` | always | per looted coin | one number added to the running run |
 | `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
 
@@ -342,7 +368,9 @@ created on first open and hidden, never destroyed; rows are a fixed pool of 10 f
 
 No `OnUpdate` scripts. One-shot `C_Timer.After` callbacks: `0` for coalescing window refreshes; `1` s
 taxi check after control loss (`FarmAssist`); `5` s login summary; `10` s price cleanup after login;
-`1` s recipe book capture after profession window events; `30` s auto-hide of the prompt bars (each callback checks a sequence number, so an older timer does
+`1` s recipe book capture after profession window events; `7` s advisor check after login; `0.3` s
+between sell batches (only after a confirmed click, stops when the merchant closes); `0` s retry of
+the advisor side cards for the load-on-demand auction window; `30` s auto-hide of the prompt bars (each callback checks a sequence number, so an older timer does
 not hide a newer offer). One ticker:
 
 | Ticker | File | Why no event | Interval | Runs while | Cost |

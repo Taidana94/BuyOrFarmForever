@@ -1,7 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.6.0 – Materialbeschaffung, Craft-Bewertung, Goldpuffer und Goldplaner, alles im
-Fenster bedienbar. Getestet in WoW Classic Era 1.15.9. Nicht in Forever getestet.**
+**Version 0.7.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
+(neu in 0.7.0) ist nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -47,6 +48,13 @@ Neu in 0.6.0: der **Goldplaner** – wie du in 1, 2, 4 Stunden oder einer belieb
 Gold machst: Taschen ausräumen (Händler, Auktionshaus oder Entzaubern), mit Gewinn herstellen,
 Abklingzeiten nutzen und die beste Farmroute aus deinen Farmrunden, mit der Anreise verrechnet.
 Gold aus dem Auktionshaus steht getrennt („bis zu“), weil Verkäufe dort nicht sicher sind.
+
+Neu in 0.7.0: der **Ratgeber** – ein kleines Fenster mit Karten „Mach das“: was gerade am meisten
+bringt oder ansteht (Kram verkaufen, volle Taschen, Abklingzeiten, herstellbare Ziele, Material bei
+deinen Twinks, deine beste Stunde, nächstes Sparziel). Am Händler, im Auktionshaus, in der Bank und
+am Briefkasten erscheinen passende Karten direkt neben dem Fenster. Beim Händler verkauft „Verkaufen“
+die vorgeschlagenen Gegenstände und „Kaufen“ besorgt fehlende Zutaten – jeweils erst nach deiner
+Bestätigung.
 
 ## Unterstützte Spielversion
 
@@ -173,6 +181,7 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes bzw. alle Ziele) |
 | `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen, selbst farmen |
 | `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget zählt dein aktuelles Gold |
+| `/bof advisor` | Ratgeber öffnen oder schließen (auch Umschalt+Klick auf den Minimap-Knopf) |
 | `/bof goldplan [Dauer]` | was du in der Zeit am besten tust, um Gold zu machen (ohne Dauer: 1, 2 und 4 Std.) |
 | `/bof goldsources` | deine Farmrouten mit Gold pro Stunde (sicher und im AH) und Anreise |
 | `/bof goldkeep [Gegenstand]` | Gegenstand auf die Behalten-Liste setzen oder davon nehmen; ohne Gegenstand: die Liste |
@@ -260,6 +269,13 @@ Rezepte dieses Charakters. Haben Produkt und Zutaten Preise, schlägt der Goldpl
 Crafts vor (höchstens 5 pro Rezept). Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
 Restzeit zeigt; ist sie vorbei, nennt der Login sie.
 
+**Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
+Jede Karte hat einen farbigen Streifen (grün: hier erledigen, gelb: Gold, blau: Hinweis, orange:
+Warnung), eine Überschrift, den Goldwert und eine Erklärung; der Tooltip zeigt den Gegenstand oder
+die Liste. Unten im Ratgeber schaltest du die Karten an den Spielfenstern und das Öffnen nach dem
+Login ab. Nach dem Login öffnet er sich von selbst, wenn etwas Wichtiges ansteht (volle Taschen,
+Abklingzeit, herstellbares Ziel).
+
 **Fenster, Tab „Einstellungen“:** alle Einstellungen zum An- und Abschalten (Farm-Automatik,
 Preise, Goldpuffer, Anzeige), Debug-Modus, Leistung anzeigen und Zurücksetzen.
 
@@ -328,6 +344,9 @@ weist darauf hin.
   der Weg von deinem Standort; der Weg in die Stadt zum Verkaufen ist nicht eingerechnet. Die
   Zeiten pro Verkauf, Entzaubern und Craft sind Schätzungen des Addons. Rezepte kennt das Addon erst
   nach dem Öffnen des Berufsfensters; Abklingzeiten erst, wenn das Fenster einmal eine Restzeit zeigte.
+- Ratgeber: Verkaufen und Kaufen gehen nur beim Händler und nur nach Bestätigung; im Auktionshaus
+  und am Briefkasten zeigt er nur, was zu tun ist. Verkauft werden genau die Gegenstände der Liste
+  (ohne Behalten-Liste und Material deiner Ziele); beim Händler kannst du sie zurückkaufen.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
@@ -379,7 +398,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.6.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.7.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

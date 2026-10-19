@@ -22,6 +22,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Gold routes: farm something else, sell, buy (sale value per hour from saved runs) | 0.5.0, tested in Classic Era |
 | Craft: armor and weapon DPS weights, verdict vs. planned replacement, level requirement | 0.5.0, tested in Classic Era |
 | Gold planner: farm routes (zone + activity + target, looted coins), bag tasks (vendor / auction / disenchant, keep list), recipe book with craft profit and cooldowns, time plans for 1/2/4 h or any duration (`/bof goldplan`, planner view in the Gold buffer tab) | 0.6.0, tested in Classic Era (routes with developer sample runs) |
+| Advisor ("Ratgeber"): context-aware suggestion cards in an own window and next to merchant, auction house, bank and mailbox; sell and buy at the merchant on click | 0.7.0-alpha.1, out of game only |
 | Forever support (second adapter and TOC) | phase B, after Forever launch |
 | English localization | phase 2 |
 
