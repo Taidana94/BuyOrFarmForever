@@ -258,6 +258,27 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.7.0-alpha.4 (Classic Era, advisor rows)
+
+1. `/reload`, `/bof version` → `0.7.0-alpha.4`. BugSack empty.
+2. `/bof advisor`: rows in this order: Verkaufen, Entzaubern (enchanter only), Herstellen, Sparziel,
+   Deine beste Stunde. Empty rows grey with a reason. Nothing cut off.
+3. Verkaufen: "Händler: x · AH: y"; tooltip lists both. At a merchant a click sells only the vendor
+   list (buyback tab).
+4. Enchanter with Auctionator and a green item: Entzaubern row; tooltip "(+… ggü. Verkaufen)".
+   At the merchant the side card "Nicht verkaufen – entzaubern"; the item is not in the sell list.
+5. Profession character (open the profession window once): Herstellen names a recipe; with the
+   reagents in the bags "Zutaten vorhanden"; tooltip lists further recipes. Without prices:
+   "Rezepte ohne Preis: n – scannen".
+6. Click on Sparziel → Gold buffer tab; click on Deine beste Stunde → planner.
+
+### Result 0.7.0-alpha.3 (Classic Era, 2026-10-19)
+
+User: the narrow window is fine, but asked whether things were left out: profitable crafts from the
+recipe book and disenchanting were not shown as own suggestions (crafts only inside the best hour,
+the disenchant card dropped out of the 4 cards). User decision: fixed rows sell, disenchant (if
+possible), craft, savings goal, best hour → 0.7.0-alpha.4.
+
 ### Result 0.7.0-alpha.2 (Classic Era, 2026-10-19)
 
 Screenshot of the user: the advisor window still too wide (long checkbox labels) and every card

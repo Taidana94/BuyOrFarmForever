@@ -2,7 +2,7 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
 ## Notes-deDE: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
-## Version: 0.7.0-alpha.3
+## Version: 0.7.0-alpha.4
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01
@@ -51,6 +51,7 @@ Core\RecipeBook.lua
 Core\CraftTasks.lua
 Core\AdvisorSources.lua
 Core\Advisor.lua
+Core\AdvisorSummary.lua
 Core\CraftEval.lua
 Core\WeightTemplates.lua
 Core\SavingsGoals.lua

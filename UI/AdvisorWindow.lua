@@ -1,6 +1,6 @@
--- Advisor window ("Ratgeber"): a small movable window with the most important suggestions as
--- cards ("Mach das"), for the window that is open right now. Created on first open, refreshed only
--- while shown (same coalesced refresh as the tabs). Opens by itself after login when something
+-- Advisor window ("Ratgeber"): a small movable window with fixed summary rows as cards
+-- (Core/AdvisorSummary.lua: sell, disenchant, craft, savings goal, best hour). Created on first
+-- open, refreshed only while shown (same coalesced refresh as the tabs). Opens by itself after login when something
 -- important is waiting (setting advisorAtLogin). Its two settings sit at the bottom, because the
 -- settings tab has no room left; /bof set works for them too.
 local _, ns = ...
@@ -13,9 +13,9 @@ local Card = ns.AdvisorCard
 local AdvisorWindow = {}
 ns.AdvisorWindow = AdvisorWindow
 
--- Compact (user feedback on 0.7.0-alpha.1: the window was far too big): four cards, the height
--- follows the shown cards, drawn at a smaller scale.
-AdvisorWindow.MAX_CARDS = 4
+-- Compact (user feedback on 0.7.0-alpha.1: the window was far too big): one card per summary row,
+-- the height follows the shown cards, drawn at a smaller scale.
+AdvisorWindow.MAX_CARDS = 5
 AdvisorWindow.SCALE = 0.85
 -- After login: wait for the chat summary, then open only for suggestions at least this important.
 AdvisorWindow.LOGIN_DELAY_SECONDS = 7
@@ -123,12 +123,12 @@ function Window:Refresh()
 	end
 	local context = ns.Advisor.Context()
 	self.contextText:SetText(Util.Format(L.ADVISOR_CONTEXT_LINE, L[CONTEXT_NAMES[context]]))
-	local list = charData and ns.Advisor.Collect(charData, context, ns.Client:GetServerTime()) or {}
+	local list = charData and ns.AdvisorSummary.Rows(charData, context, ns.Client:GetServerTime()) or {}
 	for i, card in ipairs(self.cards) do
 		Card.Draw(card, list[i], context)
 	end
 	self.frame:SetHeight(heightFor(math.min(#list, AdvisorWindow.MAX_CARDS)))
-	self.emptyText:SetText(#list == 0 and (charData and L.ADVISOR_EMPTY or L.NOT_READY) or "")
+	self.emptyText:SetText(charData and "" or L.NOT_READY)
 end
 
 function AdvisorWindow.Toggle()

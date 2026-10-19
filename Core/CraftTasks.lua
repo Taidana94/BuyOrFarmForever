@@ -2,7 +2,8 @@
 -- Profit per craft = sale value of the product (vendor price, sure; auction gold on top, not
 -- guaranteed) minus the reagents at their planning price (Prices.Best; a recipe with a reagent
 -- without price is skipped). Normal recipes count with up to MAX_CRAFTS crafts (the auction
--- house's demand is unknown), cooldown recipes with one craft once they are ready.
+-- house's demand is unknown), cooldown recipes with one craft once they are ready. fromBags: how
+-- many crafts the reagents in the bags already allow (the advisor puts those first).
 local _, ns = ...
 
 local CraftTasks = {}
@@ -39,6 +40,16 @@ local function profitPerCraft(recipe, now)
 	return made * sure - cost, made * auction
 end
 
+-- Crafts the reagents in the bags allow right now.
+local function craftsFromBags(recipe)
+	local crafts
+	for _, reagent in ipairs(recipe.reagents) do
+		local possible = math.floor(ns.Client:GetBagCount(reagent.itemID) / reagent.count)
+		crafts = math.min(crafts or possible, possible)
+	end
+	return crafts or 0
+end
+
 local function taskFor(key, entry, now)
 	local recipe = ns.Recipes.Get(ns.db, key)
 	local ready = not entry.cooldown or (entry.readyAt or 0) <= now
@@ -57,6 +68,7 @@ local function taskFor(key, entry, now)
 		seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + #recipe.reagents * BUY_SECONDS_PER_REAGENT,
 		sure = crafts * sure,
 		auction = crafts * auction,
+		fromBags = craftsFromBags(recipe),
 	}
 end
 
@@ -68,6 +80,19 @@ function ns.GoldPlan.Tasks(charData, now)
 		tasks[#tasks + 1] = task
 	end
 	return tasks
+end
+
+-- Recipes of the recipe book that make an item but cannot be rated, because the product or a
+-- reagent has no price yet.
+function CraftTasks.CountUnpriced(charData, now)
+	local count = 0
+	for key in pairs(charData.recipeBook) do
+		local recipe = ns.Recipes.Get(ns.db, key)
+		if recipe and recipe.outputItemID ~= 0 and not profitPerCraft(recipe, now) then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 -- The most profitable craft tasks of the character (rating > 0, best rating per second first).

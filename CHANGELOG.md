@@ -3,6 +3,25 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.4] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Geändert
+
+- Der Ratgeber zeigt jetzt immer dieselben Zeilen in fester Reihenfolge: **Verkaufen**,
+  **Entzaubern** (nur wenn dein Charakter entzaubern kann), **Herstellen**, **Sparziel**,
+  **Deine beste Stunde**. Gibt es gerade nichts zu tun, sagt die Zeile, warum (grau).
+- **Verkaufen** fasst Händler und Auktionshaus zusammen („Händler: 6 · AH: 20“) und warnt bei vollen
+  Taschen. Der Tooltip zeigt beide Listen; ein Klick beim Händler verkauft nur die Händler-Liste.
+- **Entzaubern** vergleicht jeden Gegenstand mit Verkaufen. Der Tooltip nennt pro Gegenstand, wie
+  viel Entzaubern mehr bringt (Werte von Auctionator). Neben dem Händler warnt eine Karte „Nicht
+  verkaufen – entzaubern“.
+- **Herstellen** rechnet mit deinem Rezeptbuch: bereite Ziele und Abklingzeiten zuerst, dann
+  gewinnbringende Rezepte, deren Zutaten du schon hast, dann solche mit Zutaten zum Kaufen. Fehlen
+  Preise, sagt die Zeile, wie viele Rezepte ohne Preis sind.
+- Ein Klick auf **Sparziel** öffnet den Goldpuffer.
+
 ## [0.7.0-alpha.3] – 2026-10-19 (Testversion)
 
 Nicht in Forever getestet.

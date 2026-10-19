@@ -20,12 +20,15 @@ local PRIORITY = {
 local HERE = { SELL_VENDOR = "MERCHANT", SELL_AUCTION = "AUCTION", CRAFT_NOW = "PROFESSION", COOLDOWN_READY = "PROFESSION" }
 local HERE_BONUS = 40
 
+-- Turns `fields` into a suggestion of `kind` (kinds without a priority, like the advisor window's
+-- summary rows, get 0).
 local function suggestion(env, kind, fields)
 	fields.kind = kind
-	fields.priority = PRIORITY[kind] + (HERE[kind] == env.context and HERE_BONUS or 0)
+	fields.priority = (PRIORITY[kind] or 0) + (HERE[kind] == env.context and HERE_BONUS or 0)
 	fields.sure, fields.auction = fields.sure or 0, fields.auction or 0
 	return fields
 end
+AdvisorSources.Suggestion = suggestion
 
 local function goalRows(env)
 	env.rows = env.rows or ns.Stock.Rows(env.charData, ns.Materials.AllGoals(env.charData))
@@ -36,7 +39,7 @@ end
 local function bagSuggestions(env, out)
 	for _, task in ipairs(ns.BagTasks.Collect(env.charData, env.now, env.discount)) do
 		out[#out + 1] = suggestion(env, task.kind, { count = task.units, sure = task.sure, auction = task.auction,
-			items = task.items, action = task.kind == "SELL_VENDOR" and env.context == "MERCHANT" and "SELL_VENDOR" or nil })
+			items = task.items, gains = task.gains, action = task.kind == "SELL_VENDOR" and env.context == "MERCHANT" and "SELL_VENDOR" or nil })
 	end
 	local free = ns.Client:GetFreeBagSlots()
 	if free and free <= AdvisorSources.BAGS_FULL_SLOTS then
@@ -131,8 +134,9 @@ local function mailAskSuggestions(env, out)
 	end
 end
 
--- Recipe goals whose materials are all in the bags now.
-local function craftSuggestions(env, out)
+-- Recipe goals whose materials are all in the bags now, then ready cooldowns.
+function AdvisorSources.CraftNow(env)
+	local out = {}
 	for _, goal in ipairs(ns.Materials.AllGoals(env.charData)) do
 		local ready = goal.recipeKey ~= nil and #goal.items > 0
 		for _, row in ipairs(ready and ns.Stock.Rows(env.charData, { goal }) or {}) do
@@ -146,24 +150,42 @@ local function craftSuggestions(env, out)
 		local recipe = ns.Recipes.Get(ns.db, key)
 		out[#out + 1] = suggestion(env, "COOLDOWN_READY", { itemID = recipe and recipe.outputItemID })
 	end
+	return out
+end
+
+local function craftSuggestions(env, out)
+	for _, s in ipairs(AdvisorSources.CraftNow(env)) do
+		out[#out + 1] = s
+	end
+end
+
+-- The best hour of the gold planner, or nil when the plan has no step.
+function AdvisorSources.BestHour(env)
+	local plan = ns.GoldPlan.Plan({ seconds = HOUR, methods = ns.GoldRoutes.Current(), discountPercent = env.discount,
+		tasks = ns.GoldPlan.Tasks(env.charData, env.now) })
+	if #plan.steps > 0 then
+		return suggestion(env, "PLAN_HOUR", { sure = plan.sure, auction = plan.auction, action = "OPEN_PLANNER" })
+	end
+	return nil
+end
+
+-- The next open savings goal, or nil.
+function AdvisorSources.NextSavings(env)
+	local routes = ns.GoldRoutes.Current()
+	for _, goal in ipairs(env.charData.savingsGoals) do
+		if not goal.done and goal.copper > goal.reserved then
+			local rest = goal.copper - goal.reserved
+			return suggestion(env, "SAVINGS", { label = goal.label, cost = rest, action = "OPEN_SAVINGS",
+				seconds = routes[1] and ns.GoldRoutes.TimeToEarn(routes[1], rest), route = routes[1] })
+		end
+	end
+	return nil
 end
 
 -- Gold: the best hour and the next savings goal.
 local function goldSuggestions(env, out)
-	local routes = ns.GoldRoutes.Current()
-	local plan = ns.GoldPlan.Plan({ seconds = HOUR, methods = routes, discountPercent = env.discount,
-		tasks = ns.GoldPlan.Tasks(env.charData, env.now) })
-	if #plan.steps > 0 then
-		out[#out + 1] = suggestion(env, "PLAN_HOUR", { sure = plan.sure, auction = plan.auction, action = "OPEN_PLANNER" })
-	end
-	for _, goal in ipairs(env.charData.savingsGoals) do
-		if not goal.done and goal.copper > goal.reserved then
-			local rest = goal.copper - goal.reserved
-			out[#out + 1] = suggestion(env, "SAVINGS", { label = goal.label, cost = rest,
-				seconds = routes[1] and ns.GoldRoutes.TimeToEarn(routes[1], rest), route = routes[1] })
-			return
-		end
-	end
+	out[#out + 1] = AdvisorSources.BestHour(env)
+	out[#out + 1] = AdvisorSources.NextSavings(env)
 end
 
 -- Sources per context; "ANY" sources run in every context.

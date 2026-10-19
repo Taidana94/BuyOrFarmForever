@@ -1,8 +1,9 @@
 # Kaufen oder farmen?
 
-**Version 0.7.0-alpha.3 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+**Version 0.7.0-alpha.4 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
 Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
-(neu in 0.7.0) ist im Spiel getestet, seine schmale Fassung aus 0.7.0-alpha.3 noch nicht. Nicht in Forever getestet.**
+(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4 noch nicht. Nicht in Forever
+getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -49,9 +50,8 @@ Gold machst: Taschen ausräumen (Händler, Auktionshaus oder Entzaubern), mit Ge
 Abklingzeiten nutzen und die beste Farmroute aus deinen Farmrunden, mit der Anreise verrechnet.
 Gold aus dem Auktionshaus steht getrennt („bis zu“), weil Verkäufe dort nicht sicher sind.
 
-Neu in 0.7.0: der **Ratgeber** – ein kleines Fenster mit Karten „Mach das“: was gerade am meisten
-bringt oder ansteht (Kram verkaufen, volle Taschen, Abklingzeiten, herstellbare Ziele, Material bei
-deinen Twinks, deine beste Stunde, nächstes Sparziel). Am Händler, im Auktionshaus, in der Bank und
+Neu in 0.7.0: der **Ratgeber** – ein kleines Fenster mit fünf Zeilen „Mach das“: Verkaufen,
+Entzaubern (wenn du es kannst), Herstellen, Sparziel und deine beste Stunde. Am Händler, im Auktionshaus, in der Bank und
 am Briefkasten erscheinen passende Karten direkt neben dem Fenster. Beim Händler verkauft „Verkaufen“
 die vorgeschlagenen Gegenstände und „Kaufen“ besorgt fehlende Zutaten – jeweils erst nach deiner
 Bestätigung.
@@ -270,10 +270,19 @@ Crafts vor (höchstens 5 pro Rezept). Rezepte mit Abklingzeit erkennt es, sobald
 Restzeit zeigt; ist sie vorbei, nennt der Login sie.
 
 **Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
-Ein Klick auf eine Karte führt sie aus (z. B. öffnet „Deine beste Stunde“ den Goldplaner). Jede
-Karte hat einen farbigen Streifen (grün: hier erledigen, gelb: Gold, blau: Hinweis, orange:
-Warnung), eine Überschrift, den Goldwert und eine Erklärung; der Tooltip zeigt den Gegenstand oder
-die Liste. Unten im Ratgeber schaltest du die Karten an den Spielfenstern und das Öffnen nach dem
+Die Zeilen stehen immer in dieser Reihenfolge:
+
+- **Verkaufen:** Kram für den Händler und Waren fürs Auktionshaus; warnt bei vollen Taschen.
+- **Entzaubern** (nur wenn du entzaubern kannst): was als Verzauberungsmaterial mehr bringt als
+  verkauft; der Tooltip nennt den Unterschied pro Gegenstand (braucht Auctionator).
+- **Herstellen:** bereite Ziele und Abklingzeiten, dann Rezepte mit Gewinn – zuerst die, deren
+  Zutaten du schon hast.
+- **Sparziel** und **Deine beste Stunde**.
+
+Ein Klick auf eine Zeile führt sie aus („Verkaufen“ beim Händler, „Sparziel“ öffnet den Goldpuffer,
+„Deine beste Stunde“ den Goldplaner). Jede Zeile hat einen farbigen Streifen (gelb: Gold, blau:
+Hinweis, orange: Warnung, grau: gerade nichts zu tun), eine Überschrift, den Goldwert und eine
+Erklärung; der Tooltip zeigt die Gegenstände oder Rezepte. Unten im Ratgeber schaltest du die Karten an den Spielfenstern und das Öffnen nach dem
 Login ab. Nach dem Login öffnet er sich von selbst, wenn etwas Wichtiges ansteht (volle Taschen,
 Abklingzeit, herstellbares Ziel).
 
@@ -399,7 +408,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.7.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.7.0-alpha.4 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

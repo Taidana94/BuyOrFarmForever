@@ -1,6 +1,6 @@
 -- Actions of advisor cards, always started by a click and confirmed first where gold or items
 -- change hands: sell the suggested bag items to the open merchant, buy missing goal materials from
--- it, scan auction prices, open the gold planner. Selling goes in small batches, because the
+-- it, scan auction prices, open the gold planner or the gold buffer. Selling goes in small batches, because the
 -- server rejects many sales in one moment; each batch re-checks that the merchant is still open
 -- and that every slot still holds the expected item (Client:SellStack).
 local _, ns = ...
@@ -64,6 +64,16 @@ local function buy(suggestion)
 	end)
 end
 
+-- Opens the gold buffer tab in a view ("BUFFER" or "PLANNER").
+local function openGold(mode)
+	ns.MainWindow.Show()
+	ns.MainWindow.SelectTab("GOLD_BUFFER")
+	local frame = ns.MainWindow.GetFrame()
+	if frame then
+		frame.gold:SetMode(mode)
+	end
+end
+
 local ACTIONS = {
 	SELL_VENDOR = sell,
 	BUY_MERCHANT = buy,
@@ -71,12 +81,10 @@ local ACTIONS = {
 		Inputs.Run("price scan")
 	end,
 	OPEN_PLANNER = function()
-		ns.MainWindow.Show()
-		ns.MainWindow.SelectTab("GOLD_BUFFER")
-		local frame = ns.MainWindow.GetFrame()
-		if frame then
-			frame.gold:SetMode("PLANNER")
-		end
+		openGold("PLANNER")
+	end,
+	OPEN_SAVINGS = function()
+		openGold("BUFFER")
 	end,
 }
 

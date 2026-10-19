@@ -245,8 +245,15 @@ level.
   A kind gets +40 priority in the window where it can be done.
 - `Core/Advisor.lua`: `Advisor.Context()` from window signals (last opened window wins),
   `ADVISOR_CONTEXT` signal on change, `Advisor.Collect` sorts by priority, then rating.
+- `Core/AdvisorSummary.lua` (0.7.0-alpha.4, user decision 2026-10-19): the window's fixed rows in
+  this order: `SUM_SELL` (vendor and auction tasks, full bags), `DISENCHANT` (only if the character
+  knows Disenchant; per item `gains` = rated copper more than the second best way, from
+  `BagTasks`), `SUM_CRAFT` (ready goals and cooldowns, then profitable recipe-book crafts with the
+  reagents in the bags (`CraftTasks` `fromBags`), then those to buy), `SAVINGS`, `PLAN_HOUR`. A row
+  with nothing to do carries `empty` (reason key) and is drawn grey.
 - UI: `AdvisorText` (texts per kind), `AdvisorCard` (card widget, `BACKDROP_TOAST_12_12`),
-  `AdvisorWindow` (movable window 300 px, at most 4 clickable cards without buttons, height follows the cards, scale 0.85, its two settings at the bottom; opens 7 s after login
+  `AdvisorWindow` (movable window 300 px, one clickable card per summary row without buttons,
+  height follows the rows, scale 0.85, its two settings at the bottom; opens 7 s after login
   if a suggestion has priority >= 80 and `advisorAtLogin`), `AdvisorSide` (cards next to
   `MerchantFrame`, `AuctionFrame`, `BankFrame`, `MailFrame`; one retry a frame later because the
   auction UI loads on demand), `AdvisorActions` (click actions).

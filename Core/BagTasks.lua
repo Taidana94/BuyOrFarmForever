@@ -47,23 +47,27 @@ local function waysOut(stack, now, canDisenchant)
 	return ways
 end
 
+-- The best way out and how much more one unit brings that way than the second best (or nothing).
 local function bestWay(ways, discount)
-	local best, bestRating = nil, 0
+	local best, bestRating, secondRating = nil, 0, 0
 	for _, way in ipairs(ways) do
 		local rating = ns.GoldRoutes.Rating(way.sure, way.auction, discount)
 		if rating > bestRating then
-			best, bestRating = way, rating
+			best, bestRating, secondRating = way, rating, bestRating
+		elseif rating > secondRating then
+			secondRating = rating
 		end
 	end
-	return best
+	return best, bestRating - secondRating
 end
 
-local function addToTask(tasks, way, stack)
+local function addToTask(tasks, way, stack, gain)
 	local task = tasks[way.kind]
 	if not task then
-		task = { kind = way.kind, seconds = 0, sure = 0, auction = 0, units = 0, items = {} }
+		task = { kind = way.kind, seconds = 0, sure = 0, auction = 0, units = 0, items = {}, gains = {} }
 		tasks[way.kind] = task
 	end
+	task.gains[stack.itemID] = (task.gains[stack.itemID] or 0) + gain * stack.count
 	task.sure = task.sure + way.sure * stack.count
 	task.auction = task.auction + way.auction * stack.count
 	task.units = task.units + stack.count
@@ -72,16 +76,21 @@ local function addToTask(tasks, way, stack)
 end
 
 -- Tasks { kind = "SELL_VENDOR" | "SELL_AUCTION" | "DISENCHANT", seconds, sure, auction, units,
--- items = { [itemID] = count } } for the current bags, at most one per kind.
+-- items = { [itemID] = count }, gains = { [itemID] = copper } } for the current bags, at most one per
+-- kind. gains: rated copper the stacks bring this way more than the second best way (for disenchanting:
+-- more than selling).
 function BagTasks.Collect(charData, now, discountPercent)
 	local skip = goalMaterials(charData)
 	local canDisenchant = ns.Client:KnowsDisenchant()
 	local byKind = {}
 	for _, stack in ipairs(ns.Client:ListBagStacks()) do
 		local wanted = not (stack.hasNoValue or skip[stack.itemID] or charData.goldKeep[stack.itemID])
-		local way = wanted and bestWay(waysOut(stack, now, canDisenchant), discountPercent)
+		local way, gain
+		if wanted then
+			way, gain = bestWay(waysOut(stack, now, canDisenchant), discountPercent)
+		end
 		if way then
-			addToTask(byKind, way, stack)
+			addToTask(byKind, way, stack, gain)
 		end
 	end
 	local tasks = {}

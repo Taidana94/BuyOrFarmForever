@@ -16,7 +16,8 @@ local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP = 400, 12, 30, 4
 local REFRESH_SIGNALS = { "BAGS_CHANGED", "MONEY_CHANGED", "MERCHANT_CHANGED", "DATA_CHANGED", "PRICES_CHANGED" }
 -- Kinds shown per window.
 local KINDS = {
-	MERCHANT = { BUY_MERCHANT = true, SELL_VENDOR = true, BAGS_FULL = true },
+	-- DISENCHANT at the merchant: a warning not to sell those items.
+	MERCHANT = { BUY_MERCHANT = true, SELL_VENDOR = true, BAGS_FULL = true, DISENCHANT = true },
 	AUCTION = { BUY_AUCTION = true, SELL_AUCTION = true, PRICES_SCAN = true, DISENCHANT = true },
 	BANK = { BANK_TAKE = true },
 	MAIL = { MAIL_SEND = true, MAIL_ASK = true },

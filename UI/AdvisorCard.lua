@@ -21,6 +21,7 @@ local COLORS = {
 	GOLD = { 1, 0.82, 0 },
 	INFO = { 0.4, 0.7, 1 },
 	WARN = { 1, 0.5, 0.15 },
+	NONE = { 0.45, 0.45, 0.45 },
 }
 
 local function showTooltip(card)
