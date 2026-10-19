@@ -34,6 +34,7 @@ Settings.SCHEMA = {
 	{ key = "goldMerchantHint", type = "boolean", default = true, group = "GOLD", label = "SET_MERCHANT_HINT" },
 	{ key = "goldReserveWarning", type = "boolean", default = true, group = "GOLD", label = "SET_RESERVE_WARNING" },
 	{ key = "tooltipEnabled", type = "boolean", default = true, group = "DISPLAY", label = "SET_TOOLTIP" },
+	{ key = "auctionHint", type = "boolean", default = true, group = "DISPLAY", label = "SET_AUCTION_HINT" },
 	{ key = "minimapButton", type = "boolean", default = true, group = "DISPLAY", label = "SET_MINIMAP" },
 	{ key = "loginSummary", type = "boolean", default = true, group = "DISPLAY", label = "SET_LOGIN_SUMMARY" },
 }

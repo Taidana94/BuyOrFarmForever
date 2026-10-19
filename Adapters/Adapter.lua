@@ -47,6 +47,8 @@ Adapter.REQUIRED = {
 	"IsOnTaxi", -- () -> bool: on a flight path
 	"GetClass", -- () -> class file name ("PRIEST"), or nil
 	"GetTalentPoints", -- () -> { points per talent tree }, or nil
+	"HookItemTooltips", -- (callback(tooltip, itemID)) -> nil: post-hook on item tooltips, call once
+	"GetMerchantFrame", -- () -> the client's merchant frame (to anchor a hint), or nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.

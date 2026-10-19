@@ -70,5 +70,7 @@ UI\SettingsTab.lua
 UI\HelpTab.lua
 UI\MainWindow.lua
 UI\FarmSuggest.lua
+UI\TooltipLines.lua
+UI\ShopHints.lua
 UI\PerfCommand.lua
 Core\Main.lua

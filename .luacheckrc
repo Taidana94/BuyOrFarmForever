@@ -80,6 +80,8 @@ read_globals = {
 	"CreateFrame",
 	"UIParent",
 	"GameTooltip",
+	"ItemRefTooltip", -- Blizzard_UIPanels_Game/Classic/ItemRef.xml (70003)
+	"MerchantFrame", -- Blizzard_UIPanels_Game/Vanilla/MerchantFrame.xml (70003)
 	"UISpecialFrames",
 	"BACKDROP_DIALOG_32_32",
 	C_Timer = { fields = { "After", "NewTicker" } },

@@ -114,6 +114,17 @@ function SavingsGoals.Overview(charData, money)
 	return overview
 end
 
+-- Sum of the reserves of all open goals (not capped by the current gold).
+function SavingsGoals.ReservedTotal(charData)
+	local total = 0
+	for _, goal in ipairs(charData.savingsGoals) do
+		if not goal.done then
+			total = total + goal.reserved
+		end
+	end
+	return total
+end
+
 -- How much of a purchase of `cost` would use reserves: max(0, cost - free).
 function SavingsGoals.ReserveUse(overview, cost)
 	return math.max(0, cost - overview.free)
