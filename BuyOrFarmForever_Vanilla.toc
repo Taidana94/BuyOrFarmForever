@@ -62,6 +62,7 @@ UI\MaterialTabActions.lua
 UI\SourcingTabLayout.lua
 UI\SourcingTab.lua
 UI\FarmTab.lua
+UI\CraftAltPanel.lua
 UI\CraftTab.lua
 UI\GoldTab.lua
 UI\SettingsTab.lua

@@ -135,6 +135,20 @@ function CraftEval.RemoveAlternative(charData, index)
 	return true
 end
 
+-- Changes whether alternative `index` is planned or a possible drop. Returns true, or nil plus
+-- "alternative_not_found" | "invalid_kind".
+function CraftEval.SetAlternativeKind(charData, index, kind)
+	local alt = charData.craftEval.alternatives[index]
+	if not alt then
+		return nil, "alternative_not_found"
+	end
+	if not CraftEval.KINDS[kind] then
+		return nil, "invalid_kind"
+	end
+	alt.kind = kind
+	return true
+end
+
 -- Optional details of an alternative, all set by the user: cost in copper, time effort in
 -- seconds and the requirements as text. Absent fields mean "unknown".
 local DETAIL_CHECKS = {

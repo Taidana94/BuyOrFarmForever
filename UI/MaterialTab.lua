@@ -47,13 +47,7 @@ local function canWrite()
 	return ns.db ~= nil and not ns.readOnly
 end
 
-local function setShown(widget, shown)
-	if shown then
-		widget:Show()
-	else
-		widget:Hide()
-	end
-end
+local setShown = Widgets.SetShown
 
 function MaterialTab.Create(parent)
 	local tab = setmetatable({ offset = 0, data = {}, rows = {} }, Tab)

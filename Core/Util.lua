@@ -123,6 +123,25 @@ function Util.ParseDuration(text)
 	return total
 end
 
+-- A duration as input text in the format Util.ParseDuration reads ("1h 30m", "45m"); "" for nil.
+function Util.DurationInput(seconds)
+	if not seconds then
+		return ""
+	end
+	local L = ns.L
+	local minutes = Util.Round(seconds / SECONDS_PER_MINUTE)
+	local hours = math.floor(minutes / (SECONDS_PER_HOUR / SECONDS_PER_MINUTE))
+	minutes = minutes - hours * (SECONDS_PER_HOUR / SECONDS_PER_MINUTE)
+	local parts = {}
+	if hours > 0 then
+		parts[#parts + 1] = hours .. L.DURATION_HOUR_LETTER
+	end
+	if minutes > 0 or hours == 0 then
+		parts[#parts + 1] = minutes .. L.DURATION_MINUTE_LETTER
+	end
+	return table.concat(parts, " ")
+end
+
 -- "vor 5 Min." etc. for a duration in seconds (localized).
 function Util.FormatAge(seconds)
 	local L = ns.L

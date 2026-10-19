@@ -88,7 +88,19 @@ local function setDetail(charData, detail, argument)
 	printAlternative(index, charData.craftEval.alternatives[index])
 end
 
-local WRITE_COMMANDS = { add = addAlternative, remove = removeAlternative }
+-- /bof alt kind <nr> planned|drop
+local function setKind(charData, argument)
+	local indexText, kindWord = Slash.SplitCommand(argument)
+	local index = Util.ParseInteger(indexText)
+	local ok, err = CraftEval.SetAlternativeKind(charData, index, KIND_WORDS[string.lower(Util.Trim(kindWord))])
+	if not ok then
+		Log.Print(err == "invalid_kind" and L.ALT_USAGE or Util.Format(L.ALT_NOT_FOUND, indexText))
+		return
+	end
+	printAlternative(index, charData.craftEval.alternatives[index])
+end
+
+local WRITE_COMMANDS = { add = addAlternative, remove = removeAlternative, kind = setKind }
 for word, detail in pairs(DETAILS) do
 	WRITE_COMMANDS[word] = function(charData, argument)
 		setDetail(charData, detail, argument)

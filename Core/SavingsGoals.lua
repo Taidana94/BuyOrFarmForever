@@ -43,6 +43,15 @@ function SavingsGoals.SetAmount(charData, index, copper)
 	return goal
 end
 
+function SavingsGoals.Rename(charData, index, label)
+	local goal = goalAt(charData, index)
+	if not goal then
+		return nil, "no_savings_goal"
+	end
+	goal.label = ns.Materials.CleanLabel(label)
+	return goal
+end
+
 -- Moves a goal one place up (higher priority). Returns the new index.
 function SavingsGoals.MoveUp(charData, index)
 	local list = charData.savingsGoals

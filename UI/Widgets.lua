@@ -129,6 +129,14 @@ function Widgets.CreateTextStack(parent, opts)
 	return lines
 end
 
+function Widgets.SetShown(widget, shown)
+	if shown then
+		widget:Show()
+	else
+		widget:Hide()
+	end
+end
+
 function Widgets.SetEnabled(widget, enabled)
 	if enabled then
 		widget:Enable()

@@ -63,6 +63,7 @@ function Tab:Refresh()
 	end
 	local budget, isOwn = Sourcing.Budget()
 	self.budgetText:SetText(PlanCommands.BudgetText(budget, isOwn))
+	ns.Inputs.SetValue(self.budgetBox, isOwn and Money.Format(budget) or "")
 	local goals, headerText, emptyText = nil, "", L.NOT_READY
 	if charData then
 		goals, headerText, emptyText = UIShared.GoalSelection(charData)

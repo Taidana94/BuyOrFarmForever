@@ -21,7 +21,7 @@ local TABLE = Widgets.TableLayout(220, {
 })
 
 local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
-local BUDGET_GAP = 12
+local BUDGET_GAP, BUDGET_BOX_WIDTH = 12, 80
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, TEXT_WIDTH = -84, 560
 local SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 42, 26, 10
@@ -59,8 +59,16 @@ local function buildStrategies(tab, frame)
 		tab.strategyButtons[strategy] = button
 		previous = button
 	end
-	tab.budgetText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	tab.budgetText:SetPoint("LEFT", previous, "RIGHT", BUDGET_GAP, 0)
+	-- Own budget: empty box = plan with the character's gold.
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	label:SetPoint("LEFT", previous, "RIGHT", BUDGET_GAP, 0)
+	label:SetText(L.SOURCING_BUDGET_LABEL)
+	tab.budgetBox = ns.Inputs.CreateBox(frame, { width = BUDGET_BOX_WIDTH, onCommit = function(text)
+		ns.Inputs.Run("budget " .. (ns.Util.Trim(text) == "" and "clear" or text))
+	end })
+	tab.budgetBox:SetPoint("LEFT", label, "RIGHT", STRATEGY_GAP, 0)
+	tab.budgetText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+	tab.budgetText:SetPoint("LEFT", tab.budgetBox, "RIGHT", STRATEGY_GAP, 0)
 	tab.budgetText:SetJustifyH("LEFT")
 end
 

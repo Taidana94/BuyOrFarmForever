@@ -114,6 +114,15 @@ function WRITE.set(charData, rest)
 	Log.Print(Util.Format(L.GOLD_CHANGED, indexText, Money.Format(copper)))
 end
 
+function WRITE.name(charData, rest)
+	local indexText, label = Slash.SplitCommand(rest)
+	if not SavingsGoals.Rename(charData, Util.ParseInteger(indexText), label) then
+		Log.Print(Util.Format(L.GOLD_NOT_FOUND, indexText))
+		return
+	end
+	Log.Print(Util.Format(L.GOLD_RENAMED, indexText))
+end
+
 local function byIndex(fn, message)
 	return function(charData, rest)
 		local index = Util.ParseInteger(Util.Trim(rest))
