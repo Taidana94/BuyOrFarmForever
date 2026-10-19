@@ -265,6 +265,15 @@ Bugs found (screenshot):
 3. `/dump Auctionator.API.v1.GetAuctionPriceByItemID("Test", 2589)` → a number (verify the API).
 4. `/bof price` and the Material tab price tooltip show "… (Auctionator, vor …)"; the plan uses it.
 5. Settings tab: switch "Preise von Auctionator verwenden" off → the Auctionator price disappears.
+6. Sourcing tab: "Zeitlimit" `10m` + Enter → limit line under the list; more is bought if gold allows.
+   Empty + Enter clears it. Nine rows, nothing overlaps (route, limit, summary, reserve, time value).
+7. After two farm runs with different targets (one not in the goal, at least 10 min): "Anderer Weg"
+   line under the plan. Runs that yield two goal materials: "nebenbei" in the row tooltip.
+8. Craft tab: seven weight boxes (Stä … DPS) fit in one row; template "Stärke" sets DPS 5.
+   `/dump GetItemStats(GetInventoryItemLink("player", 16))` shows whether the DPS key
+   `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` exists in Classic Era (verify).
+9. Planned alternative for a craft goal → "Bis Alternative … kommt" or "Der Craft bleibt …" line;
+   an item above your level shows "tragbar ab Stufe …".
 
 ### Checklist 0.4.0-alpha.1 (Classic Era, player relief)
 

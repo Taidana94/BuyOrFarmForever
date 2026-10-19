@@ -9,6 +9,22 @@ Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
 
 ### Hinzugefügt
 
+- **Zeitlimit für die Beschaffung:** Feld „Zeitlimit“ im Tab „Beschaffung“ oder `/bof timelimit 2h`.
+  Passt die Farmzeit nicht hinein, plant das Addon mehr Zukauf ein (zuerst, was pro Gold am meisten
+  Zeit spart), soweit das Budget reicht; sonst sagt es, um wie viel das Limit überschritten wird.
+- **Nebenbei gefarmt:** Materialien, die in denselben Farmrunden zusammen anfallen, werden gemeinsam
+  ausgewertet. Was beim Farmen eines anderen Materials nebenbei mitkommt, steht als „nebenbei“ im
+  Plan und kostet keine zusätzliche Farmzeit mehr.
+- **Anderer Weg:** Aus deinen gespeicherten Farmrunden berechnet das Addon, wie viel Gold pro Stunde
+  du mit einer anderen Farmroute verdienst (Auktionspreis abzüglich 5 % Gebühr oder Händlerpreis).
+  Plan und Tab „Beschaffung“ zeigen, wie lange du mit der besten Route für den Kauf aller fehlenden
+  Materialien brauchst.
+- **Rüstung und Waffen-DPS in der Craft-Bewertung:** zwei neue Gewichte (Standard 0, die Vorlagen
+  setzen passende Werte), z. B. `/bof weights armor 0,05`. Die Gewichte im Tab „Craft“ haben kurze
+  Namen (Stä, Bew, Ausd, Int, Wil, Rüst, DPS).
+- **Geplanter Ersatz:** Für jede eingeplante Alternative sagt die Bewertung, ob der Craft auch danach
+  besser bleibt oder nur die Zeit bis dahin überbrückt.
+- **Stufe:** Gegenstände, die du noch nicht tragen kannst, sind mit „tragbar ab Stufe …“ markiert.
 - **Auctionator als Preisquelle (optional):** Ist Auctionator installiert, liest das Addon dessen
   zuletzt gesehene Auktionspreise. Sie erscheinen als „Auctionator“ bei `/bof price`, im Tab
   „Material“ und fließen in Beschaffung und Craft-Bewertung ein. Preise ohne Altersangabe (älter als

@@ -1,7 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.4.0 – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles im Fenster bedienbar,
-mit viel Automatik. Getestet in WoW Classic Era 1.15.9. Nicht in Forever getestet.**
+**Version 0.5.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles
+im Fenster bedienbar, mit viel Automatik. Die Version 0.4.0 ist in WoW Classic Era 1.15.9 getestet;
+die Neuerungen von 0.5.0-alpha.1 sind nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -37,6 +38,11 @@ Anreise und speichern sich selbst, wenn nichts unklar ist. Das Addon schlägt ei
 wenn du ein fehlendes Material erbeutest, zeigt im Tooltip, was dir noch fehlt, warnt beim Händler,
 wenn ein Einkauf deine Rücklagen angreift, bietet passende Questbelohnungen als Alternative an und
 fasst deine letzte Sitzung zusammen. Jede Automatik lässt sich im Tab „Einstellungen“ abschalten.
+
+Neu in 0.5.0: **Zeitlimit** für die Beschaffung, gemeinsame Auswertung von Materialien aus derselben
+Farmrunde („nebenbei“), der **andere Weg** (etwas anderes farmen, verkaufen und davon kaufen),
+**Rüstung und Waffen-DPS** in der Craft-Bewertung, Vergleich mit einem geplanten Ersatz, Hinweis auf
+die nötige Stufe und optional die Preise von **Auctionator**.
 
 ## Unterstützte Spielversion
 
@@ -130,7 +136,7 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof craft` | Bewertung des ausgewählten Ziels (Rezept mit Gegenstand) |
 | `/bof craft <Gegenstand>` | einen beliebigen Gegenstand mit deiner Ausrüstung vergleichen |
 | `/bof weights` | deine Gewichte anzeigen |
-| `/bof weights str\|agi\|sta\|int\|spi <Zahl>` | Gewicht setzen (0 bis 10, z. B. `/bof weights int 2`) |
+| `/bof weights str\|agi\|sta\|int\|spi\|armor\|dps <Zahl>` | Gewicht setzen (0 bis 10, z. B. `/bof weights int 2`; Rüstung pro Punkt, z. B. `/bof weights armor 0,05`) |
 | `/bof weights template caster\|healer\|agility\|strength\|tank` | Gewichte aus einer Vorlage (Zauber, Heiler, Beweglichkeit, Stärke, Tank) |
 | `/bof weights suggest` | Vorlage passend zu Klasse und Talenten |
 | `/bof alt` | deine Alternativen |
@@ -163,6 +169,7 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes bzw. alle Ziele) |
 | `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen, selbst farmen |
 | `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget zählt dein aktuelles Gold |
+| `/bof timelimit [Dauer\|clear]` | höchste Farmzeit im Plan, z. B. `2h` oder `1h 30m`; der Rest wird gekauft, soweit das Budget reicht |
 
 ## Bedienung
 
@@ -189,7 +196,12 @@ Strategien:
 
 Was weder einen Preis im Budget noch eine Farmmessung hat, steht als „offen“ (rot). Der Tooltip
 zeigt Farmzeit und Anreise getrennt. Ein eigenes Budget trägst du oben ins Feld „Budget“ ein (leer =
-dein aktuelles Gold).
+dein aktuelles Gold), ein Zeitlimit oben rechts ins Feld „Zeitlimit“ (leer = keins). Fallen in deinen
+Farmrunden mehrere fehlende Materialien zusammen an, zählt das Addon, was beim längsten Farmen
+nebenbei mitkommt („nebenbei“ im Tooltip und im Chat). Unter dem Plan steht der **andere Weg**: die
+Farmroute aus deinen Runden, die am meisten Gold pro Stunde bringt (Ziel einer Runde ist kein
+fehlendes Material, mindestens 10 Minuten gemessen), und wie lange du damit für den Kauf von allem
+Fehlenden brauchst.
 
 **Farmrunden:** Während einer Runde vergleicht das Addon nach jeder Taschenänderung den Inhalt
 deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als **geplündert**. Was du bei offenem
@@ -210,7 +222,9 @@ Knopf „mitzählen“) und die geschätzte Farmzeit für die fehlenden Material
 Gegenstands gegen das, was du an diesem Platz trägst (bei Ringen und Schmuck gegen den schwächeren,
 Zweihandwaffen gegen Haupt- und Nebenhand zusammen), Beschaffungskosten und Farmzeit, Kosten pro
 Wertungspunkt, Wert vorhandener Zutaten (beim Händler und nach deinen Preisen) und deine
-Alternativen. Die Wertung ist die Summe der fünf Grundwerte mal deinem Gewicht. Aktualisiert sich,
+Alternativen. Die Wertung ist die Summe der Werte (fünf Grundwerte, Rüstung, Waffen-DPS) mal deinem
+Gewicht. Bei eingeplanten Alternativen steht, ob der Craft auch danach besser bleibt oder nur die Zeit
+bis dahin überbrückt; was du noch nicht tragen kannst, ist mit der nötigen Stufe markiert. Aktualisiert sich,
 wenn du Ausrüstung wechselst. Unten trägst du die Gewichte direkt ein oder übernimmst eine Vorlage
 (Zauber, Heiler, Beweglichkeit, Stärke, Tank; ein Vorschlag passend zu Klasse und Talenten steht
 dabei). Der Knopf „Alternativen“ oben rechts öffnet die Liste deiner Alternativen: Art umschalten,
@@ -276,25 +290,31 @@ weist darauf hin.
   anderen als Ausgabe (Quelle „Post“). Questbelohnungen erkennt das Addon am offenen Questfenster;
   kommt das Gold erst nach dem Schließen, zählt es als „Sonstiges“. Sparziele und Nettoerlös gelten
   pro Charakter.
-- Die Craft-Bewertung rechnet nur mit Stärke, Beweglichkeit, Ausdauer, Intelligenz und
-  Willenskraft. Rüstung, Waffenschaden, Effekte und Setboni werden nicht bewertet. Einhandwaffen
+- Die Craft-Bewertung rechnet mit Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft,
+  Rüstung und Waffen-DPS. Effekte und Setboni werden nicht bewertet. Ob Classic Era den Waffen-DPS
+  liefert, ist im Spiel noch zu prüfen; fehlt er, zählen bei Waffen nur die Werte. Einhandwaffen
   werden nur mit der Haupthand verglichen. Die Gewichte-Vorlagen sind ein Startpunkt des Addons,
   keine offiziellen Werte.
 - Der Tab „Craft“ zeigt höchstens 12 Zeilen; bei vielen Alternativen steht der Rest nur im Chat
   (`/bof craft`).
 - Alte Preise vom Händler und aus dem Auktionshaus löscht das Addon nach 60 Tagen (einstellbar,
   0 = nie); deine eigenen Preise bleiben.
+- Das Zeitlimit wird schrittweise eingehalten (erst das, was pro Gold am meisten Zeit spart), nicht
+  mit der rechnerisch besten Kombination. Der andere Weg rechnet mit der AH-Gebühr von 5 %, nicht mit
+  der Einstellgebühr, und nur mit aktuellen Preisen.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.4.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.5.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 208
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 237
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
-Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise, Farmrunden mit
-Automatik, Beschaffungsplan, Craft-Bewertung, Goldpuffer, Einstellungen, Hinweise).
+Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
+Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
+Craft-Bewertung mit Rüstung, Waffen-DPS und geplantem Ersatz, Goldpuffer, Einstellungen, Hinweise).
+Die Neuerungen von 0.5.0-alpha.1 sind noch nicht im Spiel getestet.
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -324,7 +344,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.4.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.5.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

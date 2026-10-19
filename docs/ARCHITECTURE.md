@@ -62,7 +62,9 @@ printed and `Core/Main.lua` registers nothing.
 | `GetCurrentMapID()` | uiMapID of the player's map, or 0 |
 | `GetMapName(uiMapID)` | localized map name, or nil |
 | `GetMoney()` | copper the character carries, or nil |
-| `GetItemStats(itemID)` | `{ STR, AGI, STA, INT, SPI, ARMOR }` (0 if missing), or nil while loading |
+| `GetItemStats(itemID)` | `{ STR, AGI, STA, INT, SPI, ARMOR, DPS }` (0 if missing), or nil while loading; DPS from `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` (unverified in Classic Era) |
+| `GetItemMinLevel(itemID)` | required character level (`itemMinLevel`, 5th return of `C_Item.GetItemInfo`), or nil while loading |
+| `GetLevel()` | character level (`UnitLevel("player")`), or nil |
 | `GetEquipSlots(itemID)` | slot keys, e.g. `{ "CHEST" }`, `{ "FINGER1", "FINGER2" }`, with `.sum = true` for two-handers; nil if not equippable |
 | `GetEquippedItemID(slotKey)` | item id in that slot, or nil (the adapter maps keys to Classic inventory slot numbers) |
 | `GetSellPrice(itemID)` | vendor sell price per unit, or nil while loading |
@@ -147,6 +149,12 @@ chat confirms every action). Status, item and estimate lines come from `FarmComm
 
 ## Craft evaluation (stage 3)
 
+0.5.0: rated stats include `ARMOR` (per point) and `DPS` (weapon damage per second); their default
+weights are 0 so older evaluations do not change; templates set them. A planned alternative gets a
+verdict (`CraftCommands.VerdictLine`): the craft stays better, or it bridges the time until the
+alternative (with its time effort if known). `CraftEval.LevelLock` marks items above the character
+level.
+
 - Stats: `GetItemStats(link)` (global function, confirmed in game in Classic Era 70003; no
   `C_Item.GetItemStats`). The adapter maps Blizzard keys (`ITEM_MOD_STRENGTH_SHORT`, …,
   `RESISTANCE0_NAME`) to `STR, AGI, STA, INT, SPI, ARMOR`; the core never sees Blizzard keys.
@@ -183,6 +191,24 @@ chat confirms every action). Status, item and estimate lines come from `FarmComm
   `frame.farm`, `frame.craft`) with
   `frame`, `Activate`, `Deactivate`, `Refresh`. Only the shown tab is activated; the selection is
   stored in `settings.window.tab` (`SOURCING` added to the enum; no migration needed).
+
+### Build-out 0.5.0 (Core/SourcingPlan.lua, Core/GoldRoutes.lua)
+
+- `Sourcing.Inputs` adds `byproducts = { [itemID] = units per farm second }` per farmable input:
+  the other missing materials yielded by the same runs that `FarmEstimates.ForItem` counts
+  (`FarmEstimates.Byproducts`). `Sourcing.Plan` settles lines from the longest farm time down; each
+  farmed line credits its by-products to lines not settled yet (no cycles). A credited part is
+  `line.byproduct` and costs no farm time.
+- Time limit: `settings.farmTimeLimitMinutes` (0 = none, max 1440; not in the settings schema, set
+  with `/bof timelimit` or the Sourcing tab box, like `budgetCopper`). After the strategy's
+  purchases, `enforceLimit` buys farmed units in order of time saved per copper until the farm time
+  fits or the budget is used; greedy, re-settles after each purchase. `plan.overLimitSeconds` > 0
+  when the budget was not enough.
+- Gold routes: runs grouped by `targetItemID` (runs without a target and targets that are missing
+  materials skipped), value = sum of items x `GoldRoutes.SaleValue` (lowest current AUCTION /
+  MANUAL / AUCTIONATOR price minus `AUCTION_CUT` 5 %, or the vendor sell price if higher), time =
+  farm + travel. Routes need `MIN_SECONDS` (600). The best route's time to earn the cost of all
+  priced missing materials is shown under the plan (`PlanCommands.RouteText`).
 
 ## Farm runs (stage 2f)
 

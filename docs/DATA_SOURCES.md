@@ -16,6 +16,7 @@ The addon ships no game data (no item, quest, NPC, spell or map IDs).
 | Gethe/wow-ui-source, branch `classic_era`, commit `8165d4cd6e48` | Classic Era | 1.15.9 (70003), 2026-09-29 | Blizzard UI code and `Blizzard_APIDocumentationGenerated`: API existence, signatures, events |
 | Gethe/wow-ui-source, branch `forever`, commit `172a387e3ab8` | Forever (beta) | 1.60.1 (70450), 2026-10-16 | planning only; beta data is not final |
 | warcraft.wiki.gg API pages and Forever API notes | both | fetched 2026-10-18 | flavor tables, TOC rules, Blizzard quotes |
+| warcraft.wiki.gg `API_GetItemStats` (Retail page) | Retail | fetched 2026-10-18 | stat keys are GlobalStrings names; `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` for weapon DPS is assumed from Retail usage, **unverified in Classic Era** |
 | Auctionator `Source/API/v1` (copy in Industrial/nixos-dotfiles, TOC Interface incl. 11509, version 335) | Classic Era | commit 2026-09-12, read 2026-10-19 | external price API; see `work/notes/price-addons.md` |
 | In game: `/dump GetBuildInfo()` | Classic Era | 1.15.9 (70003), 2026-10-18 | client version and interface |
 
