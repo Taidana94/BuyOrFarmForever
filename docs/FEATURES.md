@@ -16,7 +16,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Prices per unit from manual entry, merchants and the auction house; realm/faction, outdated flag | 0.2.0-alpha.6 (stage 2e), tested in Classic Era |
 | Main window with Material tab (`/bof show`; display, goal switch, recipe import button) | 0.2.0-alpha.4 (stage 2d), tested in Classic Era |
 | Recipe import from the profession / craft window (selected recipe, `/bof recipe`) | 0.2.0-alpha.3 (stage 2c), trade skill and craft window tested in Classic Era |
-| Player relief: every action in the window (input boxes, item slots with drag and drop and shift-click, settings tab), farm automation (idle time, unclear gains by rule, auto save, auto pause/travel, start suggestion, target reached), tooltip lines, merchant/auction hints, weight templates, quest rewards as alternatives, minimap button, key bindings, summaries, automatic gold distribution with undo, income by source, old price cleanup | 0.4.0-alpha.1, tested out of game only |
+| Player relief: every action in the window (input boxes, item slots with drag and drop and shift-click, settings tab), farm automation (idle time, unclear gains by rule, auto save, auto pause/travel, start suggestion, target reached), tooltip lines, merchant/auction hints, weight templates, quest rewards as alternatives, minimap button, key bindings, summaries, automatic gold distribution with undo, income by source, old price cleanup | 0.4.0, tested in Classic Era |
 | Forever support (second adapter and TOC) | phase B, after Forever launch |
 | English localization | phase 2 |
 

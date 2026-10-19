@@ -1,7 +1,7 @@
 # Kaufen oder farmen?
 
-**Entwicklungsversion 0.4.0-alpha.2 – alles im Fenster bedienbar, viel Automatik. Getestet in WoW
-Classic Era 1.15.9. Nicht in Forever getestet.**
+**Version 0.4.0 – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles im Fenster bedienbar,
+mit viel Automatik. Getestet in WoW Classic Era 1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -287,7 +287,7 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.4.0-alpha.2): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.4.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
 (Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 208
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
@@ -315,14 +315,14 @@ den gespeicherten Daten. Die Version 0.3.0 unterscheidet sich von 0.3.0-alpha.3 
 Versionsnummer und Dokumentation.
 
 Die Neuerungen von 0.4.0 wurden am 19.10.2026 in 0.4.0-alpha.1 im Spiel getestet, ohne Lua-Fehler;
-überlappende Knopftexte im Tab „Craft“ sind in 0.4.0-alpha.2 behoben (Korrektur im Spiel noch nicht
-bestätigt).
+überlappende Knopftexte im Tab „Craft“ wurden in 0.4.0-alpha.2 behoben und im Spiel bestätigt. Die
+Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dokumentation.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.4.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.4.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

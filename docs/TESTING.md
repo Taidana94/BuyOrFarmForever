@@ -67,7 +67,7 @@ commit (`git log -1 --oneline`).
 | 0.3.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: Craft tab lines no longer overlap, "Unterschied" instead of the box (user: "Passt") |
 | 0.3.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: user "done"; SavedVariables (11:45) show `lastAddonVersion` 0.3.0-alpha.3 and alternative 2 with `copper` 15000, `seconds` 5400, `requires` "Stufe 20" after `/reload`; `!BugGrabber.lua`: no new errors |
 | 0.4.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**: user "Alles gut bis auf das hier" – template button labels overlapped in the Craft tab (screenshot); SavedVariables (12:59): `lastAddonVersion` 0.4.0-alpha.1, `lastSession` stored; no `bySource` yet (no data trace for income sources); `!BugGrabber.lua`: no new errors |
-| 0.4.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (fix check: Craft tab template buttons, alternatives kind buttons) |
+| 0.4.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: template and kind buttons no longer overflow (user: "Passt") |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -305,6 +305,37 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 5. `/bof alt cost n clear` → "Kosten unbekannt". Errors: `/bof alt time n 90` (no unit),
    `/bof alt cost 99 1g` (unknown number) → clear messages, nothing changes.
 6. `/reload` → the details are kept. BugSack: no errors.
+
+### Release check 0.4.0 (2026-10-19)
+
+| Step (CLAUDE.md section 9) | Result |
+|---|---|
+| Checks levels 0, 1, 1b, 1c, 2 | 226 passed, 0 failed |
+| In-game test (Classic Era) | 0.4.0-alpha.1 (all checklist items, one layout finding) and 0.4.0-alpha.2 (fix) passed; 0.4.0 = 0.4.0-alpha.2 code |
+| In-game test (Forever) | none – the release must not be called Forever-compatible |
+| Version in TOC, CHANGELOG, README | 0.4.0 |
+| Interface version | 11509 = client 1.15.9 (70003), unchanged |
+| ZIP | built and inspected (see below) |
+| Performance | static review below; in-game `/bof perf` for 0.4.0 still to be measured |
+| Tag | `v0.4.0` only after the performance numbers; push/publication only after the user's approval |
+
+ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 79 files, top folder `BuyOrFarmForever/`, `/` as
+separator, no dev files; TOC `## Version: 0.4.0`, `## Interface: 11509`. Found during this check:
+`Bindings.xml` (not in the TOC) was missing from the ZIP; `work/tools/build_zip.py` now adds it
+(`.pkgmeta` does not exclude it). The 0.3.0 ZIP was moved to `work/backup/BuyOrFarmForever-0.3.0.zip`.
+
+### Performance review before 0.4.0 (2026-10-19, static)
+
+New always-registered handlers (all cheap flag updates or rare): `MoneyContext` (window and loot
+open/close flags), `TooltipLines` (dirty flag on bag/data/equipment changes; the cache is rebuilt
+only on the next item tooltip), `GoldAuto` (one comparison per gold change; distributes only with
+the setting and after a gain), `QuestAlternatives` (quest frame only), `FarmSuggest` loot/bag
+handlers (only while the setting is on; reads the missing items once per loot window). Handlers
+registered only while needed: `FarmAssist` player state (while a run exists), `ShopHints` gold
+signal (while a merchant is open), `FarmCapture` window and combat signals (while a run is running).
+Timers: one-shot `C_Timer.After` only (taxi check, login summary, price cleanup, prompt bar hide);
+the only ticker is still the Farm tab clock. No `OnUpdate` (level 1c). Tooltip hook: one table
+lookup per item tooltip after the first rebuild. Verdict: ok; in-game numbers pending.
 
 ### Release check 0.3.0 (2026-10-19)
 
