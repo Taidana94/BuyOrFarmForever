@@ -134,11 +134,21 @@ local function mailAskSuggestions(env, out)
 	end
 end
 
--- Recipe goals whose materials are all in the bags now, then ready cooldowns.
+-- Whether the character learned a recipe: it is in its recipe book. Enchantments make no item and
+-- are not kept in the book, so they cannot be checked and count as learned.
+local function isLearned(charData, key)
+	if charData.recipeBook[key] then
+		return true
+	end
+	local recipe = ns.Recipes.Get(ns.db, key)
+	return recipe ~= nil and recipe.outputItemID == 0
+end
+
+-- Goals of learned recipes whose materials are all in the bags now, then ready cooldowns.
 function AdvisorSources.CraftNow(env)
 	local out = {}
 	for _, goal in ipairs(ns.Materials.AllGoals(env.charData)) do
-		local ready = goal.recipeKey ~= nil and #goal.items > 0
+		local ready = goal.recipeKey ~= nil and #goal.items > 0 and isLearned(env.charData, goal.recipeKey)
 		for _, row in ipairs(ready and ns.Stock.Rows(env.charData, { goal }) or {}) do
 			ready = ready and row.bags >= row.need
 		end

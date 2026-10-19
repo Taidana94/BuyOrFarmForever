@@ -51,23 +51,31 @@ local function disenchantRow(env, bagTasks)
 		gains = task.gains })
 end
 
--- Craft entries: ready goals and cooldowns, then profitable recipes whose reagents are in the bags,
--- then those whose reagents must be bought.
-local function craftEntries(env)
-	local entries = {}
-	for _, s in ipairs(Sources.CraftNow(env)) do
-		entries[#entries + 1] = { reason = s.kind, itemID = s.itemID, goal = s.goal, crafts = s.count or 1, sure = 0,
-			auction = 0 }
+-- Copies the value of a craft task (CraftTasks.Value fields) into an entry; none for goals.
+local function withValue(entry, value)
+	entry.sure, entry.auction = value.sure or 0, value.auction or 0
+	entry.saleVendor, entry.saleAuction, entry.reagents = value.saleVendor, value.saleAuction, value.reagents
+	return entry
+end
+
+-- Craft entries: ready goals of learned recipes, ready cooldowns (with their value when priced and
+-- profitable), then profitable recipes whose reagents are in the bags, then those to buy for.
+local function craftEntries(env, tasks)
+	local cooldownValue = {}
+	for _, task in ipairs(tasks) do
+		cooldownValue[task.kind == "COOLDOWN" and task.itemID or false] = task
 	end
-	local buy = {}
-	for _, task in ipairs(ns.CraftTasks.Collect(env.charData, env.now)) do
+	local entries, buy = {}, {}
+	for _, s in ipairs(Sources.CraftNow(env)) do
+		local value = s.kind == "COOLDOWN_READY" and cooldownValue[s.itemID] or {}
+		entries[#entries + 1] = withValue({ reason = s.kind, itemID = s.itemID, goal = s.goal, crafts = s.count or 1 },
+			value)
+	end
+	for _, task in ipairs(tasks) do
 		if task.kind == "CRAFT" then
-			local crafts = task.fromBags > 0 and math.min(task.fromBags, task.crafts) or task.crafts
-			local share = crafts / task.crafts
-			local entry = { reason = task.fromBags > 0 and "PROFIT_BAGS" or "PROFIT_BUY", itemID = task.itemID,
-				crafts = crafts, sure = task.sure * share, auction = task.auction * share }
 			local list = task.fromBags > 0 and entries or buy
-			list[#list + 1] = entry
+			list[#list + 1] = withValue({ reason = task.fromBags > 0 and "PROFIT_BAGS" or "PROFIT_BUY",
+				itemID = task.itemID, crafts = task.crafts }, task)
 		end
 	end
 	for _, entry in ipairs(buy) do
@@ -76,24 +84,30 @@ local function craftEntries(env)
 	return entries
 end
 
-local function craftEmptyReason(env)
+local function craftEmptyReason(env, waiting)
 	if next(env.charData.recipeBook) == nil then
 		return "NO_RECIPES", 0
 	end
 	local unpriced = ns.CraftTasks.CountUnpriced(env.charData, env.now)
-	return unpriced > 0 and "UNPRICED" or "NO_PROFIT", unpriced
+	if unpriced > 0 then
+		return "UNPRICED", unpriced
+	end
+	return #waiting > 0 and "WAITING" or "NO_PROFIT", 0
 end
 
--- Craft: the first entry on the card, all entries in the tooltip.
+-- Craft: the first entry on the card, all entries and the waiting cooldowns in the tooltip.
 local function craftRow(env)
-	local entries = craftEntries(env)
+	local entries = craftEntries(env, ns.CraftTasks.Collect(env.charData, env.now))
+	local waiting = ns.CraftTasks.Waiting(env.charData, env.now)
 	local first = entries[1]
 	if not first then
-		local reason, unpriced = craftEmptyReason(env)
-		return Sources.Suggestion(env, "SUM_CRAFT", { entries = entries, empty = reason, count = unpriced })
+		local reason, unpriced = craftEmptyReason(env, waiting)
+		return Sources.Suggestion(env, "SUM_CRAFT", { entries = entries, waiting = waiting, empty = reason,
+			count = unpriced })
 	end
-	return Sources.Suggestion(env, "SUM_CRAFT", { entries = entries, reason = first.reason, itemID = first.itemID,
-		goal = first.goal, count = first.crafts, sure = first.sure, auction = first.auction, more = #entries - 1 })
+	local row = withValue({ entries = entries, waiting = waiting, reason = first.reason, itemID = first.itemID,
+		goal = first.goal, count = first.crafts, more = #entries - 1 }, first)
+	return Sources.Suggestion(env, "SUM_CRAFT", row)
 end
 
 local function savingsRow(env)

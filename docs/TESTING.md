@@ -258,6 +258,15 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.7.0-alpha.5 (Classic Era, craft values)
+
+1. `/bof version` → `0.7.0-alpha.5`. Checklist 0.7.0-alpha.4 below still applies.
+2. Profession character with a profitable recipe: Herstellen shows "Gewinn bis …"; the tooltip shows
+   per recipe "Händler … · AH … · Zutaten …".
+3. Put the reagents for 2 crafts in the bags: "Herstellen: 2× …", "Zutaten vorhanden".
+4. A cooldown recipe (e.g. transmute) on cooldown: tooltip "Abklingzeit …: in …".
+5. A goal from a recipe this character has not learned: no "Ziel: alles da" in Herstellen.
+
 ### Checklist 0.7.0-alpha.4 (Classic Era, advisor rows)
 
 1. `/reload`, `/bof version` → `0.7.0-alpha.4`. BugSack empty.

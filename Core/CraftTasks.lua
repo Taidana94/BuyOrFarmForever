@@ -1,9 +1,11 @@
--- Craft tasks for the gold planner: recipes of the character's recipe book that make a profit.
--- Profit per craft = sale value of the product (vendor price, sure; auction gold on top, not
--- guaranteed) minus the reagents at their planning price (Prices.Best; a recipe with a reagent
--- without price is skipped). Normal recipes count with up to MAX_CRAFTS crafts (the auction
--- house's demand is unknown), cooldown recipes with one craft once they are ready. fromBags: how
--- many crafts the reagents in the bags already allow (the advisor puts those first).
+-- Craft tasks for the gold planner and the advisor: learned recipes (the character's recipe book,
+-- filled from its own profession windows) that make a profit.
+-- Profit = sale value of the products (vendor price, sure; auction gold on top after the cut, not
+-- guaranteed) minus the reagents. Reagents in the bags count with their raw value (what they would
+-- bring when sold, the same split into sure and auction gold), reagents to buy with their planning
+-- price (Prices.Best); a recipe with a needed price missing is skipped. Normal recipes count with as
+-- many crafts as the bags allow, otherwise MAX_CRAFTS (the auction house's demand is unknown);
+-- cooldown recipes with one craft once they are ready.
 local _, ns = ...
 
 local CraftTasks = {}
@@ -17,29 +19,6 @@ local CRAFT_SECONDS = 5
 local POST_SECONDS = 20
 local BUY_SECONDS_PER_REAGENT = 20
 
-local function reagentCost(recipe, now)
-	local cost = 0
-	for _, reagent in ipairs(recipe.reagents) do
-		local price = ns.PriceCapture.Best(reagent.itemID, now)
-		if not price then
-			return nil
-		end
-		cost = cost + price * reagent.count
-	end
-	return cost
-end
-
--- Profit of one craft: sure, auction (nil if a price is missing).
-local function profitPerCraft(recipe, now)
-	local sure, auction = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
-	local cost = sure and reagentCost(recipe, now)
-	if not cost then
-		return nil
-	end
-	local made = (recipe.outputMin + recipe.outputMax) / 2
-	return made * sure - cost, made * auction
-end
-
 -- Crafts the reagents in the bags allow right now.
 local function craftsFromBags(recipe)
 	local crafts
@@ -50,26 +29,86 @@ local function craftsFromBags(recipe)
 	return crafts or 0
 end
 
+-- Value of `need` units of a reagent: units in the bags at their raw value (sure, auction), the rest
+-- at the planning price. Returns sure, auction, bought (units to buy), or nil if a price is missing.
+local function reagentValue(itemID, need, now)
+	local have = math.min(need, ns.Client:GetBagCount(itemID))
+	local buyPrice = ns.PriceCapture.Best(itemID, now)
+	local sure, auction = 0, 0
+	if have > 0 then
+		local vendor, extra = ns.GoldRoutes.SaleParts(itemID, now)
+		-- Without any sale value the buy price counts, so the profit is not overstated.
+		if (vendor or 0) + (extra or 0) == 0 then
+			vendor, extra = buyPrice, 0
+		end
+		if not vendor then
+			return nil
+		end
+		sure, auction = vendor * have, extra * have
+	end
+	if need > have and not buyPrice then
+		return nil
+	end
+	return sure + (need - have) * (buyPrice or 0), auction, need - have
+end
+
+-- Value of `crafts` crafts: { sure, auction (profit parts), saleVendor, saleAuction (products sold
+-- to a vendor / on the auction house after the cut), reagents (their value), buys (reagents to
+-- buy) }, or nil if a price is missing.
+function CraftTasks.Value(recipe, crafts, now)
+	local vendor, extra = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
+	if not vendor then
+		return nil
+	end
+	local made = crafts * (recipe.outputMin + recipe.outputMax) / 2
+	local costSure, costAuction, buys = 0, 0, 0
+	for _, reagent in ipairs(recipe.reagents) do
+		local sure, auction, bought = reagentValue(reagent.itemID, reagent.count * crafts, now)
+		if not sure then
+			return nil
+		end
+		costSure, costAuction = costSure + sure, costAuction + auction
+		buys = buys + (bought > 0 and 1 or 0)
+	end
+	return { sure = made * vendor - costSure, auction = made * extra - costAuction, saleVendor = made * vendor,
+		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys }
+end
+
+local function isReady(entry, now)
+	return not entry.cooldown or (entry.readyAt or 0) <= now
+end
+
 local function taskFor(key, entry, now)
 	local recipe = ns.Recipes.Get(ns.db, key)
-	local ready = not entry.cooldown or (entry.readyAt or 0) <= now
-	if not (recipe and recipe.outputItemID ~= 0 and ready) then
+	if not (recipe and recipe.outputItemID ~= 0 and isReady(entry, now)) then
 		return nil
 	end
-	local sure, auction = profitPerCraft(recipe, now)
-	if not sure then
+	local fromBags = craftsFromBags(recipe)
+	local crafts = entry.cooldown and 1 or (fromBags > 0 and math.min(fromBags, CraftTasks.MAX_CRAFTS))
+		or CraftTasks.MAX_CRAFTS
+	local value = CraftTasks.Value(recipe, crafts, now)
+	if not value then
 		return nil
 	end
-	local crafts = entry.cooldown and 1 or CraftTasks.MAX_CRAFTS
-	return {
-		kind = entry.cooldown and "COOLDOWN" or "CRAFT",
-		itemID = recipe.outputItemID,
-		crafts = crafts,
-		seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + #recipe.reagents * BUY_SECONDS_PER_REAGENT,
-		sure = crafts * sure,
-		auction = crafts * auction,
-		fromBags = craftsFromBags(recipe),
-	}
+	value.kind = entry.cooldown and "COOLDOWN" or "CRAFT"
+	value.itemID, value.crafts, value.fromBags = recipe.outputItemID, crafts, fromBags
+	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT
+	return value
+end
+
+-- Learned cooldown recipes still waiting: { { itemID, seconds } }, soonest first.
+function CraftTasks.Waiting(charData, now)
+	local list = {}
+	for key, entry in pairs(charData.recipeBook) do
+		local recipe = entry.cooldown and not isReady(entry, now) and ns.Recipes.Get(ns.db, key)
+		if recipe then
+			list[#list + 1] = { itemID = recipe.outputItemID, seconds = entry.readyAt - now }
+		end
+	end
+	table.sort(list, function(a, b)
+		return a.seconds < b.seconds
+	end)
+	return list
 end
 
 -- All one-off tasks of the character now: bags (vendor, auction, disenchant) and crafts. Lives
@@ -88,7 +127,7 @@ function CraftTasks.CountUnpriced(charData, now)
 	local count = 0
 	for key in pairs(charData.recipeBook) do
 		local recipe = ns.Recipes.Get(ns.db, key)
-		if recipe and recipe.outputItemID ~= 0 and not profitPerCraft(recipe, now) then
+		if recipe and recipe.outputItemID ~= 0 and not CraftTasks.Value(recipe, 1, now) then
 			count = count + 1
 		end
 	end

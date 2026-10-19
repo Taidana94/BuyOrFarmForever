@@ -36,6 +36,7 @@ local EMPTY = {
 		NO_RECIPES = { "ADVISOR_CRAFT_NONE", "ADVISOR_CRAFT_NO_RECIPES" },
 		UNPRICED = { "ADVISOR_CRAFT_NONE", "ADVISOR_CRAFT_UNPRICED" },
 		NO_PROFIT = { "ADVISOR_CRAFT_NONE", "ADVISOR_CRAFT_NO_PROFIT" },
+		WAITING = { "ADVISOR_CRAFT_NONE", "ADVISOR_CRAFT_WAITING" },
 	},
 	SAVINGS = { NO_GOAL = { "ADVISOR_SAVINGS_NONE", "ADVISOR_SAVINGS_NONE_DETAIL" } },
 	PLAN_HOUR = { NO_STEPS = { "ADVISOR_PLAN_HOUR", "ADVISOR_PLAN_HOUR_NONE" } },
@@ -146,11 +147,22 @@ local function valueText(s)
 	return table.concat(parts, L.ADVISOR_VALUE_SEPARATOR)
 end
 
--- Title and detail of an empty summary row (UNPRICED names the number of recipes).
+-- Title and detail of an empty summary row (UNPRICED names the number of recipes, WAITING the time
+-- until the next cooldown).
 local function emptyTexts(s)
 	local keys = EMPTY[s.kind][s.empty]
-	return L[keys[1]], Util.Format(L[keys[2]], s.count)
+	local arg = s.empty == "WAITING" and Util.FormatDuration(s.waiting[1].seconds) or s.count
+	return L[keys[1]], Util.Format(L[keys[2]], arg)
 end
+
+-- Profit of a craft entry with a value ("Gewinn bis 3g", sure and auction gold together), or "".
+local function craftValue(entry)
+	if not entry.saleVendor then
+		return ""
+	end
+	return Util.Format(L.ADVISOR_VALUE_PROFIT, Money.Format(math.floor(entry.sure + entry.auction)))
+end
+local VALUES = { SUM_CRAFT = craftValue }
 
 -- View of a suggestion in a context: { title, detail, value, category, icon, button (label or nil) }.
 function AdvisorText.View(s, context)
@@ -164,7 +176,7 @@ function AdvisorText.View(s, context)
 	return {
 		title = title,
 		detail = detail,
-		value = s.empty and "" or valueText(s),
+		value = s.empty and "" or (VALUES[s.kind] or valueText)(s),
 		category = category or CATEGORY[s.kind],
 		icon = s.itemID and ns.Client:GetItemIcon(s.itemID) or AdvisorText.GOLD_ICON,
 		button = s.action and L[BUTTONS[s.action]] or nil,
@@ -201,9 +213,17 @@ local TIPS = {
 	end,
 	SUM_CRAFT = function(s, lines)
 		for _, entry in ipairs(s.entries or {}) do
-			local value = valueText(entry)
+			local value = craftValue(entry)
 			lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT, entry.crafts, craftName(entry),
 				value ~= "" and value or L[CRAFT_REASONS[entry.reason]])
+			if entry.saleVendor then
+				lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT_PARTS, Money.Format(entry.saleVendor),
+					Money.Format(math.floor(entry.saleAuction)), Money.Format(math.floor(entry.reagents)))
+			end
+		end
+		for _, wait in ipairs(s.waiting or {}) do
+			lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_WAITING, UIShared.ItemText(wait.itemID),
+				Util.FormatDuration(wait.seconds))
 		end
 	end,
 }

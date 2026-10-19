@@ -222,8 +222,11 @@ level.
   `settings.ahDiscountPercent` / 100), default 25 %.
 - Tasks: `Core/BagTasks.lua` (per stack the best of vendor / auction / disenchant; goal materials,
   items without value and `characters[key].goldKeep` skipped; bound items not on the auction house),
-  `Core/CraftTasks.lua` (recipe book recipes: product value minus reagents at `PriceCapture.Best`,
-  5 crafts per recipe, cooldown recipes 1 craft when ready; best 5 tasks).
+  `Core/CraftTasks.lua` (learned recipes = recipe book: product value (vendor sure, auction surplus
+  after the cut) minus the reagents; reagents in the bags at their raw value (`GoldRoutes.SaleParts`,
+  buy price if they have no sale value), the rest at `PriceCapture.Best`; as many crafts as the bags
+  allow, else 5; cooldown recipes 1 craft when ready, waiting ones listed by `CraftTasks.Waiting`;
+  best 5 tasks). Since 0.7.0-alpha.5; before, all reagents counted at the buy price.
 - Plan (`Core/GoldPlan.lua`, pure): tasks by rating per second, each taken if it beats the best
   method in the same time; the rest goes to the method with the highest rating x (rest - travel).
 - Recipe book (`Core/RecipeBook.lua`): `characters[key].recipeBook[recipeKey] = { cooldown?,

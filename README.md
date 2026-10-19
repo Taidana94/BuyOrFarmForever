@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.7.0-alpha.4 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+**Version 0.7.0-alpha.5 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
 Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
-(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4 noch nicht. Nicht in Forever
+(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4/5 noch nicht. Nicht in Forever
 getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
@@ -265,8 +265,10 @@ Preisen plus das gelootete Gold (seit 0.6.0 erfasst). Gold pro Stunde zählt auf
 Anreise einmal pro Ausflug. Eine Route braucht mindestens 10 Minuten Messung.
 
 **Rezepte und Abklingzeiten:** Öffnest du ein Berufsfenster, merkt sich das Addon alle sichtbaren
-Rezepte dieses Charakters. Haben Produkt und Zutaten Preise, schlägt der Goldplaner gewinnbringende
-Crafts vor (höchstens 5 pro Rezept). Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
+Rezepte dieses Charakters (nur gelernte). Haben Produkt und Zutaten Preise, schlägt der Goldplaner
+gewinnbringende Crafts vor: Verkaufswert beim Händler und im AH minus Zutaten. Zutaten in deinen
+Taschen zählen mit dem, was sie roh beim Verkauf bringen würden; Zutaten zum Kaufen mit dem
+Kaufpreis. Mit Zutaten in der Tasche so viele Crafts, wie sie reichen, sonst höchstens 5. Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
 Restzeit zeigt; ist sie vorbei, nennt der Login sie.
 
 **Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
@@ -275,8 +277,9 @@ Die Zeilen stehen immer in dieser Reihenfolge:
 - **Verkaufen:** Kram für den Händler und Waren fürs Auktionshaus; warnt bei vollen Taschen.
 - **Entzaubern** (nur wenn du entzaubern kannst): was als Verzauberungsmaterial mehr bringt als
   verkauft; der Tooltip nennt den Unterschied pro Gegenstand (braucht Auctionator).
-- **Herstellen:** bereite Ziele und Abklingzeiten, dann Rezepte mit Gewinn – zuerst die, deren
-  Zutaten du schon hast.
+- **Herstellen:** nur gelernte Rezepte – bereite Ziele und Abklingzeiten, dann Rezepte mit Gewinn,
+  zuerst die, deren Zutaten du schon hast. Der Tooltip zeigt pro Rezept Händler- und AH-Wert, den
+  Wert der Zutaten und wann wartende Abklingzeiten bereit sind.
 - **Sparziel** und **Deine beste Stunde**.
 
 Ein Klick auf eine Zeile führt sie aus („Verkaufen“ beim Händler, „Sparziel“ öffnet den Goldpuffer,
@@ -408,7 +411,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.7.0-alpha.4 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.7.0-alpha.5 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

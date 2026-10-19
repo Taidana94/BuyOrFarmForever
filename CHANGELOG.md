@@ -3,6 +3,20 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.5] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Geändert
+
+- **Herstellen rechnet genauer:** Zutaten in deinen Taschen zählen mit ihrem Rohwert (was sie beim
+  Händler oder im AH bringen würden), Zutaten zum Kaufen mit dem Kaufpreis. Das Produkt zählt mit
+  Händler- und AH-Wert. Mit Zutaten in der Tasche werden so viele Crafts vorgeschlagen, wie sie reichen.
+- Herstellen schlägt nur gelernte Rezepte vor – auch bei Zielen aus einem Rezept.
+- Abklingzeiten: bereite stehen oben in der Zeile Herstellen (mit Gewinn, wenn Preise da sind),
+  wartende nennt der Tooltip mit der Restzeit.
+- Die Karte zeigt „Gewinn bis …“; der Tooltip pro Rezept Händler, AH und Zutaten.
+
 ## [0.7.0-alpha.4] – 2026-10-19 (Testversion)
 
 Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
