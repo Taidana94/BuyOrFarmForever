@@ -22,6 +22,7 @@ DB.DEFAULTS = {
 		strategy = "SAVE_TIME",
 		farmEstimateScope = "CHARACTER",
 		budgetCopper = 0, -- 0: plan with the character's current gold
+		farmTimeLimitMinutes = 0, -- 0: no farm time limit in the sourcing plan
 		window = {
 			point = "CENTER",
 			x = 0,
@@ -66,8 +67,8 @@ DB.ENUMS = {
 }
 
 -- Minimum and maximum values for numeric fields, by path (filled by Core/Settings.lua).
-DB.MIN = {}
-DB.MAX = {}
+DB.MIN = { ["settings.farmTimeLimitMinutes"] = 0 }
+DB.MAX = { ["settings.farmTimeLimitMinutes"] = 1440 }
 
 -- DB.MIGRATIONS[n](db) upgrades a database from schema n to n + 1 in place.
 -- New fields with defaults need no migration: mergeDefaults adds them on load.

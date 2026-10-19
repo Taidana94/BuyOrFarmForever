@@ -24,7 +24,7 @@ local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
 local BUDGET_GAP, BUDGET_BOX_WIDTH = 12, 80
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, TEXT_WIDTH = -84, 560
-local SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 42, 26, 10
+local LIMIT_Y, SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 58, 42, 26, 10
 
 local function showTooltip(row)
 	local line = row.data
@@ -72,6 +72,17 @@ local function buildStrategies(tab, frame)
 	tab.budgetText:SetJustifyH("LEFT")
 end
 
+-- Farm time limit at the top right: empty box = no limit.
+local function buildLimit(tab, frame)
+	tab.limitBox = ns.Inputs.CreateBox(frame, { width = BUDGET_BOX_WIDTH, onCommit = function(text)
+		ns.Inputs.Run("timelimit " .. (ns.Util.Trim(text) == "" and "clear" or text))
+	end })
+	tab.limitBox:SetPoint("TOPRIGHT", 0, 0)
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	label:SetPoint("RIGHT", tab.limitBox, "LEFT", -STRATEGY_GAP, 0)
+	label:SetText(L.SOURCING_LIMIT_LABEL)
+end
+
 local function createText(frame, font, y, anchor)
 	local text = frame:CreateFontString(nil, "OVERLAY", font)
 	text:SetPoint(anchor, 0, y)
@@ -86,12 +97,14 @@ function Layout.Build(tab, parent)
 	tab.frame = frame
 	tab.goalText = createText(frame, "GameFontHighlight", 0, "TOPLEFT")
 	buildStrategies(tab, frame)
+	buildLimit(tab, frame)
 	tab.rows = Widgets.CreateTable(frame, TABLE, Layout.VISIBLE_ROWS, HEADER_Y, LIST_Y)
 	for _, row in ipairs(tab.rows) do
 		row:SetScript("OnEnter", showTooltip)
 		row:SetScript("OnLeave", hideTooltip)
 	end
 	tab.emptyText = createText(frame, "GameFontDisableSmall", EMPTY_TEXT_Y, "TOPLEFT")
+	tab.limitText = createText(frame, "GameFontHighlightSmall", LIMIT_Y, "BOTTOMLEFT")
 	tab.summaryText = createText(frame, "GameFontHighlightSmall", SUMMARY_Y, "BOTTOMLEFT")
 	tab.reserveText = createText(frame, "GameFontHighlightSmall", RESERVE_Y, "BOTTOMLEFT")
 	tab.timeValueText = createText(frame, "GameFontDisableSmall", TIME_VALUE_Y, "BOTTOMLEFT")

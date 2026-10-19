@@ -8,7 +8,6 @@ local Log = ns.Log
 local Util = ns.Util
 local Money = ns.Money
 local CraftEval = ns.CraftEval
-local Sourcing = ns.Sourcing
 local Slash = ns.Slash
 local UIShared = ns.UIShared
 
@@ -53,7 +52,7 @@ function CraftCommands.CompareLine(itemID, comparison, err)
 end
 
 local function sourcingPlan(charData, goal)
-	return Sourcing.Plan(Sourcing.Inputs(charData, { goal }), ns.db.settings.strategy, (Sourcing.Budget()))
+	return (ns.PlanCommands.CurrentPlan(charData, { goal }))
 end
 
 local function sourcingLines(lines, plan, comparison)

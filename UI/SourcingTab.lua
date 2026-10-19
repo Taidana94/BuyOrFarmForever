@@ -40,6 +40,9 @@ local function tooltipLines(line, input)
 	else
 		lines[#lines + 1] = L.PLAN_TIP_NO_PRICE
 	end
+	if line.byproduct > 0 then
+		lines[#lines + 1] = Util.Format(L.PLAN_TIP_BYPRODUCT, line.byproduct)
+	end
 	if input.secondsPerUnit then
 		local travel = Util.FormatDuration(input.travelSeconds)
 		if line.farm > 0 then
@@ -64,17 +67,18 @@ function Tab:Refresh()
 	local budget, isOwn = Sourcing.Budget()
 	self.budgetText:SetText(PlanCommands.BudgetText(budget, isOwn))
 	ns.Inputs.SetValue(self.budgetBox, isOwn and Money.Format(budget) or "")
+	ns.Inputs.SetValue(self.limitBox, Util.DurationInput(Sourcing.TimeLimit()))
 	local goals, headerText, emptyText = nil, "", L.NOT_READY
 	if charData then
 		goals, headerText, emptyText = UIShared.GoalSelection(charData)
 	end
 	self.goalText:SetText(headerText)
+	self.limitText:SetText("")
 	if not goals then
 		self:Show({}, emptyText, "", {})
 		return
 	end
-	local inputs = Sourcing.Inputs(charData, goals)
-	local plan = Sourcing.Plan(inputs, strategy, budget)
+	local plan, inputs = PlanCommands.CurrentPlan(charData, goals)
 	for i, line in ipairs(plan.lines) do
 		line.tooltipLines = tooltipLines(line, inputs[i])
 	end
@@ -82,6 +86,7 @@ function Tab:Refresh()
 		self:Show({}, L.FARM_NOTHING_MISSING, "", {})
 		return
 	end
+	self.limitText:SetText(PlanCommands.LimitText(plan))
 	self:Show(plan.lines, "", PlanCommands.SummaryText(plan), PlanCommands.CostNotes(charData, plan))
 end
 
