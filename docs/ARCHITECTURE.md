@@ -184,9 +184,10 @@ level.
   per copper (fractional-knapsack greedy; the last item may be bought partly). Farming a part adds
   the average travel once per item. `SAVE_TIME` may buy everything, `SAVE_GOLD` only items without
   an estimate, `FARM_SELF` nothing. What is neither bought nor farmable is `open`.
-- Budget (`Sourcing.Budget`): `settings.budgetCopper` if > 0, else `GetMoney()`. Gold reserved for
-  savings goals is not subtracted yet (gold buffer, later stage).
-- Time value of purchases needs income data (gold buffer) and is shown as not available.
+- Budget (`Sourcing.Budget`): `settings.budgetCopper` if > 0, else `GetMoney()`; with
+  `settings.useReservesInSourcing = false` limited to the gold not reserved for savings goals.
+- Time value of purchases: from the net income per hour (`Income`, gold buffer) once there is at
+  least an hour of data (`PlanCommands.CostNotes`).
 - Window tabs: `UI/MainWindow.lua` keeps one object per tab (`frame.material`, `frame.sourcing`,
   `frame.farm`, `frame.craft`) with
   `frame`, `Activate`, `Deactivate`, `Refresh`. Only the shown tab is activated; the selection is
