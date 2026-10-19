@@ -50,6 +50,11 @@ read_globals = {
 	"UnitOnTaxi",
 	"UnitClass",
 	C_SpecializationInfo = { fields = { "GetSpecializationInfo" } },
+	-- quest frame rewards (Blizzard_UIPanels_Game/Classic/QuestFrame.lua, Vanilla/QuestInfo.lua, 70003)
+	"GetNumQuestChoices",
+	"GetNumQuestRewards",
+	"GetQuestItemLink",
+	"GetTitleText",
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
 	"GetTradeSkillInfo",

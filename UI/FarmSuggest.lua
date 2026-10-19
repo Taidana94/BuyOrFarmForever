@@ -9,7 +9,6 @@ local _, ns = ...
 local L = ns.L
 local Util = ns.Util
 local Events = ns.Events
-local Widgets = ns.Widgets
 local UIShared = ns.UIShared
 
 local FarmSuggest = {}
@@ -17,13 +16,12 @@ ns.FarmSuggest = FarmSuggest
 
 FarmSuggest.SHOW_SECONDS = 30
 local LOOT_GRACE_SECONDS = 2
-local BAR_WIDTH, BAR_HEIGHT, BAR_Y = 460, 64, -140
-local BUTTON_WIDTH, PADDING = 100, 12
+local BAR_Y = -140
 
 local before = {} -- itemID -> bag count when the loot window opened
 local offered = {} -- itemID -> true once offered in this session
 local lootOpen, lootClosedAt = false, nil
-local bar, shownSequence = nil, 0
+local bar
 
 local function charData()
 	if not (ns.db and not ns.readOnly and ns.charKey) then
@@ -44,53 +42,20 @@ local function missingItems(data)
 	return list
 end
 
-local function start(kind)
-	bar:Hide()
-	ns.Slash.Handle("farm start " .. kind .. " " .. bar.itemID)
-end
-
-local function createBar()
-	bar = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
-	bar:Hide()
-	bar:SetSize(BAR_WIDTH, BAR_HEIGHT)
-	bar:SetPoint("TOP", 0, BAR_Y)
-	bar:SetFrameStrata("DIALOG")
-	bar:SetBackdrop(BACKDROP_DIALOG_32_32)
-	bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	bar.text:SetPoint("TOPLEFT", PADDING, -PADDING)
-	bar.text:SetPoint("TOPRIGHT", -PADDING, -PADDING)
-	bar.mobs = Widgets.CreateButton(bar, L.FARM_BTN_MOBS, BUTTON_WIDTH)
-	bar.mobs:SetPoint("BOTTOMLEFT", PADDING, PADDING)
-	bar.mobs:SetScript("OnClick", function()
-		start("mobs")
-	end)
-	bar.gather = Widgets.CreateButton(bar, L.FARM_BTN_GATHER, BUTTON_WIDTH)
-	bar.gather:SetPoint("LEFT", bar.mobs, "RIGHT", PADDING, 0)
-	bar.gather:SetScript("OnClick", function()
-		start("gather")
-	end)
-	bar.close = Widgets.CreateButton(bar, L.INPUT_NO, BUTTON_WIDTH)
-	bar.close:SetPoint("BOTTOMRIGHT", -PADDING, PADDING)
-	bar.close:SetScript("OnClick", function()
-		bar:Hide()
-	end)
+local function start(kind, itemID)
+	return function()
+		ns.Slash.Handle("farm start " .. kind .. " " .. itemID)
+	end
 end
 
 local function offer(itemID)
 	offered[itemID] = true
-	if not bar then
-		createBar()
-	end
-	bar.itemID = itemID
-	bar.text:SetText(Util.Format(L.FARM_SUGGEST, UIShared.ItemText(itemID)))
-	bar:Show()
-	shownSequence = shownSequence + 1
-	local sequence = shownSequence
-	C_Timer.After(FarmSuggest.SHOW_SECONDS, function()
-		if sequence == shownSequence then
-			bar:Hide()
-		end
-	end)
+	bar = bar or ns.PromptBar.Create(BAR_Y)
+	ns.PromptBar.Show(bar, Util.Format(L.FARM_SUGGEST, UIShared.ItemText(itemID)), {
+		{ L.FARM_BTN_MOBS, start("mobs", itemID) },
+		{ L.FARM_BTN_GATHER, start("gather", itemID) },
+		{ L.INPUT_NO },
+	}, FarmSuggest.SHOW_SECONDS)
 end
 
 local function onLootOpened()

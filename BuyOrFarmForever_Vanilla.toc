@@ -29,6 +29,7 @@ Adapters\ClassicEraBags.lua
 Adapters\ClassicEraGear.lua
 Adapters\ClassicEraUI.lua
 Adapters\ClassicEraPlayer.lua
+Adapters\ClassicEraQuest.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
 Core\Stock.lua
@@ -38,6 +39,7 @@ Core\FarmCapture.lua
 Core\FarmEstimates.lua
 Core\Sourcing.lua
 Core\CraftEval.lua
+Core\WeightTemplates.lua
 Core\SavingsGoals.lua
 Core\Income.lua
 Core\IncomeCapture.lua
@@ -69,8 +71,10 @@ UI\GoldTab.lua
 UI\SettingsTab.lua
 UI\HelpTab.lua
 UI\MainWindow.lua
+UI\PromptBar.lua
 UI\FarmSuggest.lua
 UI\TooltipLines.lua
 UI\ShopHints.lua
+UI\QuestAlternatives.lua
 UI\PerfCommand.lua
 Core\Main.lua

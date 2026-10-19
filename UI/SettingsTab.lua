@@ -12,7 +12,7 @@ local SettingsTab = {}
 ns.SettingsTab = SettingsTab
 
 -- Groups per column (keys of Settings.GROUPS).
-local COLUMNS = { { "FARM" }, { "MATERIAL", "GOLD", "DISPLAY" } }
+local COLUMNS = { { "FARM", "DISPLAY" }, { "MATERIAL", "GOLD" } }
 local COLUMN_WIDTH = 370
 local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 24, 20, 8
 local BOX_WIDTH, LABEL_GAP = 44, 6

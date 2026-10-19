@@ -20,6 +20,7 @@ local MAX_LINES = 12
 local LINE_GAP = 6
 local LINES_Y, TEXT_WIDTH = -30, 690
 local WEIGHTS_Y, HINT_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP = 30, 8, 36, 6
+local TEMPLATES_Y, TEMPLATE_WIDTH = 56, 116
 local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP, MODE_WIDTH = 26, 4, 8, 110
 local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi" }
 local REFRESH_SIGNALS = {
@@ -79,6 +80,24 @@ local function buildWeights(tab, frame)
 	tab.hintText:SetText(L.CRAFT_TAB_WEIGHTS_HINT)
 end
 
+-- "Vorlage: [Zauber] [Heiler] …" above the weights; the suggestion for the class is named after it.
+local function buildTemplates(tab, frame)
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	label:SetPoint("BOTTOMLEFT", 0, TEMPLATES_Y + WEIGHT_GAP)
+	label:SetText(L.CRAFT_TEMPLATES_LABEL)
+	local previous = label
+	for _, key in ipairs(ns.WeightTemplates.ORDER) do
+		local button = Widgets.CreateButton(frame, L["TEMPLATE_" .. key], TEMPLATE_WIDTH)
+		button:SetPoint("LEFT", previous, "RIGHT", WEIGHT_GAP, 0)
+		button:SetScript("OnClick", function()
+			Inputs.Run("weights template " .. string.lower(key))
+		end)
+		previous = button
+	end
+	tab.suggestionText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+	tab.suggestionText:SetPoint("BOTTOMLEFT", 0, TEMPLATES_Y + WEIGHTS_Y)
+end
+
 function CraftTab.Create(parent)
 	local tab = setmetatable({ mode = "EVALUATION" }, Tab)
 	local frame = Widgets.CreateTabFrame(parent)
@@ -90,6 +109,7 @@ function CraftTab.Create(parent)
 		count = MAX_LINES, font = "GameFontHighlightSmall", y = LINES_Y, width = TEXT_WIDTH, gap = LINE_GAP,
 	})
 	buildWeights(tab, tab.evaluation)
+	buildTemplates(tab, tab.evaluation)
 	tab.alternatives = AltPanel.Build(frame)
 	Widgets.InitRefresh(tab, REFRESH_SIGNALS)
 	return tab
@@ -145,6 +165,8 @@ end
 
 function Tab:RefreshEvaluation(charData)
 	self:UpdateWeights(charData.craftEval.weights)
+	local suggested = CraftCommands.SuggestedTemplate()
+	self.suggestionText:SetText(suggested and Util.Format(L.CRAFT_TEMPLATE_SUGGESTED, L["TEMPLATE_" .. suggested]) or "")
 	local hasGoals = #ns.Materials.ListGoalIDs(charData) > 0
 	Widgets.SetEnabled(self.prev, hasGoals and not ns.readOnly)
 	Widgets.SetEnabled(self.next, hasGoals and not ns.readOnly)

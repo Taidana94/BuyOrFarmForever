@@ -168,6 +168,25 @@ end
 
 -- /bof weights [stat value] -----------------------------------------------------------------
 
+-- The suggested template for the player's class and talents, or nil.
+function CraftCommands.SuggestedTemplate()
+	return ns.WeightTemplates.Suggest(ns.Client:GetClass(), ns.Client:GetTalentPoints())
+end
+
+-- /bof weights template <name> | suggest
+local function applyTemplate(key)
+	local charData = UIShared.WritableCharacter()
+	if not charData then
+		return
+	end
+	if not (key and ns.WeightTemplates.Apply(charData, key)) then
+		Log.Print(L.WEIGHTS_USAGE)
+		return
+	end
+	Log.Print(Util.Format(L.WEIGHTS_TEMPLATE_SET, L["TEMPLATE_" .. key]))
+	Log.Print(CraftCommands.WeightsLine(charData.craftEval.weights))
+end
+
 local function weightsCommand(argument)
 	local word, rest = Slash.SplitCommand(argument)
 	if word == "" then
@@ -175,6 +194,10 @@ local function weightsCommand(argument)
 		if charData then
 			Log.Print(CraftCommands.WeightsLine(charData.craftEval.weights))
 		end
+		return
+	end
+	if word == "template" or word == "suggest" then
+		applyTemplate(word == "suggest" and CraftCommands.SuggestedTemplate() or ns.WeightTemplates.FromWord(Util.Trim(rest)))
 		return
 	end
 	local stat = STAT_WORDS[word]
