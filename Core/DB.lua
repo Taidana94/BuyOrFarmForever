@@ -55,6 +55,7 @@ DB.CHARACTER_DEFAULTS = {
 	},
 	savingsGoals = {},
 	income = {},
+	goldKeep = {}, -- { [itemID] = true }: never suggested for selling by the gold planner
 }
 
 -- Allowed values for enum-like fields, by path.

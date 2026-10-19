@@ -28,6 +28,14 @@ function Player.IsOnTaxi()
 end
 
 -- Class file name ("PRIEST", "WARRIOR", …), or nil.
+-- Spell ID of Disenchant (Classic Era game data; verify in game).
+local DISENCHANT_SPELL_ID = 13262
+
+-- Whether the character can disenchant (C_SpellBook.IsSpellKnown, documented in 70003).
+function Player.KnowsDisenchant()
+	return C_SpellBook ~= nil and C_SpellBook.IsSpellKnown ~= nil and C_SpellBook.IsSpellKnown(DISENCHANT_SPELL_ID) == true
+end
+
 -- Character level (UnitLevel, used by the Classic Era UI), or nil.
 function Player.GetLevel()
 	if not UnitLevel then

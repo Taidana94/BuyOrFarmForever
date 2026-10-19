@@ -64,6 +64,14 @@ local SLOTS = {
 local SELL_PRICE_RETURN = 11
 -- Position of itemMinLevel (required character level) in the same returns.
 local MIN_LEVEL_RETURN = 5
+local QUALITY_RETURN = 3
+local CLASS_ID_RETURN = 12
+-- Enum.ItemClass (70003): Weapon 2, Armor 4; fallbacks with the documented values.
+local WEAPON = Enum and Enum.ItemClass and Enum.ItemClass.Weapon or 2
+local ARMOR = Enum and Enum.ItemClass and Enum.ItemClass.Armor or 4
+-- Disenchanting takes uncommon (2) to epic (4) weapons and armor.
+local DISENCHANT_MIN_QUALITY = 2
+local DISENCHANT_MAX_QUALITY = 4
 
 local function itemLink(itemID)
 	if not (C_Item and C_Item.GetItemInfo) then
@@ -122,6 +130,20 @@ function Gear.GetSellPrice(itemID)
 		C_Item.RequestLoadItemDataByID(itemID)
 	end
 	return sellPrice
+end
+
+-- Whether the item can be disenchanted (weapon or armor, uncommon to epic); nil while loading.
+function Gear.IsDisenchantable(itemID)
+	if not (C_Item and C_Item.GetItemInfo) then
+		return nil
+	end
+	local returns = { C_Item.GetItemInfo(itemID) }
+	local quality, classID = returns[QUALITY_RETURN], returns[CLASS_ID_RETURN]
+	if quality == nil or classID == nil then
+		return nil
+	end
+	return (classID == WEAPON or classID == ARMOR) and quality >= DISENCHANT_MIN_QUALITY
+		and quality <= DISENCHANT_MAX_QUALITY
 end
 
 -- Character level needed to wear the item, or nil while loading (load requested).

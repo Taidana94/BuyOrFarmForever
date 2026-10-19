@@ -123,16 +123,21 @@ local function auctionPrice(itemID, now)
 	return best
 end
 
+-- What one unit brings on the auction house after its cut, or nil without a current price.
+function GoldRoutes.AuctionNet(itemID, now)
+	local auction = auctionPrice(itemID, now)
+	return auction and auction * (1 - GoldRoutes.AUCTION_CUT)
+end
+
 -- What one unit brings when sold: the vendor price (sure) and what the auction house brings on top
 -- after its cut (0 if it brings less or no price is known). nil, nil if neither is known.
 function GoldRoutes.SaleParts(itemID, now)
-	local auction = auctionPrice(itemID, now)
+	local net = GoldRoutes.AuctionNet(itemID, now)
 	local vendor = ns.Client:GetSellPrice(itemID)
-	if not (auction or vendor) then
+	if not (net or vendor) then
 		return nil, nil
 	end
-	local net = auction and auction * (1 - GoldRoutes.AUCTION_CUT) or 0
-	return vendor or 0, math.max(0, net - (vendor or 0))
+	return vendor or 0, math.max(0, (net or 0) - (vendor or 0))
 end
 
 -- The best price of one unit (vendor or auction after the cut), or nil if neither is known.

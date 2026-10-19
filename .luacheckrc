@@ -54,6 +54,7 @@ read_globals = {
 	"UnitOnTaxi",
 	"UnitClass",
 	"UnitLevel",
+	C_SpellBook = { fields = { "IsSpellKnown" } },
 	C_SpecializationInfo = { fields = { "GetSpecializationInfo" } },
 	-- quest frame rewards (Blizzard_UIPanels_Game/Classic/QuestFrame.lua, Vanilla/QuestInfo.lua, 70003)
 	"GetNumQuestChoices",
@@ -117,6 +118,7 @@ read_globals = {
 	Enum = { fields = {
 		AddOnProfilerMetric = { fields = { "RecentAverageTime", "SessionAverageTime", "PeakTime" } },
 		BagIndex = { fields = { "Backpack" } },
+		ItemClass = { fields = { "Weapon", "Armor" } },
 	} },
 	"DEFAULT_CHAT_FRAME",
 	"geterrorhandler",

@@ -236,6 +236,14 @@ function ClassicEra:ScanBags(counts)
 	return ns.ClassicEraBags.ScanBags(counts)
 end
 
+function ClassicEra:ListBagStacks()
+	return ns.ClassicEraBags.ListBagStacks()
+end
+
+function ClassicEra:IsDisenchantable(itemID)
+	return ns.ClassicEraGear.IsDisenchantable(itemID)
+end
+
 function ClassicEra:GetCurrentMapID()
 	return ns.ClassicEraBags.GetCurrentMapID()
 end

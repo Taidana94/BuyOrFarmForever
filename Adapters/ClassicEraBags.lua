@@ -32,6 +32,25 @@ function Bags.ScanBags(counts)
 	return counts
 end
 
+-- Every stack in the backpack and the equipped bags: { { itemID, count, isBound, hasNoValue } }
+-- (fields of ContainerItemInfo, documented in 70003). Built on demand (gold planner), not per event.
+function Bags.ListBagStacks()
+	local stacks = {}
+	if not (C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerItemInfo) then
+		return stacks
+	end
+	for bag = BACKPACK, BACKPACK + (NUM_BAG_SLOTS or DEFAULT_BAG_SLOTS) do
+		for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
+			local info = C_Container.GetContainerItemInfo(bag, slot)
+			if info and info.itemID and info.stackCount then
+				stacks[#stacks + 1] = { itemID = info.itemID, count = info.stackCount, isBound = info.isBound == true,
+					hasNoValue = info.hasNoValue == true }
+			end
+		end
+	end
+	return stacks
+end
+
 function Bags.GetCurrentMapID()
 	return C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player") or 0
 end

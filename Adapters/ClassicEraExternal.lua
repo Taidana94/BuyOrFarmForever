@@ -18,6 +18,20 @@ local function api()
 	return nil
 end
 
+-- Value of the materials from disenchanting one item, from Auctionator (newer API versions only:
+-- feature check). Returns copper, or nil (no data, older Auctionator, error: third value).
+function External.GetDisenchantPrice(itemID)
+	local v1 = api()
+	if not (v1 and type(v1.GetDisenchantPriceByItemID) == "function") then
+		return nil
+	end
+	local ok, copper = pcall(v1.GetDisenchantPriceByItemID, CALLER_ID, itemID)
+	if not ok then
+		return nil, nil, copper
+	end
+	return type(copper) == "number" and copper or nil
+end
+
 function External.HasExternalPrices()
 	return api() ~= nil
 end

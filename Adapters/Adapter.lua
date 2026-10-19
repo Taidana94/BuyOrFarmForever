@@ -56,6 +56,10 @@ Adapter.REQUIRED = {
 	"GetMinimap", -- () -> the client's minimap frame (to attach a button), or nil
 	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
 	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil
+	"GetDisenchantPrice", -- (itemID) -> copper of the disenchanted materials (price addon) | nil, nil, error | nil
+	"ListBagStacks", -- () -> { { itemID, count, isBound, hasNoValue } } of the carried bags
+	"IsDisenchantable", -- (itemID) -> bool (weapon/armor, uncommon to epic), or nil while loading
+	"KnowsDisenchant", -- () -> bool: the character can disenchant
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
