@@ -38,11 +38,19 @@ end
 -- { { targetItemID, copperPerHour, value, seconds, runs } }. Runs without a target, of other
 -- characters (scope "CHARACTER") and with a target in `excluded` ({ [itemID] = true }) are skipped.
 function GoldRoutes.List(db, scope, charKey, valueOf, excluded)
+	-- One value lookup per item, not per run (up to MAX_RUNS runs share few items).
+	local values = {}
+	local function cachedValue(itemID)
+		if values[itemID] == nil then
+			values[itemID] = valueOf(itemID) or false
+		end
+		return values[itemID] or nil
+	end
 	local routes = {}
 	for _, run in ipairs(db.farmRuns) do
 		local own = scope ~= "CHARACTER" or run.charKey == charKey
 		if own and run.targetItemID > 0 and not excluded[run.targetItemID] then
-			addRun(routes, run, valueOf)
+			addRun(routes, run, cachedValue)
 		end
 	end
 	local list = {}
