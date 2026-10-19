@@ -185,7 +185,7 @@ Update after the 0.2.0-alpha.7 test (SavedVariables 21:20): CharC has goals from
 separate from `RealmA-Alliance`. `!BugGrabber.lua`: no errors.
 
 Note: the earlier SavedVariables write (21:07) was older than CharC's tests (CharC's stock snapshot
-predates his goal), so CharC's prices and the enchantment goal are not in the file yet. Those
+predates the goal), so CharC's prices and the enchantment goal are not in the file yet. Those
 results rest on the user's report only.
 
 User feedback: with two open profession windows, the recipe that was **clicked last** should be
