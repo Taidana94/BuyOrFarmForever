@@ -13,7 +13,6 @@ ns.CraftTab = CraftTab
 
 local MAX_LINES = 12
 local LINE_GAP = 6
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local LINES_Y, TEXT_WIDTH = -26, 590
 local WEIGHTS_Y, HINT_Y = 40, 22
 local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP = 26, 4, 8
@@ -35,9 +34,7 @@ end
 
 function CraftTab.Create(parent)
 	local tab = setmetatable({}, Tab)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	-- Goal navigation as in the Material tab (the selection is shared).
 	tab.prev = Widgets.CreateButton(frame, L.WINDOW_PREV, NAV_BUTTON_WIDTH)

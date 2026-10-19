@@ -20,7 +20,6 @@ local TABLE = Widgets.TableLayout(220, {
 	{ key = "farmTime", header = "COL_FARM_TIME", width = 84 },
 })
 
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
 local BUDGET_GAP = 12
 local HEADER_Y, LIST_Y = -60, -78
@@ -75,9 +74,7 @@ end
 
 -- Creates the widgets of a tab object and connects them to its methods (SetStrategy, Scroll).
 function Layout.Build(tab, parent)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	tab.goalText = createText(frame, "GameFontHighlight", 0, "TOPLEFT")
 	buildStrategies(tab, frame)

@@ -13,7 +13,6 @@ ns.GoldTab = GoldTab
 
 local MAX_GOAL_LINES = 10
 local LINE_GAP = 6
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local BUTTON_WIDTH, BUTTON_GAP = 150, 6
 local OVERVIEW_Y, GOALS_Y = -30, -56
 local INCOME_Y, RESERVES_Y, HINT_Y = 44, 26, 8
@@ -42,9 +41,7 @@ end
 
 function GoldTab.Create(parent)
 	local tab = setmetatable({}, Tab)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	tab.distribute = createCommandButton(frame, "GOLD_BTN_DISTRIBUTE", "distribute")
 	tab.distribute:SetPoint("TOPLEFT", 0, 0)

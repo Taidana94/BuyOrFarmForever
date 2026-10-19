@@ -14,6 +14,16 @@ local ICON_SIZE = 18
 local ICON_GAP = 6
 local NAME_X = ICON_SIZE + ICON_GAP
 
+-- Content area of a window tab, inside the window's border and below the tab buttons.
+local TAB_MARGIN_X, TAB_MARGIN_TOP, TAB_MARGIN_BOTTOM = 22, 46, 20
+
+function Widgets.CreateTabFrame(parent)
+	local frame = CreateFrame("Frame", nil, parent)
+	frame:SetPoint("TOPLEFT", TAB_MARGIN_X, -TAB_MARGIN_TOP)
+	frame:SetPoint("BOTTOMRIGHT", -TAB_MARGIN_X, TAB_MARGIN_BOTTOM)
+	return frame
+end
+
 function Widgets.CreateButton(parent, text, width)
 	local button = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
 	button:SetSize(width, Widgets.BUTTON_HEIGHT)

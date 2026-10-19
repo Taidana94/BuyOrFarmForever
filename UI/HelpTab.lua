@@ -9,7 +9,6 @@ local Widgets = ns.Widgets
 local HelpTab = {}
 ns.HelpTab = HelpTab
 
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local TEXT_Y = -26
 
 local Tab = {}
@@ -18,9 +17,7 @@ Widgets.MixRefresh(Tab)
 
 function HelpTab.Create(parent)
 	local tab = setmetatable({ offset = 0, help = {} }, Tab)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	tab.intro = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	tab.intro:SetPoint("TOPLEFT", 0, 0)

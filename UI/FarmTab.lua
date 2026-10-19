@@ -15,7 +15,6 @@ ns.FarmTab = FarmTab
 local MAX_ITEM_LINES = 6
 local MAX_ESTIMATE_LINES = 4
 local LINE_HEIGHT = 16
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local BUTTON_WIDTH, BUTTON_GAP = 120, 6
 local START_Y, CONTROL_Y, STATUS_Y = 0, -28, -60
 local ITEMS_Y = -80
@@ -70,9 +69,7 @@ end
 
 function FarmTab.Create(parent)
 	local tab = setmetatable({}, Tab)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	tab.startButtons = createButtonRow(frame, START_Y, {
 		{ key = "gather", label = "FARM_BTN_GATHER", command = "start gather" },

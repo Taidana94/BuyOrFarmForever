@@ -27,7 +27,6 @@ local TABLE = Widgets.TableLayout(190, {
 local PER_CRAFT_COLUMN, PRICE_COLUMN = 1, 7
 
 -- Vertical layout inside the tab (pixels from the top) and fixed sizes.
-local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local NAV_BUTTON_WIDTH, GAP, WIDE_GAP = 26, 4, 10
 local NAME_BOX_WIDTH, COUNT_BOX_WIDTH, GOAL_BUTTON_WIDTH = 190, 44, 80
 local CHECK_SIZE, CHECK_Y, OTHERS_CHECK_X = 24, -28, 230
@@ -198,9 +197,7 @@ end
 
 -- Creates the widgets of a tab object and connects them to its methods (see UI/MaterialTab.lua).
 function Layout.Build(tab, parent)
-	local frame = CreateFrame("Frame", nil, parent)
-	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
-	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
+	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	buildGoalLine(tab, frame)
 	buildChecks(tab, frame)
