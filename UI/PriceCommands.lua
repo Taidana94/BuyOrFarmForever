@@ -16,15 +16,18 @@ local PriceCommands = {}
 ns.PriceCommands = PriceCommands
 
 local function describeItem(realmKey, itemID, now)
-	local item = Prices.Get(ns.db, realmKey, itemID)
-	if not item then
-		return L.PRICE_NONE
-	end
+	local item = Prices.Get(ns.db, realmKey, itemID) or {}
 	local parts = {}
 	for _, source in ipairs(Prices.SOURCE_ORDER) do
 		if item[source] then
 			parts[#parts + 1] = UIShared.DescribePrice(source, item[source], now)
 		end
+	end
+	for source, record in pairs(ns.PriceCapture.External(itemID, now) or {}) do
+		parts[#parts + 1] = UIShared.DescribePrice(source, record, now)
+	end
+	if #parts == 0 then
+		return L.PRICE_NONE
 	end
 	return table.concat(parts, L.PRICE_SEPARATOR)
 end

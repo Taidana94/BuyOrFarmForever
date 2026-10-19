@@ -52,6 +52,8 @@ Adapter.REQUIRED = {
 	"HookLinkInsert", -- (callback(itemID)) -> nil: shift-clicked items while no chat input is open; call once
 	"GetQuestRewards", -- () -> { title, items = { itemID } } of the open quest frame, or nil
 	"GetMinimap", -- () -> the client's minimap frame (to attach a button), or nil
+	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
+	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.

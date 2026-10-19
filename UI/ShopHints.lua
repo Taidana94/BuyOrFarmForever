@@ -89,9 +89,8 @@ end
 function ShopHints.UnpricedMissing(data)
 	local goal = ns.Materials.GetActiveGoal(data)
 	local count, now = 0, ns.Client:GetServerTime()
-	local realmKey = ns.PriceCapture.CurrentRealmKey()
 	for _, row in ipairs(goal and ns.Stock.Rows(data, { goal }) or {}) do
-		local price, _, _, outdated = ns.Prices.Best(ns.db, realmKey, row.itemID, now, ns.db.settings.priceMaxAgeDays)
+		local price, _, _, outdated = ns.PriceCapture.Best(row.itemID, now)
 		if row.missing > 0 and (not price or outdated) then
 			count = count + 1
 		end

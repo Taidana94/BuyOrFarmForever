@@ -3,7 +3,19 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.4.0] – 2026-10-19 (noch nicht veröffentlicht)
+## [0.5.0-alpha.1] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Auctionator als Preisquelle (optional):** Ist Auctionator installiert, liest das Addon dessen
+  zuletzt gesehene Auktionspreise. Sie erscheinen als „Auctionator“ bei `/bof price`, im Tab
+  „Material“ und fließen in Beschaffung und Craft-Bewertung ein. Preise ohne Altersangabe (älter als
+  21 Tage) gelten als veraltet. Gespeichert wird davon nichts. Abschaltbar im Tab „Einstellungen“
+  („Preise von Auctionator verwenden“) oder mit `/bof set useAuctionator off`.
+
+## [0.4.0] – 2026-10-19
 
 Spielerentlastung: alles im Fenster bedienbar, viel Automatik. Getestet in WoW Classic Era 1.15.9; nicht
 in Forever getestet.

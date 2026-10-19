@@ -24,7 +24,8 @@ function Sourcing.Inputs(charData, goals)
 	local inputs = {}
 	for _, row in ipairs(ns.Stock.Rows(charData, goals)) do
 		if row.missing > 0 then
-			local price, _, _, outdated = ns.Prices.Best(db, realmKey, row.itemID, now, db.settings.priceMaxAgeDays)
+			local price, _, _, outdated = ns.Prices.Best(db, realmKey, row.itemID, now, db.settings.priceMaxAgeDays,
+				ns.PriceCapture.External(row.itemID, now))
 			local basis = ns.FarmEstimates.ForItem(db, row.itemID, scope, ns.charKey)
 			local perUnit = basis and basis.amount > 0 and basis.seconds / basis.amount or nil
 			inputs[#inputs + 1] = {

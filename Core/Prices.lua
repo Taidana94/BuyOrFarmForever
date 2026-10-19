@@ -8,6 +8,7 @@ local Prices = {}
 ns.Prices = Prices
 
 Prices.SOURCES = { MANUAL = true, MERCHANT = true, AUCTION = true }
+-- Sources read live from other addons (never stored): "AUCTIONATOR".
 -- Order for display and for equal prices.
 Prices.SOURCE_ORDER = { "MERCHANT", "AUCTION", "MANUAL" }
 -- Auction results of one search come page by page; within this window they are merged (minimum).
@@ -82,23 +83,33 @@ function Prices.IsOutdated(source, record, now, maxAgeDays)
 	return now - record.at > maxAgeDays * SECONDS_PER_DAY
 end
 
--- The price to plan with: the cheapest current price; if all are outdated, the newest one.
--- Returns copper, source, at, isOutdated, or nil if there is no price.
-function Prices.Best(db, realmKey, itemID, now, maxAgeDays)
-	local item = itemPrices(db, realmKey, itemID, false)
-	if not item then
-		return nil
+-- Keeps the cheapest current and the newest outdated record seen so far in `pick`.
+local function consider(pick, source, record, now, maxAgeDays)
+	if not record then
+		return
 	end
-	local best, bestSource, newest, newestSource
-	for _, source in ipairs(Prices.SOURCE_ORDER) do
-		local record = item[source]
-		local current = record and not Prices.IsOutdated(source, record, now, maxAgeDays)
-		if current and (not best or record.copper < best.copper) then
-			best, bestSource = record, source
-		elseif record and not current and (not newest or record.at > newest.at) then
-			newest, newestSource = record, source
+	if not Prices.IsOutdated(source, record, now, maxAgeDays) then
+		if not pick.best or record.copper < pick.best.copper then
+			pick.best, pick.bestSource = record, source
 		end
+	elseif not pick.newest or record.at > pick.newest.at then
+		pick.newest, pick.newestSource = record, source
 	end
+end
+
+-- The price to plan with: the cheapest current price; if all are outdated, the newest one.
+-- `external` (optional) adds live records of other addons: { [source] = { copper, at } }.
+-- Returns copper, source, at, isOutdated, or nil if there is no price.
+function Prices.Best(db, realmKey, itemID, now, maxAgeDays, external)
+	local item = itemPrices(db, realmKey, itemID, false) or {}
+	local pick = {}
+	for _, source in ipairs(Prices.SOURCE_ORDER) do
+		consider(pick, source, item[source], now, maxAgeDays)
+	end
+	for source, record in pairs(external or {}) do
+		consider(pick, source, record, now, maxAgeDays)
+	end
+	local best, bestSource, newest, newestSource = pick.best, pick.bestSource, pick.newest, pick.newestSource
 	if best then
 		return best.copper, bestSource, best.at, false
 	end

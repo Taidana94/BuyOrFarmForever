@@ -126,7 +126,10 @@ function UIShared.PrintRecipeGoal(charData, id)
 	Log.Print(Util.Format(L.RECIPE_GOAL_CREATED, id, UIShared.GoalName(goal), #goal.items, goal.crafts))
 end
 
-local PRICE_SOURCE_NAMES = { MERCHANT = "PRICE_SOURCE_MERCHANT", AUCTION = "PRICE_SOURCE_AUCTION", MANUAL = "PRICE_SOURCE_MANUAL" }
+local PRICE_SOURCE_NAMES = {
+	MERCHANT = "PRICE_SOURCE_MERCHANT", AUCTION = "PRICE_SOURCE_AUCTION", MANUAL = "PRICE_SOURCE_MANUAL",
+	AUCTIONATOR = "PRICE_SOURCE_AUCTIONATOR",
+}
 
 -- One stored price for display: "25s (Händler)", "30s (AH, vor 2 Std., veraltet)".
 function UIShared.DescribePrice(source, record, now)

@@ -13,7 +13,7 @@ Diese Version enthält die **Materialbeschaffung**:
   Berufsfenster (auch Verzauberkunst).
 - **Bestand:** Taschen und Bank, auch deiner anderen Charaktere auf dem Realm.
 - **Preise:** eigene Eingabe, Händler und Auktionshaus (mit AH-Scan), getrennt nach Realm und
-  Fraktion, veraltete Preise markiert.
+  Fraktion, veraltete Preise markiert; optional die Preise von Auctionator.
 - **Farmrunden:** Farmzeit, Anreise und Ertrag messen; daraus schätzt das Addon, wie lange du für
   die fehlenden Materialien brauchst.
 - **Vergleich Kaufen/Farmen:** wie viel du kaufen und wie viel du farmen solltest, mit Kosten,
@@ -250,7 +250,9 @@ Das Fenster lässt sich verschieben, merkt sich Position und Tab und schließt m
 
 ## Abhängigkeiten
 
-Keine. Für Tests wird BugSack mit BugGrabber empfohlen.
+Keine. Optional: **Auctionator** – ist es installiert, nutzt das Addon dessen Auktionspreise als
+zusätzliche Preisquelle „Auctionator“ (abschaltbar im Tab „Einstellungen“). Für Tests wird BugSack mit
+BugGrabber empfohlen.
 
 ## Gespeicherte Daten
 

@@ -96,7 +96,7 @@ function CraftEval.OwnedValue(charData, goal, realmKey, now)
 		if have > 0 then
 			value.owned = value.owned + have
 			local sell = ns.Client:GetSellPrice(row.itemID)
-			local market = ns.Prices.Best(ns.db, realmKey, row.itemID, now, maxAge)
+			local market = ns.Prices.Best(ns.db, realmKey, row.itemID, now, maxAge, ns.PriceCapture.External(row.itemID, now))
 			value.vendor = value.vendor + have * (sell or 0)
 			value.market = value.market + have * (market or 0)
 			if not (sell and market) then

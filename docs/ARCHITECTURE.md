@@ -76,9 +76,11 @@ printed and `Core/Main.lua` registers nothing.
 | `HookLinkInsert(callback)` | post-hook `ChatFrameUtil.InsertLink`; `callback(itemID)` for shift-clicks while no chat input is open; call once |
 | `GetMerchantFrame()`, `GetMinimap()` | Blizzard frames to anchor the merchant hint and the minimap button, or nil |
 | `GetQuestRewards()` | `{ title, items = { itemID } }` of the open quest frame (choices first), or nil |
+| `HasExternalPrices()` | bool: a supported price addon (Auctionator API v1) is loaded |
+| `GetExternalPrice(itemID)` | copper, ageDays (nil if unknown) of the price addon; nil if none; nil, nil, error if the price addon raised an error (caught with `pcall`) |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`) are exposed as
+Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`, `ClassicEraExternal`) are exposed as
 methods by a loop in `Adapters/ClassicEra.lua`.
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
@@ -223,6 +225,12 @@ chat confirms every action). Status, item and estimate lines come from `FarmComm
   per click avoids automated query loops; whether `QueryAuctionItems` needs a hardware event in
   Classic Era is not documented, so it is only called from a click or command. Only the first page
   is read; the scan does not page through results.
+- External prices (0.5.0): Auctionator through its public API v1 (`GetAuctionPriceByItemID`,
+  `GetAuctionAgeByItemID`, callerID `"BuyOrFarmForever"`), optional (`## OptionalDeps`), switch
+  `settings.useAuctionator` (default on). `PriceCapture.External(itemID, now)` turns it into a live
+  record `{ AUCTIONATOR = { copper, at = now - ageDays } }`; without an age (Auctionator: older than
+  21 days) it counts as 22 days old, so it is outdated with the default limit. `Prices.Best` takes the
+  record as an extra source. External prices are read on demand and never stored in SavedVariables.
 - Money input (`Money.Parse`): units required (`g`, `s`, `k`/`c`, from the locale); a plain number
   is rejected because it is ambiguous.
 

@@ -28,6 +28,7 @@ Settings.SCHEMA = {
 	{ key = "farmNotifyComplete", type = "boolean", default = true, group = "FARM", label = "SET_FARM_COMPLETE" },
 	{ key = "countOtherCharacters", type = "boolean", default = true, group = "MATERIAL", label = "SET_COUNT_OTHERS" },
 	{ key = "priceMaxAgeDays", type = "number", default = 7, min = 1, max = 60, group = "MATERIAL", label = "SET_PRICE_AGE" },
+	{ key = "useAuctionator", type = "boolean", default = true, group = "MATERIAL", label = "SET_USE_AUCTIONATOR" },
 	{ key = "priceKeepDays", type = "number", default = 60, min = 0, max = 365, group = "MATERIAL", label = "SET_PRICE_KEEP" },
 	{ key = "useReservesInSourcing", type = "boolean", default = true, group = "GOLD", label = "SET_USE_RESERVES" },
 	{ key = "goldAutoDistribute", type = "boolean", default = false, group = "GOLD", label = "SET_AUTO_DISTRIBUTE" },

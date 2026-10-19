@@ -57,6 +57,32 @@ local function captureAuction()
 end
 
 PriceCapture.PRUNE_DELAY_SECONDS = 10
+-- Auctionator reports no age for prices older than 21 days; such prices count as this old.
+PriceCapture.EXTERNAL_UNKNOWN_AGE_DAYS = 22
+local SECONDS_PER_DAY = 86400
+
+-- Live price of another addon (Auctionator) as { AUCTIONATOR = { copper, at } }, or nil when it is
+-- not installed, has no price or the setting useAuctionator is off. Read on demand, never stored.
+function PriceCapture.External(itemID, now)
+	if not (ns.db and ns.db.settings.useAuctionator) then
+		return nil
+	end
+	local copper, ageDays, err = ns.Client:GetExternalPrice(itemID)
+	if err then
+		ns.Log.Debug("Auctionator price failed: " .. tostring(err))
+	end
+	if not copper then
+		return nil
+	end
+	local days = ageDays or PriceCapture.EXTERNAL_UNKNOWN_AGE_DAYS
+	return { AUCTIONATOR = { copper = copper, at = now - days * SECONDS_PER_DAY } }
+end
+
+-- Prices.Best for the current realm with the settings and the external source.
+function PriceCapture.Best(itemID, now)
+	return Prices.Best(ns.db, PriceCapture.CurrentRealmKey(), itemID, now, ns.db.settings.priceMaxAgeDays,
+		PriceCapture.External(itemID, now))
+end
 
 -- Removes captured prices older than the setting priceKeepDays. Returns the number removed.
 function PriceCapture.PruneOld()

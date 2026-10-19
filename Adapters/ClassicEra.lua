@@ -262,8 +262,8 @@ end
 
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
--- Adapters/ClassicEraQuest.lua (quest rewards).
-for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest }) do
+-- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons).
+for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal }) do
 	for name, fn in pairs(part) do
 		ClassicEra[name] = function(_, ...)
 			return fn(...)

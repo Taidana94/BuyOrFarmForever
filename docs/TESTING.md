@@ -258,6 +258,14 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.5.0-alpha.1 (Classic Era, Auctionator)
+
+1. Without Auctionator: `/reload`, `/bof version` → `0.5.0-alpha.1`; `/bof price` as before, BugSack empty.
+2. Install Auctionator, scan at the auction house (full scan or search for the goal materials).
+3. `/dump Auctionator.API.v1.GetAuctionPriceByItemID("Test", 2589)` → a number (verify the API).
+4. `/bof price` and the Material tab price tooltip show "… (Auctionator, vor …)"; the plan uses it.
+5. Settings tab: switch "Preise von Auctionator verwenden" off → the Auctionator price disappears.
+
 ### Checklist 0.4.0-alpha.1 (Classic Era, player relief)
 
 Things only the client can show are marked (verify): they rely on APIs whose details are unverified.

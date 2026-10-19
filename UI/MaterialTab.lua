@@ -64,7 +64,8 @@ local function addPrices(rows)
 	local now = ns.Client:GetServerTime()
 	local maxAge = ns.db.settings.priceMaxAgeDays
 	for _, row in ipairs(rows) do
-		row.price, _, _, row.priceOutdated = Prices.Best(ns.db, realmKey, row.itemID, now, maxAge)
+		local external = PriceCapture.External(row.itemID, now)
+		row.price, _, _, row.priceOutdated = Prices.Best(ns.db, realmKey, row.itemID, now, maxAge, external)
 		row.priceLines = {}
 		local item = Prices.Get(ns.db, realmKey, row.itemID)
 		row.manualPrice = item and item.MANUAL and item.MANUAL.copper
@@ -72,6 +73,9 @@ local function addPrices(rows)
 			if item and item[source] then
 				row.priceLines[#row.priceLines + 1] = UIShared.DescribePrice(source, item[source], now)
 			end
+		end
+		for source, record in pairs(external or {}) do
+			row.priceLines[#row.priceLines + 1] = UIShared.DescribePrice(source, record, now)
 		end
 	end
 end
