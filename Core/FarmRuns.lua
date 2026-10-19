@@ -136,6 +136,7 @@ function FarmRuns.Resume(charData, now)
 	end
 	run.state = run.resumeState or "FARM"
 	run.resumeState = nil
+	run.autoPaused = nil
 	run.segmentStart = now
 	run.lastSeenAt = now
 	run.lastActivityAt = now
@@ -149,6 +150,7 @@ function FarmRuns.ToggleTravel(charData, now, uiMapID)
 		return nil, err
 	end
 	closeSegment(run, now)
+	run.autoTravel = nil
 	if run.state == "TRAVEL" then
 		run.state = "FARM"
 		run.uiMapID = uiMapID or run.uiMapID

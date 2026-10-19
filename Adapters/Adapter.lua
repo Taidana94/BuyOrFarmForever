@@ -42,13 +42,19 @@ Adapter.REQUIRED = {
 	"GetSellPrice", -- (itemID) -> vendor sell price per unit in copper, or nil while loading
 	"GetCursorItem", -- () -> item id on the cursor (drag and drop), or nil
 	"ClearCursor", -- () -> nil: drops what the cursor holds (after the addon took an item)
+	"IsAFK", -- () -> bool
+	"IsResting", -- () -> bool: in a city or inn
+	"IsOnTaxi", -- () -> bool: on a flight path
+	"GetClass", -- () -> class file name ("PRIEST"), or nil
+	"GetTalentPoints", -- () -> { points per talent tree }, or nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
 -- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
 -- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
 -- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED, EQUIPMENT_CHANGED, MAIL_OPENED, MAIL_CLOSED,
--- TRADE_OPENED, TRADE_CLOSED, COMBAT_STARTED.
+-- TRADE_OPENED, TRADE_CLOSED, COMBAT_STARTED, PLAYER_FLAGS_CHANGED, RESTING_CHANGED, CONTROL_LOST,
+-- CONTROL_GAINED.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

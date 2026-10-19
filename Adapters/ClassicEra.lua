@@ -30,6 +30,11 @@ local ClassicEra = {
 		TRADE_CLOSED = "TRADE_CLOSED",
 		-- Combat start counts as farm activity (idle time detection).
 		PLAYER_REGEN_DISABLED = "COMBAT_STARTED",
+		-- Player state for automatic pause and travel.
+		PLAYER_FLAGS_CHANGED = "PLAYER_FLAGS_CHANGED",
+		PLAYER_UPDATE_RESTING = "RESTING_CHANGED",
+		PLAYER_CONTROL_LOST = "CONTROL_LOST",
+		PLAYER_CONTROL_GAINED = "CONTROL_GAINED",
 	},
 }
 
@@ -249,8 +254,8 @@ function ClassicEra:GetItemLink(itemID)
 end
 
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
--- Adapters/ClassicEraUI.lua (cursor and window helpers).
-for _, part in ipairs({ ns.ClassicEraUI }) do
+-- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state).
+for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer }) do
 	for name, fn in pairs(part) do
 		ClassicEra[name] = function(_, ...)
 			return fn(...)

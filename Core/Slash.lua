@@ -101,6 +101,7 @@ local function reset(argument)
 		if resetPendingUntil and uptime <= resetPendingUntil then
 			resetPendingUntil = nil
 			ns.DB.ResetSettings(ns.db)
+			ns.Events.Emit("SETTINGS_CHANGED")
 			Log.Print(L.RESET_DONE)
 			Log.Info("settings reset")
 		else

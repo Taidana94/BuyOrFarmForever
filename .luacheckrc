@@ -43,6 +43,13 @@ read_globals = {
 	-- cursor (documented in 70003; item id return unverified, see Adapters/ClassicEraUI.lua)
 	"GetCursorInfo",
 	"ClearCursor",
+	-- player state (UnitIsAFK, UnitClass, C_SpecializationInfo documented in 70003; IsResting and
+	-- UnitOnTaxi used by Blizzard's Classic Era UI; see Adapters/ClassicEraPlayer.lua)
+	"UnitIsAFK",
+	"IsResting",
+	"UnitOnTaxi",
+	"UnitClass",
+	C_SpecializationInfo = { fields = { "GetSpecializationInfo" } },
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
 	"GetTradeSkillInfo",
