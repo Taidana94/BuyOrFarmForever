@@ -262,8 +262,9 @@ Bugs found (screenshot):
 
 Reported by the user: Auctionator prices work. `GetItemStats` of the main hand returns
 `ITEM_MOD_DAMAGE_PER_SECOND_SHORT=22.954545974731` (DPS key confirmed). Bug: the Sourcing tab had no
-goal arrows; fixed in 0.5.0-alpha.2 (shared `Widgets.CreateGoalNavigation`, test added). Other
-checklist points not reported yet.
+goal arrows; fixed in 0.5.0-alpha.2 (shared `Widgets.CreateGoalNavigation`, test added). 
+0.5.0-alpha.2: the user confirmed "Passt alles" for the whole 0.5.0 checklist including the arrows
+(2026-10-19).
 
 ### Checklist 0.5.0-alpha.1 (Classic Era, Auctionator)
 
@@ -329,6 +330,27 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 5. `/bof alt cost n clear` → "Kosten unbekannt". Errors: `/bof alt time n 90` (no unit),
    `/bof alt cost 99 1g` (unknown number) → clear messages, nothing changes.
 6. `/reload` → the details are kept. BugSack: no errors.
+
+### Release check 0.5.0 (2026-10-19)
+
+| Step (CLAUDE.md section 9) | Result |
+|---|---|
+| Checks levels 0, 1, 1b, 1c, 2 | 256 passed, 0 failed |
+| In-game test (Classic Era) | 0.5.0-alpha.1 (Auctionator, DPS key; one finding: no goal arrows in the Sourcing tab) and 0.5.0-alpha.2 (all checklist items) passed; 0.5.0 = 0.5.0-alpha.2 code |
+| In-game test (Forever) | none – the release must not be called Forever-compatible |
+| Version in TOC, CHANGELOG, README | 0.5.0 |
+| Interface version | 11509 = client 1.15.9 (70003), unchanged |
+| ZIP | built and inspected: 82 files, top folder `BuyOrFarmForever/`, no dev files |
+| Performance | static review below; in-game `/bof perf` not measured for 0.5.0 |
+| Tag | `v0.5.0`, only after the user's approval |
+
+### Performance review before 0.5.0 (2026-10-19, static)
+
+No new events, tickers or `OnUpdate`. Auctionator is read on demand (price lookups while building a
+plan, a tab or `/bof price`), never in an event loop. The Sourcing tab now also runs
+`FarmEstimates.Byproducts` per farmable missing material and `GoldRoutes.List` once per refresh
+(at most 500 runs; sale value looked up once per item); refreshes stay coalesced and only happen
+while the tab is shown. The time limit re-settles the plan at most once per plan line. Verdict: ok.
 
 ### Release check 0.4.0 (2026-10-19)
 

@@ -2,7 +2,7 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
 ## Notes-deDE: Hilft bei der Entscheidung, Herstellungsmaterialien zu kaufen oder selbst zu farmen.
-## Version: 0.5.0-alpha.2
+## Version: 0.5.0
 ## SavedVariables: BuyOrFarmForeverDB
 ## OptionalDeps: Auctionator
 ## X-License: MIT

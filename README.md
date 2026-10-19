@@ -1,8 +1,7 @@
 # Kaufen oder farmen?
 
-**Version 0.5.0-alpha.2 (Testversion) – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles
-im Fenster bedienbar, mit viel Automatik. Die Version 0.4.0 ist in WoW Classic Era 1.15.9 getestet;
-von den Neuerungen sind bisher die Auctionator-Anbindung und der Waffen-DPS im Spiel bestätigt. Nicht in Forever getestet.**
+**Version 0.5.0 – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles im Fenster bedienbar,
+mit viel Automatik. Getestet in WoW Classic Era 1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -306,15 +305,17 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.5.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.5.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 237
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 238
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
 Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
 Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
 Craft-Bewertung mit Rüstung, Waffen-DPS und geplantem Ersatz, Goldpuffer, Einstellungen, Hinweise).
-Von den Neuerungen von 0.5.0 sind Auctionator-Preise und Waffen-DPS am 19.10.2026 in Classic Era
-im Spiel bestätigt, der Rest noch nicht.
+Die Neuerungen von 0.5.0 wurden am 19.10.2026 in 0.5.0-alpha.1 und 0.5.0-alpha.2 in Classic Era im
+Spiel getestet (mit Auctionator); die fehlenden Ziel-Pfeile im Tab „Beschaffung“ wurden in
+0.5.0-alpha.2 ergänzt und bestätigt. Die Version 0.5.0 unterscheidet sich von 0.5.0-alpha.2 nur in
+Versionsnummer und Dokumentation.
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -344,7 +345,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.5.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.5.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

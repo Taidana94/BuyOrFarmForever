@@ -3,16 +3,10 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.5.0-alpha.2] – 2026-10-19 (Testversion)
+## [0.5.0] – 2026-10-19
 
-Auctionator-Preise und Waffen-DPS in Classic Era im Spiel bestätigt, der Rest nur außerhalb des
-Spiels geprüft; nicht in Forever getestet.
-
-### Behoben
-
-- Im Tab „Beschaffung“ fehlten die Pfeile `<` `>` zum Wechseln des Ziels.
-
-## [0.5.0-alpha.1] – 2026-10-19 (Testversion)
+Ausbau für Classic Era: Zeitlimit, gemeinsame Auswertung, anderer Weg, Rüstung und Waffen-DPS,
+Auctionator. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.
 
 ### Hinzugefügt
 
@@ -37,6 +31,7 @@ Spiels geprüft; nicht in Forever getestet.
   „Material“ und fließen in Beschaffung und Craft-Bewertung ein. Preise ohne Altersangabe (älter als
   21 Tage) gelten als veraltet. Gespeichert wird davon nichts. Abschaltbar im Tab „Einstellungen“
   („Preise von Auctionator verwenden“) oder mit `/bof set useAuctionator off`.
+- Pfeile `<` `>` zum Wechseln des Ziels jetzt auch im Tab „Beschaffung“.
 
 ## [0.4.0] – 2026-10-19
 
