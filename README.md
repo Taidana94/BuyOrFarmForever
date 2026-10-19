@@ -1,7 +1,7 @@
 # Kaufen oder farmen?
 
-**Entwicklungsversion 0.3.0-alpha.1 – Materialbeschaffung (getestet in WoW Classic Era) und neu:
-Craft-Bewertung, Goldpuffer, Tab „Farmen“ (noch nicht im Spiel getestet). Nicht in Forever getestet.**
+**Entwicklungsversion 0.3.0-alpha.2 – Materialbeschaffung, Craft-Bewertung, Goldpuffer und Tab „Farmen“
+(getestet in WoW Classic Era). Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -19,7 +19,7 @@ Diese Version enthält die **Materialbeschaffung**:
 - **Vergleich Kaufen/Farmen:** wie viel du kaufen und wie viel du farmen solltest, mit Kosten,
   Farmzeit und Budget – nach der Strategie „Zeit sparen“, „Gold sparen“ oder „Selbst farmen“.
 
-Neu in 0.3.0-alpha.1: **Lohnt sich der Craft?** – der hergestellte Gegenstand eines Rezept-Ziels wird
+Neu in 0.3.0: **Lohnt sich der Craft?** – der hergestellte Gegenstand eines Rezept-Ziels wird
 mit deiner angelegten Ausrüstung verglichen (nach deinen Gewichten für Stärke, Beweglichkeit,
 Ausdauer, Intelligenz und Willenskraft), dazu Beschaffungskosten und Farmzeit pro
 Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen.
@@ -230,7 +230,7 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.3.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
+**Außerhalb des Spiels** (Version 0.3.0-alpha.2): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
 kein Speicherzuwachs bei Taschenänderungen) und 154 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
@@ -249,14 +249,16 @@ nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zug�
 Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
 0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
-Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) ist im Spiel noch nicht getestet. Bestätigt im Spiel ist
-nur, dass `GetItemStats` in Classic Era die Werte eines Gegenstands liefert.
+Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) wurde am 19.10.2026 im Spiel
+getestet, ohne Lua-Fehler. Dabei fielen zwei Darstellungsfehler im Tab „Craft“ auf (überlappende
+Zeilen, Kästchen statt Pfeil); sie sind in 0.3.0-alpha.2 behoben, die Korrektur ist im Spiel noch
+nicht bestätigt. Einnahmen aus Verkäufen und Ausgaben wurden im Spiel noch nicht geprüft.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.3.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.3.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

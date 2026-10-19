@@ -18,6 +18,9 @@
 - The active locale is set once from `Client:GetLocale()` when the adapter registers.
 - SavedVariables contain no localized text, only keys, IDs and user-entered text.
 - Files are UTF-8 without BOM.
+- Only characters the game font draws: ASCII, Latin-1 (umlauts, `ß`, `·`, `×`) and `–`, `„`, `“`
+  (verified in Classic Era 1.15.9 on 2026-10-19). `→` shows as a box there. The check script
+  (level 1b) rejects every other character. Forever fonts are not verified yet.
 
 ## Exception: debug messages
 

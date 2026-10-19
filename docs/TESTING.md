@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.3.0-alpha.2 | 2026-10-19 | 172 checks passed, 0 failed (154 unit tests); new level 1b check for characters the game font draws (fails on the old `→` texts); the new stacking checks in the Craft and Gold tab tests fail without the fix |
 | 0.3.0-alpha.1 | 2026-10-18 | 169 checks passed, 0 failed (152 unit tests); gold buffer mutation checks: ignoring the gold limit, no login guard, reserves ignored, no gap cap each fail 1; farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
 | 0.2.0 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); only version and documentation changed against 0.2.0-alpha.10 |
 | 0.2.0-alpha.10 | 2026-10-18 | 146 checks passed, 0 failed (129 unit tests); mutation checks: reversed buying order fails 3, ignoring the budget 5, SAVE_GOLD buying everything 1, no travel time 2 |
@@ -58,7 +59,8 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.8 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed (partly)**, usability finding (details below) |
 | 0.2.0-alpha.9 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (travel/farm split; details below) |
 | 0.2.0-alpha.10 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
-| 0.3.0-alpha.1 | Classic Era 1.15.9 | – | **not tested yet** (checklist below); `GetItemStats` confirmed in game before |
+| 0.3.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**, two display bugs (details below) |
+| 0.3.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (fix check: Craft tab lines, see result 0.3.0-alpha.1) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -225,6 +227,29 @@ errors.
 User feedback during the test: the table's farm time (with travel) and the tooltip's farm time for
 everything (without travel) differed without explanation. Fixed in the same version: the tooltip
 splits farm time and travel for the planned part and for the whole amount.
+
+### Result 0.3.0-alpha.1 (Classic Era, 2026-10-19)
+
+Character `CharC-RealmB` (Tailoring). User: everything matched the checklist except one display
+problem (screenshot of the Craft tab). SavedVariables (11:26) and `!BugGrabber.lua`:
+
+| Check | Evidence | Result |
+|---|---|---|
+| Lua errors | `!BugGrabber.lua`: only the old entry from a manual `/dump C_Item.GetItemStats(...)` (session 44, function does not exist in Classic Era); nothing from the addon | passed |
+| Recipe goal (step 2) | recipe `item:6242` imported, goal 11 | passed |
+| Craft evaluation, weights (steps 3–4) | user confirmed; weights back to 1 | passed |
+| Alternatives (step 6) | old planned alternative removed, `POSSIBLE` 4338 stored | passed |
+| Craft tab (step 7) | screenshot: comparison names the slot ("Brust"), goal navigation shown | passed, but see bugs |
+| Farm tab (step 9) | user confirmed; **no new run in `farmRuns`** (last run from 2026-10-18), so saving from the tab is not confirmed by data | open |
+| Gold buffer (step 10) | savings goals "Reiten" 5g and "Training" 1g, each fully `reserved` | passed |
+| Income after login (step 11) | session 20745: 1019 s, gained 0, spent 0: no fake gain at login. Selling/repairing not visible in the data | partly |
+| Help tab, window width (steps 1, 12) | user confirmed | passed |
+
+Bugs found (screenshot):
+1. Craft tab: the alternative line wrapped to two lines and overlapped the limits line. Cause: fixed
+   line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
+2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
+   0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
 ### Release check 0.2.0 (2026-10-18)
 
@@ -422,7 +447,7 @@ One command per line.
 1. `/reload`, `/bof version` → `0.3.0-alpha.1`. The window title is on the right, the three tab buttons
    "Material", "Beschaffung", "Craft" on the left do not cover it.
 2. Profession window: select a wearable recipe (e.g. a cloth chest or bracers), `/bof recipe`.
-3. `/bof craft` → "[Item]: Wertung X – angelegt: [your item] (Y) → +/-Z", cost line, per-point line
+3. `/bof craft` → "[Item]: Wertung X – angelegt: [your item] (Y), Unterschied +/-Z", cost line, per-point line
    (if better), limits line, weights line. Check X and Y against the item tooltips (sum of STR, AGI,
    STA, INT, SPI with all weights 1).
 4. `/bof weights int 2` → the scores change; `/bof weights int 1` again.

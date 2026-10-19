@@ -3,7 +3,7 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.3.0-alpha.1] – noch nicht veröffentlicht
+## [0.3.0-alpha.2] – noch nicht veröffentlicht
 
 ### Hinzugefügt
 
@@ -25,6 +25,12 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 - Tab „Hilfe“ mit allen Befehlen.
 - Craft-Bewertung nennt den verglichenen Platz (z. B. „Brust“, „Finger 1“); der Tab „Craft“ hat
   eigene Knöpfe `<` und `>` zum Wechseln des Ziels und erklärt, warum ein Ziel nichts zu vergleichen hat.
+
+### Behoben
+
+- Tab „Craft“ und Goldpuffer: Lange Zeilen, die umbrechen, überdecken die nächste Zeile nicht mehr.
+- Craft-Vergleich: Statt eines Pfeils, den die Spielschrift als Kästchen zeigt, steht jetzt
+  „Unterschied“ (z. B. „(15), Unterschied -12“).
 
 ### Geändert
 
