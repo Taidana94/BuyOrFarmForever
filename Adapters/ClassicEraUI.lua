@@ -69,6 +69,11 @@ function UI.HookLinkInsert(callback)
 	end)
 end
 
+-- Blizzard's minimap frame (Blizzard_Minimap/Classic/Minimap.xml), or nil.
+function UI.GetMinimap()
+	return Minimap
+end
+
 -- Blizzard's merchant frame (Blizzard_UIPanels_Game/Vanilla/MerchantFrame.xml), or nil.
 function UI.GetMerchantFrame()
 	return MerchantFrame

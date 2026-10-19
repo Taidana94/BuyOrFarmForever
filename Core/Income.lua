@@ -58,13 +58,15 @@ function Income.RecordChange(charData, delta, now)
 	prune(charData)
 end
 
--- Adds online time between two checkpoints (capped, see MAX_GAP_SECONDS).
+-- Adds online time between two checkpoints (capped, see MAX_GAP_SECONDS). Returns the seconds
+-- counted.
 function Income.RecordTime(charData, fromTime, toTime)
 	local seconds = math.min(MAX_GAP_SECONDS, math.max(0, toTime - fromTime))
 	if seconds > 0 then
 		local record = dayRecord(charData, dayOf(toTime))
 		record.seconds = record.seconds + seconds
 	end
+	return seconds
 end
 
 -- Totals over the last `days` days up to `now`: { gained, spent, net, seconds, perHour (nil with

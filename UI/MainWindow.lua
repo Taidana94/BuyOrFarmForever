@@ -165,6 +165,13 @@ function MainWindow.Toggle()
 	end
 end
 
+-- Opens the window (no toggle); used by the minimap button and key bindings.
+function MainWindow.Show()
+	if not (frame and frame:IsShown()) then
+		MainWindow.Toggle()
+	end
+end
+
 -- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT" | "GOLD_BUFFER" | "SETTINGS" | "HELP");
 -- used by the tab buttons and tests.
 function MainWindow.SelectTab(key)

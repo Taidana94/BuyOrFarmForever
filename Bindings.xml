@@ -1,0 +1,9 @@
+<Bindings>
+	<!-- Key bindings (Esc > Key Bindings > AddOns). Names: UI/MinimapButton.lua sets the BINDING_* strings. -->
+	<Binding name="BUYORFARMFOREVER_TOGGLE" header="BUYORFARMFOREVER" category="ADDONS">
+		BuyOrFarmForever.MainWindow.Toggle()
+	</Binding>
+	<Binding name="BUYORFARMFOREVER_FARM" category="ADDONS">
+		BuyOrFarmForever.MinimapButton.ToggleFarmRun()
+	</Binding>
+</Bindings>

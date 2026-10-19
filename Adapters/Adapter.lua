@@ -51,6 +51,7 @@ Adapter.REQUIRED = {
 	"GetMerchantFrame", -- () -> the client's merchant frame (to anchor a hint), or nil
 	"HookLinkInsert", -- (callback(itemID)) -> nil: shift-clicked items while no chat input is open; call once
 	"GetQuestRewards", -- () -> { title, items = { itemID } } of the open quest frame, or nil
+	"GetMinimap", -- () -> the client's minimap frame (to attach a button), or nil
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.

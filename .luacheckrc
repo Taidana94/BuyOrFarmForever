@@ -17,6 +17,10 @@ globals = {
 	"SLASH_BUYORFARMFOREVER1", -- /bof
 	"SLASH_BUYORFARMFOREVER2", -- /kof
 	SlashCmdList = { fields = { BUYORFARMFOREVER = { read_only = false } } },
+	-- key binding names (Bindings.xml)
+	"BINDING_HEADER_BUYORFARMFOREVER",
+	"BINDING_NAME_BUYORFARMFOREVER_TOGGLE",
+	"BINDING_NAME_BUYORFARMFOREVER_FARM",
 }
 
 -- WoW API and Blizzard UI globals the addon is allowed to read.
@@ -88,6 +92,7 @@ read_globals = {
 	"GameTooltip",
 	"ItemRefTooltip", -- Blizzard_UIPanels_Game/Classic/ItemRef.xml (70003)
 	"MerchantFrame", -- Blizzard_UIPanels_Game/Vanilla/MerchantFrame.xml (70003)
+	"Minimap", -- Blizzard_Minimap/Classic/Minimap.xml (70003)
 	"UISpecialFrames",
 	"BACKDROP_DIALOG_32_32",
 	C_Timer = { fields = { "After", "NewTicker" } },

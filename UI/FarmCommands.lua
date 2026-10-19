@@ -14,7 +14,7 @@ local FarmCommands = {}
 ns.FarmCommands = FarmCommands
 
 local LIST_LIMIT = 5
-local SECONDS_PER_MINUTE = 60
+local SECONDS_PER_MINUTE, SECONDS_PER_HOUR = 60, 3600
 local ACTIVITY_WORDS = { gather = "GATHER", mobs = "MOBS", other = "OTHER" }
 local ACTIVITY_NAMES = { GATHER = "FARM_ACTIVITY_GATHER", MOBS = "FARM_ACTIVITY_MOBS", OTHER = "FARM_ACTIVITY_OTHER" }
 local STATE_NAMES = { FARM = "FARM_STATE_FARM", TRAVEL = "FARM_STATE_TRAVEL", PAUSED = "FARM_STATE_PAUSED", REVIEW = "FARM_STATE_REVIEW" }
@@ -128,6 +128,16 @@ local STEPS = {
 	end,
 }
 
+-- "Ergebnis: 12 Gegenstände in 20 Min. Farmzeit (36 pro Stunde)" for a saved run.
+local function printRunSummary(saved)
+	local total = 0
+	for _, amount in pairs(saved.items) do
+		total = total + amount
+	end
+	local perHour = saved.activeSeconds > 0 and math.floor(total * SECONDS_PER_HOUR / saved.activeSeconds) or 0
+	Log.Print(Util.Format(L.FARM_RUN_SUMMARY, total, Util.FormatDuration(saved.activeSeconds), perHour))
+end
+
 -- With farmAutoReview, a stopped run without unclear gains needs no review and is saved.
 local function autoSave(charData, run)
 	if not (ns.db.settings.farmAutoReview and run.state == "REVIEW" and not FarmRuns.HasUnclear(run)) then
@@ -136,6 +146,7 @@ local function autoSave(charData, run)
 	FarmCommands.PrintStatus(charData)
 	FarmRuns.Save(ns.db, ns.charKey, charData)
 	Log.Print(L.FARM_AUTO_SAVED)
+	printRunSummary(ns.db.farmRuns[#ns.db.farmRuns])
 	return true
 end
 
@@ -180,6 +191,7 @@ local function save(charData)
 		return
 	end
 	Log.Print(L.FARM_SAVED)
+	printRunSummary(ns.db.farmRuns[count])
 end
 
 local function discard(charData)

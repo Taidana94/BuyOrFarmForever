@@ -1,4 +1,5 @@
--- Income capture: gold changes (MONEY_CHANGED) and online time of the current character.
+-- Income capture: gold changes (MONEY_CHANGED) and online time of the current character, for
+-- the income records and the play session (Core/Session.lua, summary at the next login).
 -- Online time is counted between checkpoints (login, gold changes, bag changes, logout), each gap
 -- capped by Income (an idle or crashed client does not inflate the hours).
 -- Assumption to confirm in game: GetMoney() is valid at PLAYER_LOGIN. As a guard, a gain within
@@ -13,7 +14,10 @@ ns.IncomeCapture = IncomeCapture
 
 IncomeCapture.LOGIN_GRACE_SECONDS = 30
 
+local Session = ns.Session
+
 local lastMoney, lastCheckpoint, loginAt
+local session, previousSession
 
 local function writableCharacter()
 	local db = ns.db
@@ -22,7 +26,7 @@ end
 
 local function checkpoint(charData, now)
 	if lastCheckpoint then
-		Income.RecordTime(charData, lastCheckpoint, now)
+		Session.AddTime(session, Income.RecordTime(charData, lastCheckpoint, now))
 	end
 	lastCheckpoint = now
 end
@@ -38,6 +42,7 @@ local function onMoneyChanged()
 	local initialValue = lastMoney == 0 and delta > 0 and now - loginAt <= IncomeCapture.LOGIN_GRACE_SECONDS
 	if not initialValue then
 		Income.RecordChange(charData, delta, now)
+		Session.AddMoney(session, delta)
 	end
 	lastMoney = money
 	checkpoint(charData, now)
@@ -50,13 +55,27 @@ local function onActivity()
 	end
 end
 
+local function onLogout()
+	onActivity()
+	local charData = writableCharacter()
+	if charData and session then
+		Session.End(charData, session, ns.Client:GetServerTime(), Session.CountRuns(ns.db, ns.charKey, session))
+	end
+end
+
+-- The session before this login (nil after a /reload or on the first login), for the summary.
+function IncomeCapture.PreviousSession()
+	return previousSession
+end
+
 if ns.Client then
 	Events.OnSignal("CHARACTER_READY", function()
 		lastMoney = ns.Client:GetMoney()
 		loginAt = ns.Client:GetServerTime()
 		lastCheckpoint = loginAt
+		session, previousSession = Session.Begin(ns.db.characters[ns.charKey], loginAt)
 	end)
 	Events.OnSignal("MONEY_CHANGED", onMoneyChanged)
 	Events.OnSignal("BAGS_CHANGED", onActivity)
-	Events.OnSignal("LOGOUT", onActivity)
+	Events.OnSignal("LOGOUT", onLogout)
 end
