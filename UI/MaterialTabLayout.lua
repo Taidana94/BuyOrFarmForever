@@ -27,7 +27,7 @@ local TABLE = Widgets.TableLayout(190, {
 local PER_CRAFT_COLUMN, PRICE_COLUMN = 1, 7
 
 -- Vertical layout inside the tab (pixels from the top) and fixed sizes.
-local NAV_BUTTON_WIDTH, GAP, WIDE_GAP = 26, 4, 10
+local GAP, WIDE_GAP = 4, 10
 local NAME_BOX_WIDTH, COUNT_BOX_WIDTH, GOAL_BUTTON_WIDTH = 190, 44, 80
 local CHECK_Y, OTHERS_CHECK_X = -28, 230
 local HEADER_Y, LIST_Y = -60, -78
@@ -65,16 +65,9 @@ end
 
 -- Goal line: < > "Ziel 2 von 5:" [name] Herstellungen [n] [Neu] [Löschen].
 local function buildGoalLine(tab, frame)
-	tab.prev = button(frame, L.WINDOW_PREV, NAV_BUTTON_WIDTH, function()
-		tab:StepGoal(-1)
-	end)
-	tab.prev:SetPoint("TOPLEFT", 0, 0)
-	tab.next = button(frame, L.WINDOW_NEXT, NAV_BUTTON_WIDTH, function()
-		tab:StepGoal(1)
-	end)
-	tab.next:SetPoint("LEFT", tab.prev, "RIGHT", GAP, 0)
+	local next = Widgets.CreateGoalNavigation(tab, frame)
 	tab.goalText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	tab.goalText:SetPoint("LEFT", tab.next, "RIGHT", WIDE_GAP, 0)
+	tab.goalText:SetPoint("LEFT", next, "RIGHT", WIDE_GAP, 0)
 	tab.nameBox = Inputs.CreateBox(frame, { width = NAME_BOX_WIDTH, onCommit = function(text)
 		tab:Rename(text)
 	end })

@@ -21,7 +21,7 @@ local LINE_GAP = 6
 local LINES_Y, TEXT_WIDTH = -30, 690
 local WEIGHTS_Y, HINT_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP = 30, 8, 36, 6
 local TEMPLATES_Y, TEMPLATE_WIDTH = 56, 116
-local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP, MODE_WIDTH = 26, 4, 8, 110
+local NAV_GAP, GOAL_TEXT_GAP, MODE_WIDTH = 4, 8, 110
 local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi", ARMOR = "armor", DPS = "dps" }
 local REFRESH_SIGNALS = {
 	"EQUIPMENT_CHANGED", "BAGS_CHANGED", "ITEM_LOADED", "DATA_CHANGED", "PRICES_CHANGED", "MONEY_CHANGED",
@@ -32,18 +32,9 @@ Tab.__index = Tab
 Widgets.MixRefresh(Tab)
 
 local function buildNavigation(tab, frame)
-	tab.prev = Widgets.CreateButton(frame, L.WINDOW_PREV, NAV_BUTTON_WIDTH)
-	tab.prev:SetPoint("TOPLEFT", 0, 0)
-	tab.next = Widgets.CreateButton(frame, L.WINDOW_NEXT, NAV_BUTTON_WIDTH)
-	tab.next:SetPoint("LEFT", tab.prev, "RIGHT", NAV_GAP, 0)
-	tab.prev:SetScript("OnClick", function()
-		tab:StepGoal(-1)
-	end)
-	tab.next:SetScript("OnClick", function()
-		tab:StepGoal(1)
-	end)
+	local next = Widgets.CreateGoalNavigation(tab, frame)
 	tab.goalText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	tab.goalText:SetPoint("LEFT", tab.next, "RIGHT", GOAL_TEXT_GAP, 0)
+	tab.goalText:SetPoint("LEFT", next, "RIGHT", GOAL_TEXT_GAP, 0)
 	tab.goalText:SetJustifyH("LEFT")
 	tab.altMode = Widgets.CreateButton(frame, L.CRAFT_MODE_ALTERNATIVES, MODE_WIDTH)
 	tab.altMode:SetPoint("TOPRIGHT", 0, 0)

@@ -44,6 +44,24 @@ function Widgets.CreateButton(parent, text, width)
 	return button
 end
 
+local NAV_BUTTON_WIDTH, NAV_GAP = 26, 4
+
+-- Goal switch "<" ">" at the top left of a tab; the buttons call tab:StepGoal(-1 / 1) and are
+-- stored as tab.prev and tab.next. Returns tab.next to anchor the goal line after it.
+function Widgets.CreateGoalNavigation(tab, frame)
+	tab.prev = Widgets.CreateButton(frame, L.WINDOW_PREV, NAV_BUTTON_WIDTH)
+	tab.prev:SetPoint("TOPLEFT", 0, 0)
+	tab.prev:SetScript("OnClick", function()
+		tab:StepGoal(-1)
+	end)
+	tab.next = Widgets.CreateButton(frame, L.WINDOW_NEXT, NAV_BUTTON_WIDTH)
+	tab.next:SetPoint("LEFT", tab.prev, "RIGHT", NAV_GAP, 0)
+	tab.next:SetScript("OnClick", function()
+		tab:StepGoal(1)
+	end)
+	return tab.next
+end
+
 -- Table layout from columns = { { key, header (locale key), width } } after the name column.
 -- Returns { nameWidth, columns, columnX, rowWidth, rowHeight }.
 function Widgets.TableLayout(nameWidth, columns)
