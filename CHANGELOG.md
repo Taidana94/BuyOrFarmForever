@@ -3,6 +3,14 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.2] – 2026-10-19 (Testversion)
+
+Nicht in Forever getestet.
+
+### Geändert
+
+- Der Ratgeber ist viel kleiner: höchstens 4 Karten, die Höhe passt sich an, etwas kleiner gezeichnet.
+
 ## [0.7.0-alpha.1] – 2026-10-19 (Testversion)
 
 Nur außerhalb des Spiels geprüft; nicht in Forever getestet.

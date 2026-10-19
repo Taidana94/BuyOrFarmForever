@@ -13,12 +13,15 @@ local Card = ns.AdvisorCard
 local AdvisorWindow = {}
 ns.AdvisorWindow = AdvisorWindow
 
-AdvisorWindow.MAX_CARDS = 6
+-- Compact (user feedback on 0.7.0-alpha.1: the window was far too big): four cards, the height
+-- follows the shown cards, drawn at a smaller scale.
+AdvisorWindow.MAX_CARDS = 4
+AdvisorWindow.SCALE = 0.85
 -- After login: wait for the chat summary, then open only for suggestions at least this important.
 AdvisorWindow.LOGIN_DELAY_SECONDS = 7
 -- 80: full bags, cooldowns, craftable goals; not everyday selling.
 AdvisorWindow.LOGIN_MIN_PRIORITY = 80
-local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 420, 16, 46, 4, 60
+local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 380, 16, 46, 4, 60
 local CARD_WIDTH = WIDTH - 2 * PADDING
 local CHECK_GAP = 24
 local REFRESH_SIGNALS = {
@@ -43,11 +46,16 @@ local function savePosition(frame)
 	position.point, position.x, position.y = point, math.floor(x + 0.5), math.floor(y + 0.5)
 end
 
+-- Height for `cards` shown cards (at least one row, for the "nothing to do" text).
+local function heightFor(cards)
+	return HEADER_HEIGHT + math.max(1, cards) * (Card.HEIGHT + CARD_GAP) + FOOTER_HEIGHT
+end
+
 local function buildFrame()
-	local height = HEADER_HEIGHT + AdvisorWindow.MAX_CARDS * (Card.HEIGHT + CARD_GAP) + FOOTER_HEIGHT
 	local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	frame:Hide()
-	frame:SetSize(WIDTH, height)
+	frame:SetSize(WIDTH, heightFor(AdvisorWindow.MAX_CARDS))
+	frame:SetScale(AdvisorWindow.SCALE)
 	frame:SetFrameStrata("MEDIUM")
 	frame:SetBackdrop(BACKDROP_DIALOG_32_32)
 	frame:SetMovable(true)
@@ -118,6 +126,7 @@ function Window:Refresh()
 	for i, card in ipairs(self.cards) do
 		Card.Draw(card, list[i], context)
 	end
+	self.frame:SetHeight(heightFor(math.min(#list, AdvisorWindow.MAX_CARDS)))
 	self.emptyText:SetText(#list == 0 and (charData and L.ADVISOR_EMPTY or L.NOT_READY) or "")
 end
 

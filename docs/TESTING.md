@@ -258,6 +258,11 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.7.0-alpha.1 (Classic Era, 2026-10-19)
+
+User: everything works ("Der rest ist perfekt"), but the advisor window is far too big. 0.7.0-alpha.2:
+4 cards instead of 6, height follows the shown cards, width 380, scale 0.85; test added.
+
 ### Checklist 0.7.0-alpha.1 (Classic Era, advisor)
 
 1. `/reload`, `/bof version` → `0.7.0-alpha.1`. BugSack empty.
