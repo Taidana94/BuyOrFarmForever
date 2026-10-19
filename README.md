@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.5.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles
+**Version 0.5.0-alpha.2 (Testversion) – Materialbeschaffung, Craft-Bewertung und Goldpuffer, alles
 im Fenster bedienbar, mit viel Automatik. Die Version 0.4.0 ist in WoW Classic Era 1.15.9 getestet;
-die Neuerungen von 0.5.0-alpha.1 sind nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
+von den Neuerungen sind bisher die Auctionator-Anbindung und der Waffen-DPS im Spiel bestätigt. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -185,7 +185,7 @@ Stück (grau = veraltet). Oben: `<` und `>` wechseln das Ziel, Name und Herstell
 löschen). Unten: Gegenstand ins Feld ziehen, Menge, „Hinzufügen“ (ohne Ziel wird eines angelegt);
 „Rezept übernehmen“ mit Anzahl; „AH-Scan“ (nur am Auktionshaus) sucht pro Klick ein fehlendes Material.
 
-**Fenster, Tab „Beschaffung“:** pro fehlendem Material, wie viel du kaufen und wie viel du farmen
+**Fenster, Tab „Beschaffung“:** oben wechseln `<` und `>` das Ziel; pro fehlendem Material, wie viel du kaufen und wie viel du farmen
 solltest, mit Kosten und Farmzeit (inklusive Anreise), darunter die Summe und das Restbudget.
 Strategien:
 
@@ -291,8 +291,7 @@ weist darauf hin.
   kommt das Gold erst nach dem Schließen, zählt es als „Sonstiges“. Sparziele und Nettoerlös gelten
   pro Charakter.
 - Die Craft-Bewertung rechnet mit Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft,
-  Rüstung und Waffen-DPS. Effekte und Setboni werden nicht bewertet. Ob Classic Era den Waffen-DPS
-  liefert, ist im Spiel noch zu prüfen; fehlt er, zählen bei Waffen nur die Werte. Einhandwaffen
+  Rüstung und Waffen-DPS. Effekte und Setboni werden nicht bewertet. Einhandwaffen
   werden nur mit der Haupthand verglichen. Die Gewichte-Vorlagen sind ein Startpunkt des Addons,
   keine offiziellen Werte.
 - Der Tab „Craft“ zeigt höchstens 12 Zeilen; bei vielen Alternativen steht der Rest nur im Chat
@@ -314,7 +313,8 @@ automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, besch�
 Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
 Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
 Craft-Bewertung mit Rüstung, Waffen-DPS und geplantem Ersatz, Goldpuffer, Einstellungen, Hinweise).
-Die Neuerungen von 0.5.0-alpha.1 sind noch nicht im Spiel getestet.
+Von den Neuerungen von 0.5.0 sind Auctionator-Preise und Waffen-DPS am 19.10.2026 in Classic Era
+im Spiel bestätigt, der Rest noch nicht.
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
 beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
@@ -344,7 +344,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.5.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.5.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

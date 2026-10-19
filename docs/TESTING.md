@@ -258,6 +258,13 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.5.0-alpha.1 (Classic Era, 2026-10-19, partial)
+
+Reported by the user: Auctionator prices work. `GetItemStats` of the main hand returns
+`ITEM_MOD_DAMAGE_PER_SECOND_SHORT=22.954545974731` (DPS key confirmed). Bug: the Sourcing tab had no
+goal arrows; fixed in 0.5.0-alpha.2 (shared `Widgets.CreateGoalNavigation`, test added). Other
+checklist points not reported yet.
+
 ### Checklist 0.5.0-alpha.1 (Classic Era, Auctionator)
 
 1. Without Auctionator: `/reload`, `/bof version` → `0.5.0-alpha.1`; `/bof price` as before, BugSack empty.

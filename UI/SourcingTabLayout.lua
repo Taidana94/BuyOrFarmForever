@@ -1,4 +1,4 @@
--- Widgets of the Sourcing tab: goal line, strategy buttons, budget line, the plan table
+-- Widgets of the Sourcing tab: goal line with "<" ">", strategy buttons, budget line, the plan table
 -- (missing, buy, cost, farm, farm time) and the summary lines. Logic: UI/SourcingTab.lua.
 local _, ns = ...
 
@@ -24,6 +24,8 @@ local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
 local BUDGET_GAP, BUDGET_BOX_WIDTH = 12, 80
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, TEXT_WIDTH = -84, 560
+-- Goal line between the arrows and the time limit box at the top right.
+local GOAL_TEXT_GAP, GOAL_TEXT_WIDTH = 8, 480
 local ROUTE_Y, LIMIT_Y, SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 74, 58, 42, 26, 10
 
 local function showTooltip(row)
@@ -91,11 +93,16 @@ local function createText(frame, font, y, anchor)
 	return text
 end
 
--- Creates the widgets of a tab object and connects them to its methods (SetStrategy, Scroll).
+-- Creates the widgets of a tab object and connects them to its methods (SetStrategy, StepGoal,
+-- Scroll).
 function Layout.Build(tab, parent)
 	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
-	tab.goalText = createText(frame, "GameFontHighlight", 0, "TOPLEFT")
+	local next = Widgets.CreateGoalNavigation(tab, frame)
+	tab.goalText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	tab.goalText:SetPoint("LEFT", next, "RIGHT", GOAL_TEXT_GAP, 0)
+	tab.goalText:SetWidth(GOAL_TEXT_WIDTH)
+	tab.goalText:SetJustifyH("LEFT")
 	buildStrategies(tab, frame)
 	buildLimit(tab, frame)
 	tab.rows = Widgets.CreateTable(frame, TABLE, Layout.VISIBLE_ROWS, HEADER_Y, LIST_Y)

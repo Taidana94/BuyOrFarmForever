@@ -62,7 +62,7 @@ printed and `Core/Main.lua` registers nothing.
 | `GetCurrentMapID()` | uiMapID of the player's map, or 0 |
 | `GetMapName(uiMapID)` | localized map name, or nil |
 | `GetMoney()` | copper the character carries, or nil |
-| `GetItemStats(itemID)` | `{ STR, AGI, STA, INT, SPI, ARMOR, DPS }` (0 if missing), or nil while loading; DPS from `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` (unverified in Classic Era) |
+| `GetItemStats(itemID)` | `{ STR, AGI, STA, INT, SPI, ARMOR, DPS }` (0 if missing), or nil while loading; DPS from `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` (confirmed in game, Classic Era, 2026-10-19) |
 | `GetItemMinLevel(itemID)` | required character level (`itemMinLevel`, 5th return of `C_Item.GetItemInfo`), or nil while loading |
 | `GetLevel()` | character level (`UnitLevel("player")`), or nil |
 | `GetEquipSlots(itemID)` | slot keys, e.g. `{ "CHEST" }`, `{ "FINGER1", "FINGER2" }`, with `.sum = true` for two-handers; nil if not equippable |

@@ -64,6 +64,11 @@ function Tab:Refresh()
 	for key, button in pairs(self.strategyButtons) do
 		Widgets.SetEnabled(button, canWrite and key ~= strategy)
 	end
+	-- Switching goals only matters when one goal is shown (not "all goals").
+	local hasGoals = charData ~= nil and #ns.Materials.ListGoalIDs(charData) > 0
+	local canStep = canWrite and hasGoals and not ns.db.settings.window.allGoals
+	Widgets.SetEnabled(self.prev, canStep)
+	Widgets.SetEnabled(self.next, canStep)
 	local budget, isOwn = Sourcing.Budget()
 	self.budgetText:SetText(PlanCommands.BudgetText(budget, isOwn))
 	ns.Inputs.SetValue(self.budgetBox, isOwn and Money.Format(budget) or "")
@@ -134,6 +139,13 @@ function Tab:DrawRow(row, line)
 	Widgets.SetText(row.numbers.farmTime, line.farm > 0 and Util.FormatDuration(line.farmSeconds) or L.WINDOW_OFF,
 		Widgets.COLOR_NORMAL)
 	row:Show()
+end
+
+function Tab:StepGoal(step)
+	if UIShared.StepGoal(step) then
+		self.offset = 0
+		self:Refresh()
+	end
 end
 
 function Tab:SetStrategy(strategy)

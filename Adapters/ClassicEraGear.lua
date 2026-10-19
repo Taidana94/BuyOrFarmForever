@@ -16,8 +16,8 @@ local STAT_KEYS = {
 	ITEM_MOD_INTELLECT_SHORT = "INT",
 	ITEM_MOD_SPIRIT_SHORT = "SPI",
 	RESISTANCE0_NAME = "ARMOR",
-	-- Weapon damage per second. Key known from the Retail API documentation (warcraft.wiki.gg);
-	-- not documented for Classic Era (verify in game). Without it weapons are rated by stats only.
+	-- Weapon damage per second. Not in the generated docs; confirmed in game (Classic Era 1.15.9,
+	-- 2026-10-19: GetItemStats of the main hand returned ITEM_MOD_DAMAGE_PER_SECOND_SHORT = 22.95).
 	ITEM_MOD_DAMAGE_PER_SECOND_SHORT = "DPS",
 }
 

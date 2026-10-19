@@ -3,9 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.5.0-alpha.1] – 2026-10-19 (Testversion)
+## [0.5.0-alpha.2] – 2026-10-19 (Testversion)
 
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+Auctionator-Preise und Waffen-DPS in Classic Era im Spiel bestätigt, der Rest nur außerhalb des
+Spiels geprüft; nicht in Forever getestet.
+
+### Behoben
+
+- Im Tab „Beschaffung“ fehlten die Pfeile `<` `>` zum Wechseln des Ziels.
+
+## [0.5.0-alpha.1] – 2026-10-19 (Testversion)
 
 ### Hinzugefügt
 
