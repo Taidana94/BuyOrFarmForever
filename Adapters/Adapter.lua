@@ -47,7 +47,8 @@ Adapter.REQUIRED = {
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.
 -- Signals used so far: BANK_OPENED, BANK_CLOSED, BAGS_CHANGED, ITEM_LOADED (itemID, success),
 -- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
--- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED, EQUIPMENT_CHANGED.
+-- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED, EQUIPMENT_CHANGED, MAIL_OPENED, MAIL_CLOSED,
+-- TRADE_OPENED, TRADE_CLOSED, COMBAT_STARTED.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

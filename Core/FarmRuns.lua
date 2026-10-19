@@ -5,6 +5,10 @@
 --
 -- States: FARM (farming), TRAVEL (on the way), PAUSED, REVIEW (stopped, unclear gains can be
 -- kept before saving). Yield per item: confirmed (looted) and unclear (other bag gains).
+--
+-- Idle time: with run.idleSeconds > 0, farm time without any activity (loot, bag change, combat;
+-- reported with NoteActivity) counts only up to idleSeconds. The gap is cut when the next
+-- activity arrives or the segment ends, so no timer is needed.
 local _, ns = ...
 
 local FarmRuns = {}
@@ -26,12 +30,21 @@ function FarmRuns.Current(charData)
 	return charData.currentRun
 end
 
+-- End of the counted farm time: at most idleSeconds after the last activity.
+local function countedUntil(run, now)
+	local idle = run.idleSeconds or 0
+	if run.state ~= "FARM" or idle <= 0 or not run.lastActivityAt then
+		return now
+	end
+	return math.max(run.segmentStart, math.min(now, run.lastActivityAt + idle))
+end
+
 -- Adds the time since segmentStart to the farm or travel time.
 local function closeSegment(run, now)
 	if not RUNNING[run.state] then
 		return
 	end
-	local seconds = math.max(0, now - run.segmentStart)
+	local seconds = math.max(0, countedUntil(run, now) - run.segmentStart)
 	if run.state == "TRAVEL" then
 		run.travelSeconds = run.travelSeconds + seconds
 	else
@@ -43,7 +56,7 @@ end
 -- Farm and travel seconds including the running segment (for display; changes nothing).
 function FarmRuns.Elapsed(run, now)
 	local active, travel = run.activeSeconds, run.travelSeconds
-	local running = math.max(0, now - run.segmentStart)
+	local running = math.max(0, countedUntil(run, now) - run.segmentStart)
 	if run.state == "FARM" then
 		active = active + running
 	elseif run.state == "TRAVEL" then
@@ -52,7 +65,8 @@ function FarmRuns.Elapsed(run, now)
 	return active, travel
 end
 
--- Starts a run. opts = { activity, targetItemID (optional), uiMapID (optional), now }.
+-- Starts a run. opts = { activity, targetItemID (optional), uiMapID (optional), idleSeconds
+-- (optional, 0 = count all time), now }.
 -- Returns the run, or nil plus "run_exists" | "invalid_activity".
 function FarmRuns.Start(charData, opts)
 	if charData.currentRun then
@@ -72,9 +86,24 @@ function FarmRuns.Start(charData, opts)
 		startedAt = opts.now,
 		segmentStart = opts.now,
 		lastSeenAt = opts.now,
+		lastActivityAt = opts.now,
+		idleSeconds = opts.idleSeconds or 0,
 		endedAt = 0,
 	}
 	return charData.currentRun
+end
+
+-- An activity (loot, bag change, combat) during the run. A farm gap longer than idleSeconds since
+-- the previous activity is removed by moving the segment start forward.
+function FarmRuns.NoteActivity(run, now)
+	local idle = run.idleSeconds or 0
+	if run.state == "FARM" and idle > 0 and run.lastActivityAt then
+		local gap = now - math.max(run.lastActivityAt, run.segmentStart)
+		if gap > idle then
+			run.segmentStart = math.min(now, run.segmentStart + gap - idle)
+		end
+	end
+	run.lastActivityAt = now
 end
 
 local function requireState(charData, allowed)
@@ -109,6 +138,7 @@ function FarmRuns.Resume(charData, now)
 	run.resumeState = nil
 	run.segmentStart = now
 	run.lastSeenAt = now
+	run.lastActivityAt = now
 	return run
 end
 
@@ -126,6 +156,7 @@ function FarmRuns.ToggleTravel(charData, now, uiMapID)
 		run.state = "TRAVEL"
 	end
 	run.lastSeenAt = now
+	run.lastActivityAt = now
 	return run
 end
 
@@ -155,6 +186,16 @@ function FarmRuns.AddGain(run, itemID, amount, isLoot, now)
 		entry.unclear = entry.unclear + amount
 	end
 	run.lastSeenAt = now
+end
+
+-- True if any item of the run has an unclear amount.
+function FarmRuns.HasUnclear(run)
+	for _, entry in pairs(run.items) do
+		if entry.unclear > 0 then
+			return true
+		end
+	end
+	return false
 end
 
 -- In REVIEW: counts the unclear amount of an item as confirmed. Returns the new confirmed amount.

@@ -77,11 +77,40 @@ local function validCurrentRun(run)
 		and validRunItems(run.items) and (run.resumeState == nil or STATES[run.resumeState] == true)
 end
 
+-- Optional fields of a current run (older runs have none): field -> check. Wrong values are dropped.
+local OPTIONAL_RUN_FIELDS = {
+	idleSeconds = isCount,
+	lastActivityAt = isCount,
+	targetNotified = function(value)
+		return type(value) == "boolean"
+	end,
+	autoPaused = function(value)
+		return type(value) == "boolean"
+	end,
+	autoTravel = function(value)
+		return type(value) == "boolean"
+	end,
+}
+
+local function dropInvalidOptionals(run, path, repairs)
+	for field, check in pairs(OPTIONAL_RUN_FIELDS) do
+		if run[field] ~= nil and not check(run[field]) then
+			run[field] = nil
+			repairs[#repairs + 1] = path .. ".currentRun." .. field
+		end
+	end
+end
+
 function FarmRuns.SanitizeCurrent(charData, path, repairs)
-	if charData.currentRun ~= nil and not validCurrentRun(charData.currentRun) then
+	if charData.currentRun == nil then
+		return
+	end
+	if not validCurrentRun(charData.currentRun) then
 		charData.currentRun = nil
 		repairs[#repairs + 1] = path .. ".currentRun"
+		return
 	end
+	dropInvalidOptionals(charData.currentRun, path, repairs)
 end
 
 ns.DB.ROOT_VALIDATORS[#ns.DB.ROOT_VALIDATORS + 1] = FarmRuns.SanitizeSaved

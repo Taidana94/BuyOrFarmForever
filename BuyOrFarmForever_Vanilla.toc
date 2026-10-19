@@ -46,7 +46,9 @@ UI\Shared.lua
 UI\GoalCommands.lua
 UI\StockCommands.lua
 UI\PriceCommands.lua
+UI\FarmReports.lua
 UI\FarmCommands.lua
+UI\FarmAssist.lua
 UI\PlanCommands.lua
 UI\CraftCommands.lua
 UI\AltCommands.lua

@@ -1,9 +1,11 @@
 -- Yield capture of the running farm run: compares the carried bags after every bag update with
 -- the previous state. A gain is confirmed (looted) if a loot window is open or was closed at most
--- LOOT_GRACE_SECONDS ago (autoloot and gathering also use the loot window); other gains (mail,
--- trade, bank, purchases) are unclear and can be kept or dropped when the run is reviewed.
+-- LOOT_GRACE_SECONDS ago (autoloot and gathering also use the loot window). With the setting
+-- farmAutoReview, gains while a merchant, bank, auction house, mailbox or trade window is open are
+-- not farm yield and are left out; all other gains are unclear and can be kept or dropped when the
+-- run is reviewed. Bag changes, loot and combat start count as activity (idle time, FarmRuns).
 -- Language-independent: no chat messages are parsed.
--- The bag, loot and logout signals are registered only while a run is running.
+-- The signals are registered only while a run is running.
 local _, ns = ...
 
 local Events = ns.Events
@@ -16,6 +18,8 @@ FarmCapture.LOOT_GRACE_SECONDS = 2
 
 local active = false
 local lootOpen = false
+-- Open windows whose gains are not yield ({ [window] = true }).
+local openWindows = {}
 local lootClosedAt -- client uptime
 -- Two reused count tables: baseline is one of them (or nil), each scan fills the other.
 local tableA, tableB = {}, {}
@@ -37,6 +41,24 @@ local function isLootGain()
 	return lootClosedAt ~= nil and ns.Client:GetUptime() - lootClosedAt <= FarmCapture.LOOT_GRACE_SECONDS
 end
 
+-- Gains that are clearly not yield (purchase, mail, trade, bank) are left out with the setting.
+local function isForeignGain()
+	return ns.db.settings.farmAutoReview and next(openWindows) ~= nil
+end
+
+local function recordGains(run, counts, now)
+	local isLoot = isLootGain()
+	if not isLoot and isForeignGain() then
+		return
+	end
+	for itemID, count in pairs(counts) do
+		local gain = count - (baseline[itemID] or 0)
+		if gain > 0 then
+			FarmRuns.AddGain(run, itemID, gain, isLoot, now)
+		end
+	end
+end
+
 -- First scan after activation only sets the baseline (bag data may have been loading).
 local function onBagsChanged()
 	local run = currentRun()
@@ -44,23 +66,26 @@ local function onBagsChanged()
 		return
 	end
 	local now = ns.Client:GetServerTime()
+	FarmRuns.NoteActivity(run, now)
 	local counts = ns.Client:ScanBags(freeTable())
 	if baseline then
-		local isLoot = isLootGain()
-		for itemID, count in pairs(counts) do
-			local gain = count - (baseline[itemID] or 0)
-			if gain > 0 then
-				FarmRuns.AddGain(run, itemID, gain, isLoot, now)
-			end
-		end
+		recordGains(run, counts, now)
 	end
 	FarmRuns.Touch(run, now)
 	baseline = counts
 	Events.Emit("FARM_CHANGED")
 end
 
+local function noteActivity()
+	local run = currentRun()
+	if FarmRuns.IsRunning(run) then
+		FarmRuns.NoteActivity(run, ns.Client:GetServerTime())
+	end
+end
+
 local function onLootOpened()
 	lootOpen = true
+	noteActivity()
 end
 
 local function onLootClosed()
@@ -80,7 +105,22 @@ local HANDLERS = {
 	LOOT_OPENED = onLootOpened,
 	LOOT_CLOSED = onLootClosed,
 	LOGOUT = onLogout,
+	COMBAT_STARTED = noteActivity,
 }
+
+-- Open/close signals of the windows whose gains are not yield: signal -> { window, isOpen }.
+local WINDOW_SIGNALS = {
+	MERCHANT_OPENED = { "MERCHANT", true }, MERCHANT_CLOSED = { "MERCHANT", false },
+	BANK_OPENED = { "BANK", true }, BANK_CLOSED = { "BANK", false },
+	AUCTION_OPENED = { "AUCTION", true }, AUCTION_CLOSED = { "AUCTION", false },
+	MAIL_OPENED = { "MAIL", true }, MAIL_CLOSED = { "MAIL", false },
+	TRADE_OPENED = { "TRADE", true }, TRADE_CLOSED = { "TRADE", false },
+}
+for signal, change in pairs(WINDOW_SIGNALS) do
+	HANDLERS[signal] = function()
+		openWindows[change[1]] = change[2] or nil
+	end
+end
 
 -- Starts capturing. takeBaselineNow = true when the bags are known to be loaded (a command);
 -- false right after login, where the first bag update provides the baseline.
@@ -107,6 +147,9 @@ function FarmCapture.Deactivate()
 	end
 	baseline = nil
 	lootOpen = false
+	for window in pairs(openWindows) do
+		openWindows[window] = nil
+	end
 end
 
 function FarmCapture.IsActive()

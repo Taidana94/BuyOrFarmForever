@@ -7,8 +7,6 @@ local Log = ns.Log
 local Util = ns.Util
 local FarmRuns = ns.FarmRuns
 local FarmCapture = ns.FarmCapture
-local FarmEstimates = ns.FarmEstimates
-local Stock = ns.Stock
 local Slash = ns.Slash
 local UIShared = ns.UIShared
 
@@ -16,6 +14,7 @@ local FarmCommands = {}
 ns.FarmCommands = FarmCommands
 
 local LIST_LIMIT = 5
+local SECONDS_PER_MINUTE = 60
 local ACTIVITY_WORDS = { gather = "GATHER", mobs = "MOBS", other = "OTHER" }
 local ACTIVITY_NAMES = { GATHER = "FARM_ACTIVITY_GATHER", MOBS = "FARM_ACTIVITY_MOBS", OTHER = "FARM_ACTIVITY_OTHER" }
 local STATE_NAMES = { FARM = "FARM_STATE_FARM", TRAVEL = "FARM_STATE_TRAVEL", PAUSED = "FARM_STATE_PAUSED", REVIEW = "FARM_STATE_REVIEW" }
@@ -28,11 +27,27 @@ local function mapName(uiMapID)
 	return uiMapID > 0 and ns.Client:GetMapName(uiMapID) or L.UNKNOWN_VALUE
 end
 
--- One line per item of the run: "[Item]: 7 geplündert, 2 unklar" (shared with the Farm tab).
+-- Items of the run in id order: { { itemID, unclear, line = "[Item]: 7 geplündert, 2 unklar" } }
+-- (shared with the Farm tab).
+function FarmCommands.ItemEntries(run)
+	local entries = {}
+	for itemID, entry in pairs(run.items) do
+		entries[#entries + 1] = {
+			itemID = itemID,
+			unclear = entry.unclear,
+			line = Util.Format(L.FARM_ITEM_LINE, UIShared.ItemText(itemID), entry.confirmed, entry.unclear),
+		}
+	end
+	table.sort(entries, function(a, b)
+		return a.itemID < b.itemID
+	end)
+	return entries
+end
+
 function FarmCommands.ItemLines(run)
 	local lines = {}
-	for itemID, entry in pairs(run.items) do
-		lines[#lines + 1] = Util.Format(L.FARM_ITEM_LINE, UIShared.ItemText(itemID), entry.confirmed, entry.unclear)
+	for i, entry in ipairs(FarmCommands.ItemEntries(run)) do
+		lines[i] = entry.line
 	end
 	return lines
 end
@@ -74,6 +89,7 @@ local function start(charData, argument)
 	end
 	local run, err = FarmRuns.Start(charData, {
 		activity = activity, targetItemID = targetItemID, uiMapID = ns.Client:GetCurrentMapID(), now = now(),
+		idleSeconds = ns.db.settings.farmIdleMinutes * SECONDS_PER_MINUTE,
 	})
 	if not run then
 		UIShared.PrintError(err)
@@ -112,13 +128,26 @@ local STEPS = {
 	end,
 }
 
+-- With farmAutoReview, a stopped run without unclear gains needs no review and is saved.
+local function autoSave(charData, run)
+	if not (ns.db.settings.farmAutoReview and run.state == "REVIEW" and not FarmRuns.HasUnclear(run)) then
+		return false
+	end
+	FarmCommands.PrintStatus(charData)
+	FarmRuns.Save(ns.db, ns.charKey, charData)
+	Log.Print(L.FARM_AUTO_SAVED)
+	return true
+end
+
 local function step(charData, name)
 	local run, err = STEPS[name](charData)
 	if not run then
 		UIShared.PrintError(err)
 		return
 	end
-	FarmCommands.PrintStatus(charData)
+	if not autoSave(charData, run) then
+		FarmCommands.PrintStatus(charData)
+	end
 end
 
 local function keep(charData, argument)
@@ -183,47 +212,12 @@ local function list()
 	end
 end
 
--- Estimate line for one missing material.
-function FarmCommands.EstimateText(itemID, missing)
-	local scope = ns.db.settings.farmEstimateScope
-	local basis = FarmEstimates.ForItem(ns.db, itemID, scope, ns.charKey)
-	if not basis then
-		return L.FARM_ESTIMATE_NONE
-	end
-	local seconds, low, high = FarmEstimates.TimeFor(basis, missing)
-	local source = Util.Format(L.FARM_ESTIMATE_BASIS, basis.runs, Util.FormatDuration(basis.seconds))
-	if not seconds then
-		return Util.Format(L.FARM_ESTIMATE_NO_YIELD, source)
-	end
-	local travel = Util.FormatDuration(basis.travelSeconds)
-	if low then
-		return Util.Format(L.FARM_ESTIMATE_RANGE, Util.FormatDuration(seconds), Util.FormatDuration(low),
-			Util.FormatDuration(high), travel, source)
-	end
-	return Util.Format(L.FARM_ESTIMATE, Util.FormatDuration(seconds), travel, source)
-end
-
--- Estimate lines for the missing materials of a goal (shared with the Farm tab).
-function FarmCommands.EstimateLines(charData, goal)
-	local lines = {}
-	for _, row in ipairs(Stock.Rows(charData, { goal })) do
-		if row.missing > 0 then
-			lines[#lines + 1] = Util.Format(L.FARM_ESTIMATE_LINE, UIShared.ItemText(row.itemID), row.missing,
-				FarmCommands.EstimateText(row.itemID, row.missing))
-		end
-	end
-	if #lines == 0 then
-		lines[1] = L.FARM_NOTHING_MISSING
-	end
-	return lines
-end
-
 local function estimate(charData)
 	local goal = UIShared.ActiveGoal(charData)
 	if not goal then
 		return
 	end
-	for _, line in ipairs(FarmCommands.EstimateLines(charData, goal)) do
+	for _, line in ipairs(ns.FarmReports.EstimateLines(charData, goal)) do
 		Log.Print(line)
 	end
 end

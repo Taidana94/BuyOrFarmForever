@@ -23,6 +23,13 @@ local ClassicEra = {
 		PLAYER_LOGOUT = "LOGOUT",
 		PLAYER_MONEY = "MONEY_CHANGED",
 		PLAYER_EQUIPMENT_CHANGED = "EQUIPMENT_CHANGED",
+		-- Windows whose bag gains are not farm yield (purchases, mail, trade).
+		MAIL_SHOW = "MAIL_OPENED",
+		MAIL_CLOSED = "MAIL_CLOSED",
+		TRADE_SHOW = "TRADE_OPENED",
+		TRADE_CLOSED = "TRADE_CLOSED",
+		-- Combat start counts as farm activity (idle time detection).
+		PLAYER_REGEN_DISABLED = "COMBAT_STARTED",
 	},
 }
 
