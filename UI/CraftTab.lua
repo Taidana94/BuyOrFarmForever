@@ -12,7 +12,7 @@ local CraftTab = {}
 ns.CraftTab = CraftTab
 
 local MAX_LINES = 12
-local LINE_HEIGHT = 18
+local LINE_GAP = 6
 local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local LINES_Y, TEXT_WIDTH = -26, 590
 local WEIGHTS_Y, HINT_Y = 40, 22
@@ -34,7 +34,7 @@ local function createText(frame, font, y, anchor)
 end
 
 function CraftTab.Create(parent)
-	local tab = setmetatable({ lines = {} }, Tab)
+	local tab = setmetatable({}, Tab)
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
 	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
@@ -53,9 +53,9 @@ function CraftTab.Create(parent)
 	tab.goalText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	tab.goalText:SetPoint("LEFT", tab.next, "RIGHT", GOAL_TEXT_GAP, 0)
 	tab.goalText:SetJustifyH("LEFT")
-	for i = 1, MAX_LINES do
-		tab.lines[i] = createText(frame, "GameFontHighlightSmall", LINES_Y - (i - 1) * LINE_HEIGHT, "TOPLEFT")
-	end
+	tab.lines = Widgets.CreateTextStack(frame, {
+		count = MAX_LINES, font = "GameFontHighlightSmall", y = LINES_Y, width = TEXT_WIDTH, gap = LINE_GAP,
+	})
 	tab.weightsText = createText(frame, "GameFontHighlightSmall", WEIGHTS_Y, "BOTTOMLEFT")
 	tab.hintText = createText(frame, "GameFontDisableSmall", HINT_Y, "BOTTOMLEFT")
 	tab.hintText:SetText(L.CRAFT_TAB_WEIGHTS_HINT)

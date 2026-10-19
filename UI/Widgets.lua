@@ -87,6 +87,25 @@ function Widgets.CreateTable(parent, layout, count, headerY, listY)
 	return rows
 end
 
+-- Left-aligned text lines below each other, starting at opts.y (from the top of `parent`).
+-- Each line hangs below the previous one, so a line that wraps pushes the following lines
+-- down instead of overlapping them. opts = { count, font, y, width, gap }. Returns the lines.
+function Widgets.CreateTextStack(parent, opts)
+	local lines = {}
+	for i = 1, opts.count do
+		local text = parent:CreateFontString(nil, "OVERLAY", opts.font)
+		if i == 1 then
+			text:SetPoint("TOPLEFT", 0, opts.y)
+		else
+			text:SetPoint("TOPLEFT", lines[i - 1], "BOTTOMLEFT", 0, -opts.gap)
+		end
+		text:SetWidth(opts.width)
+		text:SetJustifyH("LEFT")
+		lines[i] = text
+	end
+	return lines
+end
+
 function Widgets.SetEnabled(widget, enabled)
 	if enabled then
 		widget:Enable()

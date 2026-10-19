@@ -12,7 +12,7 @@ local GoldTab = {}
 ns.GoldTab = GoldTab
 
 local MAX_GOAL_LINES = 10
-local LINE_HEIGHT = 18
+local LINE_GAP = 6
 local MARGIN_X, MARGIN_TOP, MARGIN_BOTTOM = 22, 46, 20
 local BUTTON_WIDTH, BUTTON_GAP = 150, 6
 local OVERVIEW_Y, GOALS_Y = -30, -56
@@ -41,7 +41,7 @@ local function createCommandButton(frame, label, command)
 end
 
 function GoldTab.Create(parent)
-	local tab = setmetatable({ goalLines = {} }, Tab)
+	local tab = setmetatable({}, Tab)
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:SetPoint("TOPLEFT", MARGIN_X, -MARGIN_TOP)
 	frame:SetPoint("BOTTOMRIGHT", -MARGIN_X, MARGIN_BOTTOM)
@@ -51,9 +51,9 @@ function GoldTab.Create(parent)
 	tab.reserves = createCommandButton(frame, "GOLD_BTN_RESERVES", "reserves")
 	tab.reserves:SetPoint("LEFT", tab.distribute, "RIGHT", BUTTON_GAP, 0)
 	tab.overviewText = createText(frame, "GameFontHighlight", OVERVIEW_Y, "TOPLEFT")
-	for i = 1, MAX_GOAL_LINES do
-		tab.goalLines[i] = createText(frame, "GameFontHighlightSmall", GOALS_Y - (i - 1) * LINE_HEIGHT, "TOPLEFT")
-	end
+	tab.goalLines = Widgets.CreateTextStack(frame, {
+		count = MAX_GOAL_LINES, font = "GameFontHighlightSmall", y = GOALS_Y, width = TEXT_WIDTH, gap = LINE_GAP,
+	})
 	tab.incomeText = createText(frame, "GameFontHighlightSmall", INCOME_Y, "BOTTOMLEFT")
 	tab.reservesText = createText(frame, "GameFontHighlightSmall", RESERVES_Y, "BOTTOMLEFT")
 	tab.hintText = createText(frame, "GameFontDisableSmall", HINT_Y, "BOTTOMLEFT")
