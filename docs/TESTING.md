@@ -258,6 +258,13 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.7.0-alpha.2 (Classic Era, 2026-10-19)
+
+Screenshot of the user: the advisor window still too wide (long checkbox labels) and every card
+shown twice without an open window – `Advisor.Collect` ran the ANY sources a second time for the
+context "ANY". 0.7.0-alpha.3: fixed (regression test), window width 300, clickable cards without
+buttons, short checkbox labels (width test).
+
 ### Result 0.7.0-alpha.1 (Classic Era, 2026-10-19)
 
 User: everything works ("Der rest ist perfekt"), but the advisor window is far too big. 0.7.0-alpha.2:

@@ -37,6 +37,9 @@ local function showTooltip(card)
 	for _, line in ipairs(ns.AdvisorText.TooltipLines(card.suggestion) or {}) do
 		GameTooltip:AddLine(line, 1, 1, 1)
 	end
+	if card.clickable and view.button then
+		GameTooltip:AddLine(ns.Util.Format(ns.L.ADVISOR_CLICK_HINT, view.button), 0.4, 1, 0.4)
+	end
 	GameTooltip:Show()
 end
 
@@ -51,8 +54,9 @@ local function text(card, font, justify)
 	return fontString
 end
 
--- Creates a card of `width`; onAction(suggestion) runs when its button is clicked.
-function Card.Create(parent, width, onAction)
+-- Creates a card of `width`; onAction(suggestion) runs when its button is clicked. opts.clickable:
+-- no button, a click on the card runs the action (narrow cards of the advisor window).
+function Card.Create(parent, width, onAction, opts)
 	local card = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 	card:SetSize(width, Card.HEIGHT)
 	card:SetBackdrop(BACKDROP_TOAST_12_12)
@@ -79,6 +83,14 @@ function Card.Create(parent, width, onAction)
 	end)
 	card:SetScript("OnEnter", showTooltip)
 	card:SetScript("OnLeave", hideTooltip)
+	card.clickable = opts and opts.clickable or false
+	if card.clickable then
+		card:SetScript("OnMouseUp", function()
+			if card.suggestion and card.suggestion.action then
+				onAction(card.suggestion)
+			end
+		end)
+	end
 	return card
 end
 
@@ -98,11 +110,12 @@ function Card.Draw(card, suggestion, context)
 	card.title:SetText(view.title)
 	card.value:SetText(view.value)
 	card.detail:SetText(view.detail)
-	local right = view.button and Card.BUTTON_WIDTH + 2 * PADDING or PADDING
+	local hasButton = view.button ~= nil and not card.clickable
+	local right = hasButton and Card.BUTTON_WIDTH + 2 * PADDING or PADDING
 	for _, line in ipairs(card.lines) do
 		line:SetWidth(card:GetWidth() - Card.TEXT_X - right)
 	end
 	card.button:SetText(view.button or "")
-	Widgets.SetShown(card.button, view.button ~= nil)
+	Widgets.SetShown(card.button, hasButton)
 	card:Show()
 end

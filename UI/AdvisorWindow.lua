@@ -21,7 +21,7 @@ AdvisorWindow.SCALE = 0.85
 AdvisorWindow.LOGIN_DELAY_SECONDS = 7
 -- 80: full bags, cooldowns, craftable goals; not everyday selling.
 AdvisorWindow.LOGIN_MIN_PRIORITY = 80
-local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 380, 16, 46, 4, 60
+local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 300, 14, 44, 4, 56
 local CARD_WIDTH = WIDTH - 2 * PADDING
 local CHECK_GAP = 24
 local REFRESH_SIGNALS = {
@@ -85,8 +85,9 @@ end
 
 local function buildFooter(win, frame)
 	win.checks = {}
+	local labels = { advisorCards = L.ADVISOR_CHECK_CARDS, advisorAtLogin = L.ADVISOR_CHECK_LOGIN }
 	for i, key in ipairs({ "advisorCards", "advisorAtLogin" }) do
-		local check = Widgets.CreateCheck(frame, L[ns.Settings.Find(key).label], function(checked)
+		local check = Widgets.CreateCheck(frame, labels[key], function(checked)
 			ns.Inputs.Run("set " .. key .. " " .. (checked and "on" or "off"))
 		end)
 		check:SetPoint("BOTTOMLEFT", PADDING, PADDING / 2 + (2 - i) * CHECK_GAP)
@@ -100,7 +101,7 @@ local function create()
 	win.frame = frame
 	buildHeader(win, frame)
 	for i = 1, AdvisorWindow.MAX_CARDS do
-		local card = Card.Create(frame, CARD_WIDTH, ns.AdvisorActions.Run)
+		local card = Card.Create(frame, CARD_WIDTH, ns.AdvisorActions.Run, { clickable = true })
 		card:SetPoint("TOPLEFT", PADDING, -HEADER_HEIGHT - (i - 1) * (Card.HEIGHT + CARD_GAP))
 		win.cards[i] = card
 	end

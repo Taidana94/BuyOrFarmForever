@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.7.0-alpha.2 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+**Version 0.7.0-alpha.3 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
 Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
-(neu in 0.7.0) ist im Spiel getestet, seine kleinere Fassung aus 0.7.0-alpha.2 noch nicht. Nicht in Forever getestet.**
+(neu in 0.7.0) ist im Spiel getestet, seine schmale Fassung aus 0.7.0-alpha.3 noch nicht. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -270,7 +270,8 @@ Crafts vor (höchstens 5 pro Rezept). Rezepte mit Abklingzeit erkennt es, sobald
 Restzeit zeigt; ist sie vorbei, nennt der Login sie.
 
 **Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
-Jede Karte hat einen farbigen Streifen (grün: hier erledigen, gelb: Gold, blau: Hinweis, orange:
+Ein Klick auf eine Karte führt sie aus (z. B. öffnet „Deine beste Stunde“ den Goldplaner). Jede
+Karte hat einen farbigen Streifen (grün: hier erledigen, gelb: Gold, blau: Hinweis, orange:
 Warnung), eine Überschrift, den Goldwert und eine Erklärung; der Tooltip zeigt den Gegenstand oder
 die Liste. Unten im Ratgeber schaltest du die Karten an den Spielfenstern und das Öffnen nach dem
 Login ab. Nach dem Login öffnet er sich von selbst, wenn etwas Wichtiges ansteht (volle Taschen,
@@ -398,7 +399,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.7.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.7.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

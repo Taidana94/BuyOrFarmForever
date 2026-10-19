@@ -246,7 +246,7 @@ level.
 - `Core/Advisor.lua`: `Advisor.Context()` from window signals (last opened window wins),
   `ADVISOR_CONTEXT` signal on change, `Advisor.Collect` sorts by priority, then rating.
 - UI: `AdvisorText` (texts per kind), `AdvisorCard` (card widget, `BACKDROP_TOAST_12_12`),
-  `AdvisorWindow` (movable window, at most 4 cards, height follows the cards, scale 0.85, its two settings at the bottom; opens 7 s after login
+  `AdvisorWindow` (movable window 300 px, at most 4 clickable cards without buttons, height follows the cards, scale 0.85, its two settings at the bottom; opens 7 s after login
   if a suggestion has priority >= 80 and `advisorAtLogin`), `AdvisorSide` (cards next to
   `MerchantFrame`, `AuctionFrame`, `BankFrame`, `MailFrame`; one retry a frame later because the
   auction UI loads on demand), `AdvisorActions` (click actions).

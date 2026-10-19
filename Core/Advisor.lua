@@ -48,7 +48,8 @@ function Advisor.Collect(charData, context, now)
 	for _, source in ipairs(ns.AdvisorSources.BY_CONTEXT.ANY) do
 		source(env, list)
 	end
-	for _, source in ipairs(ns.AdvisorSources.BY_CONTEXT[context] or {}) do
+	-- The ANY sources ran already; without an open window there is nothing else to add.
+	for _, source in ipairs(context ~= "ANY" and ns.AdvisorSources.BY_CONTEXT[context] or {}) do
 		source(env, list)
 	end
 	table.sort(list, function(a, b)

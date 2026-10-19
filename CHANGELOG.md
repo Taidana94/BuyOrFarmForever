@@ -3,6 +3,20 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.3] – 2026-10-19 (Testversion)
+
+Nicht in Forever getestet.
+
+### Behoben
+
+- Im Ratgeber erschienen die Karten doppelt, solange kein Spielfenster offen war.
+
+### Geändert
+
+- Der Ratgeber ist schmaler. Seine Karten haben keinen Knopf mehr: Ein Klick auf die Karte führt
+  den Vorschlag aus (Verkaufen und Kaufen fragen weiterhin nach). Die Karten an den Spielfenstern
+  behalten ihre Knöpfe.
+
 ## [0.7.0-alpha.2] – 2026-10-19 (Testversion)
 
 Nicht in Forever getestet.
