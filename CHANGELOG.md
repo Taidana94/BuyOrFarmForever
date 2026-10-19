@@ -32,6 +32,8 @@ Auctionator. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.
   21 Tage) gelten als veraltet. Gespeichert wird davon nichts. Abschaltbar im Tab „Einstellungen“
   („Preise von Auctionator verwenden“) oder mit `/bof set useAuctionator off`.
 - Pfeile `<` `>` zum Wechseln des Ziels jetzt auch im Tab „Beschaffung“.
+- In der Addon-Liste steht das Addon in der Kategorie „Berufe“ und zeigt eine Goldmünze statt eines
+  Fragezeichens.
 
 ## [0.4.0] – 2026-10-19
 

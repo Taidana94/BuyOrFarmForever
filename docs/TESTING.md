@@ -340,6 +340,7 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 | In-game test (Forever) | none – the release must not be called Forever-compatible |
 | Version in TOC, CHANGELOG, README | 0.5.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged |
+| Addon list metadata | `## Category` (free text, read by `Blizzard_AddOnList/AddonList.lua` in 70003), `## Category-deDE` (localized variant assumed from other addons, verify), `## IconTexture` (coin icon of the minimap button); short in-game check before the tag |
 | ZIP | built and inspected: 82 files, top folder `BuyOrFarmForever/`, no dev files |
 | Performance | static review below; in-game `/bof perf` not measured for 0.5.0 |
 | Tag | `v0.5.0`, only after the user's approval |
