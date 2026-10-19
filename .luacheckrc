@@ -40,6 +40,9 @@ read_globals = {
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
 	"NUM_BAG_SLOTS",
 	"GetMoney", -- used by Blizzard_AuctionUI (Classic) in 70003
+	-- cursor (documented in 70003; item id return unverified, see Adapters/ClassicEraUI.lua)
+	"GetCursorInfo",
+	"ClearCursor",
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
 	"GetTradeSkillInfo",

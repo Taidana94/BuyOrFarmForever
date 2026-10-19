@@ -12,7 +12,7 @@ ns.MainWindow = MainWindow
 
 -- A global frame name is needed so Escape closes the window (UISpecialFrames holds names).
 local FRAME_NAME = "BuyOrFarmForeverMainFrame"
-local WIDTH, HEIGHT = 720, 420
+local WIDTH, HEIGHT = 780, 440
 local VALID_POINTS = {
 	CENTER = true, TOP = true, BOTTOM = true, LEFT = true, RIGHT = true,
 	TOPLEFT = true, TOPRIGHT = true, BOTTOMLEFT = true, BOTTOMRIGHT = true,

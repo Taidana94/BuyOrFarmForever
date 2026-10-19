@@ -40,6 +40,8 @@ Adapter.REQUIRED = {
 	"GetEquipSlots", -- (itemID) -> { slotKey, ... } e.g. { "CHEST" } (.sum = replaces all together), or nil
 	"GetEquippedItemID", -- (slotKey) -> item id in that slot, or nil
 	"GetSellPrice", -- (itemID) -> vendor sell price per unit in copper, or nil while loading
+	"GetCursorItem", -- () -> item id on the cursor (drag and drop), or nil
+	"ClearCursor", -- () -> nil: drops what the cursor holds (after the addon took an item)
 }
 
 -- Every adapter also has an `events` table: WoW event name -> client-neutral signal.

@@ -34,6 +34,16 @@ local function goalNew(argument)
 	Log.Print(Util.Format(L.GOAL_CREATED, id, UIShared.GoalName(charData.materialGoals[id])))
 end
 
+local function goalName(argument)
+	local charData = UIShared.WritableCharacter()
+	local goal = charData and UIShared.ActiveGoal(charData)
+	if not goal then
+		return
+	end
+	Materials.RenameGoal(goal, argument)
+	Log.Print(Util.Format(L.GOAL_RENAMED, UIShared.GoalName(goal)))
+end
+
 local function goalSelect(argument)
 	local charData = UIShared.WritableCharacter()
 	if not charData then
@@ -140,6 +150,7 @@ end
 
 local GOAL_SUBCOMMANDS = {
 	new = goalNew,
+	name = goalName,
 	select = goalSelect,
 	add = function(argument)
 		goalAdd(argument, false)

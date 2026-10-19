@@ -89,6 +89,12 @@ function Materials.CreateRecipeGoal(charData, recipe, crafts, now)
 	return id
 end
 
+-- Renames a goal (cleaned like a new label; empty = recipe name or "ohne Namen").
+function Materials.RenameGoal(goal, label)
+	goal.label = Materials.CleanLabel(label)
+	return goal.label
+end
+
 function Materials.GetGoal(charData, id)
 	return charData.materialGoals[id]
 end

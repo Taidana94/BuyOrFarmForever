@@ -241,4 +241,14 @@ function ClassicEra:GetItemLink(itemID)
 	return nil
 end
 
+-- Parts whose functions need no adapter state are exposed as methods unchanged:
+-- Adapters/ClassicEraUI.lua (cursor and window helpers).
+for _, part in ipairs({ ns.ClassicEraUI }) do
+	for name, fn in pairs(part) do
+		ClassicEra[name] = function(_, ...)
+			return fn(...)
+		end
+	end
+end
+
 ns.Adapter.Register(ClassicEra)

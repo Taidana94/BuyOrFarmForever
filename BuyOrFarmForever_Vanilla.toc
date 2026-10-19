@@ -26,6 +26,7 @@ Adapters\ClassicEraProfessions.lua
 Adapters\ClassicEraTrade.lua
 Adapters\ClassicEraBags.lua
 Adapters\ClassicEraGear.lua
+Adapters\ClassicEraUI.lua
 Adapters\ClassicEra.lua
 Core\Events.lua
 Core\Stock.lua
@@ -50,8 +51,10 @@ UI\CraftCommands.lua
 UI\AltCommands.lua
 UI\GoldCommands.lua
 UI\Widgets.lua
+UI\Inputs.lua
 UI\MaterialTabLayout.lua
 UI\MaterialTab.lua
+UI\MaterialTabActions.lua
 UI\SourcingTabLayout.lua
 UI\SourcingTab.lua
 UI\FarmTab.lua

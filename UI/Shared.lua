@@ -106,6 +106,20 @@ function UIShared.GoalName(goal)
 	return L.GOAL_UNNAMED
 end
 
+-- Plain-text name for an input box: the user's label, else the recipe's item or spell name
+-- (no link, so it can be edited), else "".
+function UIShared.GoalPlainName(goal)
+	if goal.label ~= "" or not goal.recipeKey then
+		return goal.label
+	end
+	local recipe = Recipes.Get(ns.db, goal.recipeKey)
+	if recipe and recipe.outputItemID ~= 0 then
+		return ns.Client:GetItemName(recipe.outputItemID) or ""
+	end
+	local keyType, id = Recipes.SplitKey(goal.recipeKey)
+	return keyType == "spell" and ns.Client:GetSpellName(id) or ""
+end
+
 -- Confirmation after a goal was created from a recipe (chat command and window button).
 function UIShared.PrintRecipeGoal(charData, id)
 	local goal = charData.materialGoals[id]
