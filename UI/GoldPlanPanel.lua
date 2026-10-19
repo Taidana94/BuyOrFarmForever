@@ -16,6 +16,8 @@ local MAX_STEPS, MAX_SOURCES = 8, 4
 local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, GAP = 60, 70, 6
 local SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -30, -52, -186, -208, -224
 local LINE_GAP, SOURCE_GAP, TEXT_WIDTH, KEEP_TEXT_WIDTH = 4, 2, 700, 600
+-- Kept items named next to the slot; more are counted.
+local MAX_KEEP_NAMES = 6
 
 local function createText(frame, font, y)
 	local text = frame:CreateFontString(nil, "OVERLAY", font)
@@ -51,11 +53,15 @@ local function buildTimeRow(panel, frame)
 	panel.durationBox:SetPoint("LEFT", previous, "RIGHT", GAP * 2, 0)
 end
 
+-- "Behalten: [slot] Kupfererz, Ruhestein …" at the bottom.
 local function buildKeepRow(panel, frame)
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	label:SetPoint("BOTTOMLEFT", 0, Inputs.SLOT_SIZE / 2 - LINE_GAP)
+	label:SetText(L.GOLDPLAN_KEEP_LABEL)
 	panel.keepSlot = Inputs.CreateItemSlot(frame, function(itemID)
 		Inputs.Run("goldkeep " .. itemID)
 	end)
-	panel.keepSlot:SetPoint("BOTTOMLEFT", 0, 0)
+	panel.keepSlot:SetPoint("LEFT", label, "RIGHT", GAP, 0)
 	panel.keepText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
 	panel.keepText:SetPoint("LEFT", panel.keepSlot, "RIGHT", GAP, 0)
 	panel.keepText:SetWidth(KEEP_TEXT_WIDTH)
@@ -112,9 +118,26 @@ function Panel.Refresh(panel)
 	panel.alternatives:SetText(alternatives)
 	panel.sourcesHeader:SetText(Util.Format(L.GOLD_SOURCES_HEADER, ns.db.settings.ahDiscountPercent))
 	showLines(panel.sources, GoldPlanCommands.SourceLines())
-	local kept = 0
-	for _ in pairs(charData.goldKeep) do
-		kept = kept + 1
+	panel.keepText:SetText(Panel.KeepText(charData))
+end
+
+-- The kept items by name (at most MAX_KEEP_NAMES, then "+n"), or a hint for an empty list.
+function Panel.KeepText(charData)
+	local ids = {}
+	for itemID in pairs(charData.goldKeep) do
+		ids[#ids + 1] = itemID
 	end
-	panel.keepText:SetText(Util.Format(L.GOLDPLAN_KEEP_HINT, kept))
+	if #ids == 0 then
+		return L.GOLDPLAN_KEEP_EMPTY
+	end
+	table.sort(ids)
+	local names = {}
+	for i = 1, math.min(#ids, MAX_KEEP_NAMES) do
+		names[i] = ns.UIShared.ItemText(ids[i])
+	end
+	local text = table.concat(names, L.PLAN_SEPARATOR)
+	if #ids > MAX_KEEP_NAMES then
+		text = text .. Util.Format(L.GOLDPLAN_KEEP_MORE, #ids - MAX_KEEP_NAMES)
+	end
+	return text
 end

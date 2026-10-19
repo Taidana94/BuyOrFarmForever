@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.6.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer und
+**Version 0.6.0-alpha.2 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer und
 Goldplaner. Die Version 0.5.0 ist in WoW Classic Era 1.15.9 getestet; der Goldplaner (neu in
-0.6.0) ist nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
+0.6.0) ist erst teilweise im Spiel getestet. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -374,7 +374,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.6.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.6.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

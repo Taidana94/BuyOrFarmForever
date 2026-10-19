@@ -28,7 +28,7 @@ function Player.IsOnTaxi()
 end
 
 -- Class file name ("PRIEST", "WARRIOR", …), or nil.
--- Spell ID of Disenchant (Classic Era game data; verify in game).
+-- Spell ID of Disenchant (Classic Era game data; confirmed in game 2026-10-19).
 local DISENCHANT_SPELL_ID = 13262
 
 -- Whether the character can disenchant (C_SpellBook.IsSpellKnown, documented in 70003).

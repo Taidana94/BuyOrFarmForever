@@ -17,7 +17,7 @@ The addon ships no game data (no item, quest, NPC, spell or map IDs).
 | Gethe/wow-ui-source, branch `forever`, commit `172a387e3ab8` | Forever (beta) | 1.60.1 (70450), 2026-10-16 | planning only; beta data is not final |
 | warcraft.wiki.gg API pages and Forever API notes | both | fetched 2026-10-18 | flavor tables, TOC rules, Blizzard quotes |
 | warcraft.wiki.gg `API_GetItemStats` (Retail page) | Retail | fetched 2026-10-18 | stat keys are GlobalStrings names; `ITEM_MOD_DAMAGE_PER_SECOND_SHORT` for weapon DPS: confirmed in game in Classic Era 1.15.9 on 2026-10-19 (`/dump GetItemStats(GetInventoryItemLink("player", 16))`) |
-| Disenchant spell ID 13262 | Classic Era | game data, **verify in game** (`/dump C_SpellBook.IsSpellKnown(13262)`) | gold planner, disenchant tasks |
+| Disenchant spell ID 13262 | Classic Era | game data, confirmed in game 2026-10-19 (`C_SpellBook.IsSpellKnown(13262)` = true on an enchanter) | gold planner, disenchant tasks |
 | Gold planner time constants (vendor 2 s/stack, auction 20 s/stack, disenchant 10 s/item, craft 5 s + post 20 s, buy 20 s/reagent), 5 crafts per recipe | – | design assumptions of this addon (2026-10-19) | gold planner |
 | Auctionator `Source/API/v1` (copy in Industrial/nixos-dotfiles, TOC Interface incl. 11509, version 335) | Classic Era | commit 2026-09-12, read 2026-10-19 | external price API; see `work/notes/price-addons.md` |
 | In game: `/dump GetBuildInfo()` | Classic Era | 1.15.9 (70003), 2026-10-18 | client version and interface |

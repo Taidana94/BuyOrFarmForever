@@ -3,6 +3,20 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.6.0-alpha.2] – 2026-10-19 (Testversion)
+
+Nicht in Forever getestet.
+
+### Behoben
+
+- Im Tab „Goldpuffer“ verschwand der eingegebene Name bzw. Betrag eines neuen Sparziels, sobald man
+  das Feld verließ; „Anlegen“ tat dann nichts. Dasselbe betraf „Einkauf prüfen“ und die Anzahl-Felder
+  im Tab „Material“, wenn man statt Enter den Knopf klickte.
+
+### Geändert
+
+- Goldplaner: Das Behalten-Feld ist beschriftet, daneben stehen die Gegenstände auf der Liste.
+
 ## [0.6.0-alpha.1] – 2026-10-19 (Testversion)
 
 Nur außerhalb des Spiels geprüft; nicht in Forever getestet.

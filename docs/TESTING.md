@@ -258,6 +258,16 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.6.0-alpha.1 (Classic Era, 2026-10-19, partial)
+
+Reported by the user: `C_SpellBook.IsSpellKnown(13262)` = true on an enchanter (Disenchant spell ID
+confirmed); `Auctionator.API.v1.GetDisenchantPriceByItemID("Test", 9515)` = 4874 (function present).
+Bugs: (1) the "Neu" row of the Gold buffer tab lost the typed name/amount on focus loss, so
+"Anlegen" did nothing – input boxes restored their shown value on focus loss; fixed with draft boxes
+(`opts.draft`) for form fields (also purchase check and the Material tab count boxes), regression
+test added. (2) the keep list was not visible – the planner now labels the slot and names the kept
+items. Both in 0.6.0-alpha.2.
+
 ### Checklist 0.6.0-alpha.1 (Classic Era, gold planner)
 
 1. `/reload`, `/bof version` → `0.6.0-alpha.1`. BugSack empty.

@@ -23,9 +23,11 @@ function Inputs.Run(command)
 	ns.Slash.Handle(command)
 end
 
--- Edit box. opts = { width, numeric (digits only), onCommit = fn(text) }. Enter commits and drops
--- the focus; Escape and losing the focus restore the shown value. Refreshes set the shown value
--- with Inputs.SetValue, which leaves a box alone while the player is typing in it.
+-- Edit box. opts = { width, numeric (digits only), draft, onCommit = fn(text) }. Enter commits and
+-- drops the focus. Losing the focus (also Escape) restores the shown value; a draft box (fields of
+-- a form that a button submits, e.g. "Neu: [Name] [Betrag] [Anlegen]") keeps the typed text
+-- instead, so moving to the next field or clicking the button does not lose it. Refreshes set the
+-- shown value with Inputs.SetValue, which leaves a box alone while the player is typing in it.
 function Inputs.CreateBox(parent, opts)
 	local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
 	box:SetSize(opts.width, BOX_HEIGHT)
@@ -41,7 +43,11 @@ function Inputs.CreateBox(parent, opts)
 		self:ClearFocus()
 	end)
 	box:SetScript("OnEditFocusLost", function(self)
-		self:SetText(self.value)
+		if opts.draft then
+			self.value = self:GetText() or ""
+		else
+			self:SetText(self.value)
+		end
 	end)
 	return box
 end
