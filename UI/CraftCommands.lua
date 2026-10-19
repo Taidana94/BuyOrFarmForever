@@ -1,5 +1,6 @@
--- /bof craft, /bof weights, /bof alt: craft evaluation of the selected goal (or of any item),
--- stat weights and alternatives. CraftCommands.EvaluationLines is shared with the Craft tab.
+-- /bof craft, /bof weights: craft evaluation of the selected goal (or of any item) and stat
+-- weights. CraftCommands.EvaluationLines is shared with the Craft tab; KindName and DetailLine are
+-- shared with /bof alt (UI/AltCommands.lua).
 local _, ns = ...
 
 local L = ns.L
@@ -15,10 +16,12 @@ local CraftCommands = {}
 ns.CraftCommands = CraftCommands
 
 local STAT_WORDS = { str = "STR", agi = "AGI", sta = "STA", int = "INT", spi = "SPI" }
-local KIND_WORDS = { planned = "PLANNED", drop = "POSSIBLE" }
 local KIND_NAMES = { PLANNED = "ALT_KIND_PLANNED", POSSIBLE = "ALT_KIND_POSSIBLE" }
-local CLEAR_WORD = "clear"
 local ERROR_TEXTS = { not_equippable = "CRAFT_NOT_EQUIPPABLE", loading = "CRAFT_LOADING" }
+
+function CraftCommands.KindName(kind)
+	return L[KIND_NAMES[kind]]
+end
 
 -- Scores are whole numbers unless a weight has decimals.
 local function scoreText(score)
@@ -84,7 +87,7 @@ end
 
 -- Extra line with the user's cost, time and requirements of an alternative (nil without details),
 -- next to the craft's sourcing cost and farm time when a plan is given.
-local function detailLine(alt, plan)
+function CraftCommands.DetailLine(alt, plan)
 	if not (alt.copper or alt.seconds or alt.requires) then
 		return nil
 	end
@@ -101,7 +104,7 @@ local function alternativeLines(lines, charData, comparison, plan)
 	local weights = charData.craftEval.weights
 	for index, alt in ipairs(charData.craftEval.alternatives) do
 		local altComparison, err = CraftEval.CompareWithEquipped(alt.itemID, weights)
-		local kind = L[KIND_NAMES[alt.kind]]
+		local kind = CraftCommands.KindName(alt.kind)
 		local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
 		if altComparison and comparison then
 			lines[#lines + 1] = Util.Format(L.ALT_LINE, index, kind, UIShared.ItemText(alt.itemID),
@@ -110,7 +113,7 @@ local function alternativeLines(lines, charData, comparison, plan)
 			lines[#lines + 1] = Util.Format(L.ALT_LINE_NO_COMPARE, index, kind,
 				CraftCommands.CompareLine(alt.itemID, altComparison, err), note)
 		end
-		lines[#lines + 1] = detailLine(alt, plan)
+		lines[#lines + 1] = CraftCommands.DetailLine(alt, plan)
 	end
 end
 
@@ -191,109 +194,7 @@ local function weightsCommand(argument)
 	Log.Print(CraftCommands.WeightsLine(charData.craftEval.weights))
 end
 
--- /bof alt [add <item> planned|drop [note] | remove <nr>] ------------------------------------
-
-local function printAlternative(index, alt)
-	local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
-	Log.Print(Util.Format(L.ALT_LIST_LINE, index, L[KIND_NAMES[alt.kind]], UIShared.ItemText(alt.itemID), note))
-	local details = detailLine(alt)
-	if details then
-		Log.Print(details)
-	end
-end
-
-local function listAlternatives(charData)
-	if #charData.craftEval.alternatives == 0 then
-		Log.Print(L.ALT_LIST_EMPTY)
-		return
-	end
-	for index, alt in ipairs(charData.craftEval.alternatives) do
-		printAlternative(index, alt)
-	end
-end
-
-local function addAlternative(charData, argument)
-	local itemID, rest = Util.ParseItemArg(argument)
-	local kindWord, note = Slash.SplitCommand(rest or "")
-	local index, err = CraftEval.AddAlternative(charData, itemID, KIND_WORDS[kindWord], note, ns.Client:GetServerTime())
-	if not index then
-		Log.Print(err == "too_many_alternatives" and Util.Format(L.ALT_TOO_MANY, CraftEval.MAX_ALTERNATIVES) or L.ALT_USAGE)
-		return
-	end
-	Log.Print(Util.Format(L.ALT_ADDED, index, UIShared.ItemText(itemID)))
-end
-
-local function removeAlternative(charData, argument)
-	if CraftEval.RemoveAlternative(charData, Util.ParseInteger(Util.Trim(argument))) then
-		Log.Print(L.ALT_REMOVED)
-	else
-		Log.Print(Util.Format(L.ALT_NOT_FOUND, Util.Trim(argument)))
-	end
-end
-
-local function parseRequires(text)
-	local requires = Util.Trim(text)
-	if requires == "" then
-		return nil, "invalid_requires"
-	end
-	return requires
-end
-
--- /bof alt cost|time|req <nr> <value|clear>: subcommand -> stored field and parser of the value.
-local DETAILS = {
-	cost = { field = "copper", parse = Money.Parse },
-	time = { field = "seconds", parse = Util.ParseDuration },
-	req = { field = "requires", parse = parseRequires },
-}
-
-local function setDetail(charData, detail, argument)
-	local indexText, valueText = Slash.SplitCommand(argument)
-	local value
-	if string.lower(Util.Trim(valueText)) ~= CLEAR_WORD then
-		local err
-		value, err = detail.parse(valueText)
-		if value == nil then
-			UIShared.PrintError(err)
-			return
-		end
-	end
-	local index = Util.ParseInteger(indexText)
-	if not CraftEval.SetAlternativeDetail(charData, index, detail.field, value) then
-		Log.Print(Util.Format(L.ALT_NOT_FOUND, indexText))
-		return
-	end
-	printAlternative(index, charData.craftEval.alternatives[index])
-end
-
-local WRITE_COMMANDS = { add = addAlternative, remove = removeAlternative }
-for word, detail in pairs(DETAILS) do
-	WRITE_COMMANDS[word] = function(charData, argument)
-		setDetail(charData, detail, argument)
-	end
-end
-
-local function altCommand(argument)
-	local sub, rest = Slash.SplitCommand(argument)
-	if sub == "" or sub == "list" then
-		local charData = UIShared.Character()
-		if charData then
-			listAlternatives(charData)
-		end
-		return
-	end
-	local command = WRITE_COMMANDS[sub]
-	if not command then
-		Log.Print(L.ALT_USAGE)
-		return
-	end
-	local charData = UIShared.WritableCharacter()
-	if charData then
-		command(charData, rest)
-	end
-end
-
 if ns.Client then
 	Slash.AddCommand("craft", craftCommand, L.HELP_LINE_CRAFT)
 	Slash.AddCommand("weights", weightsCommand, L.HELP_LINE_WEIGHTS)
-	Slash.AddCommand("alt", altCommand, L.HELP_LINE_ALT)
 end
