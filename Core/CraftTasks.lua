@@ -3,7 +3,9 @@
 -- Profit = sale value of the products (vendor price, sure; auction gold on top after the cut, not
 -- guaranteed) minus the reagents. Reagents in the bags count with their raw value (what they would
 -- bring when sold, the same split into sure and auction gold), reagents to buy with their planning
--- price (Prices.Best); a recipe with a needed price missing is skipped. Normal recipes count with as
+-- price (Prices.Best). A reagent to get without a buy price but with measured farm runs is farmed:
+-- no gold, its farm time (Core/FarmEstimates.lua, plus one run's travel) is added to the task's time.
+-- A recipe with a reagent that has neither is skipped. Normal recipes count with as
 -- many crafts as the bags allow, otherwise MAX_CRAFTS (the auction house's demand is unknown);
 -- cooldown recipes with one craft once they are ready.
 local _, ns = ...
@@ -29,8 +31,16 @@ local function craftsFromBags(recipe)
 	return crafts or 0
 end
 
+-- Seconds to farm `amount` units from measured runs (with one run's travel), or nil.
+local function farmSeconds(itemID, amount)
+	local basis = ns.FarmEstimates.ForItem(ns.db, itemID, ns.db.settings.farmEstimateScope, ns.charKey)
+	local seconds = ns.FarmEstimates.TimeFor(basis, amount)
+	return seconds and seconds + basis.travelSeconds
+end
+
 -- Value of `need` units of a reagent: units in the bags at their raw value (sure, auction), the rest
--- at the planning price. Returns sure, auction, bought (units to buy), or nil if a price is missing.
+-- at the planning price, or farmed without one. Returns sure, auction, bought (units to buy),
+-- farmed (seconds), or nil if neither a price nor farm runs are known.
 local function reagentValue(itemID, need, now)
 	local have = math.min(need, ns.Client:GetBagCount(itemID))
 	local buyPrice = ns.PriceCapture.Best(itemID, now)
@@ -46,32 +56,37 @@ local function reagentValue(itemID, need, now)
 		end
 		sure, auction = vendor * have, extra * have
 	end
-	if need > have and not buyPrice then
-		return nil
+	local missing = need - have
+	if missing > 0 and not buyPrice then
+		local seconds = farmSeconds(itemID, missing)
+		if not seconds then
+			return nil
+		end
+		return sure, auction, 0, seconds
 	end
-	return sure + (need - have) * (buyPrice or 0), auction, need - have
+	return sure + missing * (buyPrice or 0), auction, missing, 0
 end
 
 -- Value of `crafts` crafts: { sure, auction (profit parts), saleVendor, saleAuction (products sold
 -- to a vendor / on the auction house after the cut), reagents (their value), buys (reagents to
--- buy) }, or nil if a price is missing.
+-- buy), farmSeconds (time to farm the others) }, or nil if a price is missing.
 function CraftTasks.Value(recipe, crafts, now)
 	local vendor, extra = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
 	if not vendor then
 		return nil
 	end
 	local made = crafts * (recipe.outputMin + recipe.outputMax) / 2
-	local costSure, costAuction, buys = 0, 0, 0
+	local costSure, costAuction, buys, farmed = 0, 0, 0, 0
 	for _, reagent in ipairs(recipe.reagents) do
-		local sure, auction, bought = reagentValue(reagent.itemID, reagent.count * crafts, now)
+		local sure, auction, bought, seconds = reagentValue(reagent.itemID, reagent.count * crafts, now)
 		if not sure then
 			return nil
 		end
-		costSure, costAuction = costSure + sure, costAuction + auction
+		costSure, costAuction, farmed = costSure + sure, costAuction + auction, farmed + seconds
 		buys = buys + (bought > 0 and 1 or 0)
 	end
 	return { sure = made * vendor - costSure, auction = made * extra - costAuction, saleVendor = made * vendor,
-		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys }
+		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys, farmSeconds = farmed }
 end
 
 local function isReady(entry, now)
@@ -92,7 +107,7 @@ local function taskFor(key, entry, now)
 	end
 	value.kind = entry.cooldown and "COOLDOWN" or "CRAFT"
 	value.itemID, value.crafts, value.fromBags = recipe.outputItemID, crafts, fromBags
-	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT
+	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT + value.farmSeconds
 	return value
 end
 

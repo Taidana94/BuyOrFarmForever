@@ -45,6 +45,7 @@ local EMPTY = {
 local CRAFT_REASONS = {
 	CRAFT_NOW = "ADVISOR_CRAFT_REASON_GOAL", COOLDOWN_READY = "ADVISOR_CRAFT_REASON_COOLDOWN",
 	PROFIT_BAGS = "ADVISOR_CRAFT_REASON_BAGS", PROFIT_BUY = "ADVISOR_CRAFT_REASON_BUY",
+	PROFIT_FARM = "ADVISOR_CRAFT_REASON_FARM",
 }
 
 local function itemText(s)
@@ -219,6 +220,9 @@ local TIPS = {
 			if entry.saleVendor then
 				lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT_PARTS, Money.Format(entry.saleVendor),
 					Money.Format(math.floor(entry.saleAuction)), Money.Format(math.floor(entry.reagents)))
+			end
+			if (entry.farmSeconds or 0) > 0 then
+				lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT_FARM, Util.FormatDuration(entry.farmSeconds))
 			end
 		end
 		for _, wait in ipairs(s.waiting or {}) do

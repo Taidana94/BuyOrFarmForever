@@ -258,6 +258,12 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.7.0-alpha.6 (Classic Era, farmed reagents)
+
+1. `/bof version` → `0.7.0-alpha.6`. Checklists 0.7.0-alpha.5 and alpha.4 below still apply.
+2. A recipe whose reagent has no price but was farmed in a measured run (or dev samples via
+   `/bofdev seed`): Herstellen names it with "Zutaten farmen"; tooltip "Zutaten farmen: etwa …".
+
 ### Checklist 0.7.0-alpha.5 (Classic Era, craft values)
 
 1. `/bof version` → `0.7.0-alpha.5`. Checklist 0.7.0-alpha.4 below still applies.

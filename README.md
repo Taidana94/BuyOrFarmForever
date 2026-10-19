@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.7.0-alpha.5 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+**Version 0.7.0-alpha.6 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
 Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
-(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4/5 noch nicht. Nicht in Forever
+(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4 bis 6 noch nicht. Nicht in Forever
 getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
@@ -268,7 +268,8 @@ Anreise einmal pro Ausflug. Eine Route braucht mindestens 10 Minuten Messung.
 Rezepte dieses Charakters (nur gelernte). Haben Produkt und Zutaten Preise, schlägt der Goldplaner
 gewinnbringende Crafts vor: Verkaufswert beim Händler und im AH minus Zutaten. Zutaten in deinen
 Taschen zählen mit dem, was sie roh beim Verkauf bringen würden; Zutaten zum Kaufen mit dem
-Kaufpreis. Mit Zutaten in der Tasche so viele Crafts, wie sie reichen, sonst höchstens 5. Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
+Kaufpreis. Hat eine Zutat keinen Preis, aber du hast sie schon einmal gefarmt (gemessene Farmrunde),
+rechnet das Addon sie als „farmen“: kein Gold, dafür die geschätzte Farmzeit. Mit Zutaten in der Tasche so viele Crafts, wie sie reichen, sonst höchstens 5. Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
 Restzeit zeigt; ist sie vorbei, nennt der Login sie.
 
 **Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
@@ -411,7 +412,7 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 
 ## Version
 
-0.7.0-alpha.5 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.7.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -55,11 +55,12 @@ end
 local function withValue(entry, value)
 	entry.sure, entry.auction = value.sure or 0, value.auction or 0
 	entry.saleVendor, entry.saleAuction, entry.reagents = value.saleVendor, value.saleAuction, value.reagents
+	entry.farmSeconds = value.farmSeconds
 	return entry
 end
 
 -- Craft entries: ready goals of learned recipes, ready cooldowns (with their value when priced and
--- profitable), then profitable recipes whose reagents are in the bags, then those to buy for.
+-- profitable), then profitable recipes whose reagents are in the bags, then those to buy or farm for.
 local function craftEntries(env, tasks)
 	local cooldownValue = {}
 	for _, task in ipairs(tasks) do
@@ -74,8 +75,9 @@ local function craftEntries(env, tasks)
 	for _, task in ipairs(tasks) do
 		if task.kind == "CRAFT" then
 			local list = task.fromBags > 0 and entries or buy
-			list[#list + 1] = withValue({ reason = task.fromBags > 0 and "PROFIT_BAGS" or "PROFIT_BUY",
-				itemID = task.itemID, crafts = task.crafts }, task)
+			local reason = (task.fromBags > 0 and "PROFIT_BAGS") or (task.farmSeconds > 0 and "PROFIT_FARM")
+				or "PROFIT_BUY"
+			list[#list + 1] = withValue({ reason = reason, itemID = task.itemID, crafts = task.crafts }, task)
 		end
 	end
 	for _, entry in ipairs(buy) do

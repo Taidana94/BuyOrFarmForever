@@ -224,7 +224,9 @@ level.
   items without value and `characters[key].goldKeep` skipped; bound items not on the auction house),
   `Core/CraftTasks.lua` (learned recipes = recipe book: product value (vendor sure, auction surplus
   after the cut) minus the reagents; reagents in the bags at their raw value (`GoldRoutes.SaleParts`,
-  buy price if they have no sale value), the rest at `PriceCapture.Best`; as many crafts as the bags
+  buy price if they have no sale value), the rest at `PriceCapture.Best`, or farmed (no gold, farm
+  time from `FarmEstimates` plus one run's travel added to the task time; 0.7.0-alpha.6) when there is
+  no buy price but measured runs; as many crafts as the bags
   allow, else 5; cooldown recipes 1 craft when ready, waiting ones listed by `CraftTasks.Waiting`;
   best 5 tasks). Since 0.7.0-alpha.5; before, all reagents counted at the buy price.
 - Plan (`Core/GoldPlan.lua`, pure): tasks by rating per second, each taken if it beats the best

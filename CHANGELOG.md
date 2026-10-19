@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.7.0-alpha.6] – 2026-10-19 (Testversion)
+
+Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+
+### Geändert
+
+- Herstellen: Hat eine Zutat keinen Preis, aber eine gemessene Farmrunde, wird sie als gefarmt
+  gerechnet – kein Gold, dafür die Farmzeit (im Tooltip „Zutaten farmen: etwa …“, auf der Karte
+  „Zutaten farmen“). Vorher fiel so ein Rezept als „ohne Preis“ heraus. Auch der Goldplaner rechnet
+  die Farmzeit mit ein.
+
 ## [0.7.0-alpha.5] – 2026-10-19 (Testversion)
 
 Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
