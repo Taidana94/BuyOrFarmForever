@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.3.0 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); only version and documentation changed against 0.3.0-alpha.3 |
 | 0.3.0-alpha.3 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); mutation check: no sanitizing of alternative details fails 1 |
 | 0.3.0-alpha.2 | 2026-10-19 | 172 checks passed, 0 failed (154 unit tests); new level 1b check for characters the game font draws (fails on the old `→` texts); the new stacking checks in the Craft and Gold tab tests fail without the fix |
 | 0.3.0-alpha.1 | 2026-10-18 | 169 checks passed, 0 failed (152 unit tests); gold buffer mutation checks: ignoring the gold limit, no login guard, reserves ignored, no gap cap each fail 1; farm tab mutation checks: no ticker cancel on hide, ticker while paused each fail 1; mutation checks: strongest instead of weakest ring, no two-hand sum, ignoring weights, owned not capped (after adding a test) each fail 1–2 |
@@ -264,6 +265,36 @@ Bugs found (screenshot):
 5. `/bof alt cost n clear` → "Kosten unbekannt". Errors: `/bof alt time n 90` (no unit),
    `/bof alt cost 99 1g` (unknown number) → clear messages, nothing changes.
 6. `/reload` → the details are kept. BugSack: no errors.
+
+### Release check 0.3.0 (2026-10-19)
+
+| Step (CLAUDE.md section 9) | Result |
+|---|---|
+| Checks levels 0, 1, 1b, 1c, 2 | 175 passed, 0 failed |
+| In-game test (Classic Era) | every feature tested in 0.3.0-alpha.1 to alpha.3 (results above); 0.3.0 = 0.3.0-alpha.3 code |
+| In-game test (Forever) | none – the release must not be called Forever-compatible |
+| Version in TOC, CHANGELOG, README | 0.3.0 |
+| Interface version | 11509 = client 1.15.9 (70003), unchanged since 2026-10-18 (debug log of the user's client) |
+| ZIP | built and inspected (see below) |
+| Performance | static review below; in-game `/bof perf` for 0.3.0 still to be measured |
+| Tag | `v0.3.0` only after the performance numbers; push/publication only after the user's approval |
+
+ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 56 files, top folder `BuyOrFarmForever/`, `/` as
+separator, no `.git`, `docs/`, `.luacheckrc`, `.pkgmeta`; TOC `## Version: 0.3.0`, `## Interface: 11509`;
+includes the new `UI/AltCommands.lua`. The 0.2.0 ZIP was moved to `work/backup/BuyOrFarmForever-0.2.0.zip`.
+
+### Performance review before 0.3.0 (2026-10-19, static)
+
+Only what changed since the review before 0.2.0:
+
+| Handler | Registered | Frequency | Cost | Verdict |
+|---|---|---|---|---|
+| `PLAYER_MONEY` → `IncomeCapture` | always (was: only while the Sourcing tab is shown) | per gold change | one income record update; `Income.RecordChange` builds a list of at most 60 day keys for pruning (one small table per gold change) | ok: gold changes are rare (loot, vendor), not per frame |
+| `BAGS_CHANGED`, `LOGOUT` → `IncomeCapture` checkpoint | always | per bag-change burst | two number updates, no allocation once the day record exists | ok |
+| `PLAYER_EQUIPMENT_CHANGED` → Craft tab | only while the Craft tab is shown | per equipment change | one coalesced refresh (sourcing plan + stat comparison) | ok |
+| Craft tab, Gold tab, Farm tab refresh signals | only while the tab is shown | per signal, coalesced to one refresh per frame | text lines only (fixed pools of font strings) | ok |
+| Farm tab ticker (`C_Timer.NewTicker`, 1 s, `-- PERF-OK`) | only while the Farm tab is visible **and** a run is running; cancelled on hide, pause and stop | 1 per second | one status text update | ok (unit test: no ticker when hidden or paused) |
+| `OnUpdate` | none | – | – | ok (level 1c) |
 
 ### Release check 0.2.0 (2026-10-18)
 

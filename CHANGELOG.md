@@ -3,36 +3,31 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.3.0-alpha.3] – noch nicht veröffentlicht
+## [0.3.0] – 2026-10-19 (noch nicht veröffentlicht)
+
+Craft-Bewertung, Goldpuffer und neue Fenster-Tabs. Getestet in WoW Classic Era 1.15.9; nicht in
+Forever getestet.
 
 ### Hinzugefügt
 
-- Craft-Bewertung (`/bof craft`, Tab „Craft“): hergestellter Gegenstand gegen deine angelegte
-  Ausrüstung nach deinen Gewichten, Beschaffungskosten und Farmzeit, Kosten pro Wertungspunkt,
-  Wert vorhandener Zutaten.
-- Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
-- Alternativen zum Craft: eingeplant oder möglicher Drop, mit Quelle/Notiz (`/bof alt`).
-- Alternativen mit Kosten, Zeitaufwand und Voraussetzung (`/bof alt cost|time|req <Nr.> …`,
-  `clear` löscht einen Wert); die Craft-Bewertung zeigt sie neben Kosten und Farmzeit des Crafts.
+- **Craft-Bewertung** (`/bof craft`, Tab „Craft“): hergestellter Gegenstand gegen deine angelegte
+  Ausrüstung nach deinen Gewichten, mit dem verglichenen Platz (z. B. „Brust“, „Finger 1“),
+  Beschaffungskosten und Farmzeit, Kosten pro Wertungspunkt und Wert vorhandener Zutaten. Der Tab
+  hat eigene Knöpfe `<` und `>` und erklärt, warum ein Ziel nichts zu vergleichen hat.
 - `/bof craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
-- Tab „Farmen“ im Fenster: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden,
-  prüfen und speichern; laufende Zeit und geschätzte Farmzeit.
-- `/bof farm keep all` zählt alle unklaren Zugänge mit.
-- Goldpuffer (`/bof gold`, Tab „Goldpuffer“): Sparziele mit Priorität, Gold einmalig verteilen,
+- Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
+- **Alternativen** zum Craft (`/bof alt`): eingeplant oder möglicher Drop, mit Quelle/Notiz,
+  Kosten, Zeitaufwand und Voraussetzung (`/bof alt cost|time|req <Nr.> …`, `clear` löscht einen
+  Wert); die Craft-Bewertung zeigt sie neben Kosten und Farmzeit des Crafts.
+- **Goldpuffer** (`/bof gold`, Tab „Goldpuffer“): Sparziele mit Priorität, Gold einmalig verteilen,
   Rücklagen, freies Gold und ungedeckte Ziele, Prüfung eines Einkaufs gegen die Rücklagen,
   Nettoerlös pro Stunde (inklusive Verlusten).
 - Beschaffung: Zeitgegenwert der Kosten aus deinem Nettoerlös, Hinweis auf Rücklagen-Nutzung;
   wahlweise nur mit freiem Gold planen (`/bof gold reserves`).
-
+- Tab „Farmen“: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden, prüfen und
+  speichern; laufende Zeit und geschätzte Farmzeit.
+- `/bof farm keep all` zählt alle unklaren Zugänge mit.
 - Tab „Hilfe“ mit allen Befehlen.
-- Craft-Bewertung nennt den verglichenen Platz (z. B. „Brust“, „Finger 1“); der Tab „Craft“ hat
-  eigene Knöpfe `<` und `>` zum Wechseln des Ziels und erklärt, warum ein Ziel nichts zu vergleichen hat.
-
-### Behoben
-
-- Tab „Craft“ und Goldpuffer: Lange Zeilen, die umbrechen, überdecken die nächste Zeile nicht mehr.
-- Craft-Vergleich: Statt eines Pfeils, den die Spielschrift als Kästchen zeigt, steht jetzt
-  „Unterschied“ (z. B. „(15), Unterschied -12“).
 
 ### Geändert
 

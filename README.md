@@ -1,7 +1,7 @@
 # Kaufen oder farmen?
 
-**Entwicklungsversion 0.3.0-alpha.3 – Materialbeschaffung, Craft-Bewertung, Goldpuffer und Tab „Farmen“
-(getestet in WoW Classic Era). Nicht in Forever getestet.**
+**Version 0.3.0 – Materialbeschaffung, Craft-Bewertung und Goldpuffer. Getestet in WoW Classic Era
+1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -22,7 +22,8 @@ Diese Version enthält die **Materialbeschaffung**:
 Neu in 0.3.0: **Lohnt sich der Craft?** – der hergestellte Gegenstand eines Rezept-Ziels wird
 mit deiner angelegten Ausrüstung verglichen (nach deinen Gewichten für Stärke, Beweglichkeit,
 Ausdauer, Intelligenz und Willenskraft), dazu Beschaffungskosten und Farmzeit pro
-Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen.
+Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen
+mit deren Kosten, Zeitaufwand und Voraussetzungen.
 
 Ebenfalls neu: der **Goldpuffer** – Sparziele (Reiten, Training, Berufsausbau, ein weiterer Craft)
 mit Priorität, einmaliges Verteilen deines Golds, Übersicht über Rücklagen, freies Gold und
@@ -228,12 +229,14 @@ weist darauf hin.
 - Die Craft-Bewertung rechnet nur mit Stärke, Beweglichkeit, Ausdauer, Intelligenz und
   Willenskraft. Rüstung, Waffenschaden, Effekte und Setboni werden nicht bewertet. Einhandwaffen
   werden nur mit der Haupthand verglichen. Gewichte und Alternativen gibt es nur per Chat-Befehl.
+- Der Tab „Craft“ zeigt höchstens 12 Zeilen; bei vielen Alternativen steht der Rest nur im Chat
+  (`/bof craft`).
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.3.0-alpha.3): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
+**Außerhalb des Spiels** (Version 0.3.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck ohne
 Warnungen, Übersetzungsschlüssel, Sauberkeit und Leistung (Funktionslänge, keine Skripte pro Bild,
 kein Speicherzuwachs bei Taschenänderungen) und 157 automatische Tests in einer nachgebauten
 Spielumgebung (Start, `/reload`, beschädigte und neuere Daten, alle Befehle, Ziele, Bestand,
@@ -252,16 +255,18 @@ nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zug�
 Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
 0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
 
-Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) wurde am 19.10.2026 im Spiel
-getestet, ohne Lua-Fehler. Dabei fielen zwei Darstellungsfehler im Tab „Craft“ auf (überlappende
-Zeilen, Kästchen statt Pfeil); sie sind in 0.3.0-alpha.2 behoben und im Spiel bestätigt. Kosten,
-Zeitaufwand und Voraussetzung von Alternativen (0.3.0-alpha.3) sind im Spiel getestet.
+Die Neuerungen von 0.3.0 (Craft-Bewertung mit Alternativen, Tab „Farmen“, Goldpuffer, Tab „Hilfe“)
+wurden am 18. und 19.10.2026 in den Zwischenversionen 0.3.0-alpha.1 bis 0.3.0-alpha.3 im Spiel
+getestet, ohne Lua-Fehler; zwei Darstellungsfehler im Tab „Craft“ wurden dabei gefunden und
+behoben. Einnahmen und Ausgaben beim Nettoerlös: getestet nach deiner Rückmeldung, ohne Spur in
+den gespeicherten Daten. Die Version 0.3.0 unterscheidet sich von 0.3.0-alpha.3 nur in
+Versionsnummer und Dokumentation.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.3.0-alpha.3 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.3.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
