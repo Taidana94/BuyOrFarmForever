@@ -3,23 +3,10 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.6.0-alpha.2] – 2026-10-19 (Testversion)
+## [0.6.0] – 2026-10-19
 
-Nicht in Forever getestet.
-
-### Behoben
-
-- Im Tab „Goldpuffer“ verschwand der eingegebene Name bzw. Betrag eines neuen Sparziels, sobald man
-  das Feld verließ; „Anlegen“ tat dann nichts. Dasselbe betraf „Einkauf prüfen“ und die Anzahl-Felder
-  im Tab „Material“, wenn man statt Enter den Knopf klickte.
-
-### Geändert
-
-- Goldplaner: Das Behalten-Feld ist beschriftet, daneben stehen die Gegenstände auf der Liste.
-
-## [0.6.0-alpha.1] – 2026-10-19 (Testversion)
-
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
+Goldplaner: wie du in deiner verfügbaren Zeit am meisten Gold machst. Getestet in WoW Classic Era
+1.15.9; nicht in Forever getestet.
 
 ### Hinzugefügt
 
@@ -39,6 +26,11 @@ Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
 
 - „Anderer Weg“ im Tab „Beschaffung“ nutzt die neuen Farmrouten (mit Beutegold und AH-Abschlag).
 - Im Tab „Goldpuffer“ steht „Einkauf prüfen“ jetzt rechts neben „Deine Sparziele“.
+
+### Behoben
+
+- Eingabefelder, die ein Knopf abschickt (neues Sparziel, Einkauf prüfen, Anzahl im Tab „Material“),
+  verloren den eingegebenen Text, sobald man das Feld verließ.
 
 ## [0.5.0] – 2026-10-19
 

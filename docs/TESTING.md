@@ -258,6 +258,35 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.6.0-alpha.2 (Classic Era, 2026-10-19)
+
+User: new savings goal works again; everything else of the checklist passed ("Passt alles"). Farm
+routes (`/bof goldsources`, planner, "Anderer Weg") were tested with the sample runs of the
+developer addon `work/dev/BuyOrFarmForever_Dev` (`/bofdev seed`), not with real farm runs: the
+looted-coin capture of real runs is covered by unit tests only.
+
+### Release check 0.6.0 (2026-10-19)
+
+| Step (CLAUDE.md section 9) | Result |
+|---|---|
+| Checks levels 0, 1, 1b, 1c, 2 | 275 passed, 0 failed (255 addon tests + 2 developer-addon tests) |
+| In-game test (Classic Era) | 0.6.0-alpha.1 (spell and Auctionator checks; two findings) and 0.6.0-alpha.2 (all items) passed; 0.6.0 = 0.6.0-alpha.2 code |
+| In-game test (Forever) | none – the release must not be called Forever-compatible |
+| Version in TOC, CHANGELOG, README | 0.6.0 |
+| Interface version | 11509 = client 1.15.9 (70003), unchanged |
+| ZIP | built and inspected: top folder `BuyOrFarmForever/`, no dev files, developer addon not included |
+| Performance | static review below; in-game `/bof perf` not measured for 0.6.0 |
+| Tag | `v0.6.0`, only after the user's approval |
+
+### Performance review before 0.6.0 (2026-10-19, static)
+
+New handlers: `RecipeBook` on profession window events (always registered; one 1 s timer per burst,
+then one read of the visible recipes); looted coins added in the existing `MONEY_CHANGED` handler
+(one number). The Gold buffer tab adds `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` only while
+shown; the planner view recomputes bag tasks (one bag pass, ~100 slots), craft tasks (recipe book,
+at most 500 recipes) and routes (at most 500 runs, values cached per item) once per coalesced
+refresh. No `OnUpdate`, no ticker. Verdict: ok.
+
 ### Result 0.6.0-alpha.1 (Classic Era, 2026-10-19, partial)
 
 Reported by the user: `C_SpellBook.IsSpellKnown(13262)` = true on an enchanter (Disenchant spell ID
