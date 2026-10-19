@@ -84,7 +84,7 @@ function Tab:Refresh()
 		self:Show({}, emptyText, "", {})
 		return
 	end
-	local plan, inputs = PlanCommands.CurrentPlan(charData, goals)
+	local plan, inputs = Sourcing.CurrentPlan(charData, goals)
 	for i, line in ipairs(plan.lines) do
 		line.tooltipLines = tooltipLines(line, inputs[i])
 	end

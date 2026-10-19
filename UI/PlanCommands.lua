@@ -91,16 +91,11 @@ function PlanCommands.RouteText(inputs)
 	return text
 end
 
--- The plan of the current settings for the goals.
-function PlanCommands.CurrentPlan(charData, goals)
-	local inputs = Sourcing.Inputs(charData, goals)
-	return Sourcing.Plan(inputs, ns.db.settings.strategy, (Sourcing.Budget()), Sourcing.TimeLimit()), inputs
-end
 
 local function printPlan(charData, goals)
 	local budget, isOwn = Sourcing.Budget()
 	local strategy = ns.db.settings.strategy
-	local plan, inputs = PlanCommands.CurrentPlan(charData, goals)
+	local plan, inputs = Sourcing.CurrentPlan(charData, goals)
 	Log.Print(Util.Format(L.PLAN_HEADER, L[PlanCommands.STRATEGY_NAMES[strategy]], PlanCommands.BudgetText(budget, isOwn)))
 	if #plan.lines == 0 then
 		Log.Print(L.FARM_NOTHING_MISSING)

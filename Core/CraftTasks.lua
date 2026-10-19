@@ -60,6 +60,16 @@ local function taskFor(key, entry, now)
 	}
 end
 
+-- All one-off tasks of the character now: bags (vendor, auction, disenchant) and crafts. Lives
+-- here because CraftTasks loads after BagTasks and GoldPlan.
+function ns.GoldPlan.Tasks(charData, now)
+	local tasks = ns.BagTasks.Collect(charData, now, ns.db.settings.ahDiscountPercent)
+	for _, task in ipairs(CraftTasks.Collect(charData, now)) do
+		tasks[#tasks + 1] = task
+	end
+	return tasks
+end
+
 -- The most profitable craft tasks of the character (rating > 0, best rating per second first).
 function CraftTasks.Collect(charData, now)
 	local discount = ns.db.settings.ahDiscountPercent

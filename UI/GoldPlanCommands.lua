@@ -45,20 +45,10 @@ function GoldPlanCommands.SourceLines()
 	return lines
 end
 
--- All one-off tasks of the character now (bags; crafts and cooldowns from the recipe book).
-function GoldPlanCommands.Tasks(charData, now)
-	local discount = ns.db.settings.ahDiscountPercent
-	local tasks = ns.BagTasks.Collect(charData, now, discount)
-	for _, task in ipairs(ns.CraftTasks and ns.CraftTasks.Collect(charData, now) or {}) do
-		tasks[#tasks + 1] = task
-	end
-	return tasks
-end
-
 -- The plan for `seconds` with the current tasks and routes.
 function GoldPlanCommands.Plan(charData, seconds)
 	local now = ns.Client:GetServerTime()
-	return ns.GoldPlan.Plan({ seconds = seconds, tasks = GoldPlanCommands.Tasks(charData, now),
+	return ns.GoldPlan.Plan({ seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now),
 		methods = ns.GoldRoutes.Current(), discountPercent = ns.db.settings.ahDiscountPercent })
 end
 

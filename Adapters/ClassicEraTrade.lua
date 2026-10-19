@@ -15,6 +15,31 @@ local ALL_QUALITIES = -1
 
 -- Offers of the open merchant with a plain gold price: { { itemID, copper (per unit) } }.
 -- Items that cost other currencies (extendedCost) are skipped.
+-- Buys `count` units of an item from the open merchant (BuyMerchantItem with units, as the
+-- Vanilla MerchantFrame's stack split does; at most GetMerchantItemMaxStack per call, whole merchant
+-- stacks). Returns the units bought (0 if the merchant does not sell it).
+function Trade.BuyFromMerchant(itemID, count)
+	if not (GetMerchantNumItems and GetMerchantItemInfo and GetMerchantItemLink and BuyMerchantItem) then
+		return 0
+	end
+	for i = 1, GetMerchantNumItems() or 0 do
+		local _, linkedID = ns.Util.ParseLink(GetMerchantItemLink(i))
+		if linkedID == itemID then
+			local _, _, _, stackCount = GetMerchantItemInfo(i)
+			local stack = math.max(1, stackCount or 1)
+			local perCall = math.max(stack, math.floor((GetMerchantItemMaxStack and GetMerchantItemMaxStack(i) or stack) / stack) * stack)
+			local left = math.ceil(count / stack) * stack
+			local bought = left
+			while left > 0 do
+				BuyMerchantItem(i, math.min(left, perCall))
+				left = left - math.min(left, perCall)
+			end
+			return bought
+		end
+	end
+	return 0
+end
+
 function Trade.ReadMerchantPrices()
 	local offers = {}
 	if not (GetMerchantNumItems and GetMerchantItemInfo and GetMerchantItemLink) then

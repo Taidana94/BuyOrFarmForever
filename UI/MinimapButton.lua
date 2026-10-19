@@ -41,6 +41,7 @@ end
 local function showTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	GameTooltip:AddLine(L.ADDON_TITLE)
+	GameTooltip:AddLine(L.MINIMAP_TIP_CLICKS, 1, 1, 1)
 	local run = currentRun()
 	if run then
 		GameTooltip:AddLine(ns.FarmCommands.StatusLine(run, ns.Client:GetServerTime()))
@@ -64,6 +65,8 @@ local function createButton(minimap)
 	button:SetScript("OnClick", function(_, mouseButton)
 		if mouseButton == "RightButton" then
 			MinimapButton.ToggleFarmRun()
+		elseif IsShiftKeyDown() then
+			ns.AdvisorWindow.Toggle()
 		else
 			ns.MainWindow.Toggle()
 		end
@@ -100,6 +103,7 @@ end
 BINDING_HEADER_BUYORFARMFOREVER = L.ADDON_TITLE
 BINDING_NAME_BUYORFARMFOREVER_TOGGLE = L.BINDING_TOGGLE
 BINDING_NAME_BUYORFARMFOREVER_FARM = L.BINDING_FARM
+BINDING_NAME_BUYORFARMFOREVER_ADVISOR = L.BINDING_ADVISOR
 
 -- The button, or nil while it was never shown (for tests).
 function MinimapButton.GetButton()

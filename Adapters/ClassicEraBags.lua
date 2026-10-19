@@ -32,8 +32,8 @@ function Bags.ScanBags(counts)
 	return counts
 end
 
--- Every stack in the backpack and the equipped bags: { { itemID, count, isBound, hasNoValue } }
--- (fields of ContainerItemInfo, documented in 70003). Built on demand (gold planner), not per event.
+-- Every stack in the backpack and the equipped bags: { { itemID, count, isBound, hasNoValue, bag,
+-- slot } } (fields of ContainerItemInfo, documented in 70003). Built on demand, not per event.
 function Bags.ListBagStacks()
 	local stacks = {}
 	if not (C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerItemInfo) then
@@ -44,11 +44,35 @@ function Bags.ListBagStacks()
 			local info = C_Container.GetContainerItemInfo(bag, slot)
 			if info and info.itemID and info.stackCount then
 				stacks[#stacks + 1] = { itemID = info.itemID, count = info.stackCount, isBound = info.isBound == true,
-					hasNoValue = info.hasNoValue == true }
+					hasNoValue = info.hasNoValue == true, bag = bag, slot = slot }
 			end
 		end
 	end
 	return stacks
+end
+
+-- Free slots over the backpack and the equipped bags (all bag types), or nil without the API.
+function Bags.GetFreeBagSlots()
+	if not (C_Container and C_Container.GetContainerNumFreeSlots) then
+		return nil
+	end
+	local free = 0
+	for bag = BACKPACK, BACKPACK + (NUM_BAG_SLOTS or DEFAULT_BAG_SLOTS) do
+		free = free + (C_Container.GetContainerNumFreeSlots(bag) or 0)
+	end
+	return free
+end
+
+-- Sells the stack in bag/slot to the open merchant (C_Container.UseContainerItem, documented in
+-- 70003 without restrictions; with a merchant open it sells). Only if the slot still holds itemID,
+-- so a moved stack is never sold by mistake. Returns true if the sale was sent.
+function Bags.SellStack(bag, slot, itemID)
+	local info = C_Container and C_Container.GetContainerItemInfo and C_Container.GetContainerItemInfo(bag, slot)
+	if not (info and info.itemID == itemID and C_Container.UseContainerItem) then
+		return false
+	end
+	C_Container.UseContainerItem(bag, slot)
+	return true
 end
 
 function Bags.GetCurrentMapID()

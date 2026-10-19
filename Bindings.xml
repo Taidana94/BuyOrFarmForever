@@ -6,4 +6,7 @@
 	<Binding name="BUYORFARMFOREVER_FARM" category="ADDONS">
 		BuyOrFarmForever.MinimapButton.ToggleFarmRun()
 	</Binding>
+	<Binding name="BUYORFARMFOREVER_ADVISOR" category="ADDONS">
+		BuyOrFarmForever.AdvisorWindow.Toggle()
+	</Binding>
 </Bindings>

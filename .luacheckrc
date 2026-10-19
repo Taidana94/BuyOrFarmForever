@@ -20,7 +20,7 @@ globals = {
 	-- key binding names (Bindings.xml)
 	"BINDING_HEADER_BUYORFARMFOREVER",
 	"BINDING_NAME_BUYORFARMFOREVER_TOGGLE",
-	"BINDING_NAME_BUYORFARMFOREVER_FARM",
+	"BINDING_NAME_BUYORFARMFOREVER_FARM", "BINDING_NAME_BUYORFARMFOREVER_ADVISOR",
 }
 
 -- WoW API and Blizzard UI globals the addon is allowed to read.
@@ -40,7 +40,7 @@ read_globals = {
 	"GetInventoryItemLink",
 	C_Spell = { fields = { "GetSpellName" } },
 	-- bags and map (documented in 70003; NUM_BAG_SLOTS from Blizzard_FrameXMLBase/Classic/Constants.lua)
-	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo" } },
+	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo", "GetContainerNumFreeSlots", "UseContainerItem" } },
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
 	"NUM_BAG_SLOTS",
 	"GetMoney", -- used by Blizzard_AuctionUI (Classic) in 70003
@@ -55,6 +55,13 @@ read_globals = {
 	"UnitClass",
 	"UnitLevel",
 	C_SpellBook = { fields = { "IsSpellKnown" } },
+	-- buying at the merchant (Vanilla MerchantFrame.lua, 70003)
+	"BuyMerchantItem",
+	"GetMerchantItemMaxStack",
+	-- advisor cards attach to these Blizzard frames
+	"AuctionFrame",
+	"BankFrame",
+	"MailFrame",
 	C_SpecializationInfo = { fields = { "GetSpecializationInfo" } },
 	-- quest frame rewards (Blizzard_UIPanels_Game/Classic/QuestFrame.lua, Vanilla/QuestInfo.lua, 70003)
 	"GetNumQuestChoices",
@@ -104,6 +111,8 @@ read_globals = {
 	} } } } } },
 	"UISpecialFrames",
 	"BACKDROP_DIALOG_32_32",
+	"BACKDROP_TOAST_12_12",
+	"IsShiftKeyDown",
 	C_Timer = { fields = { "After", "NewTicker" } },
 	-- merchant and auction house (called by MerchantFrame.lua / Blizzard_AuctionUI, Vanilla, 70003)
 	"GetMerchantNumItems",

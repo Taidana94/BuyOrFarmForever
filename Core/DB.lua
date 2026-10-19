@@ -23,6 +23,7 @@ DB.DEFAULTS = {
 		farmEstimateScope = "CHARACTER",
 		budgetCopper = 0, -- 0: plan with the character's current gold
 		farmTimeLimitMinutes = 0, -- 0: no farm time limit in the sourcing plan
+		advisorWindow = { point = "CENTER", x = 420, y = 40 },
 		window = {
 			point = "CENTER",
 			x = 0,

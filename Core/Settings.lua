@@ -15,6 +15,8 @@ Settings.GROUPS = {
 	{ key = "MATERIAL", label = "SET_GROUP_MATERIAL" },
 	{ key = "GOLD", label = "SET_GROUP_GOLD" },
 	{ key = "DISPLAY", label = "SET_GROUP_DISPLAY" },
+	-- Shown in the advisor window, not in the settings tab (no room left there).
+	{ key = "ADVISOR", label = "SET_GROUP_ADVISOR" },
 }
 
 -- type "boolean" or "number" (whole numbers in [min, max]).
@@ -41,6 +43,8 @@ Settings.SCHEMA = {
 	{ key = "minimapButton", type = "boolean", default = true, group = "DISPLAY", label = "SET_MINIMAP" },
 	{ key = "minimapAngle", type = "number", default = 225, min = 0, max = 359, group = "DISPLAY", label = "SET_MINIMAP_ANGLE" },
 	{ key = "loginSummary", type = "boolean", default = true, group = "DISPLAY", label = "SET_LOGIN_SUMMARY" },
+	{ key = "advisorCards", type = "boolean", default = true, group = "ADVISOR", label = "SET_ADVISOR_CARDS" },
+	{ key = "advisorAtLogin", type = "boolean", default = true, group = "ADVISOR", label = "SET_ADVISOR_AT_LOGIN" },
 }
 
 local byKey = {}

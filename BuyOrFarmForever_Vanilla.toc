@@ -49,6 +49,8 @@ Core\GoldPlan.lua
 Core\BagTasks.lua
 Core\RecipeBook.lua
 Core\CraftTasks.lua
+Core\AdvisorSources.lua
+Core\Advisor.lua
 Core\CraftEval.lua
 Core\WeightTemplates.lua
 Core\SavingsGoals.lua
@@ -91,6 +93,11 @@ UI\FarmSuggest.lua
 UI\TooltipLines.lua
 UI\ShopHints.lua
 UI\QuestAlternatives.lua
+UI\AdvisorText.lua
+UI\AdvisorCard.lua
+UI\AdvisorActions.lua
+UI\AdvisorWindow.lua
+UI\AdvisorSide.lua
 UI\MinimapButton.lua
 UI\LoginSummary.lua
 UI\GoldAuto.lua

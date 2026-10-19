@@ -58,7 +58,11 @@ Adapter.REQUIRED = {
 	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
 	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil
 	"GetDisenchantPrice", -- (itemID) -> copper of the disenchanted materials (price addon) | nil, nil, error | nil
-	"ListBagStacks", -- () -> { { itemID, count, isBound, hasNoValue } } of the carried bags
+	"ListBagStacks", -- () -> { { itemID, count, isBound, hasNoValue, bag, slot } } of the carried bags
+	"GetFreeBagSlots", -- () -> free slots of the carried bags, or nil
+	"SellStack", -- (bag, slot, itemID) -> true if the stack was sold to the open merchant
+	"BuyFromMerchant", -- (itemID, count) -> units bought from the open merchant (whole merchant stacks)
+	"GetContextFrame", -- (context) -> Blizzard frame of "MERCHANT" | "AUCTION" | "BANK" | "MAIL", or nil
 	"IsDisenchantable", -- (itemID) -> bool (weapon/armor, uncommon to epic), or nil while loading
 	"KnowsDisenchant", -- () -> bool: the character can disenchant
 }

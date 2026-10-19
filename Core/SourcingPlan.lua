@@ -130,6 +130,13 @@ local BUY_RULES = {
 	end,
 }
 
+-- The plan with the current settings (strategy, budget, time limit) for the goals; also returns
+-- the inputs.
+function Sourcing.CurrentPlan(charData, goals)
+	local inputs = Sourcing.Inputs(charData, goals)
+	return Sourcing.Plan(inputs, ns.db.settings.strategy, (Sourcing.Budget()), Sourcing.TimeLimit()), inputs
+end
+
 -- Plan for the inputs. limitSeconds (optional) is the farm time limit.
 -- Returns { lines (in input order), cost, farmSeconds, budgetLeft, open, limitSeconds,
 -- overLimitSeconds (farm time above the limit the budget could not buy away, else 0) }.

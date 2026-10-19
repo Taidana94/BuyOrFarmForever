@@ -43,6 +43,8 @@ local ClassicEra = {
 		TRADE_SKILL_SHOW = "PROFESSION_OPENED",
 		CRAFT_SHOW = "PROFESSION_OPENED",
 		TRADE_SKILL_UPDATE = "PROFESSION_CHANGED",
+		TRADE_SKILL_CLOSE = "PROFESSION_CLOSED",
+		CRAFT_CLOSE = "PROFESSION_CLOSED",
 		CRAFT_UPDATE = "PROFESSION_CHANGED",
 		TRAINER_SHOW = "TRAINER_OPENED",
 		TRAINER_CLOSED = "TRAINER_CLOSED",
@@ -235,25 +237,12 @@ function ClassicEra:GetItemMinLevel(itemID)
 	return ns.ClassicEraGear.GetItemMinLevel(itemID)
 end
 
--- Bags and map: Adapters/ClassicEraBags.lua.
-function ClassicEra:ScanBags(counts)
-	return ns.ClassicEraBags.ScanBags(counts)
-end
-
-function ClassicEra:ListBagStacks()
-	return ns.ClassicEraBags.ListBagStacks()
+function ClassicEra:BuyFromMerchant(itemID, count)
+	return ns.ClassicEraTrade.BuyFromMerchant(itemID, count)
 end
 
 function ClassicEra:IsDisenchantable(itemID)
 	return ns.ClassicEraGear.IsDisenchantable(itemID)
-end
-
-function ClassicEra:GetCurrentMapID()
-	return ns.ClassicEraBags.GetCurrentMapID()
-end
-
-function ClassicEra:GetMapName(uiMapID)
-	return ns.ClassicEraBags.GetMapName(uiMapID)
 end
 
 -- Profession windows: Adapters/ClassicEraProfessions.lua.
@@ -282,8 +271,9 @@ end
 
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
--- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons).
-for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal }) do
+-- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons),
+-- Adapters/ClassicEraBags.lua (bags and map).
+for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal, ns.ClassicEraBags }) do
 	for name, fn in pairs(part) do
 		ClassicEra[name] = function(_, ...)
 			return fn(...)

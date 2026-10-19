@@ -52,7 +52,7 @@ function CraftCommands.CompareLine(itemID, comparison, err)
 end
 
 local function sourcingPlan(charData, goal)
-	return (ns.PlanCommands.CurrentPlan(charData, { goal }))
+	return (ns.Sourcing.CurrentPlan(charData, { goal }))
 end
 
 local function sourcingLines(lines, plan, comparison)

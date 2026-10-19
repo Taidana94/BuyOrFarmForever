@@ -74,6 +74,16 @@ function UI.GetMinimap()
 	return Minimap
 end
 
+-- Blizzard's frame of a context, to attach the advisor card: MerchantFrame, AuctionFrame (load on
+-- demand, exists after the first auction house visit), BankFrame, MailFrame (frame names from the
+-- Classic Era UI source, 70003). nil for other contexts or a missing frame.
+local CONTEXT_FRAMES = { MERCHANT = "MerchantFrame", AUCTION = "AuctionFrame", BANK = "BankFrame", MAIL = "MailFrame" }
+
+function UI.GetContextFrame(context)
+	local name = CONTEXT_FRAMES[context]
+	return name and _G[name] or nil
+end
+
 -- Blizzard's merchant frame (Blizzard_UIPanels_Game/Vanilla/MerchantFrame.xml), or nil.
 function UI.GetMerchantFrame()
 	return MerchantFrame
