@@ -67,6 +67,12 @@ function Util.FormatDecimal(value, decimals)
 	return (text:gsub("%.", ns.L.DECIMAL_SEPARATOR))
 end
 
+-- A number with up to two decimals and no trailing zeros: "1", "1,5", "0,05".
+function Util.FormatCompact(value)
+	local text = string.format("%.2f", value):gsub("0+$", ""):gsub("%.$", "")
+	return (text:gsub("%.", ns.L.DECIMAL_SEPARATOR))
+end
+
 -- Reads a whole number from user input, or nil.
 function Util.ParseInteger(text)
 	local n = tonumber(text)

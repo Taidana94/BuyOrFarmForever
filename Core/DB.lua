@@ -50,7 +50,7 @@ DB.CHARACTER_DEFAULTS = {
 	activeGoalID = 0,
 	nextGoalID = 1,
 	craftEval = {
-		weights = { STR = 1, AGI = 1, STA = 1, INT = 1, SPI = 1 },
+		weights = { STR = 1, AGI = 1, STA = 1, INT = 1, SPI = 1, ARMOR = 0, DPS = 0 },
 		alternatives = {},
 	},
 	savingsGoals = {},

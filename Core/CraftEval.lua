@@ -1,14 +1,16 @@
 -- Craft evaluation: compares an item (the output of a recipe goal, or any item) with the gear the
 -- character wears, using the character's stat weights, and puts the gain next to the sourcing
 -- cost and farm time, the value of materials already owned and planned or possible alternatives.
--- Rated stats: STR, AGI, STA, INT, SPI. Armor, weapon damage, procs and set bonuses are not rated.
+-- Rated stats: STR, AGI, STA, INT, SPI, ARMOR (points) and DPS (weapon damage per second); procs,
+-- other effects and set bonuses are not rated. ARMOR and DPS weigh 0 unless a template or the
+-- player sets them, so evaluations from before 0.5.0 stay the same.
 -- Item data comes from the adapter (GetItemStats, GetEquipSlots, GetEquippedItemID, GetSellPrice).
 local _, ns = ...
 
 local CraftEval = {}
 ns.CraftEval = CraftEval
 
-CraftEval.STATS = { "STR", "AGI", "STA", "INT", "SPI" }
+CraftEval.STATS = { "STR", "AGI", "STA", "INT", "SPI", "ARMOR", "DPS" }
 CraftEval.MAX_WEIGHT = 10
 CraftEval.MAX_ALTERNATIVES = 20
 CraftEval.KINDS = { PLANNED = true, POSSIBLE = true }
@@ -191,7 +193,7 @@ local function sanitizeWeights(weights, path, repairs)
 	for _, stat in ipairs(CraftEval.STATS) do
 		local value = weights[stat]
 		if not (type(value) == "number" and value >= 0 and value <= CraftEval.MAX_WEIGHT) then
-			weights[stat] = 1
+			weights[stat] = ns.DB.CHARACTER_DEFAULTS.craftEval.weights[stat]
 			repairs[#repairs + 1] = path .. ".weights." .. stat
 		end
 	end

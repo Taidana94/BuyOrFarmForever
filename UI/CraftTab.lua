@@ -22,7 +22,7 @@ local LINES_Y, TEXT_WIDTH = -30, 690
 local WEIGHTS_Y, HINT_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP = 30, 8, 36, 6
 local TEMPLATES_Y, TEMPLATE_WIDTH = 56, 116
 local NAV_BUTTON_WIDTH, NAV_GAP, GOAL_TEXT_GAP, MODE_WIDTH = 26, 4, 8, 110
-local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi" }
+local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi", ARMOR = "armor", DPS = "dps" }
 local REFRESH_SIGNALS = {
 	"EQUIPMENT_CHANGED", "BAGS_CHANGED", "ITEM_LOADED", "DATA_CHANGED", "PRICES_CHANGED", "MONEY_CHANGED",
 }
@@ -57,7 +57,8 @@ local function buildNavigation(tab, frame)
 	end)
 end
 
--- "Gewichte: Stärke [1] Beweglichkeit [1] …" at the bottom of the evaluation view.
+-- "Gewichte: Stä [1] Bew [1] …" at the bottom of the evaluation view (short names: seven boxes
+-- with the full names do not fit the width).
 local function buildWeights(tab, frame)
 	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	label:SetPoint("BOTTOMLEFT", 0, WEIGHTS_Y)
@@ -67,7 +68,7 @@ local function buildWeights(tab, frame)
 	for _, stat in ipairs(CraftEval.STATS) do
 		local name = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 		name:SetPoint("LEFT", previous, "RIGHT", WEIGHT_GAP * 2, 0)
-		name:SetText(L["STAT_" .. stat])
+		name:SetText(L["STAT_SHORT_" .. stat])
 		local box = Inputs.CreateBox(frame, { width = WEIGHT_BOX_WIDTH, onCommit = function(text)
 			Inputs.Run("weights " .. STAT_WORDS[stat] .. " " .. text)
 		end })
@@ -132,14 +133,10 @@ function Tab:ShowLines(lines)
 	end
 end
 
--- Weight boxes show "1" or "1,5".
-local function weightText(value)
-	return Util.FormatDecimal(value, value == math.floor(value) and 0 or 1)
-end
-
+-- Weight boxes show "1", "1,5" or "0,05".
 function Tab:UpdateWeights(weights)
 	for stat, box in pairs(self.weightBoxes) do
-		Inputs.SetValue(box, weightText(weights[stat]))
+		Inputs.SetValue(box, Util.FormatCompact(weights[stat]))
 	end
 end
 

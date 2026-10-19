@@ -16,6 +16,9 @@ local STAT_KEYS = {
 	ITEM_MOD_INTELLECT_SHORT = "INT",
 	ITEM_MOD_SPIRIT_SHORT = "SPI",
 	RESISTANCE0_NAME = "ARMOR",
+	-- Weapon damage per second. Key known from the Retail API documentation (warcraft.wiki.gg);
+	-- not documented for Classic Era (verify in game). Without it weapons are rated by stats only.
+	ITEM_MOD_DAMAGE_PER_SECOND_SHORT = "DPS",
 }
 
 -- Slot keys per equip location; the core and the UI only see these keys (and show them with
@@ -71,13 +74,13 @@ local function itemLink(itemID)
 	return link
 end
 
--- { STR, AGI, STA, INT, SPI, ARMOR } (missing stats are 0), or nil while the item data loads.
+-- { STR, AGI, STA, INT, SPI, ARMOR, DPS } (missing stats are 0), or nil while the item data loads.
 function Gear.GetItemStats(itemID)
 	local link = itemLink(itemID)
 	if not (link and GetItemStats) then
 		return nil
 	end
-	local stats = { STR = 0, AGI = 0, STA = 0, INT = 0, SPI = 0, ARMOR = 0 }
+	local stats = { STR = 0, AGI = 0, STA = 0, INT = 0, SPI = 0, ARMOR = 0, DPS = 0 }
 	for key, value in pairs(GetItemStats(link) or {}) do
 		local stat = STAT_KEYS[key]
 		if stat and type(value) == "number" then

@@ -10,11 +10,13 @@ ns.WeightTemplates = WeightTemplates
 WeightTemplates.ORDER = { "CASTER", "HEALER", "AGILITY", "STRENGTH", "TANK" }
 
 WeightTemplates.VALUES = {
-	CASTER = { STR = 0, AGI = 0, STA = 1, INT = 2, SPI = 0.5 },
-	HEALER = { STR = 0, AGI = 0, STA = 1, INT = 1.5, SPI = 1.5 },
-	AGILITY = { STR = 0.5, AGI = 2, STA = 1, INT = 0, SPI = 0 },
-	STRENGTH = { STR = 2, AGI = 1, STA = 1, INT = 0, SPI = 0 },
-	TANK = { STR = 1, AGI = 1, STA = 2, INT = 0, SPI = 0 },
+	-- ARMOR per armor point, DPS per point of weapon damage per second (rough: one DPS is worth
+	-- several points of the main stat for weapon users).
+	CASTER = { STR = 0, AGI = 0, STA = 1, INT = 2, SPI = 0.5, ARMOR = 0, DPS = 0 },
+	HEALER = { STR = 0, AGI = 0, STA = 1, INT = 1.5, SPI = 1.5, ARMOR = 0, DPS = 0 },
+	AGILITY = { STR = 0.5, AGI = 2, STA = 1, INT = 0, SPI = 0, ARMOR = 0.02, DPS = 5 },
+	STRENGTH = { STR = 2, AGI = 1, STA = 1, INT = 0, SPI = 0, ARMOR = 0.02, DPS = 5 },
+	TANK = { STR = 1, AGI = 1, STA = 2, INT = 0, SPI = 0, ARMOR = 0.1, DPS = 2 },
 }
 
 -- Template per talent tree (Classic Era tree order) for each class file name.
@@ -52,7 +54,7 @@ function WeightTemplates.FromWord(word)
 	return WeightTemplates.VALUES[key] and key or nil
 end
 
--- Sets all five weights of a character from a template. Returns true, or nil + "unknown_template".
+-- Sets all weights of a character from a template. Returns true, or nil + "unknown_template".
 function WeightTemplates.Apply(charData, key)
 	local values = WeightTemplates.VALUES[key]
 	if not values then

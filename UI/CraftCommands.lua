@@ -14,7 +14,7 @@ local UIShared = ns.UIShared
 local CraftCommands = {}
 ns.CraftCommands = CraftCommands
 
-local STAT_WORDS = { str = "STR", agi = "AGI", sta = "STA", int = "INT", spi = "SPI" }
+local STAT_WORDS = { str = "STR", agi = "AGI", sta = "STA", int = "INT", spi = "SPI", armor = "ARMOR", dps = "DPS" }
 local KIND_NAMES = { PLANNED = "ALT_KIND_PLANNED", POSSIBLE = "ALT_KIND_POSSIBLE" }
 local ERROR_TEXTS = { not_equippable = "CRAFT_NOT_EQUIPPABLE", loading = "CRAFT_LOADING" }
 
@@ -133,8 +133,9 @@ function CraftCommands.EvaluationLines(charData, goal)
 end
 
 function CraftCommands.WeightsLine(weights)
-	return Util.Format(L.WEIGHTS_LINE, scoreText(weights.STR), scoreText(weights.AGI), scoreText(weights.STA),
-		scoreText(weights.INT), scoreText(weights.SPI))
+	local F = Util.FormatCompact
+	return Util.Format(L.WEIGHTS_LINE, F(weights.STR), F(weights.AGI), F(weights.STA), F(weights.INT), F(weights.SPI),
+		F(weights.ARMOR), F(weights.DPS))
 end
 
 -- /bof craft [item] -----------------------------------------------------------------------

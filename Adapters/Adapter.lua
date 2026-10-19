@@ -36,7 +36,7 @@ Adapter.REQUIRED = {
 	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
 	"GetMapName", -- (uiMapID) -> localized map name, or nil
 	"GetMoney", -- () -> copper the character carries, or nil
-	"GetItemStats", -- (itemID) -> { STR, AGI, STA, INT, SPI, ARMOR }, or nil while loading
+	"GetItemStats", -- (itemID) -> { STR, AGI, STA, INT, SPI, ARMOR, DPS }, or nil while loading
 	"GetEquipSlots", -- (itemID) -> { slotKey, ... } e.g. { "CHEST" } (.sum = replaces all together), or nil
 	"GetEquippedItemID", -- (slotKey) -> item id in that slot, or nil
 	"GetSellPrice", -- (itemID) -> vendor sell price per unit in copper, or nil while loading
