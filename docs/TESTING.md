@@ -62,7 +62,7 @@ commit (`git log -1 --oneline`).
 | 0.2.0-alpha.10 | Classic Era 1.15.9 (70003), deDE | 2026-10-18 | **passed** (details below) |
 | 0.3.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**, two display bugs (details below) |
 | 0.3.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: Craft tab lines no longer overlap, "Unterschied" instead of the box (user: "Passt") |
-| 0.3.0-alpha.3 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.3.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: user "done"; SavedVariables (11:45) show `lastAddonVersion` 0.3.0-alpha.3 and alternative 2 with `copper` 15000, `seconds` 5400, `requires` "Stufe 20" after `/reload`; `!BugGrabber.lua`: no new errors |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)

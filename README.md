@@ -255,7 +255,7 @@ Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet
 Version 0.3.0-alpha.1 (Craft-Bewertung, Tab „Farmen“, Goldpuffer) wurde am 19.10.2026 im Spiel
 getestet, ohne Lua-Fehler. Dabei fielen zwei Darstellungsfehler im Tab „Craft“ auf (überlappende
 Zeilen, Kästchen statt Pfeil); sie sind in 0.3.0-alpha.2 behoben und im Spiel bestätigt. Kosten,
-Zeitaufwand und Voraussetzung von Alternativen (0.3.0-alpha.3) sind im Spiel noch nicht getestet.
+Zeitaufwand und Voraussetzung von Alternativen (0.3.0-alpha.3) sind im Spiel getestet.
 
 **Nicht in Forever getestet.**
 
