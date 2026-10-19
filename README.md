@@ -1,8 +1,7 @@
 # Kaufen oder farmen?
 
-**Entwicklungsversion 0.4.0-alpha.1 – alles im Fenster bedienbar, viel Automatik. Version 0.3.0 ist
-in WoW Classic Era 1.15.9 getestet; die Neuerungen von 0.4.0 sind noch nicht im Spiel getestet.
-Nicht in Forever getestet.**
+**Entwicklungsversion 0.4.0-alpha.2 – alles im Fenster bedienbar, viel Automatik. Getestet in WoW
+Classic Era 1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -262,9 +261,6 @@ weist darauf hin.
 
 ## Bekannte Einschränkungen
 
-- Die Neuerungen von 0.4.0 sind noch nicht im Spiel getestet; einige hängen an Spielfunktionen,
-  deren Verhalten erst der Test zeigt (Ziehen in Felder, Umschalt+Klick, AFK/Stadt/Flugroute,
-  Talentpunkte, Questbelohnungen, Tooltip-Zeilen, Tastenbelegung, Minimap-Symbol).
 - Der Bestand anderer Charaktere ist der Stand von deren letzter Taschenänderung, ihrem letzten
   Bankbesuch oder `/bof stock`. Neue Zutaten kennen sie erst nach ihrem nächsten Login.
 - Rezeptimport nur für das ausgewählte Rezept, nur feste Zutaten.
@@ -291,9 +287,9 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.4.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.4.0-alpha.2): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 207
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 208
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
 Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise, Farmrunden mit
 Automatik, Beschaffungsplan, Craft-Bewertung, Goldpuffer, Einstellungen, Hinweise).
@@ -318,13 +314,15 @@ behoben. Einnahmen und Ausgaben beim Nettoerlös: getestet nach deiner Rückmeld
 den gespeicherten Daten. Die Version 0.3.0 unterscheidet sich von 0.3.0-alpha.3 nur in
 Versionsnummer und Dokumentation.
 
-Die Neuerungen von 0.4.0-alpha.1 sind **noch nicht im Spiel getestet**.
+Die Neuerungen von 0.4.0 wurden am 19.10.2026 in 0.4.0-alpha.1 im Spiel getestet, ohne Lua-Fehler;
+überlappende Knopftexte im Tab „Craft“ sind in 0.4.0-alpha.2 behoben (Korrektur im Spiel noch nicht
+bestätigt).
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.4.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.4.0-alpha.2 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

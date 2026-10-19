@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.4.0-alpha.2 | 2026-10-19 | 226 checks passed, 0 failed (208 unit tests); new layout test: every button label must fit its button (6.4 px per character + 4 px, calibrated on the in-game screenshot); it flagged the two overflowing labels, fixed by shorter texts |
 | 0.4.0-alpha.1 | 2026-10-19 | 225 checks passed, 0 failed (207 unit tests); new tests per stage of the player relief plan; mutation checks: no sanitizing of alternative details fails 1, loot grace before merchant window in the farm capture fails 1; tests found and fixed: editable rows in the all-goals view, `Settings.Set` returning `false` for "off", read-only `false` run in `FarmAssist`, loot grace winning over an open merchant window (income sources and farm capture) |
 | 0.3.0 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); only version and documentation changed against 0.3.0-alpha.3 |
 | 0.3.0-alpha.3 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); mutation check: no sanitizing of alternative details fails 1 |
@@ -65,7 +66,8 @@ commit (`git log -1 --oneline`).
 | 0.3.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**, two display bugs (details below) |
 | 0.3.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: Craft tab lines no longer overlap, "Unterschied" instead of the box (user: "Passt") |
 | 0.3.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: user "done"; SavedVariables (11:45) show `lastAddonVersion` 0.3.0-alpha.3 and alternative 2 with `copper` 15000, `seconds` 5400, `requires` "Stufe 20" after `/reload`; `!BugGrabber.lua`: no new errors |
-| 0.4.0-alpha.1 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
+| 0.4.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**: user "Alles gut bis auf das hier" – template button labels overlapped in the Craft tab (screenshot); SavedVariables (12:59): `lastAddonVersion` 0.4.0-alpha.1, `lastSession` stored; no `bySource` yet (no data trace for income sources); `!BugGrabber.lua`: no new errors |
+| 0.4.0-alpha.2 | Classic Era 1.15.9 | – | **not tested yet** (fix check: Craft tab template buttons, alternatives kind buttons) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)

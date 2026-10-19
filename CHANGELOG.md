@@ -3,10 +3,10 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.4.0-alpha.1] – noch nicht veröffentlicht
+## [0.4.0-alpha.2] – noch nicht veröffentlicht
 
-Spielerentlastung: alles im Fenster bedienbar, viel Automatik. Noch nicht im Spiel getestet; nicht in
-Forever getestet.
+Spielerentlastung: alles im Fenster bedienbar, viel Automatik. In WoW Classic Era 1.15.9 getestet
+(0.4.0-alpha.1); nicht in Forever getestet.
 
 ### Hinzugefügt
 

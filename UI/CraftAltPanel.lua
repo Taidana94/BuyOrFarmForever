@@ -23,7 +23,8 @@ local TIME_X, TIME_WIDTH = 420, 70
 local REQ_X, REQ_WIDTH = 495, 180
 local REMOVE_X, REMOVE_WIDTH = 680, 22
 local GAP = 8
-local KIND_LABELS = { PLANNED = "ALT_KIND_PLANNED", POSSIBLE = "ALT_KIND_POSSIBLE" }
+-- Short labels: the kind buttons are narrow.
+local KIND_LABELS = { PLANNED = "ALT_KIND_SHORT_PLANNED", POSSIBLE = "ALT_KIND_SHORT_POSSIBLE" }
 local KIND_WORDS = { PLANNED = "planned", POSSIBLE = "drop" }
 local OTHER_KIND = { PLANNED = "POSSIBLE", POSSIBLE = "PLANNED" }
 
