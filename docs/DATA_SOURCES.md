@@ -1,6 +1,13 @@
 # Data sources
 
-The addon ships no game data yet (no item, quest, NPC, spell or map IDs).
+The addon ships no game data (no item, quest, NPC, spell or map IDs).
+
+## Addon design data (not game data)
+
+| Data | File | Source | Date | Client |
+|---|---|---|---|---|
+| Stat weight templates (caster, healer, agility, strength, tank) and the template per talent tree of each class | `Core/WeightTemplates.lua` | own choice as a starting point for players; not taken from any guide or game file; the player can change every weight | 2026-10-19 | class file names and three talent trees per class: Classic Era (Blizzard UI 70003) |
+| Texture paths of the minimap button (`Interface\Icons\INV_Misc_Coin_01`, `Interface\Minimap\MiniMap-TrackingBorder`) | `UI/MinimapButton.lua` | common client paths; **unverified in game** for 1.15.9 | 2026-10-19 | Classic Era |
 
 ## API references used for development
 

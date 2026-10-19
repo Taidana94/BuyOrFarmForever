@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.4.0-alpha.1 | 2026-10-19 | 225 checks passed, 0 failed (207 unit tests); new tests per stage of the player relief plan; mutation checks: no sanitizing of alternative details fails 1, loot grace before merchant window in the farm capture fails 1; tests found and fixed: editable rows in the all-goals view, `Settings.Set` returning `false` for "off", read-only `false` run in `FarmAssist`, loot grace winning over an open merchant window (income sources and farm capture) |
 | 0.3.0 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); only version and documentation changed against 0.3.0-alpha.3 |
 | 0.3.0-alpha.3 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); mutation check: no sanitizing of alternative details fails 1 |
 | 0.3.0-alpha.2 | 2026-10-19 | 172 checks passed, 0 failed (154 unit tests); new level 1b check for characters the game font draws (fails on the old `→` texts); the new stacking checks in the Craft and Gold tab tests fail without the fix |
@@ -64,6 +65,7 @@ commit (`git log -1 --oneline`).
 | 0.3.0-alpha.1 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed (partly)**, two display bugs (details below) |
 | 0.3.0-alpha.2 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: Craft tab lines no longer overlap, "Unterschied" instead of the box (user: "Passt") |
 | 0.3.0-alpha.3 | Classic Era 1.15.9 (70003), deDE | 2026-10-19 | **passed**: user "done"; SavedVariables (11:45) show `lastAddonVersion` 0.3.0-alpha.3 and alternative 2 with `copper` 15000, `seconds` 5400, `requires` "Stufe 20" after `/reload`; `!BugGrabber.lua`: no new errors |
+| 0.4.0-alpha.1 | Classic Era 1.15.9 | – | **not tested yet** (checklist below) |
 | – | Forever | – | **not tested in Forever** |
 
 ### Result 0.1.0 (Classic Era, 2026-10-18)
@@ -253,6 +255,42 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.4.0-alpha.1 (Classic Era, player relief)
+
+Things only the client can show are marked (verify): they rely on APIs whose details are unverified.
+
+1. `/reload`, `/bof version` → `0.4.0-alpha.1`. `/bof show`: title line above eight tab buttons, nothing
+   overlaps. Minimap button visible (verify icon and border textures).
+2. Material tab: "Neues Ziel", type a name + Enter, "Herstellungen" 2 + Enter. Drag an item from the bags
+   onto the slot at the bottom left (verify `GetCursorInfo`), count 3, "Hinzufügen". Shift-click another
+   item in the bags while the window is open (verify the link hook), "Hinzufügen". Change a count in a row,
+   "x" removes, click the price cell, type `1s` + Enter. "Löschen" asks first. "Twinks mitzählen" toggles.
+3. Recipe import with count 2; import the same recipe again → the goal goes to 4 crafts (no second goal).
+4. Craft tab: weight box `1,5` + Enter; template buttons; the suggestion names your class role (verify
+   talent points). "Alternativen": drag an item, toggle the kind, add; cost `1g`, time `45m`, requirement.
+5. Gold tab: new goal (name + amount + "Anlegen"), rename, change the amount, "hoch", "erreicht", "x"
+   (asks), "Gold verteilen", "Rückgängig", purchase check `3g`.
+6. Sourcing tab: budget box `2g` + Enter, then empty + Enter.
+7. Settings tab: switch a few settings, change a number, debug mode, "Leistung anzeigen", "Zurücksetzen"
+   (asks).
+8. Farm run from the Farm tab (target preselected). `/afk` → paused, back → resumed (verify). Enter a city
+   or inn → paused, leave → resumed (verify `IsResting`). Take a flight path → travel, landing → farming
+   (verify `UnitOnTaxi`). Stand still 6+ minutes, then loot → the farm time grew by at most 5 minutes.
+   Buy something at a merchant during the run → not counted. "Beenden" without unclear gains → saved with
+   an "Ergebnis" line.
+9. Without a run, loot a material the selected goal misses → bar "Farmrunde starten?"; "Gegner" starts it.
+10. Item tooltips (bags, auction house, merchant): goal materials show "fehlt …", crafted goal items show
+    "Craft-Ziel, +n" (verify the tooltip hook).
+11. Merchant: line under the merchant frame with free gold and reserves; buying into the reserves gives one
+    warning. Auction house: hint about materials without a price.
+12. A quest with a reward for the slot of an item a goal crafts → bar "Merken" adds it (verify the quest
+    reward APIs).
+13. Esc → Key Bindings → AddOns: two entries "Kaufen oder farmen?" (verify `Bindings.xml` loading); bind one.
+14. Log out, wait over a minute, log in → after about 5 s "Letzte Sitzung …".
+15. `/bof gold` → "Quellen" line (loot coins, merchant).
+16. In combat: open the window, shift-click, hover items → no "Aktion blockiert"/taint message. BugSack empty.
+17. `/bof perf` with the window closed and with a run in the Farm tab.
 
 ### Checklist 0.3.0-alpha.3 (Classic Era, alternative details)
 

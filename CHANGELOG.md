@@ -3,6 +3,46 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.4.0-alpha.1] – noch nicht veröffentlicht
+
+Spielerentlastung: alles im Fenster bedienbar, viel Automatik. Noch nicht im Spiel getestet; nicht in
+Forever getestet.
+
+### Hinzugefügt
+
+- **Eingabe im Fenster statt im Chat:** Felder anklicken, Wert eintippen, Enter. Gegenstände in ein
+  Feld ziehen oder mit Umschalt+Klick einfügen. Löschen fragt nach.
+  - Tab „Material“: Ziel neu anlegen, umbenennen, löschen; Herstellungen; Menge pro Zutat; Zutat
+    entfernen; eigener Preis per Klick in die Preisspalte; „Twinks mitzählen“; Rezept mit Anzahl.
+  - Tab „Craft“: Gewichte als Felder, Vorlagen (Zauber, Heiler, Beweglichkeit, Stärke, Tank) mit
+    Vorschlag nach Klasse und Talenten, Ansicht „Alternativen“ zum Anlegen und Bearbeiten.
+  - Tab „Goldpuffer“: Sparziele als Zeilen (Name, Betrag, hoch, erreicht, löschen), neues Sparziel,
+    Einkauf prüfen, Verteilung rückgängig machen.
+  - Tab „Beschaffung“: Feld für das eigene Budget.
+  - Tab „Farmen“: Zielmaterial vorausgewählt und änderbar, „mitzählen“ pro unklarem Gegenstand.
+  - Neuer Tab „Einstellungen“ für alle Einstellungen, Debug-Modus, Leistung und Zurücksetzen.
+- **Farm-Automatik:** Leerlauf zählt höchstens 5 Minuten am Stück; Zugänge bei Händler, Bank,
+  Auktionshaus, Briefkasten und Handel zählen nicht; eine Runde ohne unklare Zugänge speichert sich
+  beim Beenden selbst; Pause bei AFK und in Städten/Gasthäusern, danach geht es weiter; Flugrouten
+  zählen als Anreise; Meldung, wenn das Zielmaterial für deine Ziele reicht; Vorschlag einer
+  Farmrunde, wenn du ein fehlendes Material erbeutest; Ergebnis-Zeile nach jeder gespeicherten Runde.
+- **Hinweise:** Zeilen im Gegenstands-Tooltip (was fehlt, Verbesserung eines Craft-Ziels); freies
+  Gold und Rücklagen unter dem Händlerfenster mit Warnung, wenn ein Einkauf die Rücklagen angreift;
+  Hinweis im Auktionshaus auf Materialien ohne Preis; Questbelohnungen als Alternative.
+- **Goldpuffer:** neues Gold auf Wunsch automatisch verteilen (standardmäßig aus); Nettoerlös nach
+  Quelle (Beute, Quests, Händler, Lehrer, Post, Auktionshaus, Handel, Sonstiges).
+- Minimap-Knopf (Links: Fenster, Rechts: Farmrunde pausieren/fortsetzen), Tastenbelegungen für
+  Fenster und Farmrunde, Rückblick auf die letzte Sitzung beim Login.
+- Neue Chat-Befehle als Reserve: `/bof set`, `/bof goal name`, `/bof recipe new`,
+  `/bof weights template|suggest`, `/bof alt kind`, `/bof gold name|undo`.
+
+### Geändert
+
+- Ein Rezept, das schon ein Ziel hat, erhöht beim Übernehmen dieses Ziel, statt ein doppeltes
+  anzulegen (`/bof recipe new` legt trotzdem ein neues an).
+- Alte Händler- und Auktionshauspreise werden nach 60 Tagen gelöscht (einstellbar); eigene Preise bleiben.
+- Das Fenster hat eine Titelzeile über acht Tab-Knöpfen und ist etwas größer.
+
 ## [0.3.0] – 2026-10-19 (noch nicht veröffentlicht)
 
 Craft-Bewertung, Goldpuffer und neue Fenster-Tabs. Getestet in WoW Classic Era 1.15.9; nicht in
