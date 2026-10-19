@@ -67,6 +67,33 @@ function PlanCommands.LimitText(plan)
 	return Util.Format(L.PLAN_LIMIT_OK, limit)
 end
 
+-- Buying everything missing with gold from the best other farm route: "Anderer Weg: ...".
+-- "" without a priced missing material or without a route with enough data.
+function PlanCommands.RouteText(inputs)
+	local cost, unpriced, excluded = 0, 0, {}
+	for _, input in ipairs(inputs) do
+		excluded[input.itemID] = true
+		if input.unitPrice then
+			cost = cost + input.missing * input.unitPrice
+		else
+			unpriced = unpriced + 1
+		end
+	end
+	local now = ns.Client:GetServerTime()
+	local route = cost > 0 and ns.GoldRoutes.List(ns.db, ns.db.settings.farmEstimateScope, ns.charKey, function(itemID)
+		return ns.GoldRoutes.SaleValue(itemID, now)
+	end, excluded)[1]
+	if not route then
+		return ""
+	end
+	local text = Util.Format(L.PLAN_ROUTE, UIShared.ItemText(route.targetItemID), Money.Format(route.copperPerHour),
+		Money.Format(cost), Util.FormatDuration(ns.GoldRoutes.TimeToEarn(route, cost)))
+	if unpriced > 0 then
+		text = text .. " " .. Util.Format(L.PLAN_ROUTE_UNPRICED, unpriced)
+	end
+	return text
+end
+
 -- The plan of the current settings for the goals.
 function PlanCommands.CurrentPlan(charData, goals)
 	local inputs = Sourcing.Inputs(charData, goals)
@@ -76,7 +103,7 @@ end
 local function printPlan(charData, goals)
 	local budget, isOwn = Sourcing.Budget()
 	local strategy = ns.db.settings.strategy
-	local plan = PlanCommands.CurrentPlan(charData, goals)
+	local plan, inputs = PlanCommands.CurrentPlan(charData, goals)
 	Log.Print(Util.Format(L.PLAN_HEADER, L[PlanCommands.STRATEGY_NAMES[strategy]], PlanCommands.BudgetText(budget, isOwn)))
 	if #plan.lines == 0 then
 		Log.Print(L.FARM_NOTHING_MISSING)
@@ -88,6 +115,10 @@ local function printPlan(charData, goals)
 	Log.Print(PlanCommands.SummaryText(plan))
 	if plan.limitSeconds then
 		Log.Print(PlanCommands.LimitText(plan))
+	end
+	local routeText = PlanCommands.RouteText(inputs)
+	if routeText ~= "" then
+		Log.Print(routeText)
 	end
 	for _, note in ipairs(PlanCommands.CostNotes(charData, plan)) do
 		Log.Print(note)

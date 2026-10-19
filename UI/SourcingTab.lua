@@ -74,6 +74,7 @@ function Tab:Refresh()
 	end
 	self.goalText:SetText(headerText)
 	self.limitText:SetText("")
+	self.routeText:SetText("")
 	if not goals then
 		self:Show({}, emptyText, "", {})
 		return
@@ -87,6 +88,7 @@ function Tab:Refresh()
 		return
 	end
 	self.limitText:SetText(PlanCommands.LimitText(plan))
+	self.routeText:SetText(PlanCommands.RouteText(inputs))
 	self:Show(plan.lines, "", PlanCommands.SummaryText(plan), PlanCommands.CostNotes(charData, plan))
 end
 

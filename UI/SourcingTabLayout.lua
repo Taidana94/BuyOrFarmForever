@@ -8,7 +8,7 @@ local Widgets = ns.Widgets
 local Layout = {}
 ns.SourcingTabLayout = Layout
 
-Layout.VISIBLE_ROWS = 10
+Layout.VISIBLE_ROWS = 9
 Layout.STRATEGIES = { "SAVE_TIME", "SAVE_GOLD", "FARM_SELF" }
 local STRATEGY_LABELS = { SAVE_TIME = "STRATEGY_SAVE_TIME", SAVE_GOLD = "STRATEGY_SAVE_GOLD", FARM_SELF = "STRATEGY_FARM_SELF" }
 
@@ -24,7 +24,7 @@ local STRATEGY_Y, STRATEGY_WIDTH, STRATEGY_GAP = -26, 120, 6
 local BUDGET_GAP, BUDGET_BOX_WIDTH = 12, 80
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, TEXT_WIDTH = -84, 560
-local LIMIT_Y, SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 58, 42, 26, 10
+local ROUTE_Y, LIMIT_Y, SUMMARY_Y, RESERVE_Y, TIME_VALUE_Y = 74, 58, 42, 26, 10
 
 local function showTooltip(row)
 	local line = row.data
@@ -104,6 +104,7 @@ function Layout.Build(tab, parent)
 		row:SetScript("OnLeave", hideTooltip)
 	end
 	tab.emptyText = createText(frame, "GameFontDisableSmall", EMPTY_TEXT_Y, "TOPLEFT")
+	tab.routeText = createText(frame, "GameFontHighlightSmall", ROUTE_Y, "BOTTOMLEFT")
 	tab.limitText = createText(frame, "GameFontHighlightSmall", LIMIT_Y, "BOTTOMLEFT")
 	tab.summaryText = createText(frame, "GameFontHighlightSmall", SUMMARY_Y, "BOTTOMLEFT")
 	tab.reserveText = createText(frame, "GameFontHighlightSmall", RESERVE_Y, "BOTTOMLEFT")

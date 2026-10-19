@@ -41,6 +41,7 @@ Core\FarmCapture.lua
 Core\FarmEstimates.lua
 Core\Sourcing.lua
 Core\SourcingPlan.lua
+Core\GoldRoutes.lua
 Core\CraftEval.lua
 Core\WeightTemplates.lua
 Core\SavingsGoals.lua
