@@ -316,8 +316,8 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 | Version in TOC, CHANGELOG, README | 0.4.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged |
 | ZIP | built and inspected (see below) |
-| Performance | static review below; in-game `/bof perf` for 0.4.0 still to be measured |
-| Tag | `v0.4.0` only after the performance numbers; push/publication only after the user's approval |
+| Performance | static review below; in-game `/bof perf` for 0.4.0 was not measured (release approved without it) |
+| Tag | `v0.4.0`, pushed with `main` after the user's approval (2026-10-19) |
 
 ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 79 files, top folder `BuyOrFarmForever/`, `/` as
 separator, no dev files; TOC `## Version: 0.4.0`, `## Interface: 11509`. Found during this check:
@@ -335,7 +335,7 @@ registered only while needed: `FarmAssist` player state (while a run exists), `S
 signal (while a merchant is open), `FarmCapture` window and combat signals (while a run is running).
 Timers: one-shot `C_Timer.After` only (taxi check, login summary, price cleanup, prompt bar hide);
 the only ticker is still the Farm tab clock. No `OnUpdate` (level 1c). Tooltip hook: one table
-lookup per item tooltip after the first rebuild. Verdict: ok; in-game numbers pending.
+lookup per item tooltip after the first rebuild. Verdict: ok; no in-game numbers for 0.4.0.
 
 ### Release check 0.3.0 (2026-10-19)
 
