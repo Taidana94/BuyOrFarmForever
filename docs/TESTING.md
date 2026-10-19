@@ -258,6 +258,12 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.7.0-alpha.6 (Classic Era, 2026-10-19)
+
+User confirmed the alpha.4 to alpha.6 checklists ("jap"). Files: `!BugGrabber.lua` has no error from
+this addon (only an old `/dump` typo of session 44). The SavedVariables (written 19:41) still show
+`lastAddonVersion` 0.7.0-alpha.4, so they were saved before alpha.5/6 were loaded.
+
 ### Checklist 0.7.0-alpha.6 (Classic Era, farmed reagents)
 
 1. `/bof version` → `0.7.0-alpha.6`. Checklists 0.7.0-alpha.5 and alpha.4 below still apply.
