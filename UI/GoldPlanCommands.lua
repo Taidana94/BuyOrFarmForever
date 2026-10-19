@@ -14,6 +14,8 @@ local GoldPlanCommands = {}
 ns.GoldPlanCommands = GoldPlanCommands
 
 local HOUR = 3600
+-- Unused plan time below this is not mentioned (rounding, short tasks).
+local MIN_UNUSED_SECONDS = 60
 -- Durations of the overview without argument, and the buttons of the planner view.
 GoldPlanCommands.DURATIONS = { HOUR, 2 * HOUR, 4 * HOUR }
 -- Items named per task line in the chat.
@@ -95,6 +97,13 @@ function GoldPlanCommands.PlanTexts(plan, seconds)
 	for i, step in ipairs(plan.steps) do
 		steps[i] = Util.Format(L.GOLD_SOURCE_NUMBERED, i, STEP_TEXTS[step.kind](step))
 	end
+	-- Without a measured farm route the rest of the time stays open; say so instead of showing
+	-- the same steps for every duration without explanation.
+	local unused = seconds - plan.seconds
+	if unused >= MIN_UNUSED_SECONDS then
+		steps[#steps + 1] = Util.Format(L.GOLDPLAN_UNUSED, Util.FormatDuration(unused),
+			Util.FormatDuration(ns.GoldRoutes.MIN_SECONDS))
+	end
 	local summary = Util.Format(L.GOLDPLAN_SUMMARY, Util.FormatDuration(seconds), Money.Format(plan.sure),
 		Money.Format(plan.auction), Money.Format(plan.rating))
 	local others = {}
@@ -122,7 +131,8 @@ local function printPlan(charData, seconds)
 	Log.Print(summary)
 	for i, line in ipairs(steps) do
 		Log.Print(line)
-		local items = plan.steps[i].task and itemsLine(plan.steps[i].task)
+		local step = plan.steps[i] -- nil for the unused-time line
+		local items = step and step.task and itemsLine(step.task)
 		if items then
 			Log.Print(items)
 		end
