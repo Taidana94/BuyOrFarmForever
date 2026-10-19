@@ -65,6 +65,13 @@ if hooksecurefunc then
 end
 
 local TRADE = {
+	count = function()
+		return GetNumTradeSkills()
+	end,
+	-- Seconds until the recipe can be used again, or nil (Vanilla TradeSkillUI shows it the same way).
+	cooldown = function(i)
+		return GetTradeSkillCooldown(i)
+	end,
 	selection = function()
 		return GetTradeSkillSelectionIndex()
 	end,
@@ -94,6 +101,12 @@ local TRADE = {
 }
 
 local CRAFT = {
+	count = function()
+		return GetNumCrafts()
+	end,
+	cooldown = function()
+		return nil
+	end,
 	selection = function()
 		return GetCraftSelectionIndex()
 	end,
@@ -153,19 +166,8 @@ local function readReagents(api, index)
 	return reagents
 end
 
--- The recipe selected in the most recently opened profession window.
--- Returns { key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } },
--- or nil plus "no_window" | "no_selection" | "loading" (links not available yet).
--- The result is raw client data; the core validates it (Recipes.Normalize).
-function Professions.ReadSelectedRecipe()
-	local api = (lastWindow == "trade" and TRADE) or (lastWindow == "craft" and CRAFT)
-	if not api then
-		return nil, "no_window"
-	end
-	local index = api.selection()
-	if type(index) ~= "number" or index < 1 or api.info(index) == "header" then
-		return nil, "no_selection"
-	end
+-- One recipe entry, or nil plus "loading" while its links are not available.
+local function readEntry(api, index)
 	local key, outputItemID = recipeIdentity(api, index)
 	local reagents = readReagents(api, index)
 	if not (key and reagents) then
@@ -179,4 +181,38 @@ function Professions.ReadSelectedRecipe()
 		outputMax = outputMax,
 		reagents = reagents,
 	}
+end
+
+-- The recipe selected in the most recently opened profession window.
+-- Returns { key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } },
+-- or nil plus "no_window" | "no_selection" | "loading" (links not available yet).
+-- The result is raw client data; the core validates it (Recipes.Normalize).
+function Professions.ReadSelectedRecipe()
+	local api = (lastWindow == "trade" and TRADE) or (lastWindow == "craft" and CRAFT)
+	if not api then
+		return nil, "no_window"
+	end
+	local index = api.selection()
+	if type(index) ~= "number" or index < 1 or api.info(index) == "header" then
+		return nil, "no_selection"
+	end
+	return readEntry(api, index)
+end
+
+-- Every recipe of the open profession windows (headers skipped), each like ReadSelectedRecipe plus
+-- cooldownSeconds (nil without cooldown). Returns the list and true if some entries were skipped
+-- because their links are still loading. Empty without an open window.
+function Professions.ReadAllRecipes()
+	local list, incomplete = {}, false
+	for kind, api in pairs({ trade = TRADE, craft = CRAFT }) do
+		for index = 1, openWindows[kind] and (api.count() or 0) or 0 do
+			local recipe = api.info(index) ~= "header" and readEntry(api, index)
+			if recipe then
+				recipe.cooldownSeconds = api.cooldown(index)
+				list[#list + 1] = recipe
+			end
+			incomplete = incomplete or (api.info(index) ~= "header" and not recipe)
+		end
+	end
+	return list, incomplete
 end

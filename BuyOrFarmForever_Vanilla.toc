@@ -47,6 +47,8 @@ Core\SourcingPlan.lua
 Core\GoldRoutes.lua
 Core\GoldPlan.lua
 Core\BagTasks.lua
+Core\RecipeBook.lua
+Core\CraftTasks.lua
 Core\CraftEval.lua
 Core\WeightTemplates.lua
 Core\SavingsGoals.lua

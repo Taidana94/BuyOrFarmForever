@@ -27,6 +27,7 @@ Adapter.REQUIRED = {
 	"GetCPUMetrics", -- (addonName) -> { recent, average, peak = { addon, app, overall } }, or nil if off
 	"GetTimeMs", -- () -> high-resolution time in ms, or nil
 	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
+	"ReadAllRecipes", -- () -> { recipe + cooldownSeconds } of the open profession windows, incomplete (bool)
 	"GetItemName", -- (itemID) -> localized name, or nil while loading (load is requested)
 	"ReadMerchantPrices", -- () -> { { itemID, copper per unit } } of the open merchant (gold prices only)
 	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page

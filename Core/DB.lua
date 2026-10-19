@@ -56,6 +56,7 @@ DB.CHARACTER_DEFAULTS = {
 	savingsGoals = {},
 	income = {},
 	goldKeep = {}, -- { [itemID] = true }: never suggested for selling by the gold planner
+	recipeBook = {}, -- { [recipeKey] = { cooldown = true?, readyAt? } }: recipes seen (Core/RecipeBook.lua)
 }
 
 -- Allowed values for enum-like fields, by path.

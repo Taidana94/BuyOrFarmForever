@@ -63,6 +63,9 @@ read_globals = {
 	"GetTitleText",
 	-- profession windows (called by Blizzard_TradeSkillUI / Blizzard_CraftUI, Vanilla, 70003)
 	"GetTradeSkillSelectionIndex",
+	"GetNumTradeSkills",
+	"GetTradeSkillCooldown",
+	"GetNumCrafts",
 	"GetTradeSkillInfo",
 	"GetTradeSkillItemLink",
 	"GetTradeSkillRecipeLink",

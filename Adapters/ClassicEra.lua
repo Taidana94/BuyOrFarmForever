@@ -40,6 +40,10 @@ local ClassicEra = {
 		QUEST_COMPLETE = "QUEST_REWARDS",
 		QUEST_FINISHED = "QUEST_CLOSED",
 		-- Trainer window (gold spent on training).
+		TRADE_SKILL_SHOW = "PROFESSION_OPENED",
+		CRAFT_SHOW = "PROFESSION_OPENED",
+		TRADE_SKILL_UPDATE = "PROFESSION_CHANGED",
+		CRAFT_UPDATE = "PROFESSION_CHANGED",
 		TRAINER_SHOW = "TRAINER_OPENED",
 		TRAINER_CLOSED = "TRAINER_CLOSED",
 	},
@@ -255,6 +259,10 @@ end
 -- Profession windows: Adapters/ClassicEraProfessions.lua.
 function ClassicEra:ReadSelectedRecipe()
 	return ns.ClassicEraProfessions.ReadSelectedRecipe()
+end
+
+function ClassicEra:ReadAllRecipes()
+	return ns.ClassicEraProfessions.ReadAllRecipes()
 end
 
 -- C_Item.GetItemInfo returns nil until the item is in the client cache.

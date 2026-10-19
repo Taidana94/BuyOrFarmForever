@@ -1,0 +1,84 @@
+-- Craft tasks for the gold planner: recipes of the character's recipe book that make a profit.
+-- Profit per craft = sale value of the product (vendor price, sure; auction gold on top, not
+-- guaranteed) minus the reagents at their planning price (Prices.Best; a recipe with a reagent
+-- without price is skipped). Normal recipes count with up to MAX_CRAFTS crafts (the auction
+-- house's demand is unknown), cooldown recipes with one craft once they are ready.
+local _, ns = ...
+
+local CraftTasks = {}
+ns.CraftTasks = CraftTasks
+
+CraftTasks.MAX_CRAFTS = 5
+-- Only the best tasks go into a plan (the view shows a few steps).
+CraftTasks.MAX_TASKS = 5
+-- Time per action (design assumptions of this addon, not game data).
+local CRAFT_SECONDS = 5
+local POST_SECONDS = 20
+local BUY_SECONDS_PER_REAGENT = 20
+
+local function reagentCost(recipe, now)
+	local cost = 0
+	for _, reagent in ipairs(recipe.reagents) do
+		local price = ns.PriceCapture.Best(reagent.itemID, now)
+		if not price then
+			return nil
+		end
+		cost = cost + price * reagent.count
+	end
+	return cost
+end
+
+-- Profit of one craft: sure, auction (nil if a price is missing).
+local function profitPerCraft(recipe, now)
+	local sure, auction = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
+	local cost = sure and reagentCost(recipe, now)
+	if not cost then
+		return nil
+	end
+	local made = (recipe.outputMin + recipe.outputMax) / 2
+	return made * sure - cost, made * auction
+end
+
+local function taskFor(key, entry, now)
+	local recipe = ns.Recipes.Get(ns.db, key)
+	local ready = not entry.cooldown or (entry.readyAt or 0) <= now
+	if not (recipe and recipe.outputItemID ~= 0 and ready) then
+		return nil
+	end
+	local sure, auction = profitPerCraft(recipe, now)
+	if not sure then
+		return nil
+	end
+	local crafts = entry.cooldown and 1 or CraftTasks.MAX_CRAFTS
+	return {
+		kind = entry.cooldown and "COOLDOWN" or "CRAFT",
+		itemID = recipe.outputItemID,
+		crafts = crafts,
+		seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + #recipe.reagents * BUY_SECONDS_PER_REAGENT,
+		sure = crafts * sure,
+		auction = crafts * auction,
+	}
+end
+
+-- The most profitable craft tasks of the character (rating > 0, best rating per second first).
+function CraftTasks.Collect(charData, now)
+	local discount = ns.db.settings.ahDiscountPercent
+	local tasks = {}
+	for key, entry in pairs(charData.recipeBook) do
+		local task = taskFor(key, entry, now)
+		if task and ns.GoldRoutes.Rating(task.sure, task.auction, discount) > 0 then
+			task.perSecond = ns.GoldRoutes.Rating(task.sure, task.auction, discount) / task.seconds
+			tasks[#tasks + 1] = task
+		end
+	end
+	table.sort(tasks, function(a, b)
+		if a.perSecond ~= b.perSecond then
+			return a.perSecond > b.perSecond
+		end
+		return a.itemID < b.itemID
+	end)
+	while #tasks > CraftTasks.MAX_TASKS do
+		table.remove(tasks)
+	end
+	return tasks
+end
