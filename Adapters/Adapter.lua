@@ -40,6 +40,8 @@ Adapter.REQUIRED = {
 	"GetEquipSlots", -- (itemID) -> { slotKey, ... } e.g. { "CHEST" } (.sum = replaces all together), or nil
 	"GetEquippedItemID", -- (slotKey) -> item id in that slot, or nil
 	"GetSellPrice", -- (itemID) -> vendor sell price per unit in copper, or nil while loading
+	"GetItemMinLevel", -- (itemID) -> character level needed to wear the item, or nil while loading
+	"GetLevel", -- () -> character level, or nil
 	"GetCursorItem", -- () -> item id on the cursor (drag and drop), or nil
 	"ClearCursor", -- () -> nil: drops what the cursor holds (after the addon took an item)
 	"IsAFK", -- () -> bool

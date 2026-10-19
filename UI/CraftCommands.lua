@@ -99,12 +99,36 @@ function CraftCommands.DetailLine(alt, plan)
 		Util.FormatDuration(plan.farmSeconds), requires)
 end
 
+-- Immediate benefit vs. a planned replacement: does the craft stay better, or does it only bridge
+-- the time until the alternative arrives? nil unless the alternative is planned and the craft
+-- improves the gear now.
+function CraftCommands.VerdictLine(index, alt, comparison, altComparison)
+	if alt.kind ~= "PLANNED" or not (comparison and altComparison) or comparison.gain <= 0 then
+		return nil
+	end
+	local difference = comparison.score - altComparison.score
+	if difference >= 0 then
+		return Util.Format(L.ALT_VERDICT_STAYS, index, gainText(difference))
+	end
+	if alt.seconds then
+		return Util.Format(L.ALT_VERDICT_BRIDGE_TIME, index, gainText(comparison.gain), scoreText(-difference),
+			Util.FormatDuration(alt.seconds))
+	end
+	return Util.Format(L.ALT_VERDICT_BRIDGE, index, gainText(comparison.gain), scoreText(-difference))
+end
+
+local function altNote(alt)
+	local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
+	local level = CraftEval.LevelLock(alt.itemID)
+	return level and note .. Util.Format(L.ALT_LEVEL_PART, level) or note
+end
+
 local function alternativeLines(lines, charData, comparison, plan)
 	local weights = charData.craftEval.weights
 	for index, alt in ipairs(charData.craftEval.alternatives) do
 		local altComparison, err = CraftEval.CompareWithEquipped(alt.itemID, weights)
 		local kind = CraftCommands.KindName(alt.kind)
-		local note = alt.note ~= "" and Util.Format(L.ALT_NOTE, alt.note) or ""
+		local note = altNote(alt)
 		if altComparison and comparison then
 			lines[#lines + 1] = Util.Format(L.ALT_LINE, index, kind, UIShared.ItemText(alt.itemID),
 				scoreText(altComparison.score), gainText(comparison.score - altComparison.score), note)
@@ -113,6 +137,7 @@ local function alternativeLines(lines, charData, comparison, plan)
 				CraftCommands.CompareLine(alt.itemID, altComparison, err), note)
 		end
 		lines[#lines + 1] = CraftCommands.DetailLine(alt, plan)
+		lines[#lines + 1] = CraftCommands.VerdictLine(index, alt, comparison, altComparison)
 	end
 end
 
@@ -124,6 +149,10 @@ function CraftCommands.EvaluationLines(charData, goal)
 	end
 	local comparison, err = CraftEval.CompareWithEquipped(itemID, charData.craftEval.weights)
 	local lines = { CraftCommands.CompareLine(itemID, comparison, err) }
+	local level = CraftEval.LevelLock(itemID)
+	if level then
+		lines[#lines + 1] = Util.Format(L.CRAFT_LEVEL_LOCKED, level, ns.Client:GetLevel())
+	end
 	local plan = sourcingPlan(charData, goal)
 	sourcingLines(lines, plan, comparison)
 	ownedLine(lines, charData, goal)

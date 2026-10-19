@@ -48,11 +48,12 @@ read_globals = {
 	"GetCursorInfo",
 	"ClearCursor",
 	-- player state (UnitIsAFK, UnitClass, C_SpecializationInfo documented in 70003; IsResting and
-	-- UnitOnTaxi used by Blizzard's Classic Era UI; see Adapters/ClassicEraPlayer.lua)
+	-- UnitOnTaxi, UnitLevel used by Blizzard's Classic Era UI; see Adapters/ClassicEraPlayer.lua)
 	"UnitIsAFK",
 	"IsResting",
 	"UnitOnTaxi",
 	"UnitClass",
+	"UnitLevel",
 	C_SpecializationInfo = { fields = { "GetSpecializationInfo" } },
 	-- quest frame rewards (Blizzard_UIPanels_Game/Classic/QuestFrame.lua, Vanilla/QuestInfo.lua, 70003)
 	"GetNumQuestChoices",

@@ -28,6 +28,14 @@ function Player.IsOnTaxi()
 end
 
 -- Class file name ("PRIEST", "WARRIOR", …), or nil.
+-- Character level (UnitLevel, used by the Classic Era UI), or nil.
+function Player.GetLevel()
+	if not UnitLevel then
+		return nil
+	end
+	return UnitLevel("player")
+end
+
 function Player.GetClass()
 	if not UnitClass then
 		return nil

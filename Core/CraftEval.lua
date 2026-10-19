@@ -78,6 +78,15 @@ function CraftEval.CompareWithEquipped(itemID, weights)
 	return result
 end
 
+-- The level needed for an item if the character is below it, else nil (also while loading).
+function CraftEval.LevelLock(itemID)
+	local needed, level = ns.Client:GetItemMinLevel(itemID), ns.Client:GetLevel()
+	if needed and level and needed > level then
+		return needed
+	end
+	return nil
+end
+
 -- The crafted item of a goal created from a recipe, or nil (enchantments, manual goals).
 function CraftEval.GoalItemID(goal)
 	local recipe = goal.recipeKey and ns.Recipes.Get(ns.db, goal.recipeKey)

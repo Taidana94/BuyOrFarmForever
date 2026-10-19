@@ -62,6 +62,8 @@ local SLOTS = {
 
 -- Position of sellPrice in the returns of C_Item.GetItemInfo (generated docs, 70003).
 local SELL_PRICE_RETURN = 11
+-- Position of itemMinLevel (required character level) in the same returns.
+local MIN_LEVEL_RETURN = 5
 
 local function itemLink(itemID)
 	if not (C_Item and C_Item.GetItemInfo) then
@@ -120,4 +122,16 @@ function Gear.GetSellPrice(itemID)
 		C_Item.RequestLoadItemDataByID(itemID)
 	end
 	return sellPrice
+end
+
+-- Character level needed to wear the item, or nil while loading (load requested).
+function Gear.GetItemMinLevel(itemID)
+	if not (C_Item and C_Item.GetItemInfo) then
+		return nil
+	end
+	local minLevel = select(MIN_LEVEL_RETURN, C_Item.GetItemInfo(itemID))
+	if minLevel == nil and C_Item.RequestLoadItemDataByID then
+		C_Item.RequestLoadItemDataByID(itemID)
+	end
+	return minLevel
 end

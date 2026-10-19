@@ -227,6 +227,10 @@ function ClassicEra:GetSellPrice(itemID)
 	return ns.ClassicEraGear.GetSellPrice(itemID)
 end
 
+function ClassicEra:GetItemMinLevel(itemID)
+	return ns.ClassicEraGear.GetItemMinLevel(itemID)
+end
+
 -- Bags and map: Adapters/ClassicEraBags.lua.
 function ClassicEra:ScanBags(counts)
 	return ns.ClassicEraBags.ScanBags(counts)
