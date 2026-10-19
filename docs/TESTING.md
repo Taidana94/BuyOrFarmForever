@@ -276,8 +276,8 @@ Bugs found (screenshot):
 | Version in TOC, CHANGELOG, README | 0.3.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged since 2026-10-18 (debug log of the user's client) |
 | ZIP | built and inspected (see below) |
-| Performance | static review below; in-game `/bof perf` for 0.3.0 still to be measured |
-| Tag | `v0.3.0` only after the performance numbers; push/publication only after the user's approval |
+| Performance | static review below; in game `/bof perf` idle and with a running farm run in the Farm tab: "quasi 0" (user, 2026-10-19; exact numbers not reported) |
+| Tag | `v0.3.0` local only; push/publication only after the user's approval |
 
 ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 56 files, top folder `BuyOrFarmForever/`, `/` as
 separator, no `.git`, `docs/`, `.luacheckrc`, `.pkgmeta`; TOC `## Version: 0.3.0`, `## Interface: 11509`;
