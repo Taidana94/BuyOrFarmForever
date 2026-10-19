@@ -1,4 +1,5 @@
--- Main window: a movable frame with tabs (Material, Sourcing, Farm, Craft, Gold buffer, Help). Created lazily on first open;
+-- Main window: a movable frame with a title line and tabs (Material, Sourcing, Farm, Craft, Gold
+-- buffer, Settings, Help). Created lazily on first open;
 -- only the shown tab has its events registered, closing the window unregisters them.
 -- Uses only widely stable frame APIs and templates that exist in Classic Era 70003
 -- (BackdropTemplate, UIPanelCloseButton; see docs/ARCHITECTURE.md).
@@ -12,7 +13,7 @@ ns.MainWindow = MainWindow
 
 -- A global frame name is needed so Escape closes the window (UISpecialFrames holds names).
 local FRAME_NAME = "BuyOrFarmForeverMainFrame"
-local WIDTH, HEIGHT = 780, 440
+local WIDTH, HEIGHT = 780, 466
 local VALID_POINTS = {
 	CENTER = true, TOP = true, BOTTOM = true, LEFT = true, RIGHT = true,
 	TOPLEFT = true, TOPRIGHT = true, BOTTOMLEFT = true, BOTTOMRIGHT = true,
@@ -25,11 +26,12 @@ local TABS = {
 	{ key = "FARM", label = "TAB_FARM", field = "farm", module = "FarmTab" },
 	{ key = "CRAFT", label = "TAB_CRAFT", field = "craft", module = "CraftTab" },
 	{ key = "GOLD_BUFFER", label = "TAB_GOLD", field = "gold", module = "GoldTab" },
+	{ key = "SETTINGS", label = "TAB_SETTINGS", field = "settings", module = "SettingsTab" },
 	{ key = "HELP", label = "TAB_HELP", field = "help", module = "HelpTab" },
 }
-local TAB_BUTTON_WIDTH, TAB_BUTTON_GAP = 76, 3
-local TAB_BUTTON_X, TAB_BUTTON_Y = 18, -14
-local TITLE_X, TITLE_Y = -40, -18
+local TAB_BUTTON_WIDTH, TAB_BUTTON_GAP = 88, 3
+local TAB_BUTTON_X, TAB_BUTTON_Y = 18, -40
+local TITLE_X, TITLE_Y = 22, -18
 
 local frame
 local currentKey
@@ -124,8 +126,8 @@ local function create()
 	frame:SetScript("OnDragStop", savePosition)
 
 	local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-	-- Right-aligned next to the close button, so the tab buttons on the left never cover it.
-	title:SetPoint("TOPRIGHT", TITLE_X, TITLE_Y)
+	-- Own line above the tab buttons, so eight tabs fit without covering it.
+	title:SetPoint("TOPLEFT", TITLE_X, TITLE_Y)
 	title:SetText(L.ADDON_TITLE)
 
 	local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
@@ -163,7 +165,8 @@ function MainWindow.Toggle()
 	end
 end
 
--- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT" | "GOLD_BUFFER" | "HELP"); used by the tab buttons and tests.
+-- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT" | "GOLD_BUFFER" | "SETTINGS" | "HELP");
+-- used by the tab buttons and tests.
 function MainWindow.SelectTab(key)
 	if frame then
 		selectTab(key)

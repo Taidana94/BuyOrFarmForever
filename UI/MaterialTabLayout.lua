@@ -29,7 +29,7 @@ local PER_CRAFT_COLUMN, PRICE_COLUMN = 1, 7
 -- Vertical layout inside the tab (pixels from the top) and fixed sizes.
 local NAV_BUTTON_WIDTH, GAP, WIDE_GAP = 26, 4, 10
 local NAME_BOX_WIDTH, COUNT_BOX_WIDTH, GOAL_BUTTON_WIDTH = 190, 44, 80
-local CHECK_SIZE, CHECK_Y, OTHERS_CHECK_X = 24, -28, 230
+local CHECK_Y, OTHERS_CHECK_X = -28, 230
 local HEADER_Y, LIST_Y = -60, -78
 local EMPTY_TEXT_Y, EMPTY_TEXT_WIDTH = -84, 500
 local BOX_INSET, REMOVE_WIDTH = 4, 22
@@ -61,16 +61,6 @@ local function button(frame, label, width, onClick)
 	local b = Widgets.CreateButton(frame, label, width)
 	b:SetScript("OnClick", onClick)
 	return b
-end
-
-local function createCheck(frame, label, onClick)
-	local c = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-	c:SetSize(CHECK_SIZE, CHECK_SIZE)
-	c.Text:SetText(label)
-	c:SetScript("OnClick", function(self)
-		onClick(self:GetChecked() and true or false)
-	end)
-	return c
 end
 
 -- Goal line: < > "Ziel 2 von 5:" [name] Herstellungen [n] [Neu] [Löschen].
@@ -107,11 +97,11 @@ local function buildGoalLine(tab, frame)
 end
 
 local function buildChecks(tab, frame)
-	tab.allGoals = createCheck(frame, L.WINDOW_ALL_GOALS, function(checked)
+	tab.allGoals = Widgets.CreateCheck(frame, L.WINDOW_ALL_GOALS, function(checked)
 		tab:SetAllGoals(checked)
 	end)
 	tab.allGoals:SetPoint("TOPLEFT", 0, CHECK_Y)
-	tab.countOthers = createCheck(frame, L.MATERIAL_COUNT_OTHERS, function()
+	tab.countOthers = Widgets.CreateCheck(frame, L.MATERIAL_COUNT_OTHERS, function()
 		tab:ToggleOthers()
 	end)
 	tab.countOthers:SetPoint("TOPLEFT", OTHERS_CHECK_X, CHECK_Y)

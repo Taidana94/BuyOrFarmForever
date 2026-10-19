@@ -15,13 +15,26 @@ local ICON_GAP = 6
 local NAME_X = ICON_SIZE + ICON_GAP
 
 -- Content area of a window tab, inside the window's border and below the tab buttons.
-local TAB_MARGIN_X, TAB_MARGIN_TOP, TAB_MARGIN_BOTTOM = 22, 46, 20
+local TAB_MARGIN_X, TAB_MARGIN_TOP, TAB_MARGIN_BOTTOM = 22, 72, 20
 
 function Widgets.CreateTabFrame(parent)
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:SetPoint("TOPLEFT", TAB_MARGIN_X, -TAB_MARGIN_TOP)
 	frame:SetPoint("BOTTOMRIGHT", -TAB_MARGIN_X, TAB_MARGIN_BOTTOM)
 	return frame
+end
+
+-- Check box with a label; onClick(checked) after each click.
+local CHECK_SIZE = 24
+
+function Widgets.CreateCheck(parent, label, onClick)
+	local check = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
+	check:SetSize(CHECK_SIZE, CHECK_SIZE)
+	check.Text:SetText(label)
+	check:SetScript("OnClick", function(self)
+		onClick(self:GetChecked() and true or false)
+	end)
+	return check
 end
 
 function Widgets.CreateButton(parent, text, width)

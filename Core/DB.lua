@@ -16,13 +16,11 @@ DB.DEFAULTS = {
 		createdAt = 0,
 		lastAddonVersion = "",
 	},
+	-- User settings with a schema entry (Core/Settings.lua) are added there.
 	settings = {
 		debug = false,
 		strategy = "SAVE_TIME",
-		useReservesInSourcing = true,
 		farmEstimateScope = "CHARACTER",
-		countOtherCharacters = true,
-		priceMaxAgeDays = 7,
 		budgetCopper = 0, -- 0: plan with the character's current gold
 		window = {
 			point = "CENTER",
@@ -62,13 +60,14 @@ DB.CHARACTER_DEFAULTS = {
 DB.ENUMS = {
 	["settings.strategy"] = { SAVE_TIME = true, SAVE_GOLD = true, FARM_SELF = true },
 	["settings.farmEstimateScope"] = { CHARACTER = true, ACCOUNT = true },
-	["settings.window.tab"] = { MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, GOLD_BUFFER = true, HELP = true },
+	["settings.window.tab"] = {
+		MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, GOLD_BUFFER = true, SETTINGS = true, HELP = true,
+	},
 }
 
--- Minimum values for numeric fields, by path.
-DB.MIN = {
-	["settings.priceMaxAgeDays"] = 1,
-}
+-- Minimum and maximum values for numeric fields, by path (filled by Core/Settings.lua).
+DB.MIN = {}
+DB.MAX = {}
 
 -- DB.MIGRATIONS[n](db) upgrades a database from schema n to n + 1 in place.
 -- New fields with defaults need no migration: mergeDefaults adds them on load.
@@ -94,6 +93,9 @@ local function mergeDefaults(target, defaults, path, repairs)
 		end
 		if valid and DB.MIN[fullPath] then
 			valid = value >= DB.MIN[fullPath]
+		end
+		if valid and DB.MAX[fullPath] then
+			valid = value <= DB.MAX[fullPath]
 		end
 		if not valid then
 			if value ~= nil then
