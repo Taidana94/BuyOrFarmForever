@@ -27,6 +27,12 @@ function Player.IsOnTaxi()
 	return UnitOnTaxi ~= nil and truthy(UnitOnTaxi("player"))
 end
 
+-- IsFishingLoot is a legacy global; Blizzard's Classic Era LootFrame.lua calls it while the loot
+-- window opens. Return values in 1.15.9: unverified in game.
+function Player.IsFishingLoot()
+	return IsFishingLoot ~= nil and truthy(IsFishingLoot())
+end
+
 -- Class file name ("PRIEST", "WARRIOR", …), or nil.
 -- Spell ID of Disenchant (Classic Era game data; confirmed in game 2026-10-19).
 local DISENCHANT_SPELL_ID = 13262

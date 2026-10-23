@@ -5,8 +5,8 @@
 --
 -- States: FARM (farming), TRAVEL (on the way), PAUSED, REVIEW (stopped; Finish saves it at once).
 -- Yield per item: confirmed (looted) and unclear (other bag gains, e.g. mail or trade; not saved).
--- Runs have no activity type any more (user decision 0.10.0: a farm is a farm); new runs store
--- "OTHER" so runs saved before keep validating.
+-- Runs have no activity type to choose (user decision 0.10.0: a farm is a farm); new runs store
+-- "OTHER", or "FISHING" when most loot windows of the run were fishing loot (detected, 0.11.0).
 -- Idle time: with run.idleSeconds > 0, farm time without any activity (loot, bag change, combat;
 -- reported with NoteActivity) counts only up to idleSeconds. The gap is cut when the next
 -- activity arrives or the segment ends, so no timer is needed.
@@ -16,7 +16,9 @@ local FarmRuns = {}
 ns.FarmRuns = FarmRuns
 
 -- Activity types of stored runs (older versions asked for one).
-FarmRuns.ACTIVITIES = { GATHER = true, MOBS = true, OTHER = true }
+FarmRuns.ACTIVITIES = { GATHER = true, MOBS = true, OTHER = true, FISHING = true }
+-- A run is a fishing run when more than this share of its loot windows were fishing loot.
+FarmRuns.FISHING_SHARE = 0.5
 FarmRuns.MAX_RUNS = 500
 -- A run that was running at login continues if the last sign of life is this recent (a /reload);
 -- otherwise it is paused at that moment (logout or crash).
@@ -180,6 +182,24 @@ function FarmRuns.Stop(charData, now)
 	return run
 end
 
+-- Counts a loot window of a running run (isFishing: fishing loot).
+function FarmRuns.NoteLoot(run, isFishing)
+	if not FarmRuns.IsRunning(run) then
+		return
+	end
+	run.loots = (run.loots or 0) + 1
+	if isFishing then
+		run.fishingLoots = (run.fishingLoots or 0) + 1
+	end
+end
+
+local function activityOf(run)
+	if (run.fishingLoots or 0) > (run.loots or 0) * FarmRuns.FISHING_SHARE then
+		return "FISHING"
+	end
+	return run.activity
+end
+
 -- Records a bag gain of an item during a running run. isLoot = true counts it as confirmed.
 -- The caller only reports gains while FarmRuns.IsRunning(run).
 function FarmRuns.AddGain(run, itemID, amount, isLoot, now)
@@ -210,7 +230,7 @@ function FarmRuns.Save(db, charKey, charData)
 	end
 	db.farmRuns[#db.farmRuns + 1] = {
 		charKey = charKey,
-		activity = run.activity,
+		activity = activityOf(run),
 		targetItemID = run.targetItemID,
 		uiMapID = run.uiMapID,
 		items = items,

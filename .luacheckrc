@@ -70,6 +70,7 @@ read_globals = {
 	"UnitIsAFK",
 	"IsResting",
 	"UnitOnTaxi",
+	"IsFishingLoot", -- Blizzard_UIPanels_Game/Classic/LootFrame.lua
 	"UnitClass",
 	"UnitLevel",
 	C_SpellBook = { fields = { "IsSpellKnown" } },

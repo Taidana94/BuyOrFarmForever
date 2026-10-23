@@ -59,6 +59,7 @@ Adapter.REQUIRED = {
 	"IsAFK", -- () -> bool
 	"IsResting", -- () -> bool: in a city or inn
 	"IsOnTaxi", -- () -> bool: on a flight path
+	"IsFishingLoot", -- () -> bool: the open loot window is fishing loot (call on LOOT_OPENED)
 	"GetClass", -- () -> class file name ("PRIEST"), or nil
 	"GetTalentPoints", -- () -> { points per talent tree }, or nil
 	"HookItemTooltips", -- (callback(tooltip, itemID)) -> nil: post-hook on item tooltips, call once

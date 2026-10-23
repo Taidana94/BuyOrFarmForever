@@ -91,6 +91,8 @@ local OPTIONAL_RUN_FIELDS = {
 	idleSeconds = isCount,
 	lastActivityAt = isCount,
 	lootCopper = isCount,
+	loots = isCount,
+	fishingLoots = isCount,
 	targetNotified = function(value)
 		return type(value) == "boolean"
 	end,

@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.11.0-alpha.1 | 2026-10-23 | 292 checks passed, 0 failed; new `test_strategies.lua` (gold per character, account rows and `/bof account`, fishing detection and fishing routes, crafted routes, comparison ranking and missing families, `/bof compare`, planner views) |
 | 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/bof want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
 | 0.9.0-alpha.1 | 2026-10-23 | 324 checks passed, 0 failed (306 unit tests); 8 new tests in `test_make.lua` (craft counts, crafting in the open window with cap and "all", opening a closed or other window, combat/no reagents/unknown/enchantment refused, collapsed categories, smelting spell for Mining, detail buttons); mutation check: crafting in another profession's window fails 1 |
 | 0.8.0 | 2026-10-23 | 316 checks passed, 0 failed (298 unit tests); against 0.8.0-alpha.1: skill bar guard (with test; mutation check: removing the guard fails 1) and the fix for the user's in-game finding (linen bolt showed a loss because owned reagents counted at their buy price; now at their sale value after the cut, like `CraftTasks`; the new test fails without the fix), version and documentation |
@@ -261,6 +262,23 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.11.0-alpha.1 (Classic Era, strategy comparison, account, fishing)
+
+1. `/reload`, `/bof version` → `0.11.0-alpha.1`. BugSack empty.
+2. `/bof account` → header with the gold of the characters on the realm; this character with its
+   gold (matches the bag display), professions with skill and recipe count. Log an alt in and back:
+   the alt appears with its gold.
+3. Tab "Goldpuffer" → "Goldplaner": buttons "Plan", "Vergleich", "Konto" fit; "Vergleich" lists the
+   strategies with "gewertet …", the last line "Ohne Daten: …"; 1/2/4 h change the numbers. "Konto"
+   shows the account lines; "Plan" brings the old view back.
+4. Fishing: start a farm run, fish a few times (5+ catches), stop → tab "Farmen" shows
+   "<Zone> (Angeln)" as its own row. Check `/dump IsFishingLoot()` while a fishing loot window is
+   open → `1` or `true` (unverified API return).
+5. With a learned recipe whose product sells better than its reagent (e.g. linen → bolt with an AH
+   price for the bolt) and a farm route that loots the reagent: "Vergleich" shows "Farmen, Beute
+   verarbeiten, verkaufen" and the plan line "…, verarbeitet zu …".
+6. `/bof perf` with the planner open on "Vergleich".
 
 ### Checklist 0.10.0-alpha.1 (Classic Era, wants, stock, farm window)
 

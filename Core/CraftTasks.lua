@@ -20,6 +20,7 @@ CraftTasks.MAX_TASKS = 5
 local CRAFT_SECONDS = 5
 local POST_SECONDS = 20
 local BUY_SECONDS_PER_REAGENT = 20
+CraftTasks.SECONDS_PER_CRAFT = CRAFT_SECONDS + POST_SECONDS
 
 -- Crafts the reagents in the bags allow right now.
 local function craftsFromBags(recipe)

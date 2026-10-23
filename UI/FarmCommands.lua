@@ -26,9 +26,11 @@ local function mapName(uiMapID)
 	return uiMapID > 0 and ns.Client:GetMapName(uiMapID) or L.UNKNOWN_VALUE
 end
 
--- Name of a farm route (GoldRoutes): its zone.
+-- Name of a farm route (GoldRoutes): its zone, marked for fishing.
 function FarmCommands.RouteName(route)
-	return mapName(route.uiMapID)
+	local name = mapName(route.uiMapID)
+	name = route.fishing and Util.Format(L.ROUTE_FISHING, name) or name
+	return route.crafted and Util.Format(L.ROUTE_CRAFTED, name, ns.UIShared.ItemText(route.productItemID)) or name
 end
 
 local function itemTotal(items)

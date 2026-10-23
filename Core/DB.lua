@@ -40,6 +40,8 @@ DB.DEFAULTS = {
 
 DB.CHARACTER_DEFAULTS = {
 	faction = "",
+	money = 0, -- copper carried at moneyAt (Core/IncomeCapture.lua), for the account overview
+	moneyAt = 0,
 	stock = {
 		bags = {},
 		bank = {},

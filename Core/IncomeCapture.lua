@@ -31,6 +31,11 @@ local function checkpoint(charData, now)
 	lastCheckpoint = now
 end
 
+-- The carried gold of the character for the account overview (Core/Account.lua).
+local function noteMoney(charData, money, now)
+	charData.money, charData.moneyAt = money, now
+end
+
 local function onMoneyChanged()
 	local charData = writableCharacter()
 	local money = ns.Client:GetMoney()
@@ -38,6 +43,7 @@ local function onMoneyChanged()
 		return
 	end
 	local now = ns.Client:GetServerTime()
+	noteMoney(charData, money, now)
 	local delta = money - lastMoney
 	local initialValue = lastMoney == 0 and delta > 0 and now - loginAt <= IncomeCapture.LOGIN_GRACE_SECONDS
 	if not initialValue then
@@ -76,6 +82,10 @@ if ns.Client then
 	Events.OnSignal("CHARACTER_READY", function()
 		lastMoney = ns.Client:GetMoney()
 		loginAt = ns.Client:GetServerTime()
+		local charData = writableCharacter()
+		if charData and lastMoney then
+			noteMoney(charData, lastMoney, loginAt)
+		end
 		lastCheckpoint = loginAt
 		session, previousSession = Session.Begin(ns.db.characters[ns.charKey], loginAt)
 	end)

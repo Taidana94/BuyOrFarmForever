@@ -3,6 +3,30 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Was lohnt sich?** Goldplaner (Reiter „Goldpuffer“ → „Goldplaner“): Zeit wählen, dann „Vergleich“.
+  Alle Wege zu Gold für diese Zeit nebeneinander, bester zuerst: alles kombiniert, Taschen verkaufen
+  oder entzaubern, Herstellen und verkaufen (Zutaten aus den Taschen oder gekauft), Farmen, Angeln,
+  Farmen und die Beute verarbeiten. Wege ohne Daten stehen unten mit dem, was fehlt. Im Chat:
+  `/bof compare [Dauer]`.
+- **Farmen → Herstellen → Verkaufen:** Macht ein gelerntes Rezept die Beute einer Route wertvoller,
+  plant der Goldplaner „Westfall, verarbeitet zu …“ mit ein (Herstell- und Einstellzeit eingerechnet).
+- **Angeln wird automatisch erkannt:** Eine Farmrunde, deren Beute meist vom Angeln stammt, wird als
+  Angelroute der Zone gespeichert („Westfall (Angeln)“).
+- **Konto:** Gold jedes Charakters wird gespeichert. Ansicht „Konto“ im Goldplaner und `/bof account`:
+  Gold, Berufe mit Stufe und Rezepten, Gegenstände in Taschen und Bank – je Charakter auf dem Realm.
+
+### Bekannt
+
+- Reines AH-Handeln (billig kaufen, teurer einstellen) wird nicht vorgeschlagen: Ohne Preisverlauf und
+  Verkaufsmengen wäre das geraten.
+- Herstellen zum Verkauf bleibt auf 5 je Rezept begrenzt, weil die Nachfrage im AH unbekannt ist.
+
 ## [0.10.0-alpha.1] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

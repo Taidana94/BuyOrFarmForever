@@ -1,6 +1,8 @@
--- Planner view of the Gold buffer tab: time buttons (1, 2, 4 hours) and a duration box, the plan
--- for that time (summary, steps, alternatives), the farm routes with gold per hour and an item slot
--- for the keep list. Same lines as /bof goldplan and /bof goldsources; inputs run those commands.
+-- Planner view of the Gold buffer tab: time buttons (1, 2, 4 hours) and a duration box, three view
+-- buttons, and below them either the plan for that time (summary, steps, alternatives, the farm
+-- routes with gold per hour), the comparison of the strategies, or the account overview; an item
+-- slot for the keep list. Same lines as /bof goldplan, /bof goldsources, /bof compare and
+-- /bof account; inputs run those commands.
 local _, ns = ...
 
 local L = ns.L
@@ -12,8 +14,10 @@ local GoldPlanCommands = ns.GoldPlanCommands
 local Panel = {}
 ns.GoldPlanPanel = Panel
 
-local MAX_STEPS, MAX_SOURCES = 8, 4
-local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, GAP = 60, 70, 6
+local MAX_STEPS, MAX_SOURCES, MAX_LIST = 8, 4, 10
+local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, GAP = 60, 70, 80, 6
+-- Views of the lower part, in button order; the view is not stored (the plan shows first).
+local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
 local SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -30, -52, -186, -208, -224
 local LINE_GAP, SOURCE_GAP, TEXT_WIDTH, KEEP_TEXT_WIDTH = 4, 2, 700, 600
 -- Kept items named next to the slot; more are counted.
@@ -53,6 +57,21 @@ local function buildTimeRow(panel, frame)
 	panel.durationBox:SetPoint("LEFT", previous, "RIGHT", GAP * 2, 0)
 end
 
+local function buildViewButtons(panel, frame)
+	panel.viewButtons = {}
+	local previous = panel.durationBox
+	for _, view in ipairs(VIEWS) do
+		local button = Widgets.CreateButton(frame, L["GOLDPLAN_VIEW_" .. view], VIEW_BUTTON_WIDTH)
+		button:SetPoint("LEFT", previous, "RIGHT", previous == panel.durationBox and GAP * 3 or GAP, 0)
+		button:SetScript("OnClick", function()
+			panel.view = view
+			Panel.Refresh(panel)
+		end)
+		panel.viewButtons[view] = button
+		previous = button
+	end
+end
+
 -- "Behalten: [slot] Kupfererz, Ruhestein …" at the bottom.
 local function buildKeepRow(panel, frame)
 	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -70,12 +89,13 @@ end
 
 -- Builds the view inside `parent` (hidden until the tab shows it). Returns the panel object.
 function Panel.Build(parent)
-	local panel = { seconds = GoldPlanCommands.DURATIONS[1] }
+	local panel = { seconds = GoldPlanCommands.DURATIONS[1], view = "PLAN" }
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:SetAllPoints()
 	frame:Hide()
 	panel.frame = frame
 	buildTimeRow(panel, frame)
+	buildViewButtons(panel, frame)
 	panel.summary = createText(frame, "GameFontHighlight", SUMMARY_Y)
 	panel.steps = Widgets.CreateTextStack(frame, {
 		count = MAX_STEPS, font = "GameFontHighlightSmall", y = STEPS_Y, width = TEXT_WIDTH, gap = LINE_GAP,
@@ -84,6 +104,9 @@ function Panel.Build(parent)
 	panel.sourcesHeader = createText(frame, "GameFontNormalSmall", SOURCES_HEADER_Y)
 	panel.sources = Widgets.CreateTextStack(frame, {
 		count = MAX_SOURCES, font = "GameFontHighlightSmall", y = SOURCES_Y, width = TEXT_WIDTH, gap = SOURCE_GAP,
+	})
+	panel.list = Widgets.CreateTextStack(frame, {
+		count = MAX_LIST, font = "GameFontHighlightSmall", y = STEPS_Y, width = TEXT_WIDTH, gap = LINE_GAP,
 	})
 	buildKeepRow(panel, frame)
 	return panel
@@ -100,24 +123,61 @@ local function showLines(texts, lines)
 	end
 end
 
-function Panel.Refresh(panel)
-	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
-	for seconds, button in pairs(panel.timeButtons) do
-		Widgets.SetEnabled(button, seconds ~= panel.seconds)
+local function setShownAll(texts, shown)
+	for _, text in ipairs(texts) do
+		Widgets.SetShown(text, shown)
 	end
-	if not charData or ns.readOnly then
-		panel.summary:SetText(L.NOT_READY)
-		showLines(panel.steps, {})
-		return
+end
+
+-- Shows the widgets of the plan view or the list of the other views.
+local function showView(panel)
+	local isPlan = panel.view == "PLAN"
+	setShownAll(panel.steps, isPlan)
+	setShownAll(panel.sources, isPlan)
+	setShownAll(panel.list, not isPlan)
+	Widgets.SetShown(panel.alternatives, isPlan)
+	Widgets.SetShown(panel.sourcesHeader, isPlan)
+	for view, button in pairs(panel.viewButtons) do
+		Widgets.SetEnabled(button, view ~= panel.view)
 	end
-	local isButton = panel.timeButtons[panel.seconds] ~= nil
-	Inputs.SetValue(panel.durationBox, isButton and "" or Util.DurationInput(panel.seconds))
+end
+
+-- Comparison and account view: the first line as the summary, the rest as the list.
+local function refreshList(panel, charData)
+	local lines = panel.view == "COMPARE" and GoldPlanCommands.CompareLines(charData, panel.seconds)
+		or ns.AccountCommands.Lines()
+	panel.summary:SetText(table.remove(lines, 1))
+	showLines(panel.list, lines)
+end
+
+local function refreshPlan(panel, charData)
 	local steps, summary, alternatives = GoldPlanCommands.PlanTexts(GoldPlanCommands.Plan(charData, panel.seconds), panel.seconds)
 	panel.summary:SetText(summary)
 	showLines(panel.steps, steps)
 	panel.alternatives:SetText(alternatives)
 	panel.sourcesHeader:SetText(Util.Format(L.GOLD_SOURCES_HEADER, ns.db.settings.ahDiscountPercent))
 	showLines(panel.sources, GoldPlanCommands.SourceLines())
+end
+
+function Panel.Refresh(panel)
+	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
+	for seconds, button in pairs(panel.timeButtons) do
+		Widgets.SetEnabled(button, seconds ~= panel.seconds)
+	end
+	showView(panel)
+	if not charData or ns.readOnly then
+		panel.summary:SetText(L.NOT_READY)
+		showLines(panel.steps, {})
+		showLines(panel.list, {})
+		return
+	end
+	local isButton = panel.timeButtons[panel.seconds] ~= nil
+	Inputs.SetValue(panel.durationBox, isButton and "" or Util.DurationInput(panel.seconds))
+	if panel.view == "PLAN" then
+		refreshPlan(panel, charData)
+	else
+		refreshList(panel, charData)
+	end
 	panel.keepText:SetText(Panel.KeepText(charData))
 end
 

@@ -276,6 +276,26 @@ farming in the wants plan.
 - UI: `UI/GoldPlanCommands.lua` (`/bof goldplan`, `/bof goldsources`, `/bof goldkeep`),
   `UI/GoldPlanPanel.lua` (planner view of the Gold buffer tab).
 
+### Strategy comparison (0.11.0)
+
+- Gold per character: `characters[key].money` / `moneyAt`, written by `Core/IncomeCapture.lua` at
+  login and on every gold change. `Core/Account.lua` (pure): rows per character of a realm (gold,
+  professions with skill and recipe count, distinct items and units in the bag and bank snapshots).
+- Fishing: `FarmCapture` counts loot windows of a running run (`run.loots`, `run.fishingLoots`
+  via `Client:IsFishingLoot()` on LOOT_OPENED); `FarmRuns.Save` stores `activity = "FISHING"` when
+  more than `FISHING_SHARE` (50 %) were fishing loot. `GoldRoutes.Key` = `"<uiMapID>"` or
+  `"<uiMapID>:FISHING"` (strings since 0.11.0); routes carry `fishing`.
+- Crafted routes: `Core/Conversion.lua` values one unit of loot through the best learned recipe
+  (no cooldown) using it: (products' sale value - other reagents at `PriceCapture.Best`) / units
+  needed, kept only when it beats selling the loot raw; craft + post seconds per unit
+  (`CraftTasks.SECONDS_PER_CRAFT` / units). `Strategies.CraftedRoutes` (pure) adds the gain per hour
+  and scales the route by 3600 / (3600 + craft seconds per farmed hour). `Conversion.Methods` =
+  routes + crafted routes; used by the gold plan and the advisor's best hour.
+- `Strategies.Compare` (pure): one `GoldPlan.Plan` per family (BEST, BAGS, CRAFT, FARM, FISHING,
+  FARM_CRAFT), ranked by rating; families without a step are returned separately.
+- UI: `/bof compare [duration]`, `/bof account` (`UI/AccountCommands.lua`); planner view buttons
+  Plan / Vergleich / Konto (view not stored).
+
 ### Advisor (0.7.0)
 
 - `Core/AdvisorSources.lua`: sources per context return suggestions `{ kind, priority, itemID?,

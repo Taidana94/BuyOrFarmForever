@@ -174,7 +174,7 @@ end
 
 -- The best hour of the gold planner, or nil when the plan has no step.
 function AdvisorSources.BestHour(env)
-	local plan = ns.GoldPlan.Plan({ seconds = HOUR, methods = ns.GoldRoutes.Current(), discountPercent = env.discount,
+	local plan = ns.GoldPlan.Plan({ seconds = HOUR, methods = ns.Conversion.Methods(env.charData, env.now), discountPercent = env.discount,
 		tasks = ns.GoldPlan.Tasks(env.charData, env.now) })
 	if #plan.steps > 0 then
 		return suggestion(env, "PLAN_HOUR", { sure = plan.sure, auction = plan.auction, action = "OPEN_PLANNER" })

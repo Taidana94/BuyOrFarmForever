@@ -1,6 +1,7 @@
--- Gold planner commands: /bof goldplan [duration] (what to do in that time), /bof goldsources (the
--- character's farm routes with gold per hour), /bof goldkeep [item] (items never to sell), and the
--- text lines shared with the planner view of the Gold buffer tab.
+-- Gold planner commands: /bof goldplan [duration] (what to do in that time), /bof compare [duration]
+-- (the strategies side by side), /bof goldsources (the character's farm routes with gold per hour),
+-- /bof goldkeep [item] (items never to sell), and the text lines shared with the planner view of the
+-- Gold buffer tab.
 local _, ns = ...
 
 local L = ns.L
@@ -45,11 +46,15 @@ function GoldPlanCommands.SourceLines()
 	return lines
 end
 
--- The plan for `seconds` with the current tasks and routes.
-function GoldPlanCommands.Plan(charData, seconds)
+local function planOptions(charData, seconds)
 	local now = ns.Client:GetServerTime()
-	return ns.GoldPlan.Plan({ seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now),
-		methods = ns.GoldRoutes.Current(), discountPercent = ns.db.settings.ahDiscountPercent })
+	return { seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now),
+		methods = ns.Conversion.Methods(charData, now), discountPercent = ns.db.settings.ahDiscountPercent }
+end
+
+-- The plan for `seconds` with the current tasks, routes and routes with crafted loot.
+function GoldPlanCommands.Plan(charData, seconds)
+	return ns.GoldPlan.Plan(planOptions(charData, seconds))
 end
 
 local TASK_TEXTS = {
@@ -104,6 +109,39 @@ function GoldPlanCommands.PlanTexts(plan, seconds)
 	return steps, summary, #others > 0 and Util.Format(L.GOLDPLAN_ALTERNATIVES, table.concat(others, L.PLAN_SEPARATOR)) or ""
 end
 
+-- The step that names a plan: the first one that is not travel.
+local function mainStep(plan)
+	for _, step in ipairs(plan.steps) do
+		if step.kind ~= "TRAVEL" then
+			return step
+		end
+	end
+end
+
+local function familyName(family)
+	return Util.Format(L["STRATEGY_" .. family], ns.CraftTasks.MAX_CRAFTS)
+end
+
+-- Header line and one line per strategy (best first), then one line naming the strategies without
+-- data and what they need.
+function GoldPlanCommands.CompareLines(charData, seconds)
+	local ranked, empty = ns.Strategies.Compare(planOptions(charData, seconds))
+	local lines = { Util.Format(L.STRATEGY_HEADER, Util.FormatDuration(seconds), ns.db.settings.ahDiscountPercent) }
+	for i, entry in ipairs(ranked) do
+		local plan = entry.plan
+		lines[#lines + 1] = Util.Format(L.STRATEGY_LINE, i, familyName(entry.family), Money.Format(plan.rating),
+			Money.Format(plan.sure), Money.Format(plan.auction), STEP_TEXTS[mainStep(plan).kind](mainStep(plan)))
+	end
+	local missing = {}
+	for _, family in ipairs(empty) do
+		missing[#missing + 1] = Util.Format(L.STRATEGY_MISSING_PART, familyName(family), L["STRATEGY_NEEDS_" .. family])
+	end
+	if #missing > 0 then
+		lines[#lines + 1] = Util.Format(L.STRATEGY_MISSING, table.concat(missing, L.STRATEGY_SEPARATOR))
+	end
+	return lines
+end
+
 -- "   Wollstoff ×20, Leichtes Leder ×5" for a bag task (chat only).
 local function itemsLine(task)
 	local parts = {}
@@ -152,6 +190,25 @@ local function planCommand(argument)
 	printPlan(charData, seconds)
 end
 
+local function compareCommand(argument)
+	local charData = UIShared.Character()
+	if not charData then
+		return
+	end
+	argument = Util.Trim(argument)
+	local seconds, err = HOUR, nil
+	if argument ~= "" then
+		seconds, err = Util.ParseDuration(argument)
+	end
+	if not seconds or seconds <= 0 then
+		UIShared.PrintError(err or "invalid_duration")
+		return
+	end
+	for _, line in ipairs(GoldPlanCommands.CompareLines(charData, seconds)) do
+		Log.Print(line)
+	end
+end
+
 local function sourcesCommand()
 	if not UIShared.Character() then
 		return
@@ -186,6 +243,7 @@ end
 
 if ns.Client then
 	Slash.AddCommand("goldplan", planCommand, L.HELP_LINE_GOLDPLAN)
+	Slash.AddCommand("compare", compareCommand, L.HELP_LINE_COMPARE)
 	Slash.AddCommand("goldsources", sourcesCommand, L.HELP_LINE_GOLDSOURCES)
 	Slash.AddCommand("goldkeep", keepCommand, L.HELP_LINE_GOLDKEEP)
 end

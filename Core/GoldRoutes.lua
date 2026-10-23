@@ -1,5 +1,5 @@
 -- Gold routes: what farming brings in gold. A route is the zone a run started in (since 0.10.0;
--- activity and target material no longer split routes). From the saved runs of a route: gold per
+-- target material no longer splits routes); fishing runs of a zone form their own route (0.11.0). From the saved runs of a route: gold per
 -- hour of farm time, split into a sure part (vendor value of the loot plus looted coins) and an
 -- auction part (what the auction house brings on top, after its cut; not guaranteed), and the
 -- average travel per trip. Used by the gold planner, the farm tab and the time value of farming.
@@ -18,8 +18,9 @@ local PERCENT = 100
 -- Price sources a sale on the auction house can reach (merchant prices are buy prices).
 local SALE_SOURCES = { "AUCTION", "MANUAL" }
 
+-- "1436" for a zone, "1436:FISHING" for fishing in it.
 function GoldRoutes.Key(run)
-	return run.uiMapID
+	return run.activity == "FISHING" and run.uiMapID .. ":FISHING" or tostring(run.uiMapID)
 end
 
 -- Rating of gold with an uncertain auction part: sure + auction x (1 - discount%).
@@ -31,7 +32,7 @@ local function addRun(routes, run, partsOf)
 	local key = GoldRoutes.Key(run)
 	local route = routes[key]
 	if not route then
-		route = { key = key, uiMapID = run.uiMapID, items = {}, sure = 0, auction = 0, activeSeconds = 0,
+		route = { key = key, uiMapID = run.uiMapID, fishing = run.activity == "FISHING", items = {}, sure = 0, auction = 0, activeSeconds = 0,
 			travelSeconds = 0, runs = 0, runsWithoutCoins = 0 }
 		routes[key] = route
 	end
@@ -76,7 +77,7 @@ end
 -- (opts.minCopper, default 1), best rating first. opts = { scope ("CHARACTER" | "ACCOUNT"), charKey,
 -- partsOf (itemID -> sure, auction copper per unit), excluded ({ [target itemID] = true }, optional),
 -- discountPercent, minSeconds, minCopper }.
--- Each route: { key, uiMapID, items ({ [itemID] = amount }), surePerHour, auctionPerHour,
+-- Each route: { key, uiMapID, fishing, items ({ [itemID] = amount }), surePerHour, auctionPerHour,
 -- ratingPerHour, travelSeconds (per trip), activeSeconds, runs, runsWithoutCoins }.
 function GoldRoutes.List(db, opts)
 	local partsOf, excluded = cachedParts(opts.partsOf), opts.excluded or {}

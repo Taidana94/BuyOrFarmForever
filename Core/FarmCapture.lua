@@ -88,6 +88,7 @@ end
 local function onLootOpened()
 	lootOpen = true
 	noteActivity()
+	FarmRuns.NoteLoot(currentRun(), ns.Client:IsFishingLoot())
 end
 
 local function onLootClosed()

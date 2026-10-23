@@ -2,7 +2,7 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
 ## Notes-deDE: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
-## Version: 0.10.0-alpha.1
+## Version: 0.11.0-alpha.1
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01
@@ -54,6 +54,9 @@ Core\RecipeBook.lua
 Core\RecipeCategories.lua
 Core\ProfessionView.lua
 Core\CraftTasks.lua
+Core\Strategies.lua
+Core\Conversion.lua
+Core\Account.lua
 Core\AdvisorSources.lua
 Core\Advisor.lua
 Core\AdvisorSummary.lua
@@ -74,6 +77,7 @@ UI\FarmAssist.lua
 UI\CraftCommands.lua
 UI\GoldCommands.lua
 UI\GoldPlanCommands.lua
+UI\AccountCommands.lua
 UI\SettingsCommands.lua
 UI\Widgets.lua
 UI\Inputs.lua
