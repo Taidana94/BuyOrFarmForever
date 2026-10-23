@@ -3,253 +3,53 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.11.0-alpha.17] – 2026-10-23 (Testversion)
+## [0.11.0] – 2026-10-23
 
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+Ziele, „Was lohnt sich?“ und viel mehr Automatik. Getestet in WoW Classic Era 1.15.9; nicht in Forever
+getestet. Die Versionen 0.9.0 und 0.10.0 wurden nicht einzeln veröffentlicht, ihre Neuerungen sind hier
+enthalten.
 
 ### Hinzugefügt
 
-- Einstellung „Zutaten und Kosten in der Herstellung zeigen“ (Anzeige): blendet im Tooltip nur die
-  Zutatenliste mit Kosten aus; Beruf und „gelernt“ bleiben. Der ganze Block bleibt mit „Herstellung
-  im Gegenstands-Tooltip“ abschaltbar.
+- **Reiter „Ziele“:** Du trägst ein, was du haben willst. Das Addon prüft, ob du es hast (Taschen, Bank,
+  Post, Twinks), kaufen, farmen oder herstellen kannst, und zeigt den günstigsten Weg – für Zutaten
+  genauso. Farmzeit zählt mit dem Gold pro Stunde deiner besten Route. „Herstellen“ und „Farmen“ starten
+  direkt aus dem Plan. Pro Ziel wählbar: **„Alle“** (ganzer Bestand zählt) oder **„Neu“** (nur, was ab
+  jetzt dazukommt). Im Chat: `/bof want`.
+- **Bestand automatisch:** alle Items in Taschen, Bank und Post jedes Charakters, ohne Eintragen.
+- **Goldplaner „Was lohnt sich?“:** Zeit wählen, dann **Plan** (beste Schritte), **Vergleich** (alle Wege
+  nebeneinander: Taschen verkaufen/entzaubern, Herstellen – auch auf Twinks –, Farmen, Angeln, Farmen
+  und Beute verarbeiten, im AH günstig kaufen und wieder einstellen, alles kombiniert) und **Konto**
+  (Gold, Berufe und Gegenstände aller Charaktere). `/bof compare`, `/bof account`.
+- **Farmen automatisch:** Runden starten beim Looten außerhalb von Städten von selbst und enden nach der
+  Leerlaufzeit; Angeln wird erkannt und eigene Route. Farmfenster mit Start, Pause, Anreise, Beenden.
+- **AH-Preisverlauf:** jede Suche merkt sich Tiefstpreise (14 Tage); daraus erkennt der Goldplaner
+  Angebote deutlich unter dem üblichen Preis.
+- **Herstellen im Reiter „Berufe“:** Anzahl, „Herstellen“, „Alle: n“, „Stapel: n“ (`/bof make`). Der
+  Tooltip der Berufssymbole zeigt, wann der Beruf zuletzt eingelesen wurde.
+- **Herstellung im Gegenstands-Tooltip:** Beruf, wer das Rezept kennt, jede Zutat mit Anzahl und Kosten
+  in Münzen, Gesamtkosten. Block und Zutatenliste einzeln abschaltbar.
+- **Neue Hilfe:** Themen links (Schnellstart, jeder Reiter, Ratgeber, Minimap & Tasten, Einstellungen,
+  Datenerfassung, Chatbefehle, Über), gegliederte Erklärung rechts. `/bof howto`, `/bof about`.
+- **Behalten-Liste** im Goldplaner mit Symbolen; Rechtsklick nimmt ein Item wieder herunter.
 
-## [0.11.0-alpha.16] – 2026-10-23 (Testversion)
+### Geändert
 
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+- Die Reiter „Material“, „Beschaffung“ und „Craft“ sind im Reiter „Ziele“ aufgegangen; alte
+  Materialziele werden beim ersten Start übernommen.
+- Minimap-Knopf: rund und mit der linken Maustaste um die Minimap verschiebbar.
+- Schneller: Farmrouten werden nicht mehr bei jeder Taschen- oder Goldänderung neu berechnet.
+- Gewichte für die Ausrüstungswertung stehen im Reiter „Einstellungen“.
 
 ### Behoben
 
-- Verzauberkunst: Gegenstände aus dem Verzauberungsfenster (z. B. Runenverzierte Silberrute, Stäbe,
-  Öle) wurden als Verzauberung ohne Produkt gespeichert, weil das Spiel dort jeden Eintrag als
-  Verzauberung verlinkt. Das Produkt wird jetzt über den Namen erkannt; Tooltip, Ziele und Planer
-  kennen dann Zutaten und Kosten. Einmal das Verzauberungsfenster öffnen genügt.
-
-## [0.11.0-alpha.15] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- Herstellung im Tooltip neu angeordnet: „Herstellung:“ als Überschrift, der Beruf mit „gelernt: …“
-  in der Zeile darunter, jede Zutat als „- Zutat x12“ mit den Kosten rechtsbündig in Münzen (wie
-  „Händler“ und „Auktion“), darunter „Gesamtkosten Zutaten“ ebenfalls rechtsbündig in Münzen.
-
-## [0.11.0-alpha.14] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- Berufe-Reiter: Der Tooltip der Berufssymbole zeigt Datum und Uhrzeit des letzten Einlesens
-  (z. B. „Zuletzt eingelesen: 23.10.2026 14:05 (vor 2 Std.)“).
-
-## [0.11.0-alpha.13] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Herstellung im Gegenstands-Tooltip** (ganz unten, abschaltbar unter Einstellungen → Anzeige):
-  welcher Beruf das Item herstellt, welche deiner Charaktere das Rezept kennen, jede Zutat in einer
-  Zeile mit Anzahl („x12“) und Preis sowie die Gesamtkosten (bei mehreren Stück pro Herstellung auch
-  je Stück). Der Beruf ist für alle herstellbaren Items bekannt (Wowhead-Daten); Zutaten und Kosten
-  erscheinen, sobald einer deiner Charaktere das Rezept im Berufsfenster gesehen hat.
-
-### Geändert
-
-- Entwicklername: Zuerich3.
-
-## [0.11.0-alpha.12] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- **Neue Hilfe:** Der Reiter „Hilfe“ hat links eine Themenliste und rechts eine gegliederte
-  Erklärung mit Überschriften: Schnellstart, Ziele, Farmen, Berufe, Goldpuffer, Goldplaner, Ratgeber,
-  Minimap & Tasten, Einstellungen, Datenerfassung, Chatbefehle (nach Bereich sortiert) und Über. Jeder
-  Knopf, jede Mausaktion und jeder Befehl ist beschrieben, auch „Alle“/„Neu“ bei den Zielen.
-
-## [0.11.0-alpha.11] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Ziele: „Alle“ oder „Neu“ zählen.** Jedes Ziel hat einen Knopf neben „X“. „Alle“ (Standard): dein
-  ganzer Bestand aller Charaktere zählt. „Neu“: Der Bestand beim Umschalten bleibt außen vor (er wird
-  auch nicht als Zutat verplant); es zählt nur, was danach dazukommt. Verbrauchst du davon etwas, sinkt
-  die zurückgehaltene Menge mit. Im Chat: `/bof want new <Gegenstand>`, `/bof want all <Gegenstand>`.
-
-## [0.11.0-alpha.10] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- **Minimap-Knopf:** rund wie andere Minimap-Knöpfe (kleines Symbol auf rundem Hintergrund unter dem
-  Rand, statt eines Vierecks) und mit gedrückter linker Maustaste um die Minimap verschiebbar; die
-  Position wird gespeichert.
-
-## [0.11.0-alpha.9] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- „Über“ hat einen Abschnitt „Feedback“: Fragen, Wünsche, Fehler und Vorschläge als Kommentar auf
-  der CurseForge-Seite, bei Fehlern die BugSack/BugGrabber-Meldung mitschicken.
-
-## [0.11.0-alpha.8] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- „Über“ und „Anleitung“ in Abschnitte mit farbigen Überschriften gegliedert; „Über“ zeigt keinen
-  GitHub-Link mehr.
-- Neuer, verständlicher Einleitungstext im Hilfe-Reiter (erklärt die drei Knöpfe); der Text darunter
-  rückt mit, wenn die Einleitung umbricht.
-
-## [0.11.0-alpha.7] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Anleitung:** Reiter „Hilfe“ → „Anleitung“ oder `/bof howto`: wie das Addon seine Daten sammelt
-  (Twinks einloggen, Bank und Briefkasten besuchen, Berufsfenster öffnen, Händler, AH, Auctionator,
-  Preisverlauf, eigene Preise, Farmrouten, Angeln, Ziele). Der Hilfe-Reiter hat dafür drei Knöpfe:
-  Befehle, Anleitung, Über. Dieselbe Anleitung steht im README.
-
-## [0.11.0-alpha.6] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Über das Addon:** Reiter „Hilfe“ → Knopf „Über“ (zurück mit „Befehle“) oder `/bof about`:
-  was das Addon kann, Version, Entwickler (Taidana aka zuerich3), Lizenz. In der Addon-Liste steht
-  Taidana (zuerich3) als Autor.
-
-## [0.11.0-alpha.5] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- **Behalten-Liste im Goldplaner:** Jeder behaltene Gegenstand erscheint als Symbol neben dem Feld
-  (Tooltip mit dem Gegenstand); Rechtsklick nimmt ihn von der Liste. Bisher ging das nur durch
-  erneutes Hineinziehen oder `/bof goldkeep`.
-
-## [0.11.0-alpha.4] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Farmrunde startet von selbst:** Lootest du außerhalb von Städten und Gasthäusern und läuft keine
-  Runde, startet eine (fehlt dir das gelootete Material, ist es das Ziel). Der erste Loot zählt nicht
-  mit; die Leerlaufzeit beendet die Runde wie sonst. Abschaltbar in den Einstellungen („Farmrunde beim
-  Looten automatisch starten“), dann gilt wieder der Vorschlag.
-- **Rezepte deiner Twinks im Goldplaner:** Kennt ein Twink (gleicher Realm, gleiche Fraktion) ein
-  lohnendes Rezept, das du nicht kennst, plant der Goldplaner es mit ein („– auf Name (Zutaten per
-  Post)“, 3 Min. für Post und Umloggen eingerechnet).
-- **Preisverlauf und Weiterverkauf:** Jede AH-Suche speichert den niedrigsten Preis je Gegenstand und
-  Tag (14 Tage). Liegt ein aktuelles Angebot deutlich unter dem üblichen Preis (mindestens 3 Tage
-  Verlauf, mindestens 20 % Gewinn nach AH-Gebühr), schlägt der Goldplaner „Im AH kaufen und neu
-  einstellen“ vor; im Vergleich als eigener Weg. Höchstens 20 Stück, da die Nachfrage unbekannt ist.
-
-## [0.11.0-alpha.3] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Briefkasten im Bestand:** Beim Öffnen des Briefkastens merkt sich das Addon automatisch die
-  Gegenstände und das Gold in empfangener Post. Sie zählen bei Zielen, Plan und Ratgeber mit; der
-  Tooltip zeigt „Post …“, die Kontoübersicht das Gold in der Post.
-
-### Geändert
-
-- **Schneller:** Farmrouten und „Beute verarbeiten“-Routen werden nicht mehr bei jeder Taschen- oder
-  Goldänderung neu berechnet, sondern nur nach neuen Läufen, Preisen, Rezepten oder Einstellungen
-  (spätestens nach einer Minute wegen der Live-Preise von Auctionator).
-- Farmfenster-Knöpfe breiter; die Ansichtsknöpfe des Goldplaners haben eine eigene Zeile (alpha.2).
-
-## [0.11.0-alpha.1] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Was lohnt sich?** Goldplaner (Reiter „Goldpuffer“ → „Goldplaner“): Zeit wählen, dann „Vergleich“.
-  Alle Wege zu Gold für diese Zeit nebeneinander, bester zuerst: alles kombiniert, Taschen verkaufen
-  oder entzaubern, Herstellen und verkaufen (Zutaten aus den Taschen oder gekauft), Farmen, Angeln,
-  Farmen und die Beute verarbeiten. Wege ohne Daten stehen unten mit dem, was fehlt. Im Chat:
-  `/bof compare [Dauer]`.
-- **Farmen → Herstellen → Verkaufen:** Macht ein gelerntes Rezept die Beute einer Route wertvoller,
-  plant der Goldplaner „Westfall, verarbeitet zu …“ mit ein (Herstell- und Einstellzeit eingerechnet).
-- **Angeln wird automatisch erkannt:** Eine Farmrunde, deren Beute meist vom Angeln stammt, wird als
-  Angelroute der Zone gespeichert („Westfall (Angeln)“).
-- **Konto:** Gold jedes Charakters wird gespeichert. Ansicht „Konto“ im Goldplaner und `/bof account`:
-  Gold, Berufe mit Stufe und Rezepten, Gegenstände in Taschen und Bank – je Charakter auf dem Realm.
-
-### Bekannt
-
-- Reines AH-Handeln (billig kaufen, teurer einstellen) wird nicht vorgeschlagen: Ohne Preisverlauf und
-  Verkaufsmengen wäre das geraten.
-- Herstellen zum Verkauf bleibt auf 5 je Rezept begrenzt, weil die Nachfrage im AH unbekannt ist.
-
-## [0.10.0-alpha.1] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Reiter „Ziele“:** Du nimmst ein Item auf, das du haben willst. Das Addon prüft, ob du es hast
-  (Taschen, Bank, Twinks), kaufen, farmen oder herstellen kannst, und zeigt den günstigsten Weg, für
-  Zutaten genauso. Farmzeit zählt mit dem Gold pro Stunde deiner besten Farmroute (einstellbar: „1 Std.
-  Farmen ist wert“). „Herstellen“ und „Farmen“ starten direkt aus dem Plan. Unten: Summen, Hinweis, wenn
-  dein freies Gold nicht reicht. Im Chat: `/bof want`.
-- **Bestand automatisch:** alle Items in Taschen und Bank jedes Charakters werden erfasst (Bank beim
-  Bankbesuch), auch kurz nach dem Login. Nichts muss mehr eingetragen werden.
-- **Farmfenster:** kleines Fenster mit Start, Pause/Fortsetzen, Anreise/Angekommen, Beenden (`/bof farm`,
-  Rechtsklick auf den Minimap-Knopf). Der Reiter „Farmen“ zeigt deine Farmrouten pro Zone mit Gold pro
-  Stunde und Beute pro Stunde.
-- Reiter „Berufe“: bei Ausrüstung die Wertung gegenüber deiner angelegten Ausrüstung.
-
-### Geändert
-
-- Die Reiter „Material“, „Beschaffung“ und „Craft“ sind im Reiter „Ziele“ aufgegangen. Alte
-  Materialziele werden beim ersten Start übernommen (Rezeptziel → Produkt, Handziel → Zutaten).
-- Farmrunden haben keine Art mehr (Sammeln/Gegner); „Beenden“ speichert sofort, nur Beute zählt.
-  Farmrouten sind jetzt eine pro Zone.
-- Die Gewichte für die Ausrüstungswertung stehen im Reiter „Einstellungen“ (mit „Vorschlag“).
-- `/bof recipe` nimmt das Produkt des Rezepts als Ziel auf.
+- Gegenstände aus dem Verzauberungsfenster (Stäbe, Öle) werden als Produkt erkannt.
 
 ### Entfernt
 
-- Strategien, Budget und Zeitlimit der Beschaffung, Alternativen und Questbelohnungen der
-  Craft-Bewertung, `/bof goal`, `/bof stock`, `/bof plan`, `/bof alt`, `/bof gold reserves`, die
-  Einstellungen „Unklare Zugänge automatisch einordnen“, „Beschaffung darf Rücklagen verwenden“ und
-  „Questbelohnungen als Alternative vorschlagen“.
-
-## [0.9.0-alpha.1] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Herstellen im Reiter „Berufe“:** unten im Detail ein Feld für die Anzahl, „Herstellen“, „Alle: n“ (so oft
-  die Zutaten in deinen Taschen reichen) und „Stapel: n“ (ein voller Stapel des Produkts). Ist das
-  Berufsfenster zu oder zeigt einen anderen Beruf, öffnet der erste Klick das richtige Fenster; der zweite
-  Klick stellt her. Verzauberungen gehen weiterhin nur im Verzauberkunstfenster.
-- `/bof make <Rezept> [Anzahl|all]` – dasselbe im Chat.
-
-### Geändert
-
-- „Als Ziel anlegen“ steht jetzt oben rechts neben „Zutaten“.
+- Strategien, Budget und Zeitlimit der alten Beschaffung, Alternativen und Questbelohnungen der
+  Craft-Bewertung, `/bof goal`, `/bof stock`, `/bof plan`, `/bof alt`, `/bof gold reserves` und die
+  zugehörigen Einstellungen.
 
 ## [0.8.0] – 2026-10-23
 
