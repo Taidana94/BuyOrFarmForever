@@ -42,6 +42,8 @@ Adapter.REQUIRED = {
 	"GetItemStackSize", -- (itemID) -> units per stack, or nil while loading
 	"GetItemName", -- (itemID) -> localized name, or nil while loading (load is requested)
 	"ReadMerchantPrices", -- () -> { { itemID, copper per unit } } of the open merchant (gold prices only)
+	"ReadAuctionListings", -- () -> { { itemID, count, buyout, owner, timeLeft (1..4) } } of the current result list
+	"GetAuctionBatchSize", -- () -> number of auctions in the current result list
 	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page
 	"CanQueryAuction", -- () -> bool: an auction search can be sent now
 	"QueryAuction", -- (itemName) -> bool: exact-name search sent (call only from a click or command)

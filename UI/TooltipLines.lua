@@ -113,6 +113,9 @@ function TooltipLines.SaleLine(itemID)
 	local percent = math.floor(estimate.chance * PERCENT + 0.5)
 	if estimate.source == "OWN" then
 		return Util.Format(L.TOOLTIP_SALE_OWN, percent, estimate.sold, estimate.sold + estimate.expired)
+	elseif estimate.source == "SALES" then
+		return Util.Format(L.TOOLTIP_SALE_REALM, percent, estimate.realmSold, estimate.realmSold + estimate.realmExpired,
+			Util.FormatDecimal(estimate.perDay or 0, 1))
 	elseif estimate.source == "MARKET" then
 		return Util.Format(L.TOOLTIP_SALE_MARKET, percent, estimate.supply)
 	end

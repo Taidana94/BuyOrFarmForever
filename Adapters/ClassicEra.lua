@@ -188,23 +188,6 @@ function ClassicEra:GetTimeMs()
 	return debugprofilestop and debugprofilestop() or nil
 end
 
--- Merchant and auction house: Adapters/ClassicEraTrade.lua.
-function ClassicEra:ReadMerchantPrices()
-	return ns.ClassicEraTrade.ReadMerchantPrices()
-end
-
-function ClassicEra:ReadAuctionResults()
-	return ns.ClassicEraTrade.ReadAuctionResults()
-end
-
-function ClassicEra:CanQueryAuction()
-	return ns.ClassicEraTrade.CanQueryAuction()
-end
-
-function ClassicEra:QueryAuction(itemName)
-	return ns.ClassicEraTrade.QueryAuction(itemName)
-end
-
 -- Item name if cached; otherwise requests the item data and returns nil.
 function ClassicEra:GetItemName(itemID)
 	local name = C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(itemID)
@@ -238,10 +221,6 @@ end
 
 function ClassicEra:GetItemMinLevel(itemID)
 	return ns.ClassicEraGear.GetItemMinLevel(itemID)
-end
-
-function ClassicEra:BuyFromMerchant(itemID, count)
-	return ns.ClassicEraTrade.BuyFromMerchant(itemID, count)
 end
 
 function ClassicEra:IsDisenchantable(itemID)
@@ -279,10 +258,11 @@ end
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
 -- Adapters/ClassicEraExternal.lua (other addons), Adapters/ClassicEraMail.lua (mailbox),
+-- Adapters/ClassicEraTrade.lua (merchant and auction house),
 -- Adapters/ClassicEraBags.lua (bags and map), Adapters/ClassicEraProfessionInfo.lua (profession names,
 -- icons, effect data), Adapters/ClassicEraCrafting.lua (crafting from the professions tab).
 local PARTS = {
-	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraExternal, ns.ClassicEraBags, ns.ClassicEraMail,
+	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraExternal, ns.ClassicEraBags, ns.ClassicEraMail, ns.ClassicEraTrade,
 	ns.ClassicEraProfessionInfo, ns.ClassicEraCrafting,
 }
 for _, part in ipairs(PARTS) do

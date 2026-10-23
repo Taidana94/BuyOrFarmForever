@@ -141,6 +141,7 @@ read_globals = {
 	"GetMerchantItemInfo",
 	"GetMerchantItemLink",
 	"GetNumAuctionItems",
+	"GetAuctionItemTimeLeft",
 	"GetAuctionItemInfo",
 	"CanSendAuctionQuery",
 	"QueryAuctionItems",

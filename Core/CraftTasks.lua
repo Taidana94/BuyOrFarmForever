@@ -111,8 +111,7 @@ function CraftTasks.TaskFor(key, entry, now)
 	end
 	local fromBags = craftsFromBags(recipe)
 	-- Without a known demand, as many crafts as the sale chance suggests (at least one).
-	local chance = ns.SaleEstimate.Chance(recipe.outputItemID, now)
-	local cap = ns.SaleEstimate.Units(CraftTasks.MAX_CRAFTS, chance)
+	local cap, chance = ns.SaleEstimate.PlanUnits(recipe.outputItemID, CraftTasks.MAX_CRAFTS, now)
 	local crafts = entry.cooldown and 1 or (fromBags > 0 and math.min(fromBags, cap)) or cap
 	local value = CraftTasks.Value(recipe, crafts, now)
 	if not value then

@@ -48,15 +48,66 @@ local function captureMerchant()
 	Events.Emit("PRICES_CHANGED")
 end
 
-local function captureAuction()
+-- Items whose auctions the market watch follows: tracked items (wants and their reagents), the
+-- products and reagents of every stored recipe, and what the bags hold.
+local function watchedItems(db, tracked)
+	local watched = {}
+	for itemID in pairs(tracked) do
+		watched[itemID] = true
+	end
+	for _, recipe in pairs(db.recipes) do
+		watched[recipe.outputItemID] = recipe.outputItemID ~= 0 or nil
+		for _, reagent in ipairs(recipe.reagents) do
+			watched[reagent.itemID] = true
+		end
+	end
+	for itemID in pairs(ns.Client:ScanBags({})) do
+		watched[itemID] = true
+	end
+	return watched
+end
+
+local function recordResults(results)
 	local db, realmKey, tracked = context()
 	if not db then
-		return
+		return nil
 	end
-	local results, now = ns.Client:ReadAuctionResults(), ns.Client:GetServerTime()
+	local now = ns.Client:GetServerTime()
 	Prices.RecordAuction(db, realmKey, results, tracked, now)
 	ns.PriceHistory.Record(db, realmKey, results, now)
-	Events.Emit("PRICES_CHANGED")
+	return db, realmKey, tracked, now
+end
+
+-- A full scan arrives in several result updates: it is read once, FULL_SCAN_SETTLE_SECONDS after the
+-- last one (a sequence number drops older timers), and compared by the market watch.
+PriceCapture.FULL_SCAN_SETTLE_SECONDS = 3
+local fullScanSequence = 0
+
+local function captureFullScan(sequence)
+	if sequence ~= fullScanSequence or not auctionOpen then
+		return
+	end
+	local listings = ns.Client:ReadAuctionListings()
+	local db, realmKey, tracked, now = recordResults(listings)
+	if db then
+		local sold = ns.MarketWatch.RecordScan(db, realmKey, listings, watchedItems(db, tracked), now)
+		Log.Debug("full scan: " .. #listings .. " auctions, " .. sold .. " sold since the last scan")
+		Events.Emit("PRICES_CHANGED")
+	end
+end
+
+local function captureAuction()
+	if ns.Client:GetAuctionBatchSize() >= ns.MarketWatch.FULL_SCAN_MIN then
+		fullScanSequence = fullScanSequence + 1
+		local sequence = fullScanSequence
+		C_Timer.After(PriceCapture.FULL_SCAN_SETTLE_SECONDS, function()
+			captureFullScan(sequence)
+		end)
+		return
+	end
+	if recordResults(ns.Client:ReadAuctionResults()) then
+		Events.Emit("PRICES_CHANGED")
+	end
 end
 
 PriceCapture.PRUNE_DELAY_SECONDS = 10
@@ -94,6 +145,7 @@ function PriceCapture.PruneOld()
 	end
 	local now = ns.Client:GetServerTime()
 	ns.PriceHistory.Prune(ns.db, now)
+	ns.MarketWatch.Prune(ns.db, now)
 	local removed = Prices.Prune(ns.db, now, ns.db.settings.priceKeepDays)
 	if removed > 0 then
 		ns.Log.Debug("removed " .. removed .. " old prices")

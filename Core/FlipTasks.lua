@@ -33,7 +33,7 @@ local function taskFor(itemID, item, now)
 	if gain < item.last * FlipTasks.MIN_MARGIN then
 		return nil
 	end
-	local units = math.min(item.lastCount, ns.SaleEstimate.Units(FlipTasks.MAX_UNITS, chance))
+	local units = math.min(item.lastCount, (ns.SaleEstimate.PlanUnits(itemID, FlipTasks.MAX_UNITS, now)))
 	return { kind = "FLIP", itemID = itemID, units = units, buy = item.last * units, sell = reference,
 		sure = 0, auction = math.floor(gain * units), seconds = FlipTasks.SECONDS_PER_FLIP, spend = item.last * units,
 		chance = chance }

@@ -34,6 +34,7 @@ DB.DEFAULTS = {
 	},
 	prices = {},
 	priceHistory = {},
+	market = {}, -- auctions of watched items between full scans (Core/MarketWatch.lua)
 	salesLog = {}, -- own auction results from the mailbox (Core/SalesLog.lua) -- auction house lows per day (Core/PriceHistory.lua)
 	recipes = {},
 	farmRuns = {},

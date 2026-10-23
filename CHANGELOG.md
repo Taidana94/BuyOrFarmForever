@@ -3,6 +3,22 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.9] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Verkäufe aller Spieler auf deinem Realm** (ohne Desktop-App, ohne Login): Nach jedem AH-Vollscan
+  (z. B. mit Auctionator) vergleicht das Addon die Angebote der Items, die es interessieren (deine Ziele,
+  Rezepte, Taschen), mit dem letzten Vollscan. Ein Angebot, das verschwunden ist, obwohl seine Restlaufzeit
+  noch nicht um sein konnte, zählt als verkauft (mit Menge und Preis), sonst als abgelaufen. Daraus
+  entstehen Verkaufsrate und „verkauft pro Tag“. Zurückgezogene Angebote sehen wie Verkäufe aus – es bleibt
+  eine Schätzung, die mit jedem Scan besser wird.
+- Die Verkaufschance nutzt diese Realm-Verkäufe zusammen mit deinen eigenen; Herstellen und
+  AH-Weiterverkauf planen höchstens so viele Stück, wie am Tag verkauft werden. Tooltip: „AH-Absatz: etwa
+  60 % – auf dem Realm 6 von 10 Angeboten weg, ca. 3 Stück/Tag“.
+
 ## [0.12.0-alpha.8] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
