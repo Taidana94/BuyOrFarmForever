@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.1-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- Die beiden Haken unten im Ratgeber-Fenster sind in den Reiter „Einstellungen“ umgezogen (neue Gruppe
+  „Ratgeber“ links unten); das Ratgeber-Fenster ist dadurch kürzer. Die Einstellungszeilen stehen etwas
+  enger, damit alles Platz hat.
+
 ## [0.11.0] – 2026-10-23
 
 Ziele, „Was lohnt sich?“ und viel mehr Automatik. Getestet in WoW Classic Era 1.15.9; nicht in Forever

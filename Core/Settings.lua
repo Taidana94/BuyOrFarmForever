@@ -15,7 +15,6 @@ Settings.GROUPS = {
 	{ key = "MATERIAL", label = "SET_GROUP_MATERIAL" },
 	{ key = "GOLD", label = "SET_GROUP_GOLD" },
 	{ key = "DISPLAY", label = "SET_GROUP_DISPLAY" },
-	-- Shown in the advisor window, not in the settings tab (no room left there).
 	{ key = "ADVISOR", label = "SET_GROUP_ADVISOR" },
 }
 

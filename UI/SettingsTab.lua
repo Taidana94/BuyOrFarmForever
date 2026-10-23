@@ -13,9 +13,9 @@ local SettingsTab = {}
 ns.SettingsTab = SettingsTab
 
 -- Groups per column (keys of Settings.GROUPS).
-local COLUMNS = { { "FARM", "MATERIAL" }, { "GOLD", "DISPLAY" } }
+local COLUMNS = { { "FARM", "MATERIAL", "ADVISOR" }, { "GOLD", "DISPLAY" } }
 local COLUMN_WIDTH = 370
-local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 24, 20, 8
+local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 20, 20, 8
 local BOX_WIDTH, LABEL_GAP = 44, 6
 local BUTTON_WIDTH, BUTTON_GAP = 160, 10
 local WEIGHTS_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP, SUGGEST_WIDTH = 30, 32, 6, 100

@@ -1,8 +1,7 @@
 -- Advisor window ("Ratgeber"): a small movable window with fixed summary rows as cards
 -- (Core/AdvisorSummary.lua: sell, disenchant, craft, savings goal, best hour). Created on first
 -- open, refreshed only while shown (same coalesced refresh as the tabs). Opens by itself after login when something
--- important is waiting (setting advisorAtLogin). Its two settings sit at the bottom, because the
--- settings tab has no room left; /bof set works for them too.
+-- important is waiting (setting advisorAtLogin). Its settings are in the settings tab.
 local _, ns = ...
 
 local L = ns.L
@@ -21,9 +20,8 @@ AdvisorWindow.SCALE = 0.85
 AdvisorWindow.LOGIN_DELAY_SECONDS = 7
 -- 80: full bags, cooldowns, craftable goals; not everyday selling.
 AdvisorWindow.LOGIN_MIN_PRIORITY = 80
-local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 300, 14, 44, 4, 56
+local WIDTH, PADDING, HEADER_HEIGHT, CARD_GAP, FOOTER_HEIGHT = 300, 14, 44, 4, 14
 local CARD_WIDTH = WIDTH - 2 * PADDING
-local CHECK_GAP = 24
 local REFRESH_SIGNALS = {
 	"BAGS_CHANGED", "DATA_CHANGED", "PRICES_CHANGED", "MONEY_CHANGED", "ITEM_LOADED", "ADVISOR_CONTEXT",
 	"SETTINGS_CHANGED", "MERCHANT_CHANGED",
@@ -83,18 +81,6 @@ local function buildHeader(win, frame)
 	win.emptyText:SetJustifyH("LEFT")
 end
 
-local function buildFooter(win, frame)
-	win.checks = {}
-	local labels = { advisorCards = L.ADVISOR_CHECK_CARDS, advisorAtLogin = L.ADVISOR_CHECK_LOGIN }
-	for i, key in ipairs({ "advisorCards", "advisorAtLogin" }) do
-		local check = Widgets.CreateCheck(frame, labels[key], function(checked)
-			ns.Inputs.Run("set " .. key .. " " .. (checked and "on" or "off"))
-		end)
-		check:SetPoint("BOTTOMLEFT", PADDING, PADDING / 2 + (2 - i) * CHECK_GAP)
-		win.checks[key] = check
-	end
-end
-
 local function create()
 	local win = setmetatable({ cards = {} }, Window)
 	local frame = buildFrame()
@@ -105,7 +91,6 @@ local function create()
 		card:SetPoint("TOPLEFT", PADDING, -HEADER_HEIGHT - (i - 1) * (Card.HEIGHT + CARD_GAP))
 		win.cards[i] = card
 	end
-	buildFooter(win, frame)
 	Widgets.InitRefresh(win, REFRESH_SIGNALS)
 	frame:SetScript("OnShow", function()
 		win:Activate()
@@ -118,9 +103,6 @@ end
 
 function Window:Refresh()
 	local charData = ns.db and not ns.readOnly and ns.charKey and ns.db.characters[ns.charKey]
-	for key, check in pairs(self.checks) do
-		check:SetChecked(ns.db.settings[key] == true)
-	end
 	local context = ns.Advisor.Context()
 	self.contextText:SetText(Util.Format(L.ADVISOR_CONTEXT_LINE, L[CONTEXT_NAMES[context]]))
 	local list = charData and ns.AdvisorSummary.Rows(charData, context, ns.Client:GetServerTime()) or {}
