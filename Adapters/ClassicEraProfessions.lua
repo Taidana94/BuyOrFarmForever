@@ -252,3 +252,35 @@ function Professions.ReadProfessionSkills()
 	end
 	return list
 end
+
+-- Crafting support (used by Adapters/ClassicEraCrafting.lua) ------------------------------
+
+-- Profession key of the open trade skill window, or nil if it is closed. The craft window
+-- (Enchanting) is not included: its recipes need a target item.
+function Professions.TradeWindowProfession()
+	if not openWindows.trade then
+		return nil
+	end
+	return ns.ClassicEraProfessionOf((TRADE.skillLine()))
+end
+
+local function findIndex(recipeKey)
+	for index = 1, TRADE.count() or 0 do
+		if TRADE.info(index) ~= "header" and recipeIdentity(TRADE, index) == recipeKey then
+			return index
+		end
+	end
+	return nil
+end
+
+-- Index of a recipe in the open trade skill window, or nil. Collapsed categories hide recipes, so
+-- they are expanded once (ExpandTradeSkillSubClass(0), as the window's "expand all" button does);
+-- the window's subclass and slot filters are left alone.
+function Professions.FindTradeRecipe(recipeKey)
+	local index = findIndex(recipeKey)
+	if not index and ExpandTradeSkillSubClass then
+		ExpandTradeSkillSubClass(0)
+		index = findIndex(recipeKey)
+	end
+	return index
+end

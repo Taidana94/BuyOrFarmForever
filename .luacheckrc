@@ -49,6 +49,13 @@ read_globals = {
 	C_TradeSkillUI = { fields = { "GetTradeSkillDisplayName" } },
 	"GetTradeSkillLine",
 	"GetCraftDisplaySkillLine",
+	-- crafting from the professions tab (DoTradeSkill and ExpandTradeSkillSubClass are called by the
+	-- Vanilla TradeSkillUI; CastSpellByName opens profession windows (warcraft.wiki.gg); InCombatLockdown
+	-- is used by SecureTemplates; all 70003)
+	"DoTradeSkill",
+	"ExpandTradeSkillSubClass",
+	"CastSpellByName",
+	"InCombatLockdown",
 	-- bags and map (documented in 70003; NUM_BAG_SLOTS from Blizzard_FrameXMLBase/Classic/Constants.lua)
 	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo", "GetContainerNumFreeSlots", "UseContainerItem" } },
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
@@ -96,7 +103,7 @@ read_globals = {
 	"GetCraftNumReagents",
 	"GetCraftReagentInfo",
 	"GetCraftReagentItemLink",
-	"SelectTradeSkill", -- hooked only (hooksecurefunc), to know where a recipe was selected last
+	"SelectTradeSkill", -- hooked (hooksecurefunc) to know where a recipe was selected last; called before crafting
 	"SelectCraft",
 	"hooksecurefunc", -- used by Blizzard UI code in 70003 (e.g. Blizzard_EditMode)
 	ChatFrameUtil = { fields = { "InsertLink", "GetActiveWindow" } }, -- Blizzard_ChatFrameBase (70003), post-hook only

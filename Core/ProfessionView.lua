@@ -60,6 +60,18 @@ function ProfessionView.PassesMats(state, mats)
 	return (MATS_CHECKS[mats] or MATS_CHECKS.ALL)(state)
 end
 
+-- Crafts for the quick buttons of the detail panel: { all = the crafts the bags allow, stack = crafts
+-- for one stack of the product (rounded up, at most `all`), or nil if the product does not stack or its
+-- stack size is unknown }.
+function ProfessionView.CraftCounts(recipe, possible, stackSize)
+	local stack
+	if type(stackSize) == "number" and stackSize > 1 then
+		local made = (recipe.outputMin + recipe.outputMax) / 2
+		stack = math.min(possible, math.ceil(stackSize / made))
+	end
+	return { all = possible, stack = stack }
+end
+
 -- Localized product name (item or enchantment spell) from the client, or nil while loading.
 function ProfessionView.ProductName(key, recipe)
 	if recipe.outputItemID ~= 0 then

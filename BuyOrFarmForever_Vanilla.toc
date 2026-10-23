@@ -31,6 +31,7 @@ Data\ClassicEra\EffectData.lua
 Adapters\Adapter.lua
 Adapters\ClassicEraProfessionInfo.lua
 Adapters\ClassicEraProfessions.lua
+Adapters\ClassicEraCrafting.lua
 Adapters\ClassicEraTrade.lua
 Adapters\ClassicEraBags.lua
 Adapters\ClassicEraGear.lua
@@ -91,7 +92,9 @@ UI\CraftAltPanel.lua
 UI\CraftTab.lua
 UI\ProfessionTabLayout.lua
 UI\ProfessionDetail.lua
+UI\ProfessionMakeRow.lua
 UI\ProfessionTab.lua
+UI\MakeCommand.lua
 UI\GoldPlanPanel.lua
 UI\GoldTab.lua
 UI\SettingsTab.lua

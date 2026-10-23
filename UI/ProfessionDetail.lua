@@ -18,7 +18,7 @@ local ICON_SIZE, TITLE_X = 36, 56
 local REAGENTS_Y, REAGENT_HEIGHT, REAGENT_ICON = -64, 22, 20
 local REAGENT_COUNT_WIDTH, REAGENT_NAME_X = 70, 26
 local BOTTOM_LINES, LINE_GAP, BOTTOM_Y = 4, 4, 40
-local GOAL_BUTTON_WIDTH = 140
+local GOAL_BUTTON_WIDTH, GOAL_BUTTON_LIFT = 140, 4
 local BACKGROUND = { 0, 0, 0, 0.3 }
 -- Icon of enchantments (no product item); also used by the list rows.
 Detail.SPELL_ICON = "Interface\\Icons\\Spell_Holy_GreaterHeal"
@@ -37,6 +37,21 @@ end
 
 local function hideTooltip()
 	GameTooltip:Hide()
+end
+
+local function showButtonTip(button)
+	GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+	GameTooltip:AddLine(button.tip, 1, 1, 1, true)
+	GameTooltip:Show()
+end
+
+-- Button with a tooltip text (shared with UI/ProfessionMakeRow.lua); the caller sets OnClick.
+function Detail.CreateButton(parent, label, width, tip)
+	local button = Widgets.CreateButton(parent, label, width)
+	button.tip = tip
+	button:SetScript("OnEnter", showButtonTip)
+	button:SetScript("OnLeave", hideTooltip)
+	return button
 end
 
 local function createReagent(panel, index)
@@ -94,19 +109,15 @@ local function buildBottom(detail, panel)
 		text:SetJustifyH("LEFT")
 		detail.lines[index] = text
 	end
-	detail.goalButton = Widgets.CreateButton(panel, L.PROF_GOAL_BUTTON, GOAL_BUTTON_WIDTH)
-	detail.goalButton:SetPoint("BOTTOMRIGHT", -PADDING, PADDING)
+	-- Right of the "Zutaten" label; the bottom row belongs to the craft buttons (UI/ProfessionMakeRow.lua).
+	detail.goalButton = Detail.CreateButton(panel, L.PROF_GOAL_BUTTON, GOAL_BUTTON_WIDTH, L.PROF_GOAL_TIP)
+	detail.goalButton:SetPoint("TOPRIGHT", -PADDING, REAGENTS_Y + GOAL_BUTTON_LIFT)
 	detail.goalButton:SetScript("OnClick", function()
 		if detail.key then
 			ns.Inputs.Run("recipe key " .. detail.key)
 		end
 	end)
-	detail.goalButton:SetScript("OnEnter", function(self)
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:AddLine(L.PROF_GOAL_TIP, 1, 1, 1, true)
-		GameTooltip:Show()
-	end)
-	detail.goalButton:SetScript("OnLeave", hideTooltip)
+	detail.make = ns.ProfessionMakeRow.Build(panel, PADDING)
 end
 
 -- Panel right of the list, from x = left + PANEL_GAP to the tab's right edge.
@@ -215,6 +226,7 @@ end
 function Detail.Show(detail, row, now)
 	detail.key = row and row.key
 	setFilled(detail, row ~= nil)
+	ns.ProfessionMakeRow.Update(detail.make, row)
 	if not row then
 		for _, line in ipairs(detail.reagents) do
 			line:Hide()

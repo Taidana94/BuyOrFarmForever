@@ -277,10 +277,10 @@ end
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
 -- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons),
 -- Adapters/ClassicEraBags.lua (bags and map), Adapters/ClassicEraProfessionInfo.lua (profession names,
--- icons, effect data).
+-- icons, effect data), Adapters/ClassicEraCrafting.lua (crafting from the professions tab).
 local PARTS = {
 	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal, ns.ClassicEraBags,
-	ns.ClassicEraProfessionInfo,
+	ns.ClassicEraProfessionInfo, ns.ClassicEraCrafting,
 }
 for _, part in ipairs(PARTS) do
 	for name, fn in pairs(part) do

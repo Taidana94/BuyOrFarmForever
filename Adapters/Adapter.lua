@@ -33,6 +33,11 @@ Adapter.REQUIRED = {
 	"GetEffectCategory", -- ("item" | "spell", id) -> effect category key of the client's data, or nil
 	"GetItemClassID", -- (itemID) -> item class id (no item cache needed), or nil
 	"GetItemClassName", -- (classID) -> localized item class name, or nil
+	"IsInCombat", -- () -> bool: combat lockdown (no crafting, no opening of profession windows)
+	"OpenProfession", -- (professionKey) -> bool: the profession window was asked to open (click/command only)
+	"GetOpenTradeProfession", -- () -> profession key of the open recipe window (not Enchanting), or nil
+	"CraftRecipe", -- (recipeKey, count) -> true | false + "combat" | "no_window" | "not_listed" (click/command only)
+	"GetItemStackSize", -- (itemID) -> units per stack, or nil while loading
 	"GetItemName", -- (itemID) -> localized name, or nil while loading (load is requested)
 	"ReadMerchantPrices", -- () -> { { itemID, copper per unit } } of the open merchant (gold prices only)
 	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page
