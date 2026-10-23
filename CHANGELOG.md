@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.15] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- Herstellung im Tooltip neu angeordnet: „Herstellung:“ als Überschrift, der Beruf mit „gelernt: …“
+  in der Zeile darunter, jede Zutat als „- Zutat x12“ mit den Kosten rechtsbündig in Münzen (wie
+  „Händler“ und „Auktion“), darunter „Gesamtkosten Zutaten“ ebenfalls rechtsbündig in Münzen.
+
 ## [0.11.0-alpha.14] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

@@ -1,7 +1,8 @@
 -- Recipe lines at the bottom of item tooltips (setting tooltipRecipes): which profession makes the
 -- item (Data/ClassicEra/CraftedBy.lua through the adapter, or the recipe book), which of the player's
 -- characters know the recipe, and, when the recipe was seen in a profession window, one line per
--- reagent with its count and cost and the total. Prices are planning prices (Core/PriceCapture.lua);
+-- reagent with its count and its cost right-aligned in coins, and the total. Lines are texts or
+-- { left, right } pairs (UI/TooltipLines.lua). Prices are planning prices (Core/PriceCapture.lua);
 -- a reagent without one is marked and the total becomes "at least". Built on demand per item and
 -- cached by UI/TooltipLines.lua until the data changes.
 local _, ns = ...
@@ -62,30 +63,35 @@ local function knownText(names)
 	return Util.Format(L.TOOLTIP_RECIPE_KNOWN, text)
 end
 
+-- Copper with coin icons where the client has them, else as text (e.g. 8s 48k).
+local function coins(copper)
+	return ns.Client:FormatCoins(copper) or Money.Format(math.floor(copper))
+end
+
 local function reagentLines(lines, recipe, now)
 	local total, missing = 0, 0
 	for _, reagent in ipairs(recipe.reagents) do
 		local price = ns.PriceCapture.Best(reagent.itemID, now)
-		local name = UIShared.ItemText(reagent.itemID)
+		local left = Util.Format(L.TOOLTIP_RECIPE_REAGENT, UIShared.ItemText(reagent.itemID), reagent.count)
 		if price then
 			total = total + price * reagent.count
-			lines[#lines + 1] = Util.Format(L.TOOLTIP_RECIPE_REAGENT, name, reagent.count, Money.Format(price * reagent.count))
+			lines[#lines + 1] = { left, coins(price * reagent.count) }
 		else
 			missing = missing + 1
-			lines[#lines + 1] = Util.Format(L.TOOLTIP_RECIPE_REAGENT, name, reagent.count, DIM_COLOR .. L.TOOLTIP_RECIPE_NO_PRICE .. COLOR_END)
+			lines[#lines + 1] = { left, DIM_COLOR .. L.TOOLTIP_RECIPE_NO_PRICE .. COLOR_END }
 		end
 	end
 	return total, missing
 end
 
-local function costLine(recipe, total, missing)
+local function costLines(lines, recipe, total, missing)
+	local label = missing > 0 and L.TOOLTIP_RECIPE_COST_MIN or L.TOOLTIP_RECIPE_COST
+	lines[#lines + 1] = { HEADING_COLOR .. label .. COLOR_END, coins(total) }
 	local made = (recipe.outputMin + recipe.outputMax) / 2
-	local text = Util.Format(missing > 0 and L.TOOLTIP_RECIPE_COST_MIN or L.TOOLTIP_RECIPE_COST, Money.Format(total))
 	if made > 1 then
-		text = text .. Util.Format(L.TOOLTIP_RECIPE_PER_UNIT, Util.FormatDecimal(made, made == math.floor(made) and 0 or 1),
-			Money.Format(math.floor(total / made)))
+		local amount = Util.FormatDecimal(made, made == math.floor(made) and 0 or 1)
+		lines[#lines + 1] = { Util.Format(L.TOOLTIP_RECIPE_PER_UNIT, amount), coins(total / made) }
 	end
-	return HEADING_COLOR .. text .. COLOR_END
 end
 
 -- Tooltip lines for itemID (index from TooltipRecipe.Index), or nil if nobody makes it as far as the
@@ -101,14 +107,13 @@ function TooltipRecipe.Lines(itemID, index, now)
 	if not (professions or recipe) then
 		return nil
 	end
-	local lines = { " " }
-	local head = HEADING_COLOR .. L.TOOLTIP_RECIPE_HEAD .. COLOR_END
-	lines[2] = Util.Format(L.TOOLTIP_RECIPE_BY, head, professions and professionNames(professions) or L.PROF_OTHER, knownText(names))
+	local lines = { " ", HEADING_COLOR .. L.TOOLTIP_RECIPE_HEAD .. COLOR_END,
+		Util.Format(L.TOOLTIP_RECIPE_BY, professions and professionNames(professions) or L.PROF_OTHER, knownText(names)) }
 	if not recipe then
-		lines[3] = DIM_COLOR .. L.TOOLTIP_RECIPE_UNKNOWN .. COLOR_END
+		lines[4] = DIM_COLOR .. L.TOOLTIP_RECIPE_UNKNOWN .. COLOR_END
 		return lines
 	end
 	local total, missing = reagentLines(lines, recipe, now)
-	lines[#lines + 1] = costLine(recipe, total, missing)
+	costLines(lines, recipe, total, missing)
 	return lines
 end

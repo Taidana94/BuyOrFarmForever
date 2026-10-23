@@ -134,6 +134,7 @@ read_globals = {
 	"IsShiftKeyDown",
 	"GetCursorPosition",
 	"date",
+	"C_CurrencyInfo",
 	C_Timer = { fields = { "After", "NewTicker" } },
 	-- merchant and auction house (called by MerchantFrame.lua / Blizzard_AuctionUI, Vanilla, 70003)
 	"GetMerchantNumItems",

@@ -74,6 +74,13 @@ function UI.GetMinimap()
 	return Minimap
 end
 
+-- Copper as gold/silver/copper with coin icons (C_CurrencyInfo.GetCoinTextureString, documented in
+-- Classic Era 70003), or nil without the API.
+function UI.FormatCoins(copper)
+	local api = C_CurrencyInfo and C_CurrencyInfo.GetCoinTextureString
+	return api and api(math.floor(copper)) or nil
+end
+
 -- Local date and time of a server timestamp ("23.10.2026 14:05"), with the client's date().
 function UI.FormatDateTime(timestamp)
 	return date("%d.%m.%Y %H:%M", timestamp)

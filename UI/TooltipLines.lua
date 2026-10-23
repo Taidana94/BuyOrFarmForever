@@ -90,9 +90,14 @@ function TooltipLines.RecipeFor(itemID)
 	return recipeCache[itemID] or nil
 end
 
+-- A line is a text, or { left, right } shown left and right-aligned (right side white).
 local function addLines(tooltip, lines)
-	for _, text in ipairs(lines or {}) do
-		tooltip:AddLine(text, LINE_COLOR[1], LINE_COLOR[2], LINE_COLOR[3])
+	for _, line in ipairs(lines or {}) do
+		if type(line) == "table" then
+			tooltip:AddDoubleLine(line[1], line[2], LINE_COLOR[1], LINE_COLOR[2], LINE_COLOR[3], 1, 1, 1)
+		else
+			tooltip:AddLine(line, LINE_COLOR[1], LINE_COLOR[2], LINE_COLOR[3])
+		end
 	end
 end
 

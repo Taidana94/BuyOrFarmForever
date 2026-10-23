@@ -346,7 +346,7 @@ Entwickelt von **Taidana** aka **Zuerich3**. Fragen, Wünsche, Fehler oder Verbe
 
 ## Version
 
-0.11.0-alpha.14 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.11.0-alpha.15 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
