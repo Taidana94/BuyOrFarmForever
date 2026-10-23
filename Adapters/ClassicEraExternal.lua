@@ -32,6 +32,24 @@ function External.GetDisenchantPrice(itemID)
 	return type(copper) == "number" and copper or nil
 end
 
+-- Creates (or replaces) an Auctionator shopping list from { { name, units } }; Auctionator searches
+-- it at the auction house. API checked in Auctionator 341 (Source/API/v1/ShoppingLists.lua).
+-- Returns true, or false plus "unavailable" | the error of Auctionator.
+function External.CreateShoppingList(listName, entries)
+	local v1 = api()
+	if not (v1 and type(v1.CreateShoppingList) == "function" and type(v1.ConvertToSearchString) == "function") then
+		return false, "unavailable"
+	end
+	local ok, err = pcall(function()
+		local searches = {}
+		for i, entry in ipairs(entries) do
+			searches[i] = v1.ConvertToSearchString(CALLER_ID, { searchString = entry.name, isExact = true, quantity = entry.units })
+		end
+		v1.CreateShoppingList(CALLER_ID, listName, searches)
+	end)
+	return ok, err
+end
+
 function External.HasExternalPrices()
 	return api() ~= nil
 end

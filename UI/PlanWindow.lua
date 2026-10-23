@@ -1,7 +1,8 @@
 -- Plan window ("Jetzt tun"): a small movable window with the steps of the active plan as a checklist
 -- (UI/PlanCommands.lua, Core/ActivePlan.lua). A click on a step ticks or unticks it by hand; the
 -- addon ticks steps itself when the game shows them done. Header: progress and gold since the start.
--- Buttons: "Beenden" ends the plan with its result. Created on first open, refreshed only while shown.
+-- Buttons: "Starten", "Einkaufsliste" (/bof shop), "Beenden" ends the plan with its result.
+-- Created on first open, refreshed only while shown.
 local _, ns = ...
 
 local L = ns.L
@@ -109,6 +110,11 @@ local function create()
 	win.start:SetPoint("BOTTOMLEFT", PADDING, PADDING)
 	win.start:SetScript("OnClick", function()
 		ns.Inputs.Run("plan start")
+	end)
+	local shop = Widgets.CreateButton(frame, L.PLAN_BTN_SHOP, BUTTON_WIDTH)
+	shop:SetPoint("BOTTOM", 0, PADDING)
+	shop:SetScript("OnClick", function()
+		ns.Inputs.Run("shop")
 	end)
 	Widgets.InitRefresh(win, REFRESH_SIGNALS)
 	frame:SetScript("OnShow", function()

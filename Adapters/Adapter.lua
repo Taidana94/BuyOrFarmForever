@@ -76,6 +76,7 @@ Adapter.REQUIRED = {
 	"FormatDateTime", -- (timestamp) -> "dd.mm.yyyy hh:mm" in local time
 	"GetCursorIn", -- (frame) -> x, y: cursor position in the frame's coordinates
 	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
+	"CreateShoppingList", -- (listName, { { name, units } }) -> true | false, error (Auctionator)
 	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil
 	"GetDisenchantPrice", -- (itemID) -> copper of the disenchanted materials (price addon) | nil, nil, error | nil
 	"ListBagStacks", -- () -> { { itemID, count, isBound, hasNoValue, bag, slot } } of the carried bags

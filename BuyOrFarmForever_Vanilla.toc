@@ -65,6 +65,7 @@ Core\SalesLog.lua
 Core\MarketWatch.lua
 Core\SaleEstimate.lua
 Core\FlipTasks.lua
+Core\ShoppingList.lua
 Core\AltCraftTasks.lua
 Core\Strategies.lua
 Core\Conversion.lua
@@ -90,6 +91,7 @@ UI\CraftCommands.lua
 UI\GoldCommands.lua
 UI\GoldPlanCommands.lua
 UI\PlanCommands.lua
+UI\ShopCommand.lua
 UI\AccountCommands.lua
 UI\SettingsCommands.lua
 UI\Widgets.lua
