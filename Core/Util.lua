@@ -16,6 +16,16 @@ function Util.CopyTable(value)
 	return copy
 end
 
+-- t[key], set to a copy of `template` first when missing.
+function Util.Ensure(t, key, template)
+	local value = t[key]
+	if value == nil then
+		value = Util.CopyTable(template)
+		t[key] = value
+	end
+	return value
+end
+
 function Util.Trim(text)
 	local result = text:gsub("^%s+", "")
 	result = result:gsub("%s+$", "")

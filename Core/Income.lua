@@ -20,13 +20,10 @@ local function dayOf(serverTime)
 	return math.floor(serverTime / SECONDS_PER_DAY)
 end
 
+local EMPTY_DAY = { gained = 0, spent = 0, seconds = 0 }
+
 local function dayRecord(charData, day)
-	local record = charData.income[day]
-	if not record then
-		record = { gained = 0, spent = 0, seconds = 0 }
-		charData.income[day] = record
-	end
-	return record
+	return ns.Util.Ensure(charData.income, day, EMPTY_DAY)
 end
 
 -- Drops the oldest days beyond MAX_DAYS.

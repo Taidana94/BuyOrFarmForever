@@ -22,13 +22,12 @@ local function listingKey(listing)
 	return table.concat({ listing.owner, listing.count, listing.buyout }, "|")
 end
 
+local EMPTY_DAY = { sold = 0, soldUnits = 0, soldCopper = 0, expired = 0 }
+local EMPTY_MARKET = { scanAt = 0, items = {} }
+local EMPTY_ITEM = { listings = {}, days = {} }
+
 local function dayStats(item, day)
-	local stats = item.days[day]
-	if not stats then
-		stats = { sold = 0, soldUnits = 0, soldCopper = 0, expired = 0 }
-		item.days[day] = stats
-	end
-	return stats
+	return ns.Util.Ensure(item.days, day, EMPTY_DAY)
 end
 
 -- Listings of the watched items in this scan: { [itemID] = { [key] = { count, unit, timeLeft } } }.
@@ -60,19 +59,10 @@ local function compare(item, gap, listings, day)
 	end
 end
 
-local function realmMarket(db, realmKey)
-	local market = db.market[realmKey]
-	if not market then
-		market = { scanAt = 0, items = {} }
-		db.market[realmKey] = market
-	end
-	return market
-end
-
 -- Compares a full scan (listings with owner and timeLeft) with the previous one for the watched
 -- items ({ [itemID] = true }) and stores it. Returns the number of auctions counted as sold.
 function MarketWatch.RecordScan(db, realmKey, listings, watched, now)
-	local market = realmMarket(db, realmKey)
+	local market = ns.Util.Ensure(db.market, realmKey, EMPTY_MARKET)
 	local gap, day, sold = now - market.scanAt, ns.PriceHistory.Day(now), 0
 	local compareScans = market.scanAt > 0 and gap <= MAX_SCAN_GAP_SECONDS
 	local byItem = current(listings, watched)
@@ -83,8 +73,7 @@ function MarketWatch.RecordScan(db, realmKey, listings, watched, now)
 		end
 	end
 	for itemID, list in pairs(byItem) do
-		local item = market.items[itemID] or { listings = {}, days = {} }
-		market.items[itemID] = item
+		local item = ns.Util.Ensure(market.items, itemID, EMPTY_ITEM)
 		-- A day counts only once two scans were compared on it (a single scan says nothing about sales).
 		if compareScans then
 			local before = dayStats(item, day).sold

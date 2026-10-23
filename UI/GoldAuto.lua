@@ -5,7 +5,6 @@
 local _, ns = ...
 
 local Events = ns.Events
-local SavingsGoals = ns.SavingsGoals
 
 local GoldAuto = {}
 ns.GoldAuto = GoldAuto
@@ -34,11 +33,6 @@ local function onMoneyChanged()
 		ns.Log.Debug("gold distributed automatically")
 		Events.Emit("DATA_CHANGED")
 	end
-end
-
--- Total reserves after the automatic distribution (for tests).
-function GoldAuto.Reserved(charData)
-	return SavingsGoals.ReservedTotal(charData)
 end
 
 if ns.Client then

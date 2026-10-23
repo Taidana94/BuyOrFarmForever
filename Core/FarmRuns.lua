@@ -200,14 +200,12 @@ local function activityOf(run)
 	return run.activity
 end
 
+local EMPTY_GAIN = { confirmed = 0, unclear = 0 }
+
 -- Records a bag gain of an item during a running run. isLoot = true counts it as confirmed.
 -- The caller only reports gains while FarmRuns.IsRunning(run).
 function FarmRuns.AddGain(run, itemID, amount, isLoot, now)
-	local entry = run.items[itemID]
-	if not entry then
-		entry = { confirmed = 0, unclear = 0 }
-		run.items[itemID] = entry
-	end
+	local entry = ns.Util.Ensure(run.items, itemID, EMPTY_GAIN)
 	if isLoot then
 		entry.confirmed = entry.confirmed + amount
 	else

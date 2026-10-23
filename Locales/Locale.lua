@@ -24,10 +24,6 @@ function Locale.NewLocale(code)
 	return t
 end
 
-function Locale.HasLocale(code)
-	return tables[code] ~= nil
-end
-
 -- Selects the locale for lookups. Unknown locales fall back to the base locale.
 function Locale.SetActive(code)
 	if type(code) == "string" and tables[code] then

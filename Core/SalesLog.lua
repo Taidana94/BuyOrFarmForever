@@ -19,18 +19,11 @@ local function signature(mail, now)
 	return table.concat({ mail.subject, mail.money, expiresAt }, "|"), expiresAt * SIGNATURE_STEP
 end
 
-local function realmLog(db, realmKey)
-	local log = db.salesLog[realmKey]
-	if not log then
-		log = { items = {}, seen = {} }
-		db.salesLog[realmKey] = log
-	end
-	return log
-end
+local EMPTY_LOG = { items = {}, seen = {} }
+local EMPTY_ITEM = { sold = 0, expired = 0, cancelled = 0, soldCopper = 0, lastAt = 0 }
 
 local function count(log, mail, now)
-	local item = log.items[mail.itemID] or { sold = 0, expired = 0, cancelled = 0, soldCopper = 0, lastAt = 0 }
-	log.items[mail.itemID] = item
+	local item = ns.Util.Ensure(log.items, mail.itemID, EMPTY_ITEM)
 	local field = COUNTERS[mail.kind]
 	item[field] = item[field] + 1
 	if mail.kind == "SOLD" then
@@ -42,7 +35,7 @@ end
 -- Counts the auction mails ({ kind, itemID?, money, daysLeft, subject }) not seen before. Returns the
 -- number of new results.
 function SalesLog.Record(db, realmKey, mails, now)
-	local log, added = realmLog(db, realmKey), 0
+	local log, added = ns.Util.Ensure(db.salesLog, realmKey, EMPTY_LOG), 0
 	for _, mail in ipairs(mails) do
 		local key, expiresAt = signature(mail, now)
 		if mail.itemID and COUNTERS[mail.kind] and not log.seen[key] then
