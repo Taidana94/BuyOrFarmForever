@@ -3,7 +3,18 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.12.0-alpha.9] – 2026-10-24 (Testversion)
+## [0.12.0-alpha.10] – 2026-10-24 (Testversion)
+
+### Geändert
+- Ohne gesehene Verkäufe (eigene AH-Briefe oder zwei verglichene Vollscans) plant der Goldplaner
+  pro Item nur noch **1 Stück als Test** für das Auktionshaus statt der vollen Menge.
+- Weiterverkauf (günstig kaufen, teurer einstellen) wird erst vorgeschlagen, wenn für das Item
+  Verkäufe gesehen wurden.
+
+### Behoben
+- Ein einzelner Vollscan zählte schon als beobachteter Tag mit 0 Verkäufen.
+
+ – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
 

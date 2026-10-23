@@ -85,11 +85,12 @@ function MarketWatch.RecordScan(db, realmKey, listings, watched, now)
 	for itemID, list in pairs(byItem) do
 		local item = market.items[itemID] or { listings = {}, days = {} }
 		market.items[itemID] = item
-		local before = dayStats(item, day).sold
+		-- A day counts only once two scans were compared on it (a single scan says nothing about sales).
 		if compareScans then
+			local before = dayStats(item, day).sold
 			compare(item, gap, list, day)
+			sold = sold + dayStats(item, day).sold - before
 		end
-		sold = sold + dayStats(item, day).sold - before
 		item.listings = list
 	end
 	market.scanAt = now

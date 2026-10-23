@@ -19,6 +19,8 @@ local SUPPLY_MAX_AGE_SECONDS = 3 * 86400
 -- Units on offer -> chance, first matching row.
 local SUPPLY_CHANCES = { { units = 5, chance = 0.7 }, { units = 20, chance = 0.5 }, { units = 60, chance = 0.3 } }
 local CROWDED_CHANCE = 0.15
+-- Without any seen sale or result (own mails or compared scans) only one unit is planned as a test.
+local UNTESTED_UNITS = 1
 
 local function historyItem(realmKey, itemID)
 	local realm = realmKey and ns.db.priceHistory[realmKey]
@@ -63,6 +65,11 @@ function SaleEstimate.For(itemID, now)
 		perDay = realm and realm.days > 0 and realm.soldUnits / realm.days or nil, supply = item and item.supply or nil }
 end
 
+-- True when the estimate rests on seen results (own auction mails or compared full scans).
+function SaleEstimate.HasResults(estimate)
+	return estimate.source == "OWN" or estimate.source == "SALES"
+end
+
 -- Just the chance (for the value calculations); 1 with the setting useSaleChance off.
 function SaleEstimate.Chance(itemID, now)
 	if not ns.db.settings.useSaleChance then
@@ -77,14 +84,17 @@ function SaleEstimate.Units(max, chance)
 end
 
 -- Units of an item to make or buy for the auction house: `max` scaled by the sale chance and at most
--- what the realm sells in a day (when the market watch knows it). Returns units, chance.
+-- what the realm sells in a day (when the market watch knows it); one test unit without any results.
+-- Returns units, chance.
 function SaleEstimate.PlanUnits(itemID, max, now)
 	if not ns.db.settings.useSaleChance then
 		return max, 1
 	end
 	local estimate = SaleEstimate.For(itemID, now)
 	local units = SaleEstimate.Units(max, estimate.chance)
-	if estimate.perDay then
+	if not SaleEstimate.HasResults(estimate) then
+		units = math.min(units, UNTESTED_UNITS)
+	elseif estimate.perDay then
 		units = math.min(units, math.max(1, math.floor(estimate.perDay + ROUND)))
 	end
 	return units, estimate.chance

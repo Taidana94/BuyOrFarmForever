@@ -3,7 +3,8 @@
 -- listing must be recent (FRESH_SECONDS), the history at least MIN_DAYS long, and the gain after the
 -- auction house cut at least MIN_MARGIN of the price paid. The gain is auction gold only (not
 -- guaranteed: the listing may be gone, the item may not sell); units are capped by MAX_UNITS
--- because the demand is unknown. Pure logic; task { kind = "FLIP", itemID, units, buy, sell, sure,
+-- because the demand is unknown. With the sale chance on, an item is only bought for resale once
+-- sales of it were seen (own auction mails or compared full scans). Pure logic; task { kind = "FLIP", itemID, units, buy, sell, sure,
 -- auction, seconds, spend }.
 local _, ns = ...
 
@@ -24,6 +25,9 @@ local function taskFor(itemID, item, now)
 	end
 	local reference, days = ns.PriceHistory.Reference(item, ns.PriceHistory.Day(now))
 	if not reference or days < FlipTasks.MIN_DAYS then
+		return nil
+	end
+	if ns.db.settings.useSaleChance and not ns.SaleEstimate.HasResults(ns.SaleEstimate.For(itemID, now)) then
 		return nil
 	end
 	-- Expected per unit: resold with the sale chance, else sold to the vendor.
