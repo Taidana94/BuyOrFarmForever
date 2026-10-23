@@ -136,6 +136,10 @@ local CRAFT = {
 	recipeLink = function()
 		return nil
 	end,
+	-- Item made by an entry whose output link is an enchant, or nil (a real enchantment).
+	productByName = function(i)
+		return ns.ClassicEraProfessionInfo.FindEnchantingProduct((GetCraftInfo(i)))
+	end,
 	numMade = function()
 		return 1, 1
 	end,
@@ -156,7 +160,7 @@ local APIS = { trade = TRADE, craft = CRAFT }
 -- Key and output item from the recipe link (spell/enchant id) and the output link.
 local function recipeIdentity(api, index)
 	local outputType, outputID = ns.Util.ParseLink(api.outputLink(index))
-	local outputItemID = outputType == "item" and outputID or 0
+	local outputItemID = outputType == "item" and outputID or (api.productByName and api.productByName(index)) or 0
 	local recipeType, recipeID = ns.Util.ParseLink(api.recipeLink(index))
 	if recipeType ~= "enchant" and recipeType ~= "spell" then
 		recipeType, recipeID = outputType, outputID

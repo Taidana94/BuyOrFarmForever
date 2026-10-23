@@ -86,6 +86,28 @@ function Info.GetCraftedBy(itemID)
 	return entry
 end
 
+-- Enchanting products (rods, oils, wands) by localized name, from Data/ClassicEra/CraftedBy.lua. The
+-- craft window links every entry as an enchant, also crafts that make an item (seen in game
+-- 2026-10-23: Runed Silver Rod), so the product is found by its name. Names come from the client's
+-- item cache; a missing name is requested and found on a later read of the window.
+function Info.FindEnchantingProduct(name)
+	if not (name and C_Item and C_Item.GetItemInfo) then
+		return nil
+	end
+	for itemID, professions in pairs(ns.ClassicEraCraftedBy or {}) do
+		if professions == "ENCHANTING" then
+			local itemName = C_Item.GetItemInfo(itemID)
+			if itemName == name then
+				return itemID
+			end
+			if not itemName and C_Item.RequestLoadItemDataByID then
+				C_Item.RequestLoadItemDataByID(itemID)
+			end
+		end
+	end
+	return nil
+end
+
 -- Item classes (the category of products without effect data) ------------------------
 
 -- Item class id (Enum.ItemClass, e.g. 7 = trade goods) from C_Item.GetItemInfoInstant (no cache

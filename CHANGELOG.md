@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.16] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Behoben
+
+- Verzauberkunst: Gegenstände aus dem Verzauberungsfenster (z. B. Runenverzierte Silberrute, Stäbe,
+  Öle) wurden als Verzauberung ohne Produkt gespeichert, weil das Spiel dort jeden Eintrag als
+  Verzauberung verlinkt. Das Produkt wird jetzt über den Namen erkannt; Tooltip, Ziele und Planer
+  kennen dann Zutaten und Kosten. Einmal das Verzauberungsfenster öffnen genügt.
+
 ## [0.11.0-alpha.15] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
