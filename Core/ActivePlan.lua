@@ -45,8 +45,9 @@ end
 
 local function stepOf(step, ctx)
 	local task = copyFields(step.task, TASK_FIELDS)
-	if task and step.task.items then
-		task.items = ns.Util.CopyTable(step.task.items)
+	if task then
+		task.items = step.task.items and ns.Util.CopyTable(step.task.items)
+		task.toBuy = step.task.toBuy and ns.Util.CopyTable(step.task.toBuy)
 	end
 	return { kind = step.kind, seconds = step.seconds, sure = step.sure or 0, auction = step.auction or 0, task = task,
 		method = copyFields(step.method, METHOD_FIELDS), baseline = baselineOf(step.task, ctx), done = false }
@@ -114,6 +115,20 @@ function ActivePlan.Update(active, ctx)
 		end
 	end
 	return changed
+end
+
+-- Progress of a step with items to get rid of (sell, post, disenchant): units gone and planned units,
+-- or nil for other steps.
+function ActivePlan.ItemProgress(step, ctx)
+	if not (step.task and step.task.items and TASK_CHECKS[step.task.kind] == itemsGone) then
+		return nil
+	end
+	local gone, total = 0, 0
+	for itemID, count in pairs(step.task.items) do
+		local left = ctx.bagCount(itemID) - ((step.baseline[itemID] or 0) - count)
+		gone, total = gone + math.min(count, math.max(0, count - left)), total + count
+	end
+	return gone, total
 end
 
 -- Ticks a step by hand or unticks it. Returns the new state, or nil for an unknown index.

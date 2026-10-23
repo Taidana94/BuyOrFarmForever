@@ -2,7 +2,7 @@
 -- selling to a vendor (sure gold), selling on the auction house (after the cut; not guaranteed) and
 -- disenchanting (value of the materials from the price addon, after the cut; not guaranteed),
 -- grouped into one task per way. Skipped: items without value, materials of the character's goals,
--- the keep list (characters[key].goldKeep). Bound items cannot go to the auction house.
+-- the keep list (characters[key].goldKeep), profession tools (Data/ClassicEra/Tools.lua). Bound items cannot go to the auction house.
 -- Computed on demand from the adapter (bags, item data, prices); nothing is stored.
 local _, ns = ...
 
@@ -79,7 +79,8 @@ function BagTasks.Collect(charData, now, discountPercent)
 	local canDisenchant = ns.Client:KnowsDisenchant()
 	local byKind = {}
 	for _, stack in ipairs(ns.Client:ListBagStacks()) do
-		local wanted = not (stack.hasNoValue or skip[stack.itemID] or charData.goldKeep[stack.itemID])
+		local wanted = not (stack.hasNoValue or skip[stack.itemID] or charData.goldKeep[stack.itemID]
+			or ns.Client:IsProfessionTool(stack.itemID))
 		local way, gain
 		if wanted then
 			way, gain = bestWay(waysOut(stack, now, canDisenchant), discountPercent)

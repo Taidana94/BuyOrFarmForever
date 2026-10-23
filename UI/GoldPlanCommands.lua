@@ -71,10 +71,19 @@ local TASK_TEXTS = {
 	SELL_VENDOR = "GOLDPLAN_SELL_VENDOR", SELL_AUCTION = "GOLDPLAN_SELL_AUCTION", DISENCHANT = "GOLDPLAN_DISENCHANT",
 }
 
+-- " – vorher kaufen: 5× [Grober Faden], 2× [Leinenstoffballen]" for crafts with reagents to buy.
+local function buyText(task)
+	local parts = {}
+	for i, entry in ipairs(task.toBuy or {}) do
+		parts[i] = Util.Format(L.GOLDPLAN_BUY_PART, entry.units, UIShared.ItemText(entry.itemID))
+	end
+	return #parts > 0 and Util.Format(L.GOLDPLAN_BUY_FIRST, table.concat(parts, L.PLAN_SEPARATOR)) or ""
+end
+
 local function taskText(task)
 	if task.kind == "CRAFT" or task.kind == "COOLDOWN" then
 		local text = Util.Format(L["GOLDPLAN_" .. task.kind], task.crafts, UIShared.ItemText(task.itemID),
-			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds))
+			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds)) .. buyText(task)
 		return task.charKey and text .. Util.Format(L.GOLDPLAN_ON_ALT, (ns.Stock.SplitKey(task.charKey))) or text
 	end
 	if task.kind == "FLIP" then

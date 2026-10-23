@@ -30,6 +30,7 @@ Adapter.REQUIRED = {
 	"ReadAllRecipes", -- () -> { recipe + cooldownSeconds, profession, difficulty } of the open profession windows, incomplete (bool)
 	"ReadProfessionSkills", -- () -> { { profession, rank, maxRank } } of the open profession windows (raw)
 	"GetProfessionInfo", -- (professionKey) -> localized name, icon file id (nil, nil for "OTHER" or unknown keys)
+	"IsProfessionTool", -- (itemID) -> bool: a profession tool (never suggested for selling)
 	"GetCraftedBy", -- (itemID) -> { professionKey, ... } of the professions that make it, or nil
 	"GetEffectCategory", -- ("item" | "spell", id) -> effect category key of the client's data, or nil
 	"GetItemClassID", -- (itemID) -> item class id (no item cache needed), or nil

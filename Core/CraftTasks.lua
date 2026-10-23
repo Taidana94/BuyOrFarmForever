@@ -73,14 +73,15 @@ end
 -- Value of `crafts` crafts: { sure, auction (profit parts), saleVendor, saleAuction (products sold
 -- to a vendor / on the auction house after the cut), reagents (their value), buys (reagents to
 -- buy), farmSeconds (time to farm the others), spend (gold paid up front for bought reagents),
--- outdated (reagents bought at an old price) }, or nil if a price is missing.
+-- outdated (reagents bought at an old price), toBuy ({ { itemID, units } } to buy first) }, or nil if
+-- a price is missing.
 function CraftTasks.Value(recipe, crafts, now)
 	local vendor, extra = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
 	if not vendor then
 		return nil
 	end
 	local made = crafts * (recipe.outputMin + recipe.outputMax) / 2
-	local costSure, costAuction, buys, farmed, spend, outdated = 0, 0, 0, 0, 0, 0
+	local costSure, costAuction, buys, farmed, spend, outdated, toBuy = 0, 0, 0, 0, 0, 0, {}
 	for _, reagent in ipairs(recipe.reagents) do
 		local sure, auction, bought, seconds, paid, old = reagentValue(reagent.itemID, reagent.count * crafts, now)
 		if not sure then
@@ -88,11 +89,14 @@ function CraftTasks.Value(recipe, crafts, now)
 		end
 		costSure, costAuction, farmed, spend = costSure + sure, costAuction + auction, farmed + seconds, spend + paid
 		outdated = outdated + (old and 1 or 0)
+		if bought > 0 then
+			toBuy[#toBuy + 1] = { itemID = reagent.itemID, units = bought }
+		end
 		buys = buys + (bought > 0 and 1 or 0)
 	end
 	return { sure = made * vendor - costSure, auction = made * extra - costAuction, saleVendor = made * vendor,
 		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys, farmSeconds = farmed,
-		spend = spend, outdated = outdated }
+		spend = spend, outdated = outdated, toBuy = toBuy }
 end
 
 local function isReady(entry, now)

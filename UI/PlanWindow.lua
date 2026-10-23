@@ -18,7 +18,7 @@ local BUTTON_WIDTH = 100
 local CHECK_ON = "|TInterface\\Buttons\\UI-CheckBox-Check:16|t "
 local CHECK_OFF = "|TInterface\\Buttons\\UI-CheckBox-Up:16|t "
 local DONE_COLOR, COLOR_END = "|cff808080", "|r"
-local REFRESH_SIGNALS = { "PLAN_CHANGED", "MONEY_CHANGED", "ITEM_LOADED", "DATA_CHANGED" }
+local REFRESH_SIGNALS = { "PLAN_CHANGED", "MONEY_CHANGED", "ITEM_LOADED", "DATA_CHANGED", "BAGS_CHANGED" }
 
 local Window = {}
 Window.__index = Window
@@ -102,17 +102,22 @@ local function create()
 	return win
 end
 
-local function stepLine(index, step)
+local function stepLine(index, step, ctx)
 	local text = Util.Format(L.GOLD_SOURCE_NUMBERED, index, ns.GoldPlanCommands.StepText(step))
+	local gone, total = ns.ActivePlan.ItemProgress(step, ctx)
+	if gone and not step.done then
+		text = text .. Util.Format(L.PLAN_ITEM_PROGRESS, gone, total)
+	end
 	return step.done and CHECK_ON .. DONE_COLOR .. text .. COLOR_END or CHECK_OFF .. text
 end
 
 function Window:Refresh()
 	local active = ns.PlanCommands.Active()
 	local steps = active and active.steps or {}
+	local ctx = ns.PlanCommands.Context()
 	for i, row in ipairs(self.rows) do
 		Widgets.SetShown(row, steps[i] ~= nil)
-		row.text:SetText(steps[i] and stepLine(i, steps[i]) or "")
+		row.text:SetText(steps[i] and stepLine(i, steps[i], ctx) or "")
 	end
 	if active then
 		local done, total = ns.ActivePlan.Progress(active)

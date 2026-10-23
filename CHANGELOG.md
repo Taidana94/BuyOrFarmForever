@@ -3,6 +3,19 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.5] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Behoben
+
+- **Berufswerkzeuge** (Runenverzierte Ruten, Bogenlichtschraubenschlüssel, Zunderkästchen, Spitzhacke,
+  Kürschnermesser, Schmiedehammer, Angelrute) werden nie mehr zum Verkauf vorgeschlagen.
+- „Jetzt tun“: Verkaufs-, Einstell- und Entzauber-Schritte zeigen ihren Fortschritt („5/10 erledigt“) und
+  haken sich ab, wenn alle geplanten Items weg sind.
+- Herstellen-Schritte (Plan und „Jetzt tun“) nennen, was vorher zu kaufen ist („vorher kaufen: 5×
+  Grober Faden“); bisher sah es aus, als lägen die Zutaten schon bereit.
+
 ## [0.12.0-alpha.4] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
