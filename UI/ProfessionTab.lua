@@ -114,6 +114,15 @@ local function currentProfession(professions)
 	return professions[1]
 end
 
+-- When the profession window was last read: date, time and age, or "unknown".
+local function readAtText(profession)
+	local at = profession.skill and profession.skill.at or 0
+	if at <= 0 then
+		return L.UNKNOWN_VALUE
+	end
+	return Util.Format(L.PROF_READ_AT, ns.Client:FormatDateTime(at), Util.FormatAge(ns.Client:GetServerTime() - at))
+end
+
 function Tab:UpdateIcons(professions, current)
 	for index, button in ipairs(self.icons) do
 		local profession = professions[index]
@@ -124,7 +133,7 @@ function Tab:UpdateIcons(professions, current)
 			button.texture:SetTexture(icon or OTHER_ICON)
 			Widgets.SetShown(button.selected, profession == current)
 			button.tooltipTitle = name or L.PROF_OTHER
-			button.tooltipText = Util.Format(L.PROF_ICON_TIP, profession.count)
+			button.tooltipText = Util.Format(L.PROF_ICON_TIP, profession.count, readAtText(profession))
 		end
 	end
 end

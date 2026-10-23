@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.14] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- Berufe-Reiter: Der Tooltip der Berufssymbole zeigt Datum und Uhrzeit des letzten Einlesens
+  (z. B. „Zuletzt eingelesen: 23.10.2026 14:05 (vor 2 Std.)“).
+
 ## [0.11.0-alpha.13] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

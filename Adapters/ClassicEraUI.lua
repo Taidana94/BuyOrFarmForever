@@ -74,6 +74,11 @@ function UI.GetMinimap()
 	return Minimap
 end
 
+-- Local date and time of a server timestamp ("23.10.2026 14:05"), with the client's date().
+function UI.FormatDateTime(timestamp)
+	return date("%d.%m.%Y %H:%M", timestamp)
+end
+
 -- Cursor position in the coordinates of `frame` (GetCursorPosition divided by its effective scale,
 -- as FloatingChatFrame.lua does in the Classic Era UI source).
 function UI.GetCursorIn(frame)

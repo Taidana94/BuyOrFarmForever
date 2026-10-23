@@ -68,6 +68,7 @@ Adapter.REQUIRED = {
 	"GetMerchantFrame", -- () -> the client's merchant frame (to anchor a hint), or nil
 	"HookLinkInsert", -- (callback(itemID)) -> nil: shift-clicked items while no chat input is open; call once
 	"GetMinimap", -- () -> the client's minimap frame (to attach a button), or nil
+	"FormatDateTime", -- (timestamp) -> "dd.mm.yyyy hh:mm" in local time
 	"GetCursorIn", -- (frame) -> x, y: cursor position in the frame's coordinates
 	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
 	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil

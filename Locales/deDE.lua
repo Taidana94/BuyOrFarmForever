@@ -416,7 +416,8 @@ L.GOLD_UNDONE = "Verteilung rückgängig gemacht: die Rücklagen sind wie vorher
 L.GOLD_NOTHING_TO_UNDO = "Es gibt keine Verteilung zum Rückgängigmachen."
 -- Professions tab
 L.PROF_OTHER = "Sonstige"
-L.PROF_ICON_TIP = "%1$d Rezepte bekannt. Stand: als du das Berufsfenster zuletzt geöffnet hast."
+L.PROF_ICON_TIP = "%1$d Rezepte bekannt. Zuletzt eingelesen: %2$s. Neu einlesen: Berufsfenster öffnen."
+L.PROF_READ_AT = "%1$s (%2$s)"
 L.PROF_SKILL = "%1$d/%2$d"
 L.PROF_SKILL_UNKNOWN = "Fertigkeit unbekannt – öffne das Berufsfenster"
 L.PROF_SEARCH_HINT = "Suche"
