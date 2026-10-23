@@ -1,5 +1,5 @@
--- /bof price: show the prices of the selected goal's items, set or clear an own price, and
--- scan the auction house for missing materials.
+-- /bof price: show the prices of the items the wants may need, set or clear an own price, and scan the
+-- auction house for items without a current price.
 local _, ns = ...
 
 local L = ns.L
@@ -32,18 +32,20 @@ local function describeItem(realmKey, itemID, now)
 	return table.concat(parts, L.PRICE_SEPARATOR)
 end
 
-local function listPrices(charData, realmKey)
-	local goal = UIShared.ActiveGoal(charData)
-	if not goal then
+-- Prices of the wanted items and the reagents that could make them, in id order.
+local function listPrices(_, realmKey)
+	local ids = {}
+	for itemID in pairs(ns.Wants.TrackedItems(ns.db, {}, { [ns.charKey] = true })) do
+		ids[#ids + 1] = itemID
+	end
+	if #ids == 0 then
+		Log.Print(L.WANT_LIST_EMPTY)
 		return
 	end
-	if #goal.items == 0 then
-		Log.Print(L.STOCK_EMPTY)
-		return
-	end
+	table.sort(ids)
 	local now = ns.Client:GetServerTime()
-	for _, entry in ipairs(goal.items) do
-		Log.Print(Util.Format(L.PRICE_LINE, UIShared.ItemText(entry.itemID), describeItem(realmKey, entry.itemID, now)))
+	for _, itemID in ipairs(ids) do
+		Log.Print(Util.Format(L.PRICE_LINE, UIShared.ItemText(itemID), describeItem(realmKey, itemID, now)))
 	end
 end
 
@@ -65,7 +67,7 @@ local function setPrice(realmKey, itemID, rest)
 	Log.Print(Util.Format(L.PRICE_SET, UIShared.ItemText(itemID), Money.Format(copper)))
 end
 
--- Scans the next missing material (also used by the window button). Prints the result.
+-- Scans the next item without a current price (also used by the window button). Prints the result.
 function PriceCommands.Scan()
 	local itemID, positionOrError, total = PriceCapture.ScanNext()
 	if not itemID then

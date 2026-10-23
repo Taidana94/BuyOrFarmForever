@@ -30,8 +30,12 @@ local function suggestion(env, kind, fields)
 end
 AdvisorSources.Suggestion = suggestion
 
+-- Stock rows of what the plan of the character's wants needs in the bags (Core/WantPlan.lua).
 local function goalRows(env)
-	env.rows = env.rows or ns.Stock.Rows(env.charData, ns.Materials.AllGoals(env.charData))
+	if not env.rows then
+		local plan = ns.WantPlan.Current()
+		env.rows = plan and ns.Stock.Rows(env.charData, ns.WantPlan.Requirements(plan)) or {}
+	end
 	return env.rows
 end
 
@@ -47,7 +51,7 @@ local function bagSuggestions(env, out)
 	end
 end
 
--- Merchant: missing goal materials this merchant sells.
+-- Merchant: missing materials of the wants this merchant sells.
 local function merchantSuggestions(env, out)
 	local offers = {}
 	for _, offer in ipairs(ns.Client:ReadMerchantPrices()) do
@@ -63,7 +67,7 @@ local function merchantSuggestions(env, out)
 	end
 end
 
--- Bank: goal materials lying in the bank.
+-- Bank: materials of the wants lying in the bank.
 local function bankSuggestions(env, out)
 	for _, row in ipairs(goalRows(env)) do
 		local take = math.min(row.bank or 0, row.need - row.bags)
@@ -73,15 +77,15 @@ local function bankSuggestions(env, out)
 	end
 end
 
--- Auction house: purchases of the sourcing plan and materials without a current price.
+-- Auction house: purchases of the plan, and items without any way (no price, no farm run).
 local function auctionSuggestions(env, out)
-	local goals = ns.Materials.AllGoals(env.charData)
+	local plan = ns.WantPlan.Current()
 	local unpriced = 0
-	for _, line in ipairs((ns.Sourcing.CurrentPlan(env.charData, goals)).lines) do
-		if line.buy > 0 then
-			out[#out + 1] = suggestion(env, "BUY_AUCTION", { itemID = line.itemID, count = line.buy, cost = line.cost })
+	for itemID, entry in pairs(plan and ns.WantPlan.ToGet(plan) or {}) do
+		if entry.buy > 0 then
+			out[#out + 1] = suggestion(env, "BUY_AUCTION", { itemID = itemID, count = entry.buy, cost = entry.copper })
 		end
-		if not line.unitPrice or line.priceOutdated then
+		if entry.open > 0 then
 			unpriced = unpriced + 1
 		end
 	end
@@ -90,13 +94,14 @@ local function auctionSuggestions(env, out)
 	end
 end
 
--- What another character of the same realm and faction still misses for its goals: { [itemID] = n }.
+-- What another character of the same realm and faction still misses of its wanted items (not
+-- their reagents: the plan exists only for the logged-in character): { [itemID] = n }.
 local function missingOf(other)
 	local missing = {}
-	for _, req in ipairs(ns.Materials.Requirements(ns.Materials.AllGoals(other))) do
-		local have = (other.stock.bags[req.itemID] or 0) + (other.stock.bank[req.itemID] or 0)
-		if req.need > have then
-			missing[req.itemID] = req.need - have
+	for _, want in ipairs(other.wants) do
+		local have = (other.stock.bags[want.itemID] or 0) + (other.stock.bank[want.itemID] or 0)
+		if want.count > have then
+			missing[want.itemID] = want.count - have
 		end
 	end
 	return missing
@@ -111,7 +116,7 @@ local function addMailFor(env, out, other, name)
 	end
 end
 
--- Mailbox: send own materials to other characters (same realm and faction) whose goals need them.
+-- Mailbox: send own items to other characters (same realm and faction) who want them.
 local function mailSuggestions(env, out)
 	local _, realm = ns.Stock.SplitKey(ns.charKey)
 	for key, other in pairs(ns.db.characters) do
@@ -122,7 +127,7 @@ local function mailSuggestions(env, out)
 	end
 end
 
--- Anywhere: materials other characters hold for this character's goals (to be mailed over).
+-- Anywhere: materials other characters hold for this character's wants (to be mailed over).
 local function mailAskSuggestions(env, out)
 	for _, row in ipairs(goalRows(env)) do
 		local short = row.need - row.bags - (row.bank or 0)
@@ -134,26 +139,24 @@ local function mailAskSuggestions(env, out)
 	end
 end
 
--- Whether the character learned a recipe: it is in its recipe book. Enchantments were not kept in the
--- book before 0.8.0 (such books lack them until the window is opened again), so they count as learned.
-local function isLearned(charData, key)
-	if charData.recipeBook[key] then
-		return true
+-- Whether every reagent of a planned craft is in the bags now.
+local function reagentsInBags(node)
+	for _, child in ipairs(node.children) do
+		if ns.Client:GetBagCount(child.itemID) < child.need then
+			return false
+		end
 	end
-	local recipe = ns.Recipes.Get(ns.db, key)
-	return recipe ~= nil and recipe.outputItemID == 0
+	return true
 end
 
--- Goals of learned recipes whose materials are all in the bags now, then ready cooldowns.
+-- Crafts of the plan this character can do now (all reagents in the bags), then ready cooldowns.
 function AdvisorSources.CraftNow(env)
 	local out = {}
-	for _, goal in ipairs(ns.Materials.AllGoals(env.charData)) do
-		local ready = goal.recipeKey ~= nil and #goal.items > 0 and isLearned(env.charData, goal.recipeKey)
-		for _, row in ipairs(ready and ns.Stock.Rows(env.charData, { goal }) or {}) do
-			ready = ready and row.bags >= row.need
-		end
-		if ready then
-			out[#out + 1] = suggestion(env, "CRAFT_NOW", { goal = goal, itemID = ns.CraftEval.GoalItemID(goal), count = goal.crafts })
+	local plan = ns.WantPlan.Current()
+	for _, node in ipairs(plan and plan.totals.crafts or {}) do
+		if node.recipe.charKey == ns.charKey and reagentsInBags(node) then
+			out[#out + 1] = suggestion(env, "CRAFT_NOW", { itemID = node.itemID, count = node.crafts,
+				recipeKey = node.recipe.key })
 		end
 	end
 	for _, key in ipairs(ns.RecipeBook.ReadyCooldowns(env.charData, env.now)) do

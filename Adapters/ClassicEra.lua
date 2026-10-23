@@ -36,7 +36,6 @@ local ClassicEra = {
 		PLAYER_CONTROL_LOST = "CONTROL_LOST",
 		PLAYER_CONTROL_GAINED = "CONTROL_GAINED",
 		-- Quest frame with rewards (offered quest, quest ready to turn in).
-		QUEST_DETAIL = "QUEST_OFFERED",
 		QUEST_COMPLETE = "QUEST_REWARDS",
 		QUEST_FINISHED = "QUEST_CLOSED",
 		-- Trainer window (gold spent on training).
@@ -275,11 +274,11 @@ end
 
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
--- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons),
+-- Adapters/ClassicEraExternal.lua (other addons),
 -- Adapters/ClassicEraBags.lua (bags and map), Adapters/ClassicEraProfessionInfo.lua (profession names,
 -- icons, effect data), Adapters/ClassicEraCrafting.lua (crafting from the professions tab).
 local PARTS = {
-	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal, ns.ClassicEraBags,
+	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraExternal, ns.ClassicEraBags,
 	ns.ClassicEraProfessionInfo, ns.ClassicEraCrafting,
 }
 for _, part in ipairs(PARTS) do

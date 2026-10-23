@@ -12,7 +12,6 @@ local Log = ns.Log
 local Util = ns.Util
 local Events = ns.Events
 local FarmRuns = ns.FarmRuns
-local Materials = ns.Materials
 local Stock = ns.Stock
 local UIShared = ns.UIShared
 
@@ -35,9 +34,10 @@ local function command(line)
 	ns.Slash.Handle(line)
 end
 
--- Missing amount of an item over all goals of the character, or nil if no goal needs it.
+-- Missing amount of an item the plan of the character's wants needs, or nil if the plan does not need it.
 function FarmAssist.MissingForGoals(charData, itemID)
-	for _, row in ipairs(Stock.Rows(charData, Materials.AllGoals(charData))) do
+	local plan = ns.WantPlan.Current()
+	for _, row in ipairs(plan and Stock.Rows(charData, ns.WantPlan.Requirements(plan)) or {}) do
 		if row.itemID == itemID then
 			return row.missing
 		end

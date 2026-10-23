@@ -1,6 +1,6 @@
--- Start suggestion (setting farmSuggestStart): when the player loots a material that the selected
--- goal still misses and no farm run exists, a small bar offers to start a run with that material
--- as target ("Gegner" / "Sammeln"). Never starts by itself; each material is offered once per
+-- Start suggestion (setting farmSuggestStart): when the player loots an item the plan of the wants
+-- still has to get and no farm run exists, a small bar offers to start a run with that item as
+-- target. Never starts by itself; each material is offered once per
 -- session; the bar hides after SHOW_SECONDS.
 -- Loot and bag signals are registered only while the setting is on. Before the loot, the bag
 -- counts of the missing materials are noted; after it, a higher count is the looted material.
@@ -30,14 +30,12 @@ local function charData()
 	return ns.db.characters[ns.charKey]
 end
 
--- Missing materials of the selected goal.
-local function missingItems(data)
-	local goal = ns.Materials.GetActiveGoal(data)
+-- Items the plan still has to get (buy, farm or open).
+local function missingItems()
+	local plan = ns.WantPlan.Current()
 	local list = {}
-	for _, row in ipairs(goal and ns.Stock.Rows(data, { goal }) or {}) do
-		if row.missing > 0 then
-			list[#list + 1] = row.itemID
-		end
+	for itemID in pairs(plan and ns.WantPlan.ToGet(plan) or {}) do
+		list[#list + 1] = itemID
 	end
 	return list
 end
@@ -66,7 +64,7 @@ local function onLootOpened()
 	if not data or data.currentRun then
 		return
 	end
-	for _, itemID in ipairs(missingItems(data)) do
+	for _, itemID in ipairs(missingItems()) do
 		before[itemID] = ns.Client:GetBagCount(itemID)
 	end
 end

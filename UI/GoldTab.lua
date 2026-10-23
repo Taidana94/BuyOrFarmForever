@@ -18,7 +18,7 @@ ns.GoldTab = GoldTab
 local VISIBLE_ROWS = 8
 local ROW_HEIGHT, ROWS_Y, HEADER_Y, NEW_ROW_GAP = 24, -74, -56, 6
 local BUTTON_WIDTH, BUTTON_GAP, UNDO_WIDTH = 150, 6, 100
-local OVERVIEW_Y, SOURCES_Y, INCOME_Y, RESERVES_Y = -32, 44, 26, 8
+local OVERVIEW_Y, SOURCES_Y, INCOME_Y = -32, 26, 8
 -- The purchase check sits right of the goal header; the view buttons take the top right.
 local CHECK_Y, HEADER_WIDTH, MODE_WIDTH = -50, 400, 110
 local TEXT_WIDTH = 690
@@ -120,10 +120,6 @@ local function buildTop(tab, frame)
 		run("gold undo")
 	end)
 	tab.undo:SetPoint("LEFT", tab.distribute, "RIGHT", BUTTON_GAP, 0)
-	tab.reserves = button(frame, L.GOLD_BTN_RESERVES, BUTTON_WIDTH, function()
-		run("gold reserves")
-	end)
-	tab.reserves:SetPoint("LEFT", tab.undo, "RIGHT", BUTTON_GAP, 0)
 	tab.checkButton = button(frame, L.GOLD_BTN_CHECK, CHECK_BOX_WIDTH, function()
 		tab:CheckPurchase()
 	end)
@@ -167,7 +163,6 @@ function GoldTab.Create(parent)
 	buildNewRow(tab, frame)
 	tab.sourcesText = createText(frame, "GameFontDisableSmall", SOURCES_Y, "BOTTOMLEFT")
 	tab.incomeText = createText(frame, "GameFontHighlightSmall", INCOME_Y, "BOTTOMLEFT")
-	tab.reservesText = createText(frame, "GameFontHighlightSmall", RESERVES_Y, "BOTTOMLEFT")
 	Widgets.InitRefresh(tab, REFRESH_SIGNALS)
 	return tab
 end
@@ -218,7 +213,6 @@ function Tab:RefreshBuffer()
 	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
 	local canWrite = charData ~= nil and not ns.readOnly
 	Widgets.SetEnabled(self.distribute, canWrite)
-	Widgets.SetEnabled(self.reserves, canWrite)
 	Widgets.SetEnabled(self.undo, canWrite and GoldCommands.CanUndo())
 	Widgets.SetEnabled(self.create, canWrite)
 	if not charData then
@@ -233,7 +227,6 @@ function Tab:RefreshBuffer()
 	self.header:SetText(#goals > 0 and L.GOLD_ROWS_HEADER or L.GOLD_NO_GOALS_WINDOW)
 	self.incomeText:SetText(GoldCommands.IncomeLine(charData))
 	self.sourcesText:SetText(GoldCommands.SourcesLine(charData) or "")
-	self.reservesText:SetText(ns.db.settings.useReservesInSourcing and L.GOLD_RESERVES_USED or L.GOLD_RESERVES_KEPT)
 end
 
 function Tab:CreateGoal()

@@ -115,7 +115,6 @@ local function printOverview(charData)
 	if sources then
 		Log.Print(sources)
 	end
-	Log.Print(ns.db.settings.useReservesInSourcing and L.GOLD_RESERVES_USED or L.GOLD_RESERVES_KEPT)
 end
 
 -- Subcommands that change data: function(charData, rest).
@@ -199,12 +198,6 @@ function WRITE.undo(charData)
 	undoSnapshot = nil
 	Log.Print(L.GOLD_UNDONE)
 	Log.Print(GoldCommands.OverviewLine(charData))
-end
-
-function WRITE.reserves()
-	local settings = ns.db.settings
-	settings.useReservesInSourcing = not settings.useReservesInSourcing
-	Log.Print(settings.useReservesInSourcing and L.GOLD_RESERVES_USED or L.GOLD_RESERVES_KEPT)
 end
 
 local function check(charData, rest)

@@ -31,14 +31,15 @@ Settings.SCHEMA = {
 	{ key = "priceMaxAgeDays", type = "number", default = 7, min = 1, max = 60, group = "MATERIAL", label = "SET_PRICE_AGE" },
 	{ key = "useAuctionator", type = "boolean", default = true, group = "MATERIAL", label = "SET_USE_AUCTIONATOR" },
 	{ key = "priceKeepDays", type = "number", default = 60, min = 0, max = 365, group = "MATERIAL", label = "SET_PRICE_KEEP" },
-	{ key = "useReservesInSourcing", type = "boolean", default = true, group = "GOLD", label = "SET_USE_RESERVES" },
+	-- What one hour of farming is worth when choosing the cheapest way (Core/WantPlan.lua); 0 = the gold per
+	-- hour of the best measured farm route.
+	{ key = "hourValueGold", type = "number", default = 0, min = 0, max = 10000, group = "GOLD", label = "SET_HOUR_VALUE" },
 	{ key = "goldAutoDistribute", type = "boolean", default = false, group = "GOLD", label = "SET_AUTO_DISTRIBUTE" },
 	{ key = "goldMerchantHint", type = "boolean", default = true, group = "GOLD", label = "SET_MERCHANT_HINT" },
 	{ key = "ahDiscountPercent", type = "number", default = 25, min = 0, max = 100, group = "GOLD", label = "SET_AH_DISCOUNT" },
 	{ key = "goldReserveWarning", type = "boolean", default = true, group = "GOLD", label = "SET_RESERVE_WARNING" },
 	{ key = "tooltipEnabled", type = "boolean", default = true, group = "DISPLAY", label = "SET_TOOLTIP" },
 	{ key = "auctionHint", type = "boolean", default = true, group = "DISPLAY", label = "SET_AUCTION_HINT" },
-	{ key = "questAlternatives", type = "boolean", default = true, group = "DISPLAY", label = "SET_QUEST_ALTERNATIVES" },
 	{ key = "minimapButton", type = "boolean", default = true, group = "DISPLAY", label = "SET_MINIMAP" },
 	{ key = "minimapAngle", type = "number", default = 225, min = 0, max = 359, group = "DISPLAY", label = "SET_MINIMAP_ANGLE" },
 	{ key = "loginSummary", type = "boolean", default = true, group = "DISPLAY", label = "SET_LOGIN_SUMMARY" },

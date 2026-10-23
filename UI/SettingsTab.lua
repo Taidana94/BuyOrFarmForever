@@ -1,6 +1,7 @@
 -- Settings tab of the main window: one check box or number box per schema entry
--- (Core/Settings.lua), grouped in two columns, plus debug mode, the performance output and a
--- reset with confirmation. Every change runs /bof set (or debug/perf/reset), like the chat.
+-- (Core/Settings.lua), grouped in two columns, the character's stat weights for the gear rating (with
+-- the suggestion for class and talents), plus debug mode, the performance output and a reset with
+-- confirmation. Every change runs /bof set (or weights/debug/perf/reset), like the chat.
 local _, ns = ...
 
 local L = ns.L
@@ -17,6 +18,8 @@ local COLUMN_WIDTH = 370
 local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 24, 20, 8
 local BOX_WIDTH, LABEL_GAP = 44, 6
 local BUTTON_WIDTH, BUTTON_GAP = 160, 10
+local WEIGHTS_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP, SUGGEST_WIDTH = 30, 32, 6, 100
+local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi", ARMOR = "armor", DPS = "dps" }
 local REFRESH_SIGNALS = { "DATA_CHANGED", "SETTINGS_CHANGED" }
 
 local Tab = {}
@@ -74,6 +77,31 @@ local function buildColumn(tab, frame, groups, x)
 	end
 end
 
+-- "Gewichte: Stä [1] Bew [1] … [Vorschlag]" above the bottom row.
+local function buildWeights(tab, frame)
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	label:SetPoint("BOTTOMLEFT", 0, WEIGHTS_Y)
+	label:SetText(L.CRAFT_WEIGHTS_LABEL)
+	tab.weightBoxes = {}
+	local previous = label
+	for _, stat in ipairs(ns.CraftEval.STATS) do
+		local name = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+		name:SetPoint("LEFT", previous, "RIGHT", WEIGHT_GAP * 2, 0)
+		name:SetText(L["STAT_SHORT_" .. stat])
+		local box = Inputs.CreateBox(frame, { width = WEIGHT_BOX_WIDTH, onCommit = function(text)
+			run("weights " .. STAT_WORDS[stat] .. " " .. text)
+		end })
+		box:SetPoint("LEFT", name, "RIGHT", WEIGHT_GAP, 0)
+		tab.weightBoxes[stat] = box
+		previous = box
+	end
+	tab.suggest = Widgets.CreateButton(frame, L.SET_WEIGHTS_SUGGEST, SUGGEST_WIDTH)
+	tab.suggest:SetPoint("LEFT", previous, "RIGHT", WEIGHT_GAP * 2, 0)
+	tab.suggest:SetScript("OnClick", function()
+		run("weights suggest")
+	end)
+end
+
 local function buildBottom(tab, frame)
 	tab.debug = Widgets.CreateCheck(frame, L.SET_DEBUG, function()
 		run("debug")
@@ -101,6 +129,7 @@ function SettingsTab.Create(parent)
 	for i, groups in ipairs(COLUMNS) do
 		buildColumn(tab, frame, groups, (i - 1) * COLUMN_WIDTH)
 	end
+	buildWeights(tab, frame)
 	buildBottom(tab, frame)
 	Widgets.InitRefresh(tab, REFRESH_SIGNALS)
 	return tab
@@ -119,6 +148,11 @@ function Tab:Refresh()
 	for key, box in pairs(self.boxes) do
 		Inputs.SetValue(box, tostring(settings[key]))
 	end
+	local charData = ns.charKey and ns.db.characters[ns.charKey]
+	for stat, box in pairs(self.weightBoxes) do
+		Inputs.SetValue(box, charData and ns.Util.FormatCompact(charData.craftEval.weights[stat]) or "")
+	end
+	Widgets.SetEnabled(self.suggest, canWrite and charData ~= nil)
 	self.debug:SetChecked(settings.debug)
 	Widgets.SetEnabled(self.reset, canWrite)
 end

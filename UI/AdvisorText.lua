@@ -52,10 +52,6 @@ local function itemText(s)
 	return s.itemID and UIShared.ItemText(s.itemID) or L.UNKNOWN_VALUE
 end
 
-local function craftName(entry)
-	return entry.itemID and UIShared.ItemText(entry.itemID) or UIShared.GoalName(entry.goal)
-end
-
 local function sellDetail(s, context)
 	if s.freeSlots then
 		return Util.Format(L.ADVISOR_BAGS_FULL, s.freeSlots)
@@ -95,7 +91,7 @@ local TEXTS = {
 		if s.more > 0 then
 			detail = Util.Format(L.ADVISOR_CRAFT_MORE, detail, s.more)
 		end
-		return Util.Format(L.ADVISOR_CRAFT, s.count, craftName(s)), detail
+		return Util.Format(L.ADVISOR_CRAFT, s.count, itemText(s)), detail
 	end,
 	BAGS_FULL = function(s)
 		return Util.Format(L.ADVISOR_BAGS_FULL, s.count), L.ADVISOR_BAGS_FULL_DETAIL
@@ -119,7 +115,7 @@ local TEXTS = {
 		return Util.Format(L.ADVISOR_MAIL_ASK, s.name, s.count, itemText(s)), Util.Format(L.ADVISOR_MAIL_ASK_DETAIL, s.name)
 	end,
 	CRAFT_NOW = function(s)
-		return Util.Format(L.ADVISOR_CRAFT_NOW, s.count, s.itemID and itemText(s) or UIShared.GoalName(s.goal)),
+		return Util.Format(L.ADVISOR_CRAFT_NOW, s.count, itemText(s)),
 			L.ADVISOR_CRAFT_NOW_DETAIL
 	end,
 	COOLDOWN_READY = function(s)
@@ -215,7 +211,7 @@ local TIPS = {
 	SUM_CRAFT = function(s, lines)
 		for _, entry in ipairs(s.entries or {}) do
 			local value = craftValue(entry)
-			lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT, entry.crafts, craftName(entry),
+			lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT, entry.crafts, itemText(entry),
 				value ~= "" and value or L[CRAFT_REASONS[entry.reason]])
 			if entry.saleVendor then
 				lines[#lines + 1] = Util.Format(L.ADVISOR_TIP_CRAFT_PARTS, Money.Format(entry.saleVendor),

@@ -27,7 +27,7 @@ local function context()
 	if not realmKey then
 		return nil
 	end
-	return db, realmKey, ns.Materials.CollectTrackedItems(db, trackedScratch)
+	return db, realmKey, ns.Wants.TrackedItems(db, trackedScratch)
 end
 
 function PriceCapture.CurrentRealmKey()
@@ -100,14 +100,17 @@ function PriceCapture.IsAuctionOpen()
 	return auctionOpen
 end
 
--- Items of the current character's goals that are still missing, in goal order.
-local function missingItems(charData)
-	local list = {}
-	for _, row in ipairs(ns.Stock.Rows(charData, ns.Materials.AllGoals(charData))) do
-		if row.missing > 0 then
-			list[#list + 1] = row.itemID
+-- Items the current character's plan may buy (wanted items and the reagents that could make them)
+-- without a current price, in id order.
+local function missingItems()
+	local list, now = {}, ns.Client:GetServerTime()
+	for itemID in pairs(ns.Wants.TrackedItems(ns.db, {}, { [ns.charKey] = true })) do
+		local price, _, _, outdated = PriceCapture.Best(itemID, now)
+		if not price or outdated then
+			list[#list + 1] = itemID
 		end
 	end
+	table.sort(list)
 	return list
 end
 
@@ -118,8 +121,7 @@ function PriceCapture.ScanNext()
 	if not auctionOpen then
 		return nil, "no_auction"
 	end
-	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
-	local list = charData and missingItems(charData) or {}
+	local list = ns.db and ns.charKey and ns.db.characters[ns.charKey] and missingItems() or {}
 	for position, itemID in ipairs(list) do
 		if not scanned[itemID] then
 			if not ns.Client:CanQueryAuction() then

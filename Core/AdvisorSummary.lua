@@ -59,7 +59,7 @@ local function withValue(entry, value)
 	return entry
 end
 
--- Craft entries: ready goals of learned recipes, ready cooldowns (with their value when priced and
+-- Craft entries: planned crafts with all reagents in the bags, ready cooldowns (with their value when priced and
 -- profitable), then profitable recipes whose reagents are in the bags, then those to buy or farm for.
 local function craftEntries(env, tasks)
 	local cooldownValue = {}
@@ -69,7 +69,7 @@ local function craftEntries(env, tasks)
 	local entries, buy = {}, {}
 	for _, s in ipairs(Sources.CraftNow(env)) do
 		local value = s.kind == "COOLDOWN_READY" and cooldownValue[s.itemID] or {}
-		entries[#entries + 1] = withValue({ reason = s.kind, itemID = s.itemID, goal = s.goal, crafts = s.count or 1 },
+		entries[#entries + 1] = withValue({ reason = s.kind, itemID = s.itemID, crafts = s.count or 1 },
 			value)
 	end
 	for _, task in ipairs(tasks) do
@@ -108,7 +108,7 @@ local function craftRow(env)
 			count = unpriced })
 	end
 	local row = withValue({ entries = entries, waiting = waiting, reason = first.reason, itemID = first.itemID,
-		goal = first.goal, count = first.crafts, more = #entries - 1 }, first)
+		count = first.crafts, more = #entries - 1 }, first)
 	return Sources.Suggestion(env, "SUM_CRAFT", row)
 end
 

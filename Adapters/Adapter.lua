@@ -64,7 +64,6 @@ Adapter.REQUIRED = {
 	"HookItemTooltips", -- (callback(tooltip, itemID)) -> nil: post-hook on item tooltips, call once
 	"GetMerchantFrame", -- () -> the client's merchant frame (to anchor a hint), or nil
 	"HookLinkInsert", -- (callback(itemID)) -> nil: shift-clicked items while no chat input is open; call once
-	"GetQuestRewards", -- () -> { title, items = { itemID } } of the open quest frame, or nil
 	"GetMinimap", -- () -> the client's minimap frame (to attach a button), or nil
 	"HasExternalPrices", -- () -> bool: a price addon with a supported API is loaded (Auctionator)
 	"GetExternalPrice", -- (itemID) -> copper, ageDays (nil = unknown) | nil, nil, error | nil
@@ -83,7 +82,7 @@ Adapter.REQUIRED = {
 -- MERCHANT_OPENED, MERCHANT_CHANGED, MERCHANT_CLOSED, AUCTION_OPENED, AUCTION_CLOSED, AUCTION_RESULTS,
 -- LOOT_OPENED, LOOT_CLOSED, LOGOUT, MONEY_CHANGED, EQUIPMENT_CHANGED, MAIL_OPENED, MAIL_CLOSED,
 -- TRADE_OPENED, TRADE_CLOSED, COMBAT_STARTED, PLAYER_FLAGS_CHANGED, RESTING_CHANGED, CONTROL_LOST,
--- CONTROL_GAINED, QUEST_OFFERED, QUEST_REWARDS, QUEST_CLOSED, TRAINER_OPENED, TRAINER_CLOSED.
+-- CONTROL_GAINED, QUEST_REWARDS, QUEST_CLOSED, TRAINER_OPENED, TRAINER_CLOSED.
 -- Internal signal (no WoW event): DATA_CHANGED, raised after every registered slash command.
 
 -- Returns true, or false plus a list of missing field names.

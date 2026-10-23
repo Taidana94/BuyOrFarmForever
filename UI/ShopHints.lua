@@ -3,8 +3,8 @@
 --   red once purchases reach the reserves;
 -- * reserve warning (goldReserveWarning): one chat line per merchant visit when the gold drops
 --   below the reserves;
--- * auction house (auctionHint): one chat line per visit naming how many missing materials of
---   the selected goal have no current price (the AH scan button in the Material tab finds them).
+-- * auction house (auctionHint): one chat line per visit naming how many items the plan of the
+--   wants still needs have no current price (the AH scan button in the Wants tab finds them).
 -- The gold signal is registered only while a merchant is open.
 local _, ns = ...
 
@@ -85,13 +85,13 @@ local function onMerchantClosed()
 	Events.OffSignal("MONEY_CHANGED", updateMerchant)
 end
 
--- Missing materials of the selected goal without a current price.
-function ShopHints.UnpricedMissing(data)
-	local goal = ns.Materials.GetActiveGoal(data)
+-- Items of the plan still to get (buy, farm or open) without a current price.
+function ShopHints.UnpricedMissing()
+	local plan = ns.WantPlan.Current()
 	local count, now = 0, ns.Client:GetServerTime()
-	for _, row in ipairs(goal and ns.Stock.Rows(data, { goal }) or {}) do
-		local price, _, _, outdated = ns.PriceCapture.Best(row.itemID, now)
-		if row.missing > 0 and (not price or outdated) then
+	for itemID in pairs(plan and ns.WantPlan.ToGet(plan) or {}) do
+		local price, _, _, outdated = ns.PriceCapture.Best(itemID, now)
+		if not price or outdated then
 			count = count + 1
 		end
 	end
@@ -103,7 +103,7 @@ local function onAuctionOpened()
 	if not (data and ns.db.settings.auctionHint) then
 		return
 	end
-	local count = ShopHints.UnpricedMissing(data)
+	local count = ShopHints.UnpricedMissing()
 	if count > 0 then
 		Log.Print(Util.Format(L.AUCTION_HINT, count))
 	end

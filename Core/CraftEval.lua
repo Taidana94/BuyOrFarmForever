@@ -1,6 +1,6 @@
--- Craft evaluation: compares an item (the output of a recipe goal, or any item) with the gear the
--- character wears, using the character's stat weights, and puts the gain next to the sourcing
--- cost and farm time, the value of materials already owned and planned or possible alternatives.
+-- Gear rating: compares an item (a crafted or wanted item, or any item) with the gear the character
+-- wears, using the character's stat weights (shown in the professions detail, the item tooltip of
+-- wanted gear and /bof craft <item>).
 -- Rated stats: STR, AGI, STA, INT, SPI, ARMOR (points) and DPS (weapon damage per second); procs,
 -- other effects and set bonuses are not rated. ARMOR and DPS weigh 0 unless a template or the
 -- player sets them, so evaluations from before 0.5.0 stay the same.
@@ -12,8 +12,6 @@ ns.CraftEval = CraftEval
 
 CraftEval.STATS = { "STR", "AGI", "STA", "INT", "SPI", "ARMOR", "DPS" }
 CraftEval.MAX_WEIGHT = 10
-CraftEval.MAX_ALTERNATIVES = 20
-CraftEval.KINDS = { PLANNED = true, POSSIBLE = true }
 
 local STAT_SET = {}
 for _, stat in ipairs(CraftEval.STATS) do
@@ -87,116 +85,6 @@ function CraftEval.LevelLock(itemID)
 	return nil
 end
 
--- The crafted item of a goal created from a recipe, or nil (enchantments, manual goals).
-function CraftEval.GoalItemID(goal)
-	local recipe = goal.recipeKey and ns.Recipes.Get(ns.db, goal.recipeKey)
-	if recipe and recipe.outputItemID ~= 0 then
-		return recipe.outputItemID
-	end
-	return nil
-end
-
--- Value of the goal's materials the character already has (bags and bank, up to the need):
--- { vendor = copper (sell to a merchant), market = copper (planning price) or nil, complete }.
--- complete = false if a sell price or a market price is missing for an owned material.
-function CraftEval.OwnedValue(charData, goal, realmKey, now)
-	local value = { vendor = 0, market = 0, complete = true, owned = 0 }
-	local maxAge = ns.db.settings.priceMaxAgeDays
-	for _, row in ipairs(ns.Stock.Rows(charData, { goal })) do
-		local have = math.min(row.need, row.bags + (row.bank or 0))
-		if have > 0 then
-			value.owned = value.owned + have
-			local sell = ns.Client:GetSellPrice(row.itemID)
-			local market = ns.Prices.Best(ns.db, realmKey, row.itemID, now, maxAge, ns.PriceCapture.External(row.itemID, now))
-			value.vendor = value.vendor + have * (sell or 0)
-			value.market = value.market + have * (market or 0)
-			if not (sell and market) then
-				value.complete = false
-			end
-		end
-	end
-	return value
-end
-
--- Alternatives ---------------------------------------------------------------------------
-
--- Adds an alternative item: kind "PLANNED" (e.g. a quest reward you will get) or "POSSIBLE"
--- (an uncertain drop). The note is user text. Returns the new index, or nil plus an error code.
-function CraftEval.AddAlternative(charData, itemID, kind, note, now)
-	local list = charData.craftEval.alternatives
-	if not ns.Materials.IsValidItemID(itemID) then
-		return nil, "invalid_item"
-	end
-	if not CraftEval.KINDS[kind] then
-		return nil, "invalid_kind"
-	end
-	if #list >= CraftEval.MAX_ALTERNATIVES then
-		return nil, "too_many_alternatives"
-	end
-	list[#list + 1] = { itemID = itemID, kind = kind, note = CraftEval.CleanNote(note), at = now or 0 }
-	return #list
-end
-
-function CraftEval.RemoveAlternative(charData, index)
-	local list = charData.craftEval.alternatives
-	if not list[index] then
-		return false
-	end
-	table.remove(list, index)
-	return true
-end
-
--- Changes whether alternative `index` is planned or a possible drop. Returns true, or nil plus
--- "alternative_not_found" | "invalid_kind".
-function CraftEval.SetAlternativeKind(charData, index, kind)
-	local alt = charData.craftEval.alternatives[index]
-	if not alt then
-		return nil, "alternative_not_found"
-	end
-	if not CraftEval.KINDS[kind] then
-		return nil, "invalid_kind"
-	end
-	alt.kind = kind
-	return true
-end
-
--- Optional details of an alternative, all set by the user: cost in copper, time effort in
--- seconds and the requirements as text. Absent fields mean "unknown".
-local DETAIL_CHECKS = {
-	copper = function(value)
-		return type(value) == "number" and value >= 0 and value <= ns.Money.MAX_COPPER
-	end,
-	seconds = function(value)
-		return type(value) == "number" and value >= 0 and value <= ns.Util.MAX_DURATION_SECONDS
-	end,
-	requires = function(value)
-		return type(value) == "string" and value ~= ""
-	end,
-}
-
--- Sets detail `field` ("copper", "seconds" or "requires") of alternative `index`; nil clears it.
--- Returns true, or nil plus "alternative_not_found" / "invalid_value".
-function CraftEval.SetAlternativeDetail(charData, index, field, value)
-	local alt = charData.craftEval.alternatives[index]
-	if not alt then
-		return nil, "alternative_not_found"
-	end
-	assert(DETAIL_CHECKS[field], "unknown alternative detail")
-	if field == "requires" and value ~= nil then
-		value = CraftEval.CleanNote(value)
-	end
-	if value ~= nil and not DETAIL_CHECKS[field](value) then
-		return nil, "invalid_value"
-	end
-	alt[field] = value
-	return true
-end
-
--- Notes are user text: same cleaning and length limit as goal labels.
-function CraftEval.CleanNote(note)
-	return ns.Materials.CleanLabel(note)
-end
-
 -- Validation of stored craft evaluation data (registered with DB.VALIDATORS).
 local function sanitizeWeights(weights, path, repairs)
 	for _, stat in ipairs(CraftEval.STATS) do
@@ -208,40 +96,8 @@ local function sanitizeWeights(weights, path, repairs)
 	end
 end
 
-local function validAlternative(alt)
-	return type(alt) == "table" and ns.Materials.IsValidItemID(alt.itemID) and CraftEval.KINDS[alt.kind] == true
-		and type(alt.note) == "string" and type(alt.at) == "number"
-end
-
--- Drops invalid optional details; returns true if something was dropped.
-local function sanitizeDetails(alt)
-	local repaired = false
-	for field, check in pairs(DETAIL_CHECKS) do
-		if alt[field] ~= nil and not check(alt[field]) then
-			alt[field] = nil
-			repaired = true
-		end
-	end
-	return repaired
-end
-
 function CraftEval.Sanitize(charData, path, repairs)
-	local eval = charData.craftEval
-	sanitizeWeights(eval.weights, path .. ".craftEval", repairs)
-	local clean = {}
-	for _, alt in ipairs(eval.alternatives) do
-		if validAlternative(alt) and #clean < CraftEval.MAX_ALTERNATIVES then
-			alt.note = CraftEval.CleanNote(alt.note)
-			if sanitizeDetails(alt) then
-				repairs[#repairs + 1] = path .. ".craftEval.alternatives[" .. (#clean + 1) .. "]"
-			end
-			clean[#clean + 1] = alt
-		end
-	end
-	if #clean ~= #eval.alternatives then
-		repairs[#repairs + 1] = path .. ".craftEval.alternatives"
-	end
-	eval.alternatives = clean
+	sanitizeWeights(charData.craftEval.weights, path .. ".craftEval", repairs)
 end
 
 ns.DB.VALIDATORS[#ns.DB.VALIDATORS + 1] = CraftEval.Sanitize

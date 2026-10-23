@@ -9,6 +9,10 @@ local Log = ns.Log
 local Stock = {}
 ns.Stock = Stock
 
+-- After login, the bags are captured once this many seconds later (the bag data may not be loaded
+-- at login), so a character that only logs in is known to the others too.
+Stock.LOGIN_DELAY_SECONDS = 10
+
 local bankOpen = false
 -- Items seen in the bags while the bank is open: candidates for deposits, recounted on close.
 local seenAtBank = {}
@@ -116,16 +120,16 @@ local function othersOf(charData, itemID)
 	return Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID)
 end
 
--- Requirement rows of the given goals for the current character:
--- { itemID, need, bags, bank (nil = unknown), others (counted), details (OthersFor rows), missing }.
-function Stock.Rows(charData, goals)
-	local rows = ns.Materials.Shortfall(ns.Materials.Requirements(goals), function(itemID)
-		local bags, bank = Stock.Count(itemID)
-		return bags + (bank or 0) + (othersOf(charData, itemID))
-	end)
-	for _, row in ipairs(rows) do
-		row.bags, row.bank = Stock.Count(row.itemID)
-		row.others, row.details = othersOf(charData, row.itemID)
+-- Stock rows of requirements ({ { itemID, need } }, e.g. WantPlan.Requirements) for the current
+-- character: { itemID, need, bags, bank (nil = unknown), others (counted), details (OthersFor rows),
+-- missing }.
+function Stock.Rows(charData, requirements)
+	local rows = {}
+	for i, req in ipairs(requirements) do
+		local bags, bank = Stock.Count(req.itemID)
+		local others, details = othersOf(charData, req.itemID)
+		rows[i] = { itemID = req.itemID, need = req.need, bags = bags, bank = bank, others = others, details = details,
+			missing = math.max(0, req.need - bags - (bank or 0) - others) }
 	end
 	return rows
 end
@@ -177,9 +181,26 @@ function Stock.CaptureCurrent(reason)
 	end
 end
 
+-- The delayed login capture: an empty scan does not replace a stored snapshot with items, in case the
+-- bag data is still missing then.
+local function captureAfterLogin()
+	local charData = currentCharacter()
+	if not charData then
+		return
+	end
+	local scanned = ns.Client:ScanBags({})
+	if next(scanned) == nil and next(charData.stock.bags) ~= nil then
+		return
+	end
+	Stock.CaptureCurrent("login")
+end
+
 if ns.Client then
-	-- Not on login (bag data may not be loaded yet) and not on PLAYER_LOGOUT: in game the
+	-- Not at login itself (bag data may not be loaded yet) and not on PLAYER_LOGOUT: in game the
 	-- counts were already 0 there (Classic Era 70003) and overwrote good snapshots.
+	ns.Events.OnSignal("CHARACTER_READY", function()
+		C_Timer.After(Stock.LOGIN_DELAY_SECONDS, captureAfterLogin)
+	end)
 	ns.Events.OnSignal("BAGS_CHANGED", function()
 		Stock.CaptureCurrent("bags")
 	end)

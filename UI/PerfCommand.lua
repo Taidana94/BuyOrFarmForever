@@ -5,8 +5,6 @@ local L = ns.L
 local Log = ns.Log
 local Util = ns.Util
 local Perf = ns.Perf
-local Materials = ns.Materials
-local Stock = ns.Stock
 local UIShared = ns.UIShared
 
 local PERCENT_DECIMALS = 2
@@ -30,19 +28,18 @@ local function printCPU()
 	Log.Print(Util.Format(L.PERF_CPU, percent(metrics.recent), percent(metrics.average), percent(metrics.peak)))
 end
 
--- Times one recount of all goals of the character (what the window does on a bag change).
+-- Times one new plan of the character's wants (what the window does after a bag change).
 local function printTiming()
 	local charData = UIShared.Character()
 	if not charData then
 		return
 	end
-	local goals = Materials.AllGoals(charData)
-	local rows
 	local ms = Perf.Measure(function()
-		rows = Stock.Rows(charData, goals)
+		ns.WantPlan.Invalidate()
+		ns.WantPlan.Current()
 	end)
 	local msText = ms and Util.FormatDecimal(ms, MS_DECIMALS) or L.PERF_UNAVAILABLE
-	Log.Print(Util.Format(L.PERF_TIMING, msText, #rows))
+	Log.Print(Util.Format(L.PERF_TIMING, msText, #charData.wants))
 end
 
 local function perfCommand()

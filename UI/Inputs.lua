@@ -59,11 +59,6 @@ function Inputs.SetValue(box, text)
 	end
 end
 
--- True if the committed text differs from the shown value (nothing to do otherwise).
-function Inputs.Changed(box, text)
-	return ns.Util.Trim(text) ~= ns.Util.Trim(box.value)
-end
-
 local function showSlotTooltip(slot)
 	GameTooltip:SetOwner(slot, "ANCHOR_RIGHT")
 	if slot.itemID then

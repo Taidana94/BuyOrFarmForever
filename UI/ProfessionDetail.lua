@@ -1,6 +1,7 @@
 -- Detail panel of the professions tab: the selected recipe's product, category and skill-up chance,
 -- its reagents (bags / need, bank on top), how often the bags allow it, what one craft costs and
--- brings, and a button that makes a material goal of it. Widgets are created once and refilled.
+-- brings, the rating of gear against the equipped items, and a button that adds the product to the
+-- wants. Widgets are created once and refilled.
 local _, ns = ...
 
 local L = ns.L
@@ -17,7 +18,7 @@ local PANEL_GAP, PADDING = 16, 12
 local ICON_SIZE, TITLE_X = 36, 56
 local REAGENTS_Y, REAGENT_HEIGHT, REAGENT_ICON = -64, 22, 20
 local REAGENT_COUNT_WIDTH, REAGENT_NAME_X = 70, 26
-local BOTTOM_LINES, LINE_GAP, BOTTOM_Y = 4, 4, 40
+local BOTTOM_LINES, LINE_GAP, BOTTOM_Y = 5, 4, 40
 local GOAL_BUTTON_WIDTH, GOAL_BUTTON_LIFT = 140, 4
 local BACKGROUND = { 0, 0, 0, 0.3 }
 -- Icon of enchantments (no product item); also used by the list rows.
@@ -220,6 +221,8 @@ local function fillEconomics(detail, row, now)
 	detail.lines[3]:SetText(hasItem and Util.Format(L.PROF_VALUE, money(economics.vendor), money(economics.auction)) or "")
 	local text, color = profitLine(economics)
 	Widgets.SetText(detail.lines[4], hasItem and text or "", color)
+	local charData = ns.db.characters[ns.charKey]
+	detail.lines[5]:SetText(hasItem and ns.CraftCommands.GearLine(charData, row.recipe.outputItemID) or "")
 end
 
 -- Shows a row of ProfessionView.Build (plus categoryLabel), or the empty hint for nil.

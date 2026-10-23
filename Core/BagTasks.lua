@@ -18,15 +18,10 @@ local SECONDS = {
 }
 local PER_ITEM = { DISENCHANT = true }
 
--- Item IDs used by the character's goals (never suggested for selling).
-local function goalMaterials(charData)
-	local set = {}
-	for _, goal in ipairs(ns.Materials.AllGoals(charData)) do
-		for _, entry in ipairs(goal.items) do
-			set[entry.itemID] = true
-		end
-	end
-	return set
+-- Wanted items of the logged-in character and the reagents that could make them (never suggested
+-- for selling).
+local function goalMaterials()
+	return ns.Wants.TrackedItems(ns.db, {}, { [ns.charKey] = true })
 end
 
 -- Ways out for one unit of a stack: { { kind, sure, auction } }.
@@ -80,7 +75,7 @@ end
 -- kind. gains: rated copper the stacks bring this way more than the second best way (for disenchanting:
 -- more than selling).
 function BagTasks.Collect(charData, now, discountPercent)
-	local skip = goalMaterials(charData)
+	local skip = goalMaterials()
 	local canDisenchant = ns.Client:KnowsDisenchant()
 	local byKind = {}
 	for _, stack in ipairs(ns.Client:ListBagStacks()) do

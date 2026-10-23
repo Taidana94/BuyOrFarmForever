@@ -25,7 +25,7 @@ local function currentRun()
 	return ns.db.characters[ns.charKey].currentRun
 end
 
--- Right click / key binding: pause or resume the run; without a run (or in review) open the Farm tab.
+-- Right click / key binding: pause or resume the run; without a run open the farm window.
 function MinimapButton.ToggleFarmRun()
 	local run = currentRun()
 	if FarmRuns.IsRunning(run) then
@@ -33,8 +33,7 @@ function MinimapButton.ToggleFarmRun()
 	elseif run and run.state == "PAUSED" then
 		ns.Slash.Handle("farm resume")
 	else
-		ns.MainWindow.Show()
-		ns.MainWindow.SelectTab("FARM")
+		ns.FarmWindow.Show()
 	end
 end
 

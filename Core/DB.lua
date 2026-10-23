@@ -7,10 +7,10 @@ local Util = ns.Util
 local DB = {}
 ns.DB = DB
 
-DB.SCHEMA_VERSION = 1
+DB.SCHEMA_VERSION = 2
 
 DB.DEFAULTS = {
-	schemaVersion = 1,
+	schemaVersion = 2,
 	meta = {
 		client = "",
 		createdAt = 0,
@@ -19,18 +19,14 @@ DB.DEFAULTS = {
 	-- User settings with a schema entry (Core/Settings.lua) are added there.
 	settings = {
 		debug = false,
-		strategy = "SAVE_TIME",
 		farmEstimateScope = "CHARACTER",
-		budgetCopper = 0, -- 0: plan with the character's current gold
-		farmTimeLimitMinutes = 0, -- 0: no farm time limit in the sourcing plan
 		advisorWindow = { point = "CENTER", x = 420, y = 40 },
 		farmWindow = { point = "CENTER", x = 0, y = -260 },
 		window = {
 			point = "CENTER",
 			x = 0,
 			y = 0,
-			tab = "MATERIAL",
-			allGoals = false,
+			tab = "WANTS",
 			profession = "", -- professions tab: selected profession key ("" = the first one)
 			professionMats = "ALL", -- professions tab: reagent filter
 		},
@@ -50,12 +46,9 @@ DB.CHARACTER_DEFAULTS = {
 		bagsAt = 0,
 		bankAt = 0,
 	},
-	materialGoals = {},
-	activeGoalID = 0,
-	nextGoalID = 1,
+	wants = {}, -- { { itemID, count, createdAt } } (Core/Wants.lua)
 	craftEval = {
 		weights = { STR = 1, AGI = 1, STA = 1, INT = 1, SPI = 1, ARMOR = 0, DPS = 0 },
-		alternatives = {},
 	},
 	savingsGoals = {},
 	income = {},
@@ -67,18 +60,16 @@ DB.CHARACTER_DEFAULTS = {
 
 -- Allowed values for enum-like fields, by path.
 DB.ENUMS = {
-	["settings.strategy"] = { SAVE_TIME = true, SAVE_GOLD = true, FARM_SELF = true },
 	["settings.farmEstimateScope"] = { CHARACTER = true, ACCOUNT = true },
 	["settings.window.tab"] = {
-		MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, PROFESSIONS = true, GOLD_BUFFER = true,
-		SETTINGS = true, HELP = true,
+		WANTS = true, FARM = true, PROFESSIONS = true, GOLD_BUFFER = true, SETTINGS = true, HELP = true,
 	},
 	["settings.window.professionMats"] = { ALL = true, SOME = true, COMPLETE = true },
 }
 
 -- Minimum and maximum values for numeric fields, by path (filled by Core/Settings.lua).
-DB.MIN = { ["settings.farmTimeLimitMinutes"] = 0 }
-DB.MAX = { ["settings.farmTimeLimitMinutes"] = 1440 }
+DB.MIN = {}
+DB.MAX = {}
 
 -- DB.MIGRATIONS[n](db) upgrades a database from schema n to n + 1 in place.
 -- New fields with defaults need no migration: mergeDefaults adds them on load.

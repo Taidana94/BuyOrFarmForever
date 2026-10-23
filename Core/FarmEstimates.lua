@@ -60,27 +60,17 @@ function FarmEstimates.TimeFor(basis, amount)
 	return seconds, amount / basis.maxRate, amount / basis.minRate
 end
 
-local function addYield(amounts, run, itemID, wanted)
-	for otherID, amount in pairs(run.items) do
-		if otherID ~= itemID and wanted[otherID] then
-			amounts[otherID] = (amounts[otherID] or 0) + amount
-		end
-	end
-end
-
--- Other wanted items that the runs counted for an item yield, per farm second, over the same runs
--- as ForItem (so the rates match its farm time): { [itemID] = units per second }.
--- wanted = { [itemID] = true }. Empty without runs.
-function FarmEstimates.Byproducts(db, itemID, scope, charKey, wanted)
-	local seconds, amounts = 0, {}
+-- The zone where the counted runs yielded the most of an item (uiMapID), or nil without yield.
+function FarmEstimates.MainZone(db, itemID, scope, charKey)
+	local amounts, best = {}, nil
 	for _, run in ipairs(db.farmRuns) do
-		if counts(run, itemID, scope, charKey) then
-			seconds = seconds + run.activeSeconds
-			addYield(amounts, run, itemID, wanted)
+		local amount = counts(run, itemID, scope, charKey) and run.items[itemID] or 0
+		if amount > 0 and run.uiMapID > 0 then
+			amounts[run.uiMapID] = (amounts[run.uiMapID] or 0) + amount
+			if not best or amounts[run.uiMapID] > amounts[best] then
+				best = run.uiMapID
+			end
 		end
 	end
-	for otherID, amount in pairs(amounts) do
-		amounts[otherID] = amount / seconds
-	end
-	return amounts
+	return best
 end
