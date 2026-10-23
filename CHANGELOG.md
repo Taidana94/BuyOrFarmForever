@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.7] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Anleitung:** Reiter „Hilfe“ → „Anleitung“ oder `/bof howto`: wie das Addon seine Daten sammelt
+  (Twinks einloggen, Bank und Briefkasten besuchen, Berufsfenster öffnen, Händler, AH, Auctionator,
+  Preisverlauf, eigene Preise, Farmrouten, Angeln, Ziele). Der Hilfe-Reiter hat dafür drei Knöpfe:
+  Befehle, Anleitung, Über. Dieselbe Anleitung steht im README.
+
 ## [0.11.0-alpha.6] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

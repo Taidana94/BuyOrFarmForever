@@ -55,6 +55,28 @@ Weitere Teile:
 5. Damit das Addon farmen vorschlagen kann, zeichne Farmrunden auf: Farmfenster (`/bof farm` oder
    Rechtsklick auf den Minimap-Knopf), „Start“ im Farmgebiet, „Beenden“ zum Speichern.
 
+## So sammelt das Addon seine Daten
+
+Fast alles läuft automatisch. Damit die Vorschläge gut werden, hilft Folgendes
+(im Spiel: Reiter „Hilfe“ → „Anleitung“ oder `/bof howto`):
+
+| Daten | Was du tun solltest |
+|---|---|
+| Twinks | Jeden Charakter einmal einloggen (gezählt: gleicher Realm, gleiche Fraktion). |
+| Taschen | Nichts – automatisch bei jeder Änderung und nach dem Einloggen. |
+| Bank | Einmal pro Charakter die Bank besuchen; danach bei jedem Besuch aktualisiert. |
+| Post | Briefkasten öffnen – Gegenstände und Gold in der Post werden gemerkt. |
+| Gold | Nichts – beim Einloggen und bei jeder Änderung. |
+| Rezepte und Berufe | Jedes Berufsfenster einmal öffnen (auch Verzauberkunst); nach neuen Rezepten erneut öffnen. |
+| Händlerpreise | Händler ansprechen – Kaufpreise für Ziele und Rezepte werden gespeichert. Verkaufspreise kennt das Spiel. |
+| Auktionshaus | Im AH suchen, oder Knopf „AH-Scan“ bzw. `/bof price scan` für fehlende Preise. |
+| Auctionator | Optional, empfohlen: dessen Preise werden live gelesen (Einstellung „Preise von Auctionator verwenden“). |
+| Preisverlauf | Jede AH-Suche zählt; ab 3 Tagen erkennt der Goldplaner günstige Angebote zum Weiterverkaufen. |
+| Eigene Preise | `/bof price <Gegenstand> <Preis>` für Dinge, die nie im AH oder beim Händler auftauchen. |
+| Farmrouten | Einfach farmen: Die Runde startet beim ersten Loot außerhalb von Städten und endet nach der Leerlaufzeit. Eine Route braucht mindestens 10 Min. |
+| Angeln | Wird automatisch erkannt und als eigene Route gespeichert. |
+| Ziele | Gegenstand ins Feld im Reiter „Ziele“ ziehen; ab dann werden seine Preise und Zutaten mit erfasst. |
+
 ## Befehle
 
 Alles hier geht auch im Fenster; die Befehle bleiben für alle, die lieber tippen. Statt `/bof`
@@ -324,7 +346,7 @@ Entwickelt von **Taidana** aka **zuerich3**. Im Spiel: Reiter „Hilfe“ → �
 
 ## Version
 
-0.11.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.11.0-alpha.7 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
