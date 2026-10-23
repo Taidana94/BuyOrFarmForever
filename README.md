@@ -442,7 +442,8 @@ bestätigt). Bergbau, Alchemie, Lederverarbeitung, Schmiedekunst und Ingenieursk
 Spiel geprüft. `/bof perf`: 1640 KB Speicher, Durchschnitt 0,01 %, Spitze 7,54 % der Frame-Zeit. Die
 Version 0.8.0 unterscheidet sich von 0.8.0-alpha.1 durch eine kleine Absicherung beim
 Fertigkeitsbalken und eine Korrektur, die du im Spiel gefunden hast: Zutaten aus der Tasche zählen jetzt
-mit ihrem Verkaufswert statt mit dem Kaufpreis. Diese Korrektur ist nur außerhalb des Spiels geprüft.
+mit ihrem Verkaufswert statt mit dem Kaufpreis. Die Korrektur wurde am 23.10.2026 im Spiel bestätigt
+(Leinenstoffballen: Werte stimmen mit den Preisen von Auctionator überein).
 
 **Nicht in Forever getestet.**
 

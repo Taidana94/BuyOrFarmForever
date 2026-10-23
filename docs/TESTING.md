@@ -293,6 +293,14 @@ on 2026-10-19 (no `/reload` since), so they could not be checked. Follow-up (not
 the peak after `/reload` with the window closed, then after opening the tab once, and memory after
 `/run collectgarbage("collect")`.
 
+### Result 0.8.0 fix: owned reagents (Classic Era, 2026-10-23)
+
+Screenshots of the user (linen bolt, 37 linen in the bags, Auctionator open): lowest listings linen 27,
+bolt 62. Tab: "Zutaten: 51k (aus der Tasche zum Verkaufswert)" = 2 x 27 x 0.95 = 51.3; "AH 59k (nach
+Gebühr)" = 62 x 0.95 = 58.9; "Gewinn pro Herstellung: 8k" = 7.6; "herstellbar 18x". All values as
+expected. Auctionator suggests posting 1 copper below the lowest listing (61 / 26); the addon uses the
+lowest listing itself. The auction deposit (8 for the bolt) is refunded on sale and not counted.
+
 ### Result 0.8.0-alpha.1 (Classic Era, 2026-10-23)
 
 User checked the professions tab (Cooking, Tailoring, Enchanting, First Aid on the test character) and
