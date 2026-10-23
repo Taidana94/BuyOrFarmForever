@@ -49,6 +49,7 @@ Core\FarmEstimates.lua
 Core\Sourcing.lua
 Core\SourcingPlan.lua
 Core\GoldRoutes.lua
+Core\Acquire.lua
 Core\GoldPlan.lua
 Core\BagTasks.lua
 Core\RecipeBook.lua
