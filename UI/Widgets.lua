@@ -115,6 +115,11 @@ end
 -- Left-aligned text lines below each other, starting at opts.y (from the top of `parent`).
 -- Each line hangs below the previous one, so a line that wraps pushes the following lines
 -- down instead of overlapping them. opts = { count, font, y, width, gap }. Returns the lines.
+-- Frame level bands of the small movable windows (same strata): children are created one or a few
+-- levels above their window, so bands this far apart keep each window's parts together; the active
+-- checklist lies on top, the advisor at the bottom.
+Widgets.WINDOW_LEVELS = { ADVISOR = 10, FARM = 40, PLAN = 70 }
+
 function Widgets.CreateTextStack(parent, opts)
 	local lines = {}
 	for i = 1, opts.count do

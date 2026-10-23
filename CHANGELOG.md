@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.4] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Behoben
+
+- Ratgeber, Farmfenster und „Jetzt tun“ vermischten sich, wenn sie übereinander lagen (Hintergrund des
+  einen hinter, Texte vor dem anderen). Jedes Fenster hat jetzt einen eigenen Höhenbereich: „Jetzt tun“
+  oben, das Farmfenster darunter, der Ratgeber unten.
+
 ## [0.12.0-alpha.3] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

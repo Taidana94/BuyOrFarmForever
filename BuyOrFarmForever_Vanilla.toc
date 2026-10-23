@@ -3,7 +3,7 @@
 ## Notes: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
 ## Author: Taidana (Zuerich3)
 ## Notes-deDE: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
-## Version: 0.12.0-alpha.3
+## Version: 0.12.0-alpha.4
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01

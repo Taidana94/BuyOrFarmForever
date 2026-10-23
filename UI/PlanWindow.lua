@@ -39,6 +39,8 @@ local function buildFrame()
 	frame:SetSize(WIDTH, HEADER_HEIGHT + FOOTER_HEIGHT + ROW_HEIGHT)
 	frame:SetScale(PlanWindow.SCALE)
 	frame:SetFrameStrata("MEDIUM")
+	-- Own frame level band before any child is created, so the small windows never interleave.
+	frame:SetFrameLevel(Widgets.WINDOW_LEVELS.PLAN)
 	frame:SetBackdrop(BACKDROP_DIALOG_32_32)
 	frame:SetMovable(true)
 	frame:EnableMouse(true)

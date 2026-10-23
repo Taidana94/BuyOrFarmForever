@@ -55,6 +55,8 @@ local function buildFrame()
 	frame:SetSize(WIDTH, heightFor(AdvisorWindow.MAX_CARDS))
 	frame:SetScale(AdvisorWindow.SCALE)
 	frame:SetFrameStrata("MEDIUM")
+	-- Own frame level band before any child is created, so the small windows never interleave.
+	frame:SetFrameLevel(Widgets.WINDOW_LEVELS.ADVISOR)
 	frame:SetBackdrop(BACKDROP_DIALOG_32_32)
 	frame:SetMovable(true)
 	frame:EnableMouse(true)
