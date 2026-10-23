@@ -46,6 +46,7 @@ Core\PriceCapture.lua
 Core\FarmCapture.lua
 Core\FarmEstimates.lua
 Core\GoldRoutes.lua
+Core\RouteCache.lua
 Core\Acquire.lua
 Core\WantPlan.lua
 Core\GoldPlan.lua

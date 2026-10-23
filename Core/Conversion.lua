@@ -82,8 +82,7 @@ function Conversion.ConvertOf(charData, now, discount)
 	end
 end
 
--- The methods of the gold plan: the character's farm routes and the routes with crafted loot.
-function Conversion.Methods(charData, now)
+local function buildMethods(charData, now)
 	local routes = ns.GoldRoutes.Current()
 	local discount = ns.db.settings.ahDiscountPercent
 	local crafted = ns.Strategies.CraftedRoutes(routes, Conversion.ConvertOf(charData, now, discount), discount)
@@ -91,4 +90,12 @@ function Conversion.Methods(charData, now)
 		routes[#routes + 1] = route
 	end
 	return routes
+end
+
+-- The methods of the gold plan: the character's farm routes and the routes with crafted loot
+-- (cached by Core/RouteCache.lua).
+function Conversion.Methods(charData, now)
+	return ns.RouteCache.Get("METHODS", function()
+		return buildMethods(charData, now)
+	end)
 end

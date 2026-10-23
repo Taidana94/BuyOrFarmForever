@@ -150,9 +150,13 @@ function GoldRoutes.SaleValue(itemID, now)
 end
 
 -- The route list of the current character with the settings (scope, auction discount); opts as
--- for List (excluded, minSeconds), optional.
+-- for List (excluded, minSeconds), optional. Without opts the list comes from Core/RouteCache.lua.
 function GoldRoutes.Current(opts)
-	opts = opts or {}
+	if not opts then
+		return ns.RouteCache.Get("ROUTES", function()
+			return GoldRoutes.Current({})
+		end)
+	end
 	local now = ns.Client:GetServerTime()
 	local settings = ns.db.settings
 	return GoldRoutes.List(ns.db, {
