@@ -98,6 +98,11 @@ local STEP_TEXTS = {
 	end,
 }
 
+-- Display text of one plan step (also of the steps of an active plan, Core/ActivePlan.lua).
+function GoldPlanCommands.StepText(step)
+	return STEP_TEXTS[step.kind](step)
+end
+
 -- What the plan pays up front, what the free gold did not cover and how many prices it uses are old
 -- ("" when nothing).
 function GoldPlanCommands.CapitalText(plan)

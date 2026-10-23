@@ -3,7 +3,21 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.12.0-alpha.2] – 2026-10-24 (Testversion)
+## [0.12.0-alpha.3] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **„Jetzt tun“:** Im Goldplaner startet „Plan starten“ den Plan für die gewählte Zeit als Checkliste in
+  einem kleinen Fenster. Erledigte Schritte hakt das Addon selbst ab: verkaufte, eingestellte oder
+  entzauberte Items sind aus den Taschen, hergestellte oder im AH gekaufte sind drin, du bist in der Zone
+  der Route, eine Farmrunde dort wurde gespeichert. Ein Klick auf einen Schritt hakt ihn von Hand ab oder
+  auf. Oben stehen Fortschritt und Gold seit dem Start; ist alles erledigt (oder bei „Beenden“), meldet
+  der Chat das Ergebnis gegen den Plan. Im Chat: `/bof plan`, `/bof plan start [Dauer]`,
+  `/bof plan <Nr.>`, `/bof plan stop`.
+
+## [0.12.0-alpha.2] – 2026-10-24 (Testversion, im Spiel bestätigt)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
 

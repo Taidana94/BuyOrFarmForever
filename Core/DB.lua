@@ -22,6 +22,7 @@ DB.DEFAULTS = {
 		farmEstimateScope = "CHARACTER",
 		advisorWindow = { point = "CENTER", x = 420, y = 40 },
 		farmWindow = { point = "CENTER", x = 0, y = -260 },
+		planWindow = { point = "CENTER", x = -420, y = 60 },
 		window = {
 			point = "CENTER",
 			x = 0,

@@ -15,7 +15,7 @@ local Panel = {}
 ns.GoldPlanPanel = Panel
 
 local MAX_STEPS, MAX_SOURCES, MAX_LIST = 8, 4, 10
-local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, GAP = 60, 70, 80, 6
+local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, START_BUTTON_WIDTH, GAP = 60, 70, 80, 110, 6
 -- Views of the lower part, in button order; the view is not stored (the plan shows first).
 local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
 -- The view buttons get their own row: the time row shares its height with the Gold tab's mode buttons.
@@ -71,6 +71,12 @@ local function buildViewButtons(panel, frame)
 		end)
 		panel.viewButtons[view] = button
 	end
+	-- Starts the shown plan as a checklist (UI/PlanWindow.lua).
+	panel.startButton = Widgets.CreateButton(frame, L.PLAN_BTN_START, START_BUTTON_WIDTH)
+	panel.startButton:SetPoint("TOPLEFT", #VIEWS * (VIEW_BUTTON_WIDTH + GAP) + GAP, VIEW_ROW_Y)
+	panel.startButton:SetScript("OnClick", function()
+		Inputs.Run("plan start " .. Util.DurationInput(panel.seconds))
+	end)
 end
 
 -- "Behalten: [slot] Kupfererz, Ruhestein …" at the bottom.

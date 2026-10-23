@@ -32,6 +32,8 @@ local ClassicEra = {
 		TRADE_CLOSED = "TRADE_CLOSED",
 		-- Combat start counts as farm activity (idle time detection).
 		PLAYER_REGEN_DISABLED = "COMBAT_STARTED",
+		-- Zone change (MapDocumentation, Classic Era 70003): travel steps of an active plan.
+		ZONE_CHANGED_NEW_AREA = "ZONE_CHANGED",
 		-- Player state for automatic pause and travel.
 		PLAYER_FLAGS_CHANGED = "PLAYER_FLAGS_CHANGED",
 		PLAYER_UPDATE_RESTING = "RESTING_CHANGED",
