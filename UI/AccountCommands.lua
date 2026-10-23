@@ -25,6 +25,9 @@ local function characterLine(row)
 	end
 	local professions = #parts > 0 and table.concat(parts, L.PLAN_SEPARATOR) or L.ACCOUNT_NO_PROFESSIONS
 	local line = Util.Format(L.ACCOUNT_LINE, row.name, Money.Format(row.money), professions, row.items)
+	if row.mailMoney > 0 then
+		line = line .. Util.Format(L.ACCOUNT_MAIL_MONEY, Money.Format(row.mailMoney))
+	end
 	return row.bankSeen and line or line .. L.ACCOUNT_NO_BANK
 end
 

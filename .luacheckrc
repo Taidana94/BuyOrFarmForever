@@ -62,6 +62,11 @@ read_globals = {
 	"NUM_BAG_SLOTS",
 	"NUM_BANKBAGSLOTS",
 	"GetMoney", -- used by Blizzard_AuctionUI (Classic) in 70003
+	-- Mailbox, used by Blizzard_UIPanels_Game/Classic/MailFrame.lua in 70003
+	"GetInboxNumItems",
+	"GetInboxHeaderInfo",
+	"GetInboxItem",
+	"ATTACHMENTS_MAX_RECEIVE",
 	-- cursor (documented in 70003; item id return unverified, see Adapters/ClassicEraUI.lua)
 	"GetCursorInfo",
 	"ClearCursor",

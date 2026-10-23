@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.11.0-alpha.3 | 2026-10-23 | 294 checks passed, 0 failed; new tests: route cache (reuse, copy, rebuild on a saved run, a signal and age), mailbox stock (only read at the mailbox, attachments summed, gold in mail, own count, account total, taken mail removed) |
 | 0.11.0-alpha.1 | 2026-10-23 | 292 checks passed, 0 failed; new `test_strategies.lua` (gold per character, account rows and `/bof account`, fishing detection and fishing routes, crafted routes, comparison ranking and missing families, `/bof compare`, planner views) |
 | 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/bof want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
 | 0.9.0-alpha.1 | 2026-10-23 | 324 checks passed, 0 failed (306 unit tests); 8 new tests in `test_make.lua` (craft counts, crafting in the open window with cap and "all", opening a closed or other window, combat/no reagents/unknown/enchantment refused, collapsed categories, smelting spell for Mining, detail buttons); mutation check: crafting in another profession's window fails 1 |
@@ -262,6 +263,15 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.11.0-alpha.3 (Classic Era, mailbox stock, route cache)
+
+1. `/reload`, `/bof version` → `0.11.0-alpha.3`. BugSack empty.
+2. Send an alt some items and gold, log in the alt, open the mailbox, do not take anything: the tooltip
+   of a wanted item shows "Post n"; `/bof account` shows "(+ … in der Post)". Take the mail: the count
+   moves from Post to Taschen.
+3. Advisor window open while looting for a minute, then `/bof perf`: peak lower than the 7.54 % of 0.8.0.
+4. Then the checklist 0.11.0-alpha.1 below.
 
 ### Checklist 0.11.0-alpha.1 (Classic Era, strategy comparison, account, fishing)
 

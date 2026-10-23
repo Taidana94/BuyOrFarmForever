@@ -462,6 +462,8 @@ enchantment). `/bof recipe key <key> [crafts]` does the same for a stored recipe
 | `ADDON_LOADED` | `Main.onAddonLoaded` | file load, unregistered after the own addon loaded | once per load | loads the database |
 | `PLAYER_LOGIN` | `Main.onPlayerLogin` | file load, unregistered after the first call | once | character key, `EnsureCharacter` |
 | `BAG_UPDATE_DELAYED` → `BAGS_CHANGED` | `Stock`, `WantPlan` (invalidate) | always | once per bag-change burst (the client coalesces `BAG_UPDATE`) | one bag scan into the reused snapshot table (about 100 slots, `GetContainerItemID` + `GetItemCount`, no garbage); the bank too while it is open |
+| `MAIL_SHOW` / `MAIL_CLOSED`, `MAIL_INBOX_UPDATE` → `MAIL_CHANGED` | `Stock` (`WantPlan` invalidates on `MAIL_CLOSED`) | always; the inbox is read only while the mailbox is open | per inbox update at the mailbox | reads at most 50 mails × 16 attachments into the reused `stock.mail` table, plus the gold in the mail |
+| `DATA_CHANGED`, `PRICES_CHANGED`, `RECIPES_CHANGED`, `SETTINGS_CHANGED` (signals) | `RouteCache` | always | per change | drops the cached route lists; they are rebuilt by the next reader (also when the saved runs, character or settings differ, or after 60 s) |
 | `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock`, `WantPlan` (invalidate on close) | always | per bank visit | bank scan on open; recount of the bank snapshot from live counts on close |
 | `TRADE_SKILL_SHOW` / `_CLOSE`, `CRAFT_SHOW` / `_CLOSE` | Classic Era adapter (own frame) | always | per profession window open/close | sets two flags, no API calls |
 | `ITEM_DATA_LOAD_RESULT` → `ITEM_LOADED` | window tabs, farm window | only while shown | per item whose data arrives | requests one refresh |

@@ -46,25 +46,27 @@ local function row(key, charData)
 	local list = professions(charData)
 	local bagItems, bagUnits = countItems(charData.stock.bags)
 	local bankItems, bankUnits = countItems(charData.stock.bank)
+	local mailItems, mailUnits = countItems(charData.stock.mail)
 	return {
 		key = key, name = name or key, realm = realm or "", faction = charData.faction,
 		money = charData.money, moneyAt = charData.moneyAt, professions = list,
 		recipes = countRecipes(charData, list),
-		items = bagItems + bankItems, units = bagUnits + bankUnits, bankSeen = charData.stock.bankAt > 0,
+		mailMoney = charData.stock.mailMoney,
+		items = bagItems + bankItems + mailItems, units = bagUnits + bankUnits + mailUnits, bankSeen = charData.stock.bankAt > 0,
 	}
 end
 
 -- Rows of the characters on `realm` (all realms when nil), most gold first, and the total gold.
 -- Row: { key, name, realm, faction, money, moneyAt (0 = never seen), professions ({ key, rank,
--- maxRank, recipes }, highest skill first), recipes, items (stacks of distinct items, bags + bank),
--- units, bankSeen }.
+-- maxRank, recipes }, highest skill first), recipes, items (stacks of distinct items, bags + bank +
+-- mail), units, bankSeen, mailMoney (copper in received mail) }. The total includes mailMoney.
 function Account.Rows(db, realm)
 	local rows, total = {}, 0
 	for key, charData in pairs(db.characters) do
 		local data = row(key, charData)
 		if not realm or data.realm == realm then
 			rows[#rows + 1] = data
-			total = total + data.money
+			total = total + data.money + data.mailMoney
 		end
 	end
 	table.sort(rows, function(a, b)

@@ -3,6 +3,23 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.3] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Briefkasten im Bestand:** Beim Öffnen des Briefkastens merkt sich das Addon automatisch die
+  Gegenstände und das Gold in empfangener Post. Sie zählen bei Zielen, Plan und Ratgeber mit; der
+  Tooltip zeigt „Post …“, die Kontoübersicht das Gold in der Post.
+
+### Geändert
+
+- **Schneller:** Farmrouten und „Beute verarbeiten“-Routen werden nicht mehr bei jeder Taschen- oder
+  Goldänderung neu berechnet, sondern nur nach neuen Läufen, Preisen, Rezepten oder Einstellungen
+  (spätestens nach einer Minute wegen der Live-Preise von Auctionator).
+- Farmfenster-Knöpfe breiter; die Ansichtsknöpfe des Goldplaners haben eine eigene Zeile (alpha.2).
+
 ## [0.11.0-alpha.1] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

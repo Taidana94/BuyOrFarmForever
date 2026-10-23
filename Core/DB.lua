@@ -47,6 +47,9 @@ DB.CHARACTER_DEFAULTS = {
 		bank = {},
 		bagsAt = 0,
 		bankAt = 0,
+		mail = {}, -- items attached to received mail, seen at the last mailbox visit
+		mailAt = 0,
+		mailMoney = 0, -- copper attached to received mail at mailAt
 	},
 	wants = {}, -- { { itemID, count, createdAt } } (Core/Wants.lua)
 	craftEval = {

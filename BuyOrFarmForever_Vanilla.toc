@@ -2,7 +2,7 @@
 ## Title: Kaufen oder farmen?
 ## Notes: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
 ## Notes-deDE: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
-## Version: 0.11.0-alpha.2
+## Version: 0.11.0-alpha.3
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01
@@ -34,6 +34,7 @@ Adapters\ClassicEraProfessions.lua
 Adapters\ClassicEraCrafting.lua
 Adapters\ClassicEraTrade.lua
 Adapters\ClassicEraBags.lua
+Adapters\ClassicEraMail.lua
 Adapters\ClassicEraGear.lua
 Adapters\ClassicEraUI.lua
 Adapters\ClassicEraPlayer.lua

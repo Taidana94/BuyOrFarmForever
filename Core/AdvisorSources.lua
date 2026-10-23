@@ -99,7 +99,7 @@ end
 local function missingOf(other)
 	local missing = {}
 	for _, want in ipairs(other.wants) do
-		local have = (other.stock.bags[want.itemID] or 0) + (other.stock.bank[want.itemID] or 0)
+		local have = ns.Stock.SnapshotCount(other, want.itemID)
 		if want.count > have then
 			missing[want.itemID] = want.count - have
 		end

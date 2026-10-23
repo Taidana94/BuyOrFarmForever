@@ -2,6 +2,7 @@
 -- bags and the bank of every character, so other characters' stock is known without asking the player.
 -- The live bank count is correct with a closed bank (confirmed in game, Classic Era 70003); the bank's
 -- contents can only be listed while it is open, so a character's bank snapshot needs one bank visit.
+-- Items and gold attached to received mail are stored at every mailbox visit (MAIL_CHANGED).
 local _, ns = ...
 
 local Log = ns.Log
@@ -14,6 +15,7 @@ ns.Stock = Stock
 Stock.LOGIN_DELAY_SECONDS = 10
 
 local bankOpen = false
+local mailOpen = false
 -- Items seen in the bags while the bank is open: candidates for deposits, recounted on close.
 local seenAtBank = {}
 
@@ -27,13 +29,25 @@ function Stock.SplitKey(key)
 	return name, realm
 end
 
--- Live counts of the current character: bags (number) and bank (number, or nil).
+local function mailCount(charData, itemID)
+	return charData and charData.stock.mail[itemID] or 0
+end
+
+-- Counts of the current character: bags (number) and bank (number, or nil) live, mail (number)
+-- from the last mailbox visit.
 function Stock.Count(itemID)
 	local client = ns.Client
 	local bags = client:GetBagCount(itemID) or 0
 	local total = client:GetBagAndBankCount(itemID)
 	local bank = total and math.max(0, total - bags) or nil
-	return bags, bank
+	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
+	return bags, bank, mailCount(charData, itemID)
+end
+
+-- Units of an item in a stored snapshot (bags + bank + mail) of any character.
+function Stock.SnapshotCount(charData, itemID)
+	local stock = charData.stock
+	return (stock.bags[itemID] or 0) + (stock.bank[itemID] or 0) + (stock.mail[itemID] or 0)
 end
 
 local function noteSeen(bags)
@@ -71,12 +85,13 @@ end
 
 -- Other characters on the same realm that have a snapshot with this item.
 -- Returns counted (sum over characters of the same faction) and rows sorted by name:
--- { key, name, bags, bank, total, at, sameFaction }. Characters with 0 are left out.
+-- { key, name, bags, bank, mail, total, at, sameFaction }. Characters with 0 are left out.
 -- Row for one other character's snapshot of the item, or nil if it has none (or 0).
 local function otherRow(key, name, data, currentFaction, itemID)
 	local bags = data.stock.bags[itemID]
 	local bank = data.stock.bank[itemID]
-	local total = (bags or 0) + (bank or 0)
+	local mail = data.stock.mail[itemID]
+	local total = Stock.SnapshotCount(data, itemID)
 	if total <= 0 then
 		return nil
 	end
@@ -85,8 +100,9 @@ local function otherRow(key, name, data, currentFaction, itemID)
 		name = name,
 		bags = bags or 0,
 		bank = bank or 0,
+		mail = mail or 0,
 		total = total,
-		at = math.max(data.stock.bagsAt, data.stock.bankAt),
+		at = math.max(data.stock.bagsAt, data.stock.bankAt, data.stock.mailAt),
 		sameFaction = currentFaction ~= "" and data.faction == currentFaction,
 	}
 end
@@ -121,15 +137,15 @@ local function othersOf(charData, itemID)
 end
 
 -- Stock rows of requirements ({ { itemID, need } }, e.g. WantPlan.Requirements) for the current
--- character: { itemID, need, bags, bank (nil = unknown), others (counted), details (OthersFor rows),
--- missing }.
+-- character: { itemID, need, bags, bank (nil = unknown), mail, others (counted), details (OthersFor
+-- rows), missing }.
 function Stock.Rows(charData, requirements)
 	local rows = {}
 	for i, req in ipairs(requirements) do
-		local bags, bank = Stock.Count(req.itemID)
+		local bags, bank, mail = Stock.Count(req.itemID)
 		local others, details = othersOf(charData, req.itemID)
-		rows[i] = { itemID = req.itemID, need = req.need, bags = bags, bank = bank, others = others, details = details,
-			missing = math.max(0, req.need - bags - (bank or 0) - others) }
+		rows[i] = { itemID = req.itemID, need = req.need, bags = bags, bank = bank, mail = mail, others = others,
+			details = details, missing = math.max(0, req.need - bags - (bank or 0) - mail - others) }
 	end
 	return rows
 end
@@ -155,6 +171,9 @@ function Stock.Sanitize(charData, path, repairs)
 	if cleanCounts(charData.stock.bank) then
 		repairs[#repairs + 1] = path .. ".stock.bank"
 	end
+	if cleanCounts(charData.stock.mail) then
+		repairs[#repairs + 1] = path .. ".stock.mail"
+	end
 end
 
 ns.DB.VALIDATORS[#ns.DB.VALIDATORS + 1] = Stock.Sanitize
@@ -179,6 +198,17 @@ function Stock.CaptureCurrent(reason)
 	if Log.IsDebug() then
 		Log.Trace("stock snapshot (" .. reason .. ")")
 	end
+end
+
+-- Stores the items and gold attached to the current character's received mail.
+function Stock.CaptureMail()
+	local charData = currentCharacter()
+	if not charData then
+		return
+	end
+	local _, money = ns.Client:ScanMail(charData.stock.mail)
+	charData.stock.mailMoney = money
+	charData.stock.mailAt = ns.Client:GetServerTime()
 end
 
 -- The delayed login capture: an empty scan does not replace a stored snapshot with items, in case the
@@ -207,6 +237,18 @@ if ns.Client then
 	ns.Events.OnSignal("BANK_OPENED", function()
 		bankOpen = true
 		Stock.CaptureCurrent("bank opened")
+	end)
+	ns.Events.OnSignal("MAIL_OPENED", function()
+		mailOpen = true
+	end)
+	ns.Events.OnSignal("MAIL_CLOSED", function()
+		mailOpen = false
+	end)
+	-- Inbox updates outside the mailbox (new mail notices) carry no readable inbox.
+	ns.Events.OnSignal("MAIL_CHANGED", function()
+		if mailOpen then
+			Stock.CaptureMail()
+		end
 	end)
 	ns.Events.OnSignal("BANK_CLOSED", function()
 		local charData = bankOpen and currentCharacter()

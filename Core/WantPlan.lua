@@ -12,7 +12,7 @@ ns.WantPlan = WantPlan
 
 local COPPER_PER_GOLD = 10000
 local INVALIDATING_SIGNALS = {
-	"BAGS_CHANGED", "BANK_CLOSED", "PRICES_CHANGED", "DATA_CHANGED", "RECIPES_CHANGED", "SETTINGS_CHANGED",
+	"BAGS_CHANGED", "BANK_CLOSED", "MAIL_CLOSED", "PRICES_CHANGED", "DATA_CHANGED", "RECIPES_CHANGED", "SETTINGS_CHANGED",
 }
 
 local cached
@@ -68,10 +68,10 @@ function WantPlan.HourValue()
 end
 
 local function available(charData, itemID)
-	local bags, bank = ns.Stock.Count(itemID)
+	local bags, bank, mail = ns.Stock.Count(itemID)
 	local others = ns.db.settings.countOtherCharacters
 		and ns.Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID) or 0
-	return bags + (bank or 0) + others
+	return bags + (bank or 0) + mail + others
 end
 
 local function farmFor(itemID)

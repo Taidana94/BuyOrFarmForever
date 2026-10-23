@@ -62,7 +62,7 @@ L.WANT_BTN_FARM = "Farmen"
 L.WANT_TIP_PRICE = "Preis pro Stück: %1$s (%2$s)"
 L.WANT_TIP_TRAVEL = "Anreise: etwa %1$s"
 L.WANT_TIP_OPEN = "Kein Preis, keine Farmrunde mit diesem Item, kein gelerntes Rezept."
-L.WANT_TIP_OWN = "Du: Taschen %1$d, Bank %2$s"
+L.WANT_TIP_OWN = "Du: Taschen %1$d, Bank %2$s, Post %3$d"
 L.GOAL_UNNAMED = "ohne Namen"
 L.ERR_INVALID_ITEM = "Bitte einen Gegenstand angeben: Gegenstandslink (Umschalt+Klick) oder Item-ID."
 L.ERR_INVALID_COUNT = "Die Menge muss eine ganze Zahl von 1 bis %1$d sein."
@@ -305,6 +305,7 @@ L.ACCOUNT_LINE = "%1$s: %2$s – %3$s – %4$d Gegenstände"
 L.ACCOUNT_PROFESSION = "%1$s %2$d/%3$d (%4$d Rezepte)"
 L.ACCOUNT_NO_PROFESSIONS = "keine Berufe gesehen"
 L.ACCOUNT_NO_BANK = " (Bank noch nicht besucht)"
+L.ACCOUNT_MAIL_MONEY = " (+ %1$s in der Post)"
 
 -- Craft evaluation
 L.HELP_LINE_CRAFT = "/bof craft <Gegenstand> – Vergleich mit deiner Ausrüstung nach deinen Gewichten"
@@ -551,8 +552,8 @@ L.PERF_UNAVAILABLE = "nicht verfügbar"
 L.DECIMAL_SEPARATOR = ","
 
 -- Stock
-L.STOCK_ALT_DETAIL = "    %1$s: %2$d (Taschen %3$d, Bank %4$d, Stand %5$s)"
-L.STOCK_ALT_OTHER_FACTION = "    %1$s, andere Fraktion, nicht mitgezählt: %2$d (Taschen %3$d, Bank %4$d, Stand %5$s)"
+L.STOCK_ALT_DETAIL = "    %1$s: %2$d (Taschen %3$d, Bank %4$d, Post %5$d, Stand %6$s)"
+L.STOCK_ALT_OTHER_FACTION = "    %1$s, andere Fraktion, nicht mitgezählt: %2$d (Taschen %3$d, Bank %4$d, Post %5$d, Stand %6$s)"
 
 -- Time
 L.AGE_NOW = "gerade eben"

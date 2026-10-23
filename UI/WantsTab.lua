@@ -111,14 +111,14 @@ end
 
 -- Where the stock lies: own bags and bank, then every other character of the realm.
 local function stockLines(lines, itemID)
-	local bags, bank = ns.Stock.Count(itemID)
-	lines[#lines + 1] = Util.Format(L.WANT_TIP_OWN, bags, bank and tostring(bank) or L.UNKNOWN_SHORT)
+	local bags, bank, mail = ns.Stock.Count(itemID)
+	lines[#lines + 1] = Util.Format(L.WANT_TIP_OWN, bags, bank and tostring(bank) or L.UNKNOWN_SHORT, mail)
 	local charData = currentCharacter()
 	local _, others = ns.Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID)
 	local now = ns.Client:GetServerTime()
 	for _, d in ipairs(others) do
 		local template = d.sameFaction and L.STOCK_ALT_DETAIL or L.STOCK_ALT_OTHER_FACTION
-		lines[#lines + 1] = Util.Format(template, d.name, d.total, d.bags, d.bank, Util.FormatAge(now - d.at))
+		lines[#lines + 1] = Util.Format(template, d.name, d.total, d.bags, d.bank, d.mail, Util.FormatAge(now - d.at))
 	end
 end
 
