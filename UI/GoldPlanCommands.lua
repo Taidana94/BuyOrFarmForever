@@ -63,8 +63,9 @@ local TASK_TEXTS = {
 
 local function taskText(task)
 	if task.kind == "CRAFT" or task.kind == "COOLDOWN" then
-		return Util.Format(L["GOLDPLAN_" .. task.kind], task.crafts, UIShared.ItemText(task.itemID),
+		local text = Util.Format(L["GOLDPLAN_" .. task.kind], task.crafts, UIShared.ItemText(task.itemID),
 			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds))
+		return task.charKey and text .. Util.Format(L.GOLDPLAN_ON_ALT, (ns.Stock.SplitKey(task.charKey))) or text
 	end
 	local amount = task.kind == "SELL_VENDOR" and task.sure or task.auction
 	return Util.Format(L[TASK_TEXTS[task.kind]], task.units, Money.Format(amount), Util.FormatDuration(task.seconds))

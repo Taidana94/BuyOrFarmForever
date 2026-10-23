@@ -94,7 +94,8 @@ local function isReady(entry, now)
 	return not entry.cooldown or (entry.readyAt or 0) <= now
 end
 
-local function taskFor(key, entry, now)
+-- The craft task of one recipe book entry, or nil (not ready, no product or a price missing).
+function CraftTasks.TaskFor(key, entry, now)
 	local recipe = ns.Recipes.Get(ns.db, key)
 	if not (recipe and recipe.outputItemID ~= 0 and isReady(entry, now)) then
 		return nil
@@ -127,16 +128,6 @@ function CraftTasks.Waiting(charData, now)
 	return list
 end
 
--- All one-off tasks of the character now: bags (vendor, auction, disenchant) and crafts. Lives
--- here because CraftTasks loads after BagTasks and GoldPlan.
-function ns.GoldPlan.Tasks(charData, now)
-	local tasks = ns.BagTasks.Collect(charData, now, ns.db.settings.ahDiscountPercent)
-	for _, task in ipairs(CraftTasks.Collect(charData, now)) do
-		tasks[#tasks + 1] = task
-	end
-	return tasks
-end
-
 -- Recipes of the recipe book that make an item but cannot be rated, because the product or a
 -- reagent has no price yet.
 function CraftTasks.CountUnpriced(charData, now)
@@ -155,7 +146,7 @@ function CraftTasks.Collect(charData, now)
 	local discount = ns.db.settings.ahDiscountPercent
 	local tasks = {}
 	for key, entry in pairs(charData.recipeBook) do
-		local task = taskFor(key, entry, now)
+		local task = CraftTasks.TaskFor(key, entry, now)
 		if task and ns.GoldRoutes.Rating(task.sure, task.auction, discount) > 0 then
 			task.perSecond = ns.GoldRoutes.Rating(task.sure, task.auction, discount) / task.seconds
 			tasks[#tasks + 1] = task

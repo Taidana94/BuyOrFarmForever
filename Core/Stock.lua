@@ -33,6 +33,25 @@ local function mailCount(charData, itemID)
 	return charData and charData.stock.mail[itemID] or 0
 end
 
+-- Keys of the current character (first) and the characters of its realm and faction, by name.
+function Stock.SameRealmAndFaction(charData)
+	local _, realm = Stock.SplitKey(ns.charKey)
+	local keys = {}
+	for key, other in pairs(ns.db.characters) do
+		local _, otherRealm = Stock.SplitKey(key)
+		if key == ns.charKey or (otherRealm == realm and other.faction == charData.faction and charData.faction ~= "") then
+			keys[#keys + 1] = key
+		end
+	end
+	table.sort(keys, function(a, b)
+		if (a == ns.charKey) ~= (b == ns.charKey) then
+			return a == ns.charKey
+		end
+		return a < b
+	end)
+	return keys
+end
+
 -- Counts of the current character: bags (number) and bank (number, or nil) live, mail (number)
 -- from the last mailbox visit.
 function Stock.Count(itemID)

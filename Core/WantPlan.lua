@@ -17,29 +17,12 @@ local INVALIDATING_SIGNALS = {
 
 local cached
 
-local function sameRealmAndFaction(charData)
-	local _, realm = ns.Stock.SplitKey(ns.charKey)
-	local keys = {}
-	for key, other in pairs(ns.db.characters) do
-		local _, otherRealm = ns.Stock.SplitKey(key)
-		if key == ns.charKey or (otherRealm == realm and other.faction == charData.faction and charData.faction ~= "") then
-			keys[#keys + 1] = key
-		end
-	end
-	table.sort(keys, function(a, b)
-		if (a == ns.charKey) ~= (b == ns.charKey) then
-			return a == ns.charKey
-		end
-		return a < b
-	end)
-	return keys
-end
 
 -- Learned recipes by product over the characters of the realm and faction (the current one first):
 -- { [itemID] = { { key, reagents, outputMin, outputMax, charKey } } }.
 local function learnedRecipes(charData)
 	local byProduct = {}
-	for _, key in ipairs(sameRealmAndFaction(charData)) do
+	for _, key in ipairs(ns.Stock.SameRealmAndFaction(charData)) do
 		for recipeKey in pairs(ns.db.characters[key].recipeBook) do
 			local recipe = ns.Recipes.Get(ns.db, recipeKey)
 			if recipe and recipe.outputItemID ~= 0 then

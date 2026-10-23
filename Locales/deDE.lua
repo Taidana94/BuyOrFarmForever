@@ -155,6 +155,7 @@ L.GOLDPLAN_SELL_VENDOR = "Beim Händler verkaufen: %1$d Gegenstände – sicher 
 L.GOLDPLAN_SELL_AUCTION = "Im AH einstellen: %1$d Gegenstände – bis zu %2$s (etwa %3$s)"
 L.GOLDPLAN_DISENCHANT = "Entzaubern, Material im AH verkaufen: %1$d Gegenstände – bis zu %2$s (etwa %3$s)"
 L.GOLDPLAN_CRAFT = "Herstellen und verkaufen: %1$d× %2$s – Gewinn bis zu %3$s (etwa %4$s)"
+L.GOLDPLAN_ON_ALT = " – auf %1$s (Zutaten per Post)"
 L.GOLDPLAN_COOLDOWN = "Abklingzeit nutzen: %1$d× %2$s – Gewinn bis zu %3$s (etwa %4$s)"
 L.GOLDPLAN_UNUSED = "Übrige Zeit: %1$s ohne Vorschlag – dafür fehlt eine Farmroute mit mindestens %2$s Messung (Farmrunde im Tab „Farmen“)."
 L.GOLDPLAN_TRAVEL = "Anreise: %1$s (etwa %2$s)"
