@@ -30,6 +30,8 @@ DB.DEFAULTS = {
 			y = 0,
 			tab = "MATERIAL",
 			allGoals = false,
+			profession = "", -- professions tab: selected profession key ("" = the first one)
+			professionMats = "ALL", -- professions tab: reagent filter
 		},
 	},
 	prices = {},
@@ -57,7 +59,9 @@ DB.CHARACTER_DEFAULTS = {
 	savingsGoals = {},
 	income = {},
 	goldKeep = {}, -- { [itemID] = true }: never suggested for selling by the gold planner
-	recipeBook = {}, -- { [recipeKey] = { cooldown = true?, readyAt? } }: recipes seen (Core/RecipeBook.lua)
+	-- { [recipeKey] = { cooldown = true?, readyAt?, profession?, difficulty? } }: recipes seen (Core/RecipeBook.lua)
+	recipeBook = {},
+	professions = {}, -- { [professionKey] = { rank, maxRank, at } }: skill bars (Core/RecipeBook.lua)
 }
 
 -- Allowed values for enum-like fields, by path.
@@ -65,8 +69,10 @@ DB.ENUMS = {
 	["settings.strategy"] = { SAVE_TIME = true, SAVE_GOLD = true, FARM_SELF = true },
 	["settings.farmEstimateScope"] = { CHARACTER = true, ACCOUNT = true },
 	["settings.window.tab"] = {
-		MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, GOLD_BUFFER = true, SETTINGS = true, HELP = true,
+		MATERIAL = true, SOURCING = true, FARM = true, CRAFT = true, PROFESSIONS = true, GOLD_BUFFER = true,
+		SETTINGS = true, HELP = true,
 	},
+	["settings.window.professionMats"] = { ALL = true, SOME = true, COMPLETE = true },
 }
 
 -- Minimum and maximum values for numeric fields, by path (filled by Core/Settings.lua).

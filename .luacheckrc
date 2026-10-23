@@ -34,11 +34,21 @@ read_globals = {
 	"WOW_PROJECT_CLASSIC",
 	C_AddOns = { fields = { "GetAddOnMetadata" } },
 	-- items and bags (GetItemCount with includeBank: correct with closed bank, confirmed in game)
-	C_Item = { fields = { "GetItemCount", "GetItemIconByID", "GetItemInfo", "GetItemInfoInstant", "RequestLoadItemDataByID" } },
+	C_Item = {
+		fields = {
+			"GetItemCount", "GetItemIconByID", "GetItemInfo", "GetItemInfoInstant", "RequestLoadItemDataByID",
+			"GetItemClassInfo",
+		},
+	},
 	-- equipment and item stats (GetItemStats confirmed in game 70003; GetInventoryItemLink used by PaperDollFrame)
 	"GetItemStats",
 	"GetInventoryItemLink",
-	C_Spell = { fields = { "GetSpellName" } },
+	C_Spell = { fields = { "GetSpellName", "GetSpellTexture" } },
+	-- profession names and item classes (documented in 70003; GetTradeSkillLine and
+	-- GetCraftDisplaySkillLine are used by the Vanilla TradeSkillUI / CraftUI)
+	C_TradeSkillUI = { fields = { "GetTradeSkillDisplayName" } },
+	"GetTradeSkillLine",
+	"GetCraftDisplaySkillLine",
 	-- bags and map (documented in 70003; NUM_BAG_SLOTS from Blizzard_FrameXMLBase/Classic/Constants.lua)
 	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo", "GetContainerNumFreeSlots", "UseContainerItem" } },
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },

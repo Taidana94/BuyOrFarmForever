@@ -27,7 +27,12 @@ Adapter.REQUIRED = {
 	"GetCPUMetrics", -- (addonName) -> { recent, average, peak = { addon, app, overall } }, or nil if off
 	"GetTimeMs", -- () -> high-resolution time in ms, or nil
 	"ReadSelectedRecipe", -- () -> recipe of the open profession window, or nil + "no_window" | "no_selection" | "loading"
-	"ReadAllRecipes", -- () -> { recipe + cooldownSeconds } of the open profession windows, incomplete (bool)
+	"ReadAllRecipes", -- () -> { recipe + cooldownSeconds, profession, difficulty } of the open profession windows, incomplete (bool)
+	"ReadProfessionSkills", -- () -> { { profession, rank, maxRank } } of the open profession windows (raw)
+	"GetProfessionInfo", -- (professionKey) -> localized name, icon file id (nil, nil for "OTHER" or unknown keys)
+	"GetEffectCategory", -- ("item" | "spell", id) -> effect category key of the client's data, or nil
+	"GetItemClassID", -- (itemID) -> item class id (no item cache needed), or nil
+	"GetItemClassName", -- (classID) -> localized item class name, or nil
 	"GetItemName", -- (itemID) -> localized name, or nil while loading (load is requested)
 	"ReadMerchantPrices", -- () -> { { itemID, copper per unit } } of the open merchant (gold prices only)
 	"ReadAuctionResults", -- () -> { { itemID, count, buyout } } of the current auction search page

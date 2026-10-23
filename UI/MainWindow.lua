@@ -1,5 +1,5 @@
--- Main window: a movable frame with a title line and tabs (Material, Sourcing, Farm, Craft, Gold
--- buffer, Settings, Help). Created lazily on first open;
+-- Main window: a movable frame with a title line and tabs (Material, Sourcing, Farm, Craft,
+-- Professions, Gold buffer, Settings, Help). Created lazily on first open;
 -- only the shown tab has its events registered, closing the window unregisters them.
 -- Uses only widely stable frame APIs and templates that exist in Classic Era 70003
 -- (BackdropTemplate, UIPanelCloseButton; see docs/ARCHITECTURE.md).
@@ -25,6 +25,7 @@ local TABS = {
 	{ key = "SOURCING", label = "TAB_SOURCING", field = "sourcing", module = "SourcingTab" },
 	{ key = "FARM", label = "TAB_FARM", field = "farm", module = "FarmTab" },
 	{ key = "CRAFT", label = "TAB_CRAFT", field = "craft", module = "CraftTab" },
+	{ key = "PROFESSIONS", label = "TAB_PROFESSIONS", field = "professions", module = "ProfessionTab" },
 	{ key = "GOLD_BUFFER", label = "TAB_GOLD", field = "gold", module = "GoldTab" },
 	{ key = "SETTINGS", label = "TAB_SETTINGS", field = "settings", module = "SettingsTab" },
 	{ key = "HELP", label = "TAB_HELP", field = "help", module = "HelpTab" },
@@ -172,7 +173,8 @@ function MainWindow.Show()
 	end
 end
 
--- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT" | "GOLD_BUFFER" | "SETTINGS" | "HELP");
+-- Switches to a tab ("MATERIAL" | "SOURCING" | "FARM" | "CRAFT" | "PROFESSIONS" | "GOLD_BUFFER" | "SETTINGS" |
+-- "HELP");
 -- used by the tab buttons and tests.
 function MainWindow.SelectTab(key)
 	if frame then

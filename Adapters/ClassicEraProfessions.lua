@@ -1,5 +1,6 @@
 -- Classic Era adapter part: reading the profession windows (trade skill and craft window).
--- Loaded before Adapters/ClassicEra.lua, which exposes ReadSelectedRecipe as an adapter method.
+-- Loaded before Adapters/ClassicEra.lua, which exposes these functions as adapter methods; which
+-- profession a window shows comes from Adapters/ClassicEraProfessionInfo.lua.
 -- Classic Era only; Forever has a different professions API (C_TradeSkillUI).
 local _, ns = ...
 
@@ -68,6 +69,13 @@ local TRADE = {
 	count = function()
 		return GetNumTradeSkills()
 	end,
+	-- Localized skill line name, rank, max rank (Vanilla TradeSkillFrame_Update uses it so).
+	skillLine = function()
+		if GetTradeSkillLine then
+			return GetTradeSkillLine()
+		end
+		return nil
+	end,
 	-- Seconds until the recipe can be used again, or nil (Vanilla TradeSkillUI shows it the same way).
 	cooldown = function(i)
 		return GetTradeSkillCooldown(i)
@@ -104,6 +112,13 @@ local CRAFT = {
 	count = function()
 		return GetNumCrafts()
 	end,
+	-- Name is nil for Beast Training (Vanilla CraftFrame_Update).
+	skillLine = function()
+		if GetCraftDisplaySkillLine then
+			return GetCraftDisplaySkillLine()
+		end
+		return nil
+	end,
 	cooldown = function()
 		return nil
 	end,
@@ -135,6 +150,8 @@ local CRAFT = {
 		return GetCraftReagentItemLink(i, r)
 	end,
 }
+
+local APIS = { trade = TRADE, craft = CRAFT }
 
 -- Key and output item from the recipe link (spell/enchant id) and the output link.
 local function recipeIdentity(api, index)
@@ -200,19 +217,38 @@ function Professions.ReadSelectedRecipe()
 end
 
 -- Every recipe of the open profession windows (headers skipped), each like ReadSelectedRecipe plus
--- cooldownSeconds (nil without cooldown). Returns the list and true if some entries were skipped
--- because their links are still loading. Empty without an open window.
+-- cooldownSeconds (nil without cooldown), profession (key, "OTHER" if unknown) and difficulty (the
+-- window's skill type, e.g. "optimal"; raw, validated by the core). Returns the list and true if some
+-- entries were skipped because their links are still loading. Empty without an open window.
 function Professions.ReadAllRecipes()
 	local list, incomplete = {}, false
-	for kind, api in pairs({ trade = TRADE, craft = CRAFT }) do
+	for kind, api in pairs(APIS) do
+		local profession = openWindows[kind] and ns.ClassicEraProfessionOf((api.skillLine()))
 		for index = 1, openWindows[kind] and (api.count() or 0) or 0 do
-			local recipe = api.info(index) ~= "header" and readEntry(api, index)
+			local difficulty = api.info(index)
+			local recipe = difficulty ~= "header" and readEntry(api, index)
 			if recipe then
 				recipe.cooldownSeconds = api.cooldown(index)
+				recipe.profession, recipe.difficulty = profession, difficulty
 				list[#list + 1] = recipe
 			end
-			incomplete = incomplete or (api.info(index) ~= "header" and not recipe)
+			incomplete = incomplete or (difficulty ~= "header" and not recipe)
 		end
 	end
 	return list, incomplete
+end
+
+-- Skill bars of the open profession windows: { { profession, rank, maxRank } } (raw numbers).
+function Professions.ReadProfessionSkills()
+	local list = {}
+	for kind, api in pairs(APIS) do
+		local name, rank, maxRank
+		if openWindows[kind] then
+			name, rank, maxRank = api.skillLine()
+		end
+		if name then
+			list[#list + 1] = { profession = ns.ClassicEraProfessionOf(name), rank = rank, maxRank = maxRank }
+		end
+	end
+	return list
 end

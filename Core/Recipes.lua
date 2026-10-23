@@ -137,17 +137,10 @@ function Recipes.ImportSelected(charData, crafts)
 	return ns.Materials.CreateRecipeGoal(charData, recipe, crafts, ns.Client:GetServerTime())
 end
 
--- Like ImportSelected, but if a goal of the character already has this recipe, its crafts are
--- increased (and it is selected) instead of creating a duplicate. Returns the goal id and true if
--- an existing goal was increased (false if a goal was created), or nil plus an error code.
-function Recipes.ImportOrIncrease(charData, crafts)
-	if not ns.Materials.IsValidCrafts(crafts) then
-		return nil, "invalid_crafts"
-	end
-	local recipe, err = Recipes.ReadSelected()
-	if not recipe then
-		return nil, err
-	end
+-- Goal for a normalized recipe: if a goal of the character already has this recipe, its crafts are
+-- increased (and it is selected) instead of creating a duplicate. Returns the goal id and true if an
+-- existing goal was increased (false if a goal was created), or nil plus an error code.
+local function createOrIncrease(charData, recipe, crafts)
 	local id = ns.Materials.FindRecipeGoal(charData, recipe.key)
 	if not id then
 		local newID, createError = ns.Materials.CreateRecipeGoal(charData, recipe, crafts, ns.Client:GetServerTime())
@@ -160,6 +153,35 @@ function Recipes.ImportOrIncrease(charData, crafts)
 	end
 	ns.Materials.SelectGoal(charData, id)
 	return id, true
+end
+
+-- Like ImportSelected, but increases an existing goal of the recipe (see createOrIncrease).
+function Recipes.ImportOrIncrease(charData, crafts)
+	if not ns.Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local recipe, err = Recipes.ReadSelected()
+	if not recipe then
+		return nil, err
+	end
+	return createOrIncrease(charData, recipe, crafts)
+end
+
+-- Like ImportOrIncrease for a stored recipe (by key, e.g. from the professions tab) instead of the
+-- window's selection. Returns like createOrIncrease; "invalid_recipe" if the key is not stored.
+function Recipes.GoalFromStored(charData, key, crafts)
+	if not ns.Materials.IsValidCrafts(crafts) then
+		return nil, "invalid_crafts"
+	end
+	local stored = Recipes.Get(ns.db, key)
+	local recipe = stored and Recipes.Normalize({
+		key = key, outputItemID = stored.outputItemID, outputMin = stored.outputMin, outputMax = stored.outputMax,
+		reagents = stored.reagents,
+	})
+	if not recipe then
+		return nil, "invalid_recipe"
+	end
+	return createOrIncrease(charData, recipe, crafts)
 end
 
 -- Validation of stored recipes (registered with DB.ROOT_VALIDATORS).

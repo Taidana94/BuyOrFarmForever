@@ -177,12 +177,25 @@ local function goalCommand(argument)
 	end
 end
 
--- /bof recipe [new] [crafts] ------------------------------------------------------------
--- Without "new", a recipe that already has a goal increases that goal's crafts.
+-- /bof recipe [new] [crafts] | key <recipeKey> [crafts] ----------------------------------
+-- Without "new", a recipe that already has a goal increases that goal's crafts. "key" takes a stored
+-- recipe instead of the window's selection (used by the professions tab's button).
 
 local function parseCrafts(text)
 	text = Util.Trim(text)
 	return text == "" and 1 or Util.ParseInteger(text)
+end
+
+-- Chat output of a recipe goal: result true = an existing goal was increased.
+local function reportRecipeGoal(charData, id, result)
+	if not id then
+		UIShared.PrintError(result)
+	elseif result == true then
+		local goal = charData.materialGoals[id]
+		Log.Print(Util.Format(L.RECIPE_GOAL_INCREASED, id, UIShared.GoalName(goal), goal.crafts))
+	else
+		UIShared.PrintRecipeGoal(charData, id)
+	end
 end
 
 local function recipeCommand(argument)
@@ -191,19 +204,13 @@ local function recipeCommand(argument)
 		return
 	end
 	local word, rest = Slash.SplitCommand(argument)
-	local id, result
 	if word == "new" then
-		id, result = Recipes.ImportSelected(charData, parseCrafts(rest))
+		reportRecipeGoal(charData, Recipes.ImportSelected(charData, parseCrafts(rest)))
+	elseif word == "key" then
+		local key, crafts = Slash.SplitCommand(rest)
+		reportRecipeGoal(charData, Recipes.GoalFromStored(charData, key, parseCrafts(crafts)))
 	else
-		id, result = Recipes.ImportOrIncrease(charData, parseCrafts(argument))
-	end
-	if not id then
-		UIShared.PrintError(result)
-	elseif result == true then
-		local goal = charData.materialGoals[id]
-		Log.Print(Util.Format(L.RECIPE_GOAL_INCREASED, id, UIShared.GoalName(goal), goal.crafts))
-	else
-		UIShared.PrintRecipeGoal(charData, id)
+		reportRecipeGoal(charData, Recipes.ImportOrIncrease(charData, parseCrafts(argument)))
 	end
 end
 

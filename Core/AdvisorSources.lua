@@ -134,8 +134,8 @@ local function mailAskSuggestions(env, out)
 	end
 end
 
--- Whether the character learned a recipe: it is in its recipe book. Enchantments make no item and
--- are not kept in the book, so they cannot be checked and count as learned.
+-- Whether the character learned a recipe: it is in its recipe book. Enchantments were not kept in the
+-- book before 0.8.0 (such books lack them until the window is opened again), so they count as learned.
 local function isLearned(charData, key)
 	if charData.recipeBook[key] then
 		return true

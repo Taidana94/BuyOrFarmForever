@@ -254,6 +254,10 @@ function ClassicEra:ReadAllRecipes()
 	return ns.ClassicEraProfessions.ReadAllRecipes()
 end
 
+function ClassicEra:ReadProfessionSkills()
+	return ns.ClassicEraProfessions.ReadProfessionSkills()
+end
+
 -- C_Item.GetItemInfo returns nil until the item is in the client cache.
 function ClassicEra:GetItemLink(itemID)
 	if not (C_Item and C_Item.GetItemInfo) then
@@ -272,8 +276,13 @@ end
 -- Parts whose functions need no adapter state are exposed as methods unchanged:
 -- Adapters/ClassicEraUI.lua (cursor and window helpers), Adapters/ClassicEraPlayer.lua (player state),
 -- Adapters/ClassicEraQuest.lua (quest rewards), Adapters/ClassicEraExternal.lua (other addons),
--- Adapters/ClassicEraBags.lua (bags and map).
-for _, part in ipairs({ ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal, ns.ClassicEraBags }) do
+-- Adapters/ClassicEraBags.lua (bags and map), Adapters/ClassicEraProfessionInfo.lua (profession names,
+-- icons, effect data).
+local PARTS = {
+	ns.ClassicEraUI, ns.ClassicEraPlayer, ns.ClassicEraQuest, ns.ClassicEraExternal, ns.ClassicEraBags,
+	ns.ClassicEraProfessionInfo,
+}
+for _, part in ipairs(PARTS) do
 	for name, fn in pairs(part) do
 		ClassicEra[name] = function(_, ...)
 			return fn(...)
