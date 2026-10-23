@@ -1,8 +1,7 @@
 # Kaufen oder farmen?
 
-**Version 0.8.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
-Goldplaner, Ratgeber und die neue Berufsansicht. Bis 0.7.0-alpha.6 in WoW Classic Era 1.15.9 im Spiel
-getestet; der Reiter „Berufe“ (neu in 0.8.0) ist nur außerhalb des Spiels geprüft. Nicht in Forever
+**Version 0.8.0 – Materialbeschaffung, Craft-Bewertung, Goldpuffer, Goldplaner, Ratgeber und
+Berufsansicht, alles im Fenster bedienbar. Getestet in WoW Classic Era 1.15.9. Nicht in Forever
 getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
@@ -390,14 +389,15 @@ weist darauf hin.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.6.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.8.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 255
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 297
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
 Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
 Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
 Craft-Bewertung mit Rüstung, Waffen-DPS und geplantem Ersatz, Goldpuffer, Goldplaner mit Routen,
-Taschen, Rezeptbuch und Abklingzeiten, Einstellungen, Hinweise).
+Taschen, Rezeptbuch und Abklingzeiten, Ratgeber, Berufsansicht mit Gruppen, Filtern und Suche,
+Einstellungen, Hinweise).
 Die Neuerungen von 0.5.0 wurden am 19.10.2026 in 0.5.0-alpha.1 und 0.5.0-alpha.2 in Classic Era im
 Spiel getestet (mit Auctionator); die fehlenden Ziel-Pfeile im Tab „Beschaffung“ wurden in
 0.5.0-alpha.2 ergänzt und bestätigt. Die Version 0.5.0 unterscheidet sich von 0.5.0-alpha.2 nur in
@@ -435,15 +435,18 @@ Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dok
 Der Ratgeber (0.7.0) wurde am 19.10.2026 in 0.7.0-alpha.1 bis 0.7.0-alpha.6 in Classic Era im Spiel
 getestet, ohne Lua-Fehler.
 
-Der Reiter „Berufe“ (0.8.0-alpha.1) ist **nur außerhalb des Spiels geprüft; kein echter In-Game-Test
-durchgeführt** (315 automatische Prüfungen, davon 14 neue Tests für Berufe, Gruppen, Filter, Suche,
-Kosten und den Reiter).
+Der Reiter „Berufe“ wurde am 23.10.2026 in 0.8.0-alpha.1 in Classic Era im Spiel getestet (Kochkunst,
+Erste Hilfe, Schneiderei, Verzauberkunst; Namen und Fertigkeiten der Berufsfenster per `/dump`
+bestätigt). Bergbau, Alchemie, Lederverarbeitung, Schmiedekunst und Ingenieurskunst wurden nicht im
+Spiel geprüft. `/bof perf`: 1640 KB Speicher, Durchschnitt 0,01 %, Spitze 7,54 % der Frame-Zeit. Die
+Version 0.8.0 unterscheidet sich von 0.8.0-alpha.1 nur durch eine kleine Absicherung beim
+Fertigkeitsbalken, die Versionsnummer und die Dokumentation.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.8.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.8.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

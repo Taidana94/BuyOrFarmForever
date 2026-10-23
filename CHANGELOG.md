@@ -3,110 +3,38 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.8.0-alpha.1] – 2026-10-23 (Testversion)
+## [0.8.0] – 2026-10-23
 
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+Ratgeber und Berufsansicht. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet. Die Version
+0.7.0 wurde nicht einzeln veröffentlicht, ihre Neuerungen sind hier enthalten.
 
-### Neu
+### Hinzugefügt
 
 - **Reiter „Berufe“:** pro Beruf eine Ansicht mit deinen gelernten Rezepten, gruppiert nach dem, wofür
   sie gut sind – Essen, Elixiere und Verzauberungen nach ihrem Effekt (Stärke, Beweglichkeit, Ausdauer &
   Willenskraft, Zaubermacht, Angeln, Heilung …), Ausrüstung nach ihrem stärksten Wert, alles andere nach
-  Gegenstandsart. Gruppen lassen sich zuklappen.
-- Fertigkeitsbalken, Suche und Zutaten-Filter: **Alle**, **Teilweise** (mindestens eine Zutat in den
-  Taschen) und **Komplett** (jetzt herstellbar). Der Filter bleibt gespeichert.
-- Detail rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, Zutatenkosten,
-  Wert beim Händler und im AH, Gewinn pro Herstellung und „Als Ziel anlegen“.
-- `/bof recipe key <Rezept> [Anzahl]`: Ziel aus einem gemerkten Rezept (nutzt der Knopf im Reiter).
-
-### Geändert
-
-- Das Rezeptbuch merkt sich jetzt auch Beruf, Fertigkeit und Schwierigkeit sowie Verzauberungen.
-
-## [0.7.0-alpha.6] – 2026-10-19 (Testversion)
-
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
-
-### Geändert
-
-- Herstellen: Hat eine Zutat keinen Preis, aber eine gemessene Farmrunde, wird sie als gefarmt
-  gerechnet – kein Gold, dafür die Farmzeit (im Tooltip „Zutaten farmen: etwa …“, auf der Karte
-  „Zutaten farmen“). Vorher fiel so ein Rezept als „ohne Preis“ heraus. Auch der Goldplaner rechnet
-  die Farmzeit mit ein.
-
-## [0.7.0-alpha.5] – 2026-10-19 (Testversion)
-
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
-
-### Geändert
-
-- **Herstellen rechnet genauer:** Zutaten in deinen Taschen zählen mit ihrem Rohwert (was sie beim
-  Händler oder im AH bringen würden), Zutaten zum Kaufen mit dem Kaufpreis. Das Produkt zählt mit
-  Händler- und AH-Wert. Mit Zutaten in der Tasche werden so viele Crafts vorgeschlagen, wie sie reichen.
-- Herstellen schlägt nur gelernte Rezepte vor – auch bei Zielen aus einem Rezept.
-- Abklingzeiten: bereite stehen oben in der Zeile Herstellen (mit Gewinn, wenn Preise da sind),
-  wartende nennt der Tooltip mit der Restzeit.
-- Die Karte zeigt „Gewinn bis …“; der Tooltip pro Rezept Händler, AH und Zutaten.
-
-## [0.7.0-alpha.4] – 2026-10-19 (Testversion)
-
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
-
-### Geändert
-
-- Der Ratgeber zeigt jetzt immer dieselben Zeilen in fester Reihenfolge: **Verkaufen**,
-  **Entzaubern** (nur wenn dein Charakter entzaubern kann), **Herstellen**, **Sparziel**,
-  **Deine beste Stunde**. Gibt es gerade nichts zu tun, sagt die Zeile, warum (grau).
-- **Verkaufen** fasst Händler und Auktionshaus zusammen („Händler: 6 · AH: 20“) und warnt bei vollen
-  Taschen. Der Tooltip zeigt beide Listen; ein Klick beim Händler verkauft nur die Händler-Liste.
-- **Entzaubern** vergleicht jeden Gegenstand mit Verkaufen. Der Tooltip nennt pro Gegenstand, wie
-  viel Entzaubern mehr bringt (Werte von Auctionator). Neben dem Händler warnt eine Karte „Nicht
-  verkaufen – entzaubern“.
-- **Herstellen** rechnet mit deinem Rezeptbuch: bereite Ziele und Abklingzeiten zuerst, dann
-  gewinnbringende Rezepte, deren Zutaten du schon hast, dann solche mit Zutaten zum Kaufen. Fehlen
-  Preise, sagt die Zeile, wie viele Rezepte ohne Preis sind.
-- Ein Klick auf **Sparziel** öffnet den Goldpuffer.
-
-## [0.7.0-alpha.3] – 2026-10-19 (Testversion)
-
-Nicht in Forever getestet.
-
-### Behoben
-
-- Im Ratgeber erschienen die Karten doppelt, solange kein Spielfenster offen war.
-
-### Geändert
-
-- Der Ratgeber ist schmaler. Seine Karten haben keinen Knopf mehr: Ein Klick auf die Karte führt
-  den Vorschlag aus (Verkaufen und Kaufen fragen weiterhin nach). Die Karten an den Spielfenstern
-  behalten ihre Knöpfe.
-
-## [0.7.0-alpha.2] – 2026-10-19 (Testversion)
-
-Nicht in Forever getestet.
-
-### Geändert
-
-- Der Ratgeber ist viel kleiner: höchstens 4 Karten, die Höhe passt sich an, etwas kleiner gezeichnet.
-
-## [0.7.0-alpha.1] – 2026-10-19 (Testversion)
-
-Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Ratgeber** (`/bof advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): Vorschläge als Karten –
-  Kram verkaufen, volle Taschen, Abklingzeiten, herstellbare Ziele, Material bei deinen Twinks, deine
-  beste Stunde, nächstes Sparziel. Öffnet sich nach dem Login, wenn etwas Wichtiges ansteht.
-- **Karten an den Spielfenstern:** Händler (fehlende Zutaten kaufen, Kram verkaufen), Auktionshaus
-  (laut Plan kaufen, einstellen, Preise scannen), Bank (Material für deine Ziele mitnehmen),
-  Briefkasten (Material an Twinks schicken, die es für ihre Ziele brauchen).
+  Gegenstandsart. Gruppen lassen sich zuklappen. Dazu Fertigkeitsbalken, Suche und der Zutaten-Filter
+  **Alle**, **Teilweise** (mindestens eine Zutat in den Taschen) und **Komplett** (jetzt herstellbar).
+  Rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, Zutatenkosten, Wert beim
+  Händler und im AH, Gewinn pro Herstellung und „Als Ziel anlegen“.
+- **Ratgeber** (`/bof advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): ein kleines Fenster mit
+  festen Zeilen **Verkaufen**, **Entzaubern** (nur wenn dein Charakter entzaubern kann), **Herstellen**,
+  **Sparziel** und **Deine beste Stunde**; ein Klick auf eine Zeile führt sie aus. Gibt es nichts zu tun,
+  sagt die Zeile, warum. Öffnet sich nach dem Login, wenn etwas Wichtiges ansteht.
+- **Karten an den Spielfenstern:** Händler (fehlende Zutaten kaufen, Kram verkaufen, „Nicht verkaufen –
+  entzaubern“), Auktionshaus (laut Plan kaufen, einstellen, Preise scannen), Bank (Material für deine
+  Ziele mitnehmen), Briefkasten (Material an Twinks schicken).
 - **Verkaufen und Kaufen auf Knopfdruck** beim Händler, jeweils nach Bestätigung.
+- `/bof recipe key <Rezept> [Anzahl]`: Ziel aus einem gemerkten Rezept (nutzt der Knopf im Reiter „Berufe“).
 
 ### Geändert
 
-- Goldplaner: Bleibt Zeit übrig, weil eine gemessene Farmroute fehlt, steht das im Plan („Übrige
-  Zeit … ohne Vorschlag“) – vorher sahen 1, 2 und 4 Stunden ohne Erklärung gleich aus.
+- **Herstellen rechnet genauer** (Ratgeber und Goldplaner): Zutaten in deinen Taschen zählen mit ihrem
+  Rohwert, Zutaten zum Kaufen mit dem Kaufpreis, das Produkt mit Händler- und AH-Wert. Hat eine Zutat
+  keinen Preis, aber eine gemessene Farmrunde, wird sie als gefarmt gerechnet (Farmzeit statt Gold).
+  Vorgeschlagen werden nur gelernte Rezepte; bereite Abklingzeiten stehen oben, wartende im Tooltip.
+- Das Rezeptbuch merkt sich jetzt auch Beruf, Fertigkeit und Schwierigkeit sowie Verzauberungen.
+- Goldplaner: Bleibt Zeit übrig, weil eine gemessene Farmroute fehlt, steht das im Plan.
 
 ## [0.6.0] – 2026-10-19
 

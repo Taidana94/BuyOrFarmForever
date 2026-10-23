@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.8.0 | 2026-10-23 | 315 checks passed, 0 failed (297 unit tests); against 0.8.0-alpha.1 only the skill bar guard (with test; mutation check: removing the guard fails 1), version and documentation changed |
 | 0.8.0-alpha.1 | 2026-10-23 | 315 checks passed, 0 failed; 14 new tests in `test_professions.lua` (book with profession/difficulty/skill, smelting as mining, enchantments kept, categories from facts, effect data keys, labels, grouping, reagent filter, search, economics, sanitizing, tab list/collapse/detail/filter/search, goal button, gear by stats); layout test includes the new tab; level 1c exempts `Data/` from the file length (data tables) |
 | 0.4.0-alpha.2 | 2026-10-19 | 226 checks passed, 0 failed (208 unit tests); new layout test: every button label must fit its button (6.4 px per character + 4 px, calibrated on the in-game screenshot); it flagged the two overflowing labels, fixed by shorter texts |
 | 0.4.0-alpha.1 | 2026-10-19 | 225 checks passed, 0 failed (207 unit tests); new tests per stage of the player relief plan; mutation checks: no sanitizing of alternative details fails 1, loot grace before merchant window in the farm capture fails 1; tests found and fixed: editable rows in the all-goals view, `Settings.Set` returning `false` for "off", read-only `false` run in `FarmAssist`, loot grace winning over an open merchant window (income sources and farm capture) |
@@ -269,11 +270,35 @@ Bugs found (screenshot):
   a window is open.
 - Smelting/Mining: not checked (the test character has no Mining).
 
+### Performance review 0.8.0 (2026-10-23, before the release)
+
+In game (user, `/bof perf`, Classic Era 1.15.9, after testing the professions tab, window state at the
+time of the command not reported): memory 1640 KB; addon share of frame time: recent 0.00 %, average
+0.01 %, peak 7.54 %; "Bestand aller Ziele neu berechnen" 1.520 ms (18 items).
+
+Static review of the new and changed handlers (0.7.0 advisor was reviewed in its own stages):
+- Professions tab: signals `BAGS_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED`, `DATA_CHANGED`,
+  `RECIPES_CHANGED` only while the tab is shown (refresh mixin, unregistered on hide); refreshes coalesced
+  to one per frame. A refresh groups one profession's recipes (a few hundred at most) and fills 15 rows;
+  categories are cached per recipe for the session. No `OnUpdate`, no ticker, frames created once.
+- `RecipeBook`: unchanged trigger (one `C_Timer.After(1)` per profession window burst); per capture
+  additionally one skill line read per open window and one `RECIPES_CHANGED` signal.
+- Idle with the window closed: no new per-frame work; average 0.01 % confirms that.
+
+Assessment: the average is effectively zero. The peak (7.54 %) is a single frame since login, far above the
+0.13 % measured for 0.2.0. Likely candidates are one-off bursts: the recipe book capture reading every recipe of
+a window, or the first tab refresh that computes all categories and requests item data. Not reproduced or
+attributed yet. The memory value includes Lua garbage not yet collected; the SavedVariables were last written
+on 2026-10-19 (no `/reload` since), so they could not be checked. Follow-up (not blocking the release): measure
+the peak after `/reload` with the window closed, then after opening the tab once, and memory after
+`/run collectgarbage("collect")`.
+
 ### Result 0.8.0-alpha.1 (Classic Era, 2026-10-23)
 
 User checked the professions tab (Cooking, Tailoring, Enchanting, First Aid on the test character) and
-confirmed: "Passt soweit!". No details reported on single checklist points, no numbers from `/bof perf`.
-Not checked: Mining/Smelting, Alchemy, Leatherworking, Blacksmithing, Engineering, Poisons.
+confirmed: "Passt soweit!". No details reported on single checklist points. `/bof perf` numbers: see the
+performance review above. Not checked: Mining/Smelting, Alchemy, Leatherworking, Blacksmithing, Engineering,
+Poisons; the user said to assume they work as well (2026-10-23).
 
 ### Checklist 0.8.0-alpha.1 (Classic Era, professions tab)
 
