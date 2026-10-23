@@ -102,6 +102,27 @@ function Inputs.CreateItemSlot(parent, onItem)
 	return slot
 end
 
+-- A small item icon (not a drop target): item tooltip plus `hint`; right-click calls onRemove(itemID).
+function Inputs.CreateItemIcon(parent, size, hint, onRemove)
+	local icon = CreateFrame("Button", nil, parent)
+	icon:SetSize(size, size)
+	icon.icon = icon:CreateTexture(nil, "ARTWORK")
+	icon.icon:SetAllPoints()
+	icon:RegisterForClicks("RightButtonUp")
+	icon:SetScript("OnClick", function(self)
+		if self.itemID then
+			onRemove(self.itemID)
+		end
+	end)
+	icon:SetScript("OnEnter", function(self)
+		showSlotTooltip(self)
+		GameTooltip:AddLine(hint)
+		GameTooltip:Show()
+	end)
+	icon:SetScript("OnLeave", hideTooltip)
+	return icon
+end
+
 -- A shift-clicked item goes to the visible item slot (only one tab is shown at a time).
 local function onLinkInsert(itemID)
 	for _, slot in ipairs(slots) do

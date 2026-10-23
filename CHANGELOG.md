@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.5] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- **Behalten-Liste im Goldplaner:** Jeder behaltene Gegenstand erscheint als Symbol neben dem Feld
+  (Tooltip mit dem Gegenstand); Rechtsklick nimmt ihn von der Liste. Bisher ging das nur durch
+  erneutes Hineinziehen oder `/bof goldkeep`.
+
 ## [0.11.0-alpha.4] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

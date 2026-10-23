@@ -21,8 +21,8 @@ local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
 -- The view buttons get their own row: the time row shares its height with the Gold tab's mode buttons.
 local VIEW_ROW_Y, SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -32, -60, -82, -212, -234, -250
 local LINE_GAP, SOURCE_GAP, TEXT_WIDTH, KEEP_TEXT_WIDTH = 4, 2, 700, 600
--- Kept items named next to the slot; more are counted.
-local MAX_KEEP_NAMES = 6
+-- Kept items shown as icons next to the slot (right-click removes one); more are counted.
+local MAX_KEEP_ICONS, KEEP_ICON_SIZE = 12, 20
 
 local function createText(frame, font, y)
 	local text = frame:CreateFontString(nil, "OVERLAY", font)
@@ -80,8 +80,15 @@ local function buildKeepRow(panel, frame)
 		Inputs.Run("goldkeep " .. itemID)
 	end)
 	panel.keepSlot:SetPoint("LEFT", label, "RIGHT", GAP, 0)
+	panel.keepIcons = {}
+	for i = 1, MAX_KEEP_ICONS do
+		local icon = Inputs.CreateItemIcon(frame, KEEP_ICON_SIZE, L.GOLDPLAN_KEEP_REMOVE_HINT, function(itemID)
+			Inputs.Run("goldkeep " .. itemID)
+		end)
+		icon:SetPoint("LEFT", i == 1 and panel.keepSlot or panel.keepIcons[i - 1], "RIGHT", GAP / 2, 0)
+		panel.keepIcons[i] = icon
+	end
 	panel.keepText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-	panel.keepText:SetPoint("LEFT", panel.keepSlot, "RIGHT", GAP, 0)
 	panel.keepText:SetWidth(KEEP_TEXT_WIDTH)
 	panel.keepText:SetJustifyH("LEFT")
 end
@@ -177,26 +184,29 @@ function Panel.Refresh(panel)
 	else
 		refreshList(panel, charData)
 	end
-	panel.keepText:SetText(Panel.KeepText(charData))
+	Panel.RefreshKeep(panel, charData)
 end
 
--- The kept items by name (at most MAX_KEEP_NAMES, then "+n"), or a hint for an empty list.
-function Panel.KeepText(charData)
+local function keptIDs(charData)
 	local ids = {}
 	for itemID in pairs(charData.goldKeep) do
 		ids[#ids + 1] = itemID
 	end
-	if #ids == 0 then
-		return L.GOLDPLAN_KEEP_EMPTY
-	end
 	table.sort(ids)
-	local names = {}
-	for i = 1, math.min(#ids, MAX_KEEP_NAMES) do
-		names[i] = ns.UIShared.ItemText(ids[i])
+	return ids
+end
+
+-- One icon per kept item (at most MAX_KEEP_ICONS), then the hint for an empty list or "+n".
+function Panel.RefreshKeep(panel, charData)
+	local ids = keptIDs(charData)
+	local anchor = panel.keepSlot
+	for i, icon in ipairs(panel.keepIcons) do
+		Inputs.SetSlotItem(icon, ids[i])
+		Widgets.SetShown(icon, ids[i] ~= nil)
+		anchor = ids[i] and icon or anchor
 	end
-	local text = table.concat(names, L.PLAN_SEPARATOR)
-	if #ids > MAX_KEEP_NAMES then
-		text = text .. Util.Format(L.GOLDPLAN_KEEP_MORE, #ids - MAX_KEEP_NAMES)
-	end
-	return text
+	panel.keepText:ClearAllPoints()
+	panel.keepText:SetPoint("LEFT", anchor, "RIGHT", GAP, 0)
+	local more = #ids - MAX_KEEP_ICONS
+	panel.keepText:SetText(#ids == 0 and L.GOLDPLAN_KEEP_EMPTY or more > 0 and Util.Format(L.GOLDPLAN_KEEP_MORE, more) or "")
 end
