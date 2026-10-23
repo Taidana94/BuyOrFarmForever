@@ -98,11 +98,19 @@ local STEP_TEXTS = {
 	end,
 }
 
--- What the plan pays up front and what the free gold did not cover ("" when nothing).
+-- What the plan pays up front, what the free gold did not cover and how many prices it uses are old
+-- ("" when nothing).
 function GoldPlanCommands.CapitalText(plan)
 	local text = plan.spend > 0 and Util.Format(L.GOLDPLAN_SPEND, Money.Format(plan.spend)) or ""
 	if plan.skipped.count > 0 then
 		text = text .. Util.Format(L.GOLDPLAN_SKIPPED, plan.skipped.count, Money.Format(plan.skipped.spend))
+	end
+	local outdated = 0
+	for _, step in ipairs(plan.steps) do
+		outdated = outdated + (step.task and step.task.outdated or 0)
+	end
+	if outdated > 0 then
+		text = text .. Util.Format(L.GOLDPLAN_OUTDATED, outdated, ns.db.settings.priceMaxAgeDays)
 	end
 	return text
 end

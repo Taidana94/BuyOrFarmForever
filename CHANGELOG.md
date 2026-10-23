@@ -3,6 +3,24 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+Enthält 0.11.1-alpha.1 (unten).
+
+### Hinzugefügt
+
+- **Startkapital im Goldplaner:** Einkäufe (Zutaten zum Herstellen, AH-Weiterverkauf) plant er nur,
+  soweit dein freies Gold (Gold minus Sparrücklagen) reicht. Die Zusammenfassung nennt den „Einsatz
+  vorab“ und wie viele Schritte ausgelassen wurden und wie viel Gold sie bräuchten. Gilt auch für den
+  Vergleich und „Deine beste Stunde“ im Ratgeber.
+- **Zuverlässigkeit der Farmrouten:** Routen mit weniger als 3 Runden heißen „noch unsicher“, stark
+  schwankende „schwankt stark“ (Goldplaner-Routen und Tooltip im Reiter „Farmen“). Ein Lauf mit
+  seltenem Drop zählt höchstens doppelt so viel wie der Median, damit ein Glückslauf den Plan nicht
+  verzerrt.
+- **Alte Preise sichtbar:** Im Herstellungs-Tooltip steht neben einem veralteten Zutatenpreis sein Alter
+  („vor 9 Tagen“); der Goldplaner nennt, wie viele Preise im Plan älter als die eingestellte Grenze sind.
+
 ## [0.11.1-alpha.1] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

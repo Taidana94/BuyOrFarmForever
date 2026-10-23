@@ -3,7 +3,7 @@
 -- characters know the recipe, and, when the recipe was seen in a profession window, one line per
 -- reagent with its count and its cost right-aligned in coins, and the total. Lines are texts or
 -- { left, right } pairs (UI/TooltipLines.lua). Prices are planning prices (Core/PriceCapture.lua);
--- a reagent without one is marked and the total becomes "at least". Built on demand per item and
+-- a reagent without one is marked and the total becomes "at least"; an old price shows its age. Built on demand per item and
 -- cached by UI/TooltipLines.lua until the data changes. Setting tooltipReagents off: only the
 -- profession lines.
 local _, ns = ...
@@ -72,11 +72,12 @@ end
 local function reagentLines(lines, recipe, now)
 	local total, missing = 0, 0
 	for _, reagent in ipairs(recipe.reagents) do
-		local price = ns.PriceCapture.Best(reagent.itemID, now)
+		local price, _, at, outdated = ns.PriceCapture.Best(reagent.itemID, now)
 		local left = Util.Format(L.TOOLTIP_RECIPE_REAGENT, UIShared.ItemText(reagent.itemID), reagent.count)
 		if price then
 			total = total + price * reagent.count
-			lines[#lines + 1] = { left, coins(price * reagent.count) }
+			local age = outdated and DIM_COLOR .. Util.Format(L.TOOLTIP_RECIPE_OLD, Util.FormatAge(now - at)) .. COLOR_END or ""
+			lines[#lines + 1] = { left, age .. coins(price * reagent.count) }
 		else
 			missing = missing + 1
 			lines[#lines + 1] = { left, DIM_COLOR .. L.TOOLTIP_RECIPE_NO_PRICE .. COLOR_END }

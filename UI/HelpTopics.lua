@@ -44,7 +44,7 @@ HelpTopics.LIST = {
 	{ id = "FARM", label = "H_TOPIC_FARM", lines = sections({
 		{ "H_FARM_AUTO_HEAD", { "H_FARM_AUTO_1", "H_FARM_AUTO_2", "H_FARM_AUTO_3", "H_FARM_AUTO_4" } },
 		{ "H_FARM_WINDOW_HEAD", { "H_FARM_WINDOW_1", "H_FARM_WINDOW_2", "H_FARM_WINDOW_3", "H_FARM_WINDOW_4" } },
-		{ "H_FARM_TAB_HEAD", { "H_FARM_TAB_1", "H_FARM_TAB_2", "H_FARM_TAB_3" } },
+		{ "H_FARM_TAB_HEAD", { "H_FARM_TAB_1", "H_FARM_TAB_2", "H_FARM_TAB_4", "H_FARM_TAB_3" } },
 	}) },
 	{ id = "PROF", label = "H_TOPIC_PROF", lines = sections({
 		{ "H_PROF_HEAD", { "H_PROF_1", "H_PROF_2" } },
@@ -57,7 +57,7 @@ HelpTopics.LIST = {
 		{ "H_GOLD_MORE_HEAD", { "H_GOLD_MORE_1", "H_GOLD_MORE_2", "H_GOLD_MORE_3" } },
 	}) },
 	{ id = "PLANNER", label = "H_TOPIC_PLANNER", lines = sections({
-		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2" } },
+		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3" } },
 		{ "H_PLAN_TIME_HEAD", { "H_PLAN_TIME_1", "H_PLAN_TIME_2" } },
 		{ "H_PLAN_VIEWS_HEAD", { "H_PLAN_VIEWS_1", "H_PLAN_VIEWS_2", "H_PLAN_VIEWS_3" } },
 		{ "H_PLAN_KEEP_HEAD", { "H_PLAN_KEEP_1", "H_PLAN_KEEP_2" } },
