@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.8] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- „Über“ und „Anleitung“ in Abschnitte mit farbigen Überschriften gegliedert; „Über“ zeigt keinen
+  GitHub-Link mehr.
+- Neuer, verständlicher Einleitungstext im Hilfe-Reiter (erklärt die drei Knöpfe); der Text darunter
+  rückt mit, wenn die Einleitung umbricht.
+
 ## [0.11.0-alpha.7] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

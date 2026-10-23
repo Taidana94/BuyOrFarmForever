@@ -346,7 +346,7 @@ Entwickelt von **Taidana** aka **zuerich3**. Im Spiel: Reiter „Hilfe“ → �
 
 ## Version
 
-0.11.0-alpha.7 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.11.0-alpha.8 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -9,7 +9,7 @@ local Widgets = ns.Widgets
 local HelpTab = {}
 ns.HelpTab = HelpTab
 
-local TEXT_Y = -26
+local TEXT_GAP = 8
 local BUTTON_WIDTH, BUTTON_GAP = 80, 4
 -- Views in button order (right to left from the last): label key and line source.
 local VIEWS = {
@@ -53,7 +53,8 @@ function HelpTab.Create(parent)
 	buildButtons(tab, frame)
 	-- One text block: long lines wrap, text below the frame's bottom is cut off by the client.
 	tab.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	tab.text:SetPoint("TOPLEFT", 0, TEXT_Y)
+	-- Below the intro, however many lines it wraps to.
+	tab.text:SetPoint("TOPLEFT", tab.intro, "BOTTOMLEFT", 0, -TEXT_GAP)
 	tab.text:SetPoint("BOTTOMRIGHT", 0, 0)
 	tab.text:SetJustifyH("LEFT")
 	tab.text:SetJustifyV("TOP")
