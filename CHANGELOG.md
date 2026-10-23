@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.12] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- **Neue Hilfe:** Der Reiter „Hilfe“ hat links eine Themenliste und rechts eine gegliederte
+  Erklärung mit Überschriften: Schnellstart, Ziele, Farmen, Berufe, Goldpuffer, Goldplaner, Ratgeber,
+  Minimap & Tasten, Einstellungen, Datenerfassung, Chatbefehle (nach Bereich sortiert) und Über. Jeder
+  Knopf, jede Mausaktion und jeder Befehl ist beschrieben, auch „Alle“/„Neu“ bei den Zielen.
+
 ## [0.11.0-alpha.11] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

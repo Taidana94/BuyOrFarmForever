@@ -1,6 +1,7 @@
--- Help tab of the main window: a short introduction and, in one wrapping text block, the command
--- list (the same lines as /bof help), the how-to (/bof howto) or the about text (/bof about),
--- switched by three buttons; the mouse wheel scrolls by line. Static text; it needs no events.
+-- Help tab of the main window: topic buttons on the left (UI/HelpTopics.lua: quick start, every
+-- tab and window with its buttons and mouse actions, data collection, chat commands, about) and the
+-- selected topic on the right in one wrapping text block; the mouse wheel scrolls by line. Static
+-- text; it needs no events.
 local _, ns = ...
 
 local L = ns.L
@@ -9,52 +10,33 @@ local Widgets = ns.Widgets
 local HelpTab = {}
 ns.HelpTab = HelpTab
 
-local TEXT_GAP = 8
-local BUTTON_WIDTH, BUTTON_GAP = 80, 4
--- Views in button order (right to left from the last): label key and line source.
-local VIEWS = {
-	{ id = "COMMANDS", label = "HELP_BTN_COMMANDS", lines = function()
-		return ns.Slash.HelpLines()
-	end },
-	{ id = "HOWTO", label = "HELP_BTN_HOWTO", lines = function()
-		return ns.About.HowToLines()
-	end },
-	{ id = "ABOUT", label = "HELP_BTN_ABOUT", lines = function()
-		return ns.About.Lines()
-	end },
-}
+local BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_GAP, TEXT_X = 130, 22, 4, 146
 
 local Tab = {}
 Tab.__index = Tab
 Widgets.MixRefresh(Tab)
 
 local function buildButtons(tab, frame)
-	tab.viewButtons = {}
-	for i, view in ipairs(VIEWS) do
-		local button = Widgets.CreateButton(frame, L[view.label], BUTTON_WIDTH)
-		button:SetPoint("TOPRIGHT", -(#VIEWS - i) * (BUTTON_WIDTH + BUTTON_GAP), 0)
+	tab.topicButtons = {}
+	for i, topic in ipairs(ns.HelpTopics.LIST) do
+		local button = Widgets.CreateButton(frame, L[topic.label], BUTTON_WIDTH)
+		button:SetHeight(BUTTON_HEIGHT)
+		button:SetPoint("TOPLEFT", 0, -(i - 1) * (BUTTON_HEIGHT + BUTTON_GAP))
 		button:SetScript("OnClick", function()
-			tab.view, tab.offset = view, 0
-			tab:Refresh()
+			tab:Select(topic)
 		end)
-		tab.viewButtons[view.id] = button
+		tab.topicButtons[topic.id] = button
 	end
 end
 
 function HelpTab.Create(parent)
-	local tab = setmetatable({ offset = 0, help = {}, view = VIEWS[1] }, Tab)
+	local tab = setmetatable({ offset = 0, help = {}, topic = ns.HelpTopics.LIST[1] }, Tab)
 	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
-	tab.intro = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	tab.intro:SetPoint("TOPLEFT", 0, 0)
-	tab.intro:SetPoint("TOPRIGHT", -#VIEWS * (BUTTON_WIDTH + BUTTON_GAP), 0)
-	tab.intro:SetJustifyH("LEFT")
-	tab.intro:SetText(L.HELP_TAB_INTRO)
 	buildButtons(tab, frame)
 	-- One text block: long lines wrap, text below the frame's bottom is cut off by the client.
 	tab.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	-- Below the intro, however many lines it wraps to.
-	tab.text:SetPoint("TOPLEFT", tab.intro, "BOTTOMLEFT", 0, -TEXT_GAP)
+	tab.text:SetPoint("TOPLEFT", TEXT_X, 0)
 	tab.text:SetPoint("BOTTOMRIGHT", 0, 0)
 	tab.text:SetJustifyH("LEFT")
 	tab.text:SetJustifyV("TOP")
@@ -66,10 +48,15 @@ function HelpTab.Create(parent)
 	return tab
 end
 
+function Tab:Select(topic)
+	self.topic, self.offset = topic, 0
+	self:Refresh()
+end
+
 function Tab:Refresh()
-	self.help = self.view.lines()
-	for id, button in pairs(self.viewButtons) do
-		Widgets.SetEnabled(button, id ~= self.view.id)
+	self.help = self.topic.lines()
+	for id, button in pairs(self.topicButtons) do
+		Widgets.SetEnabled(button, id ~= self.topic.id)
 	end
 	self:Scroll(0)
 end
