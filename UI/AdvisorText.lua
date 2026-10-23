@@ -18,6 +18,7 @@ local MAX_TOOLTIP_ITEMS = 12
 -- Colour category of each kind: HERE (do it in this window), GOLD, INFO, WARN; NONE for empty rows.
 local CATEGORY = {
 	BUY_MERCHANT = "HERE", BANK_TAKE = "HERE", MAIL_SEND = "HERE", BUY_AUCTION = "HERE", PRICES_SCAN = "HERE",
+	FULL_SCAN = "HERE",
 	SELL_VENDOR = "GOLD", SELL_AUCTION = "GOLD", DISENCHANT = "GOLD", PLAN_HOUR = "GOLD", COOLDOWN_READY = "GOLD",
 	CRAFT_NOW = "INFO", MAIL_ASK = "INFO", SAVINGS = "INFO", BAGS_FULL = "WARN", SUM_SELL = "GOLD", SUM_CRAFT = "GOLD",
 }
@@ -107,6 +108,10 @@ local TEXTS = {
 	end,
 	PRICES_SCAN = function(s)
 		return Util.Format(L.ADVISOR_PRICES_SCAN, s.count), L.ADVISOR_PRICES_SCAN_DETAIL
+	end,
+	FULL_SCAN = function(s)
+		local title = s.seconds and Util.Format(L.ADVISOR_FULL_SCAN_OLD, Util.FormatDuration(s.seconds)) or L.ADVISOR_FULL_SCAN_NONE
+		return title, L.ADVISOR_FULL_SCAN_DETAIL
 	end,
 	MAIL_SEND = function(s)
 		return Util.Format(L.ADVISOR_MAIL_SEND, s.name, s.count, itemText(s)), Util.Format(L.ADVISOR_MAIL_SEND_DETAIL, s.name)

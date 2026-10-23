@@ -87,6 +87,12 @@ function MarketWatch.RecordScan(db, realmKey, listings, watched, now)
 	return sold
 end
 
+-- Seconds since the last full scan of the realm, or nil when there was none.
+function MarketWatch.ScanAge(db, realmKey, now)
+	local market = realmKey and db.market[realmKey]
+	return market and market.scanAt > 0 and now - market.scanAt or nil
+end
+
 -- Sales seen for an item over the kept days: { sold, soldUnits, soldCopper, expired, days } or nil.
 function MarketWatch.Stats(db, realmKey, itemID)
 	local market = realmKey and db.market[realmKey]
