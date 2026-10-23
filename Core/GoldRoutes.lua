@@ -185,10 +185,27 @@ local function auctionPrice(itemID, now)
 	return best
 end
 
+-- A lowest listing far above the usual price (one overpriced auction) is not what an item sells for:
+-- with enough price history (Core/PriceHistory.lua) the price counts at most this times its median.
+GoldRoutes.OUTLIER_PRICE_FACTOR = 1.5
+
+local function capByHistory(itemID, price, now)
+	local realm = ns.db.priceHistory[ns.PriceCapture.CurrentRealmKey() or ""]
+	local item = realm and realm[itemID]
+	local reference, days
+	if item then
+		reference, days = ns.PriceHistory.Reference(item, ns.PriceHistory.Day(now) + 1)
+	end
+	if reference and days >= ns.FlipTasks.MIN_DAYS then
+		return math.min(price, reference * GoldRoutes.OUTLIER_PRICE_FACTOR)
+	end
+	return price
+end
+
 -- What one unit brings on the auction house after its cut, or nil without a current price.
 function GoldRoutes.AuctionNet(itemID, now)
 	local auction = auctionPrice(itemID, now)
-	return auction and auction * (1 - GoldRoutes.AUCTION_CUT)
+	return auction and capByHistory(itemID, auction, now) * (1 - GoldRoutes.AUCTION_CUT)
 end
 
 -- What one unit brings when sold: the vendor price (sure) and what the auction house brings on top

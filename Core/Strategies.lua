@@ -92,6 +92,7 @@ function Strategies.Compare(opts)
 	local ranked, empty = {}, {}
 	for _, family in ipairs(Strategies.FAMILIES) do
 		local plan = ns.GoldPlan.Plan({ seconds = opts.seconds, discountPercent = opts.discountPercent, capital = opts.capital,
+			withoutAuction = opts.withoutAuction,
 			tasks = pick(opts.tasks, family, taskFamily), methods = pick(opts.methods, family, methodFamily) })
 		if #plan.steps > 0 then
 			ranked[#ranked + 1] = { family = family, plan = plan }

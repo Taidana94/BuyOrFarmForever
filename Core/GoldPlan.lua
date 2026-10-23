@@ -93,14 +93,38 @@ local function affordable(plan, task, capital)
 	return not capital or plan.spend + (task.spend or 0) <= capital
 end
 
--- Plan for opts = { seconds, tasks, methods, discountPercent, capital? }.
+-- Without the auction house (opts.withoutAuction): tasks that need it are left out, the auction part
+-- of the others and of the methods counts nothing.
+local AUCTION_TASKS = { SELL_AUCTION = true, FLIP = true }
+
+local function withoutAuction(opts)
+	local tasks, methods = {}, {}
+	for _, task in ipairs(opts.tasks) do
+		if not AUCTION_TASKS[task.kind] then
+			local copy = ns.Util.CopyTable(task)
+			copy.auction = 0
+			tasks[#tasks + 1] = copy
+		end
+	end
+	for _, method in ipairs(opts.methods) do
+		local copy = ns.Util.CopyTable(method)
+		copy.auctionPerHour, copy.ratingPerHour = 0, method.surePerHour
+		methods[#methods + 1] = copy
+	end
+	return tasks, methods
+end
+
+-- Plan for opts = { seconds, tasks, methods, discountPercent, capital?, withoutAuction? }.
 -- Returns { steps = { { kind = "TASK" | "TRAVEL" | "METHOD", task | method, seconds, sure, auction } },
 -- seconds, sure, auction, rating, spend (gold paid up front), skipped = { count, spend } (tasks the
 -- capital did not cover), alternatives = { { method, rating } } }.
 function GoldPlan.Plan(opts)
 	local plan = { steps = {}, seconds = 0, sure = 0, auction = 0, spend = 0, skipped = { count = 0, spend = 0 } }
-	local rest, methods = opts.seconds, opts.methods
-	for _, task in ipairs(sortedTasks(opts.tasks, opts.discountPercent)) do
+	local rest, methods, tasks = opts.seconds, opts.methods, opts.tasks
+	if opts.withoutAuction then
+		tasks, methods = withoutAuction(opts)
+	end
+	for _, task in ipairs(sortedTasks(tasks, opts.discountPercent)) do
 		if worthIt(task, methods, rest) and not affordable(plan, task, opts.capital) then
 			plan.skipped.count, plan.skipped.spend = plan.skipped.count + 1, plan.skipped.spend + task.spend
 		elseif worthIt(task, methods, rest) then

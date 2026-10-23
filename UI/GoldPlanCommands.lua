@@ -59,6 +59,7 @@ end
 local function planOptions(charData, seconds)
 	local now = ns.Client:GetServerTime()
 	return { seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now), capital = ns.GoldPlan.Capital(charData),
+		withoutAuction = not ns.db.settings.planUseAuction,
 		methods = ns.Conversion.Methods(charData, now), discountPercent = ns.db.settings.ahDiscountPercent }
 end
 
@@ -115,7 +116,8 @@ end
 -- What the plan pays up front, what the free gold did not cover and how many prices it uses are old
 -- ("" when nothing).
 function GoldPlanCommands.CapitalText(plan)
-	local text = plan.spend > 0 and Util.Format(L.GOLDPLAN_SPEND, Money.Format(plan.spend)) or ""
+	local text = (ns.db.settings.planUseAuction and "" or L.GOLDPLAN_NO_AUCTION)
+		.. (plan.spend > 0 and Util.Format(L.GOLDPLAN_SPEND, Money.Format(plan.spend)) or "")
 	if plan.skipped.count > 0 then
 		text = text .. Util.Format(L.GOLDPLAN_SKIPPED, plan.skipped.count, Money.Format(plan.skipped.spend))
 	end

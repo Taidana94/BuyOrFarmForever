@@ -58,6 +58,11 @@ local function buildTimeRow(panel, frame)
 		end
 	end })
 	panel.durationBox:SetPoint("LEFT", previous, "RIGHT", GAP * 2, 0)
+	-- Plan with or without selling on the auction house (setting planUseAuction).
+	panel.auctionCheck = Widgets.CreateCheck(frame, L.GOLDPLAN_USE_AUCTION, function(checked)
+		Inputs.Run("set planUseAuction " .. (checked and "on" or "off"))
+	end)
+	panel.auctionCheck:SetPoint("LEFT", panel.durationBox, "RIGHT", GAP * 2, 0)
 end
 
 local function buildViewButtons(panel, frame)
@@ -184,6 +189,7 @@ function Panel.Refresh(panel)
 		Widgets.SetEnabled(button, seconds ~= panel.seconds)
 	end
 	showView(panel)
+	panel.auctionCheck:SetChecked(ns.db ~= nil and ns.db.settings.planUseAuction)
 	if not charData or ns.readOnly then
 		panel.summary:SetText(L.NOT_READY)
 		showLines(panel.steps, {})
