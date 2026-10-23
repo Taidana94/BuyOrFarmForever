@@ -9,20 +9,20 @@ Full plan: `work/notes/BuyOrFarmForever-plan.md` in the development folder (not 
 | Namespace | `Core/Init.lua` | none |
 | Localization | `Locales/Locale.lua`, `Locales/deDE.lua` | none |
 | Core helpers | `Core/Util.lua`, `Core/Log.lua`, `Core/DB.lua`, `Core/Settings.lua` (settings schema) | `Log.lua`: `DEFAULT_CHAT_FRAME`, `geterrorhandler` only |
-| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/FarmRuns.lua` + `Core/FarmRunsValidation.lua` (run state machine), `Core/FarmCapture.lua` (yield from bag changes), `Core/FarmEstimates.lua`, `Core/Sourcing.lua` (buy/farm plan), `Core/CraftEval.lua` (craft evaluation), `Core/SavingsGoals.lua`, `Core/Income.lua` + `Core/IncomeCapture.lua` (gold buffer), `Core/MoneyContext.lua` (source of a gold change), `Core/Session.lua` (play session), `Core/WeightTemplates.lua` (stat weight templates), `Core/Materials.lua` (goals, requirements, shortfall), `Core/MaterialsValidation.lua` (stored goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
+| Core logic | `Core/Money.lua` (parse/format copper), `Core/Prices.lua` (prices per source), `Core/PriceCapture.lua` (merchant/auction capture, scan), `Core/FarmRuns.lua` + `Core/FarmRunsValidation.lua` (run state machine), `Core/FarmCapture.lua` (yield from bag changes), `Core/FarmEstimates.lua`, `Core/Acquire.lua` (cheapest way per wanted item, pure), `Core/WantPlan.lua` (the plan with the addon's data, cached), `Core/CraftEval.lua` (gear rating), `Core/SavingsGoals.lua`, `Core/Income.lua` + `Core/IncomeCapture.lua` (gold buffer), `Core/MoneyContext.lua` (source of a gold change), `Core/Session.lua` (play session), `Core/WeightTemplates.lua` (stat weight templates), `Core/Materials.lua` (shared checks of ids, counts, labels), `Core/Wants.lua` (wanted items, migration from goals), `Core/Recipes.lua` (imported recipes), `Core/Stock.lua` (bag/bank counts via adapter, snapshots) | none |
 | Adapter interface | `Adapters/Adapter.lua` | `DEFAULT_CHAT_FRAME` (mismatch message) |
-| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEraBags.lua` (bags, map), `Adapters/ClassicEraGear.lua` (item stats, equipment), `Adapters/ClassicEraUI.lua` (cursor item, tooltip and link hooks, merchant frame, minimap), `Adapters/ClassicEraPlayer.lua` (AFK, resting, taxi, class, talent points), `Adapters/ClassicEraQuest.lua` (quest frame rewards), `Adapters/ClassicEra.lua` | all client-specific APIs |
+| Client adapter | `Adapters/ClassicEraProfessions.lua` (profession windows), `Adapters/ClassicEraTrade.lua` (merchant, auction house), `Adapters/ClassicEraBags.lua` (bags, map), `Adapters/ClassicEraGear.lua` (item stats, equipment), `Adapters/ClassicEraUI.lua` (cursor item, tooltip and link hooks, merchant frame, minimap), `Adapters/ClassicEraPlayer.lua` (AFK, resting, taxi, class, talent points), `Adapters/ClassicEraCrafting.lua`, `Adapters/ClassicEraProfessionInfo.lua`, `Adapters/ClassicEra.lua` | all client-specific APIs |
 | Events, commands, startup | `Core/Events.lua`, `Core/Slash.lua`, `Core/Main.lua` | `CreateFrame`, `SlashCmdList` |
-| Chat commands (fallback for every window action) | `UI/Shared.lua` (helpers), `UI/*Commands.lua` (`/bof goal`, `recipe`, `stock`, `price`, `farm`, `plan`, `craft`, `weights`, `alt`, `gold`, `set`), `UI/FarmReports.lua` (estimate texts) | none (prints via `Log.Print`) |
-| Window | `UI/Widgets.lua` (buttons, check boxes, item tables, tab frames, refresh mixin), `UI/Inputs.lua` (edit boxes, item slot, confirmation dialog, `Inputs.Run`), `UI/MainWindow.lua` (frame, title line, eight tabs, `/bof show`), `UI/MaterialTabLayout.lua` + `UI/MaterialTab.lua` + `UI/MaterialTabActions.lua`, `UI/SourcingTabLayout.lua` + `UI/SourcingTab.lua`, `UI/FarmTab.lua`, `UI/CraftAltPanel.lua` + `UI/CraftTab.lua`, `UI/GoldTab.lua`, `UI/SettingsTab.lua`, `UI/HelpTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
-| Assistance (no player input) | `UI/FarmAssist.lua` (target reached, auto pause/travel), `UI/FarmSuggest.lua` (start suggestion), `UI/PromptBar.lua` (offer bar), `UI/TooltipLines.lua`, `UI/ShopHints.lua` (merchant/auction hints, reserve warning), `UI/QuestAlternatives.lua`, `UI/MinimapButton.lua` (+ key binding names), `UI/LoginSummary.lua`, `UI/GoldAuto.lua` | through the adapter; frames via the frame API |
+| Chat commands (fallback for every window action) | `UI/Shared.lua` (helpers), `UI/*Commands.lua` (`/bof want`, `recipe`, `price`, `farm`, `craft`, `weights`, `gold`, `goldplan`, `make`, `set`), `UI/FarmReports.lua` (estimate text) | none (prints via `Log.Print`) |
+| Window | `UI/Widgets.lua` (buttons, check boxes, item tables, tab frames, refresh mixin), `UI/Inputs.lua` (edit boxes, item slot, confirmation dialog, `Inputs.Run`), `UI/MainWindow.lua` (frame, title line, six tabs, `/bof show`), `UI/WantsTabLayout.lua` + `UI/WantsTab.lua`, `UI/FarmTab.lua` (routes) + `UI/FarmWindow.lua` (run control), `UI/Profession*.lua`, `UI/GoldTab.lua` + `UI/GoldPlanPanel.lua`, `UI/SettingsTab.lua`, `UI/HelpTab.lua` | stable frame API only: `CreateFrame`, templates, `GameTooltip`, `UISpecialFrames`, `C_Timer.After` |
+| Assistance (no player input) | `UI/FarmAssist.lua` (target reached, auto pause/travel), `UI/FarmSuggest.lua` (start suggestion), `UI/PromptBar.lua` (offer bar), `UI/TooltipLines.lua`, `UI/ShopHints.lua` (merchant/auction hints, reserve warning), `UI/MinimapButton.lua` (+ key binding names), `UI/LoginSummary.lua`, `UI/GoldAuto.lua` | through the adapter; frames via the frame API |
 
-Core logic (later: materials, farm runs, prices, sourcing, craft evaluation, gold buffer) never calls
+Core logic (wants, the plan, farm runs, prices, gear rating, gold buffer) never calls
 WoW APIs. It uses `ns.Client` (the adapter) and plain Lua data.
 
 ## Load order (TOC)
 
-`Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` → `Core/DB.lua` → `Core/Settings.lua` → `Core/Materials.lua` → `Core/MaterialsValidation.lua` → `Core/Recipes.lua` → `Core/FarmRuns.lua` → `Core/FarmRunsValidation.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEraBags.lua` → `Adapters/ClassicEraGear.lua` → `Adapters/ClassicEraUI.lua` → `Adapters/ClassicEraPlayer.lua` → `Adapters/ClassicEraQuest.lua` → `Adapters/ClassicEra.lua` → `Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/Sourcing.lua` → `Core/CraftEval.lua` → `Core/WeightTemplates.lua` → `Core/SavingsGoals.lua` → `Core/Income.lua` → `Core/MoneyContext.lua` → `Core/Session.lua` → `Core/IncomeCapture.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/GoalCommands.lua` → `UI/StockCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmReports.lua` → `UI/FarmCommands.lua` → `UI/FarmAssist.lua` → `UI/PlanCommands.lua` → `UI/CraftCommands.lua` → `UI/AltCommands.lua` → `UI/GoldCommands.lua` → `UI/SettingsCommands.lua` → `UI/Widgets.lua` → `UI/Inputs.lua` → `UI/MaterialTabLayout.lua` → `UI/MaterialTab.lua` → `UI/MaterialTabActions.lua` → `UI/SourcingTabLayout.lua` → `UI/SourcingTab.lua` → `UI/FarmTab.lua` → `UI/CraftAltPanel.lua` → `UI/CraftTab.lua` → `UI/GoldTab.lua` → `UI/SettingsTab.lua` → `UI/HelpTab.lua` → `UI/MainWindow.lua` → `UI/PromptBar.lua` → `UI/FarmSuggest.lua` → `UI/TooltipLines.lua` → `UI/ShopHints.lua` → `UI/QuestAlternatives.lua` → `UI/MinimapButton.lua` → `UI/LoginSummary.lua` → `UI/GoldAuto.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
+`Core/Init.lua` → `Locales/Locale.lua` → `Locales/deDE.lua` → `Core/Util.lua` → `Core/Money.lua` → `Core/Log.lua` → `Core/DB.lua` → `Core/Settings.lua` → `Core/Materials.lua` → `Core/Wants.lua` → `Core/Recipes.lua` → `Core/FarmRuns.lua` → `Core/FarmRunsValidation.lua` → `Data/ClassicEra/Professions.lua` → `Data/ClassicEra/EffectData.lua` → `Adapters/Adapter.lua` → `Adapters/ClassicEraProfessionInfo.lua` → `Adapters/ClassicEraProfessions.lua` → `Adapters/ClassicEraCrafting.lua` → `Adapters/ClassicEraTrade.lua` → `Adapters/ClassicEraBags.lua` → `Adapters/ClassicEraGear.lua` → `Adapters/ClassicEraUI.lua` → `Adapters/ClassicEraPlayer.lua` → `Adapters/ClassicEraExternal.lua` → `Adapters/ClassicEra.lua` → `Core/Events.lua` → `Core/Stock.lua` → `Core/Prices.lua` → `Core/PriceCapture.lua` → `Core/FarmCapture.lua` → `Core/FarmEstimates.lua` → `Core/GoldRoutes.lua` → `Core/Acquire.lua` → `Core/WantPlan.lua` → `Core/GoldPlan.lua` → `Core/BagTasks.lua` → `Core/RecipeBook.lua` → `Core/RecipeCategories.lua` → `Core/ProfessionView.lua` → `Core/CraftTasks.lua` → `Core/AdvisorSources.lua` → `Core/Advisor.lua` → `Core/AdvisorSummary.lua` → `Core/CraftEval.lua` → `Core/WeightTemplates.lua` → `Core/SavingsGoals.lua` → `Core/Income.lua` → `Core/MoneyContext.lua` → `Core/Session.lua` → `Core/IncomeCapture.lua` → `Core/Perf.lua` → `Core/Slash.lua` → `UI/Shared.lua` → `UI/WantCommands.lua` → `UI/PriceCommands.lua` → `UI/FarmCommands.lua` → `UI/FarmAssist.lua` → `UI/CraftCommands.lua` → `UI/GoldCommands.lua` → `UI/GoldPlanCommands.lua` → `UI/SettingsCommands.lua` → `UI/Widgets.lua` → `UI/Inputs.lua` → `UI/WantsTabLayout.lua` → `UI/WantsTab.lua` → `UI/FarmTab.lua` → `UI/FarmWindow.lua` → `UI/ProfessionTabLayout.lua` → `UI/ProfessionDetail.lua` → `UI/ProfessionMakeRow.lua` → `UI/ProfessionTab.lua` → `UI/MakeCommand.lua` → `UI/GoldPlanPanel.lua` → `UI/GoldTab.lua` → `UI/SettingsTab.lua` → `UI/HelpTab.lua` → `UI/MainWindow.lua` → `UI/PromptBar.lua` → `UI/FarmSuggest.lua` → `UI/TooltipLines.lua` → `UI/ShopHints.lua` → `UI/AdvisorText.lua` → `UI/AdvisorCard.lua` → `UI/AdvisorActions.lua` → `UI/AdvisorWindow.lua` → `UI/AdvisorSide.lua` → `UI/MinimapButton.lua` → `UI/LoginSummary.lua` → `UI/GoldAuto.lua` → `UI/PerfCommand.lua` → `Core/Main.lua`
 
 Modules that listen to signals (`Stock.lua`) load after `Events.lua`; modules that register
 subcommands (`UI/*Commands.lua`) load after `Slash.lua`.
@@ -58,7 +58,8 @@ printed and `Core/Main.lua` registers nothing.
 | `ReadMerchantPrices()` | `{ { itemID, copper per unit } }` of the open merchant; items with token costs skipped |
 | `ReadAuctionResults()` | `{ { itemID, count, buyout } }` of the current auction search page (rows without data skipped) |
 | `CanQueryAuction()` | bool |
-| `ScanBags(counts)` | fills and returns `{ [itemID] = count }` for backpack + equipped bags (table cleared first) |
+| `ScanBags(counts)` | fills and returns `{ [itemID] = count }` for backpack + equipped bags (table cleared first; `GetContainerItemID` + `GetItemCount`, no table per slot) |
+| `ScanBank(counts)` | same for the bank and the bank bags (`Enum.BagIndex.Bank`, `NUM_BAG_SLOTS + 1 .. + NUM_BANKBAGSLOTS`); only meaningful while the bank is open |
 | `GetCurrentMapID()` | uiMapID of the player's map, or 0 |
 | `GetMapName(uiMapID)` | localized map name, or nil |
 | `GetMoney()` | copper the character carries, or nil |
@@ -87,19 +88,18 @@ printed and `Core/Main.lua` registers nothing.
 | `HookItemTooltips(callback)` | post-hook `OnTooltipSetItem` of `GameTooltip` and `ItemRefTooltip`; `callback(tooltip, itemID)`; call once |
 | `HookLinkInsert(callback)` | post-hook `ChatFrameUtil.InsertLink`; `callback(itemID)` for shift-clicks while no chat input is open; call once |
 | `GetMerchantFrame()`, `GetMinimap()` | Blizzard frames to anchor the merchant hint and the minimap button, or nil |
-| `GetQuestRewards()` | `{ title, items = { itemID } }` of the open quest frame (choices first), or nil |
 | `HasExternalPrices()` | bool: a supported price addon (Auctionator API v1) is loaded |
 | `GetExternalPrice(itemID)` | copper, ageDays (nil if unknown) of the price addon; nil if none; nil, nil, error if the price addon raised an error (caught with `pcall`) |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`, `ClassicEraExternal`,
+Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraExternal`,
 `ClassicEraBags`, `ClassicEraProfessionInfo`, `ClassicEraCrafting`) are exposed as methods by a loop in `Adapters/ClassicEra.lua`.
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
 `MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`, `LOOT_OPENED`,
 `LOOT_CLOSED`, `LOGOUT` (only the time of a running farm run is noted), `MONEY_CHANGED`,
 `EQUIPMENT_CHANGED`, `MAIL_OPENED`, `MAIL_CLOSED`, `TRADE_OPENED`, `TRADE_CLOSED`, `COMBAT_STARTED`,
-`PLAYER_FLAGS_CHANGED`, `RESTING_CHANGED`, `CONTROL_LOST`, `CONTROL_GAINED`, `QUEST_OFFERED`, `QUEST_REWARDS`,
+`PLAYER_FLAGS_CHANGED`, `RESTING_CHANGED`, `CONTROL_LOST`, `CONTROL_GAINED`, `QUEST_REWARDS`,
 `QUEST_CLOSED`, `TRAINER_OPENED`, `TRAINER_CLOSED`. Internal
 signals: `DATA_CHANGED` (raised by `Slash.Handle` after every registered command), `PRICES_CHANGED`
 (raised by `PriceCapture` after storing prices and when the auction house opens or closes),
@@ -112,30 +112,53 @@ are unregistered.
 
 The interface grows with each stage (plan section 6).
 
-## Material goals and stock (stages 2a, 2b)
+## Wants and the acquisition plan (0.10.0)
 
-Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, items = { { itemID, count } }, createdAt }`,
-`activeGoalID` (0 = none), `nextGoalID` (ids are never reused).
+User request 2026-10-23 (`work/notes/wants-plan.md`): "I want this item" and the addon says how to get it
+cheapest. Replaces material goals, the sourcing plan and the craft tab of 0.2.0 to 0.9.0.
 
-- `Materials.Requirements(goals)` → `{ { itemID, need } }`, need = count × crafts, merged over goals in
-  order of first appearance.
-- `Materials.Shortfall(requirements, haveFn)` → adds `have` and `missing` (never below 0).
-- Have = bags + bank of the current character + snapshots of other characters on the same realm and
-  faction (`settings.countOtherCharacters`, default on). Other-faction characters are shown, not counted.
-- Bank: live value = `GetBagAndBankCount - GetBagCount`. Confirmed in game (Classic Era 70003) to be
-  correct with a closed bank, also after `/reload` and relog.
-- Snapshots (stage 2b): `stock.bags[itemID]`, `stock.bank[itemID]`, `bagsAt`, `bankAt` of every
-  character, for all items in the goals of *any* character (`Materials.CollectTrackedItems`, filled into a reused table; the snapshot
-  tables are updated in place), zeros
-  included so "0" and "unknown" differ. Taken on `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED` and on
-  `/bof stock`. Deliberately not on login (bag data may not be loaded yet) and not on `PLAYER_LOGOUT`:
-  in game (Classic Era 70003) both characters stored 0 hearthstones at logout although each had one,
-  so counts at logout are treated as unreliable.
-  Items no longer tracked are dropped. Realm and name come from the character key
-  (`Name-NormalizedRealm`; normalized realm names have no hyphens).
-- `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
-- Labels are user text: control characters and `|` removed, max. 50 characters.
-- `Materials.Sanitize` (`Core/MaterialsValidation.lua`) is registered in `DB.VALIDATORS` and repairs stored goals on load.
+- `characters[k].wants = { { itemID, count, createdAt } }` (`Core/Wants.lua`, max. 50, merged by item).
+  `Wants.OfRecipe(recipe, crafts)`: a recipe stands for its product (enchantments for their reagents),
+  used by `/bof recipe` and the professions tab's button. `Wants.TrackedItems(db, set, charKeys?)`:
+  wants plus the reagents of stored recipes that make them, as deep as the planner looks; this set
+  drives price capture, the AH scan list and the sell exclusions of the advisor.
+- `Core/Acquire.lua` (pure, tested with a fake context): `Acquire.Plan(wants, ctx)`. Per item the stock
+  pool comes first (one pool for all wants, so two wants never use the same stack); for the rest the
+  options BUY (price x rest), FARM ((seconds per unit x rest + travel) x hourValue / 3600) and CRAFT (per
+  learned recipe: crafts = rest / average output rounded up, each reagent planned recursively on a copy
+  of the pool, max. `MAX_DEPTH` 3, cycle guard; stock a reagent takes counts at its sale value). Lowest
+  value wins, ties BUY > CRAFT > FARM. Without an option: OPEN (value infinite, so a craft with an open
+  reagent still beats OPEN but loses to any priced option). Totals: copper, farm seconds, travel once per
+  zone, craft nodes (reagents first), open nodes.
+- `Core/WantPlan.lua` builds the context from the addon's data: `available` = bags + bank (live) +
+  snapshots of same-realm, same-faction characters (`settings.countOtherCharacters`), `buyPrice` =
+  `PriceCapture.Best`, `saleValue` = `GoldRoutes.SaleValue`, `farm` from `FarmEstimates.ForItem` +
+  `MainZone`, `recipesFor` from the recipe books of the characters on the realm and faction (own first).
+  `hourValue`: setting `hourValueGold` if > 0, else the rating per hour of the best route
+  (`GoldRoutes.Current()[1]`), else 0. The plan is cached and invalidated on `BAGS_CHANGED`,
+  `BANK_CLOSED`, `PRICES_CHANGED`, `DATA_CHANGED`, `RECIPES_CHANGED`, `SETTINGS_CHANGED`.
+  `Requirements(plan)` (everything the plan needs in the bags, i.e. all nodes but crafts) feeds
+  `Stock.Rows` for tooltips, advisor and farm assist; `ToGet(plan)` (buy/farm/open per item) feeds the
+  auction suggestions, the AH hint and the farm start suggestion.
+- UI: `UI/WantsTab.lua` + `UI/WantsTabLayout.lua` (wants list with count boxes, plan tree with indent,
+  "Herstellen" runs `MakeCommand.Run`, "Farmen" runs `farm start <item>`, summary lines incl. the free
+  gold check and the hour value); `UI/WantCommands.lua` (`/bof want`, `/bof recipe`, shared texts).
+
+## Stock (stages 2a, 2b; full snapshots since 0.10.0)
+
+- Live counts: bags via `GetBagCount`; bank = `GetBagAndBankCount - GetBagCount`, correct with a closed
+  bank (confirmed in game, Classic Era 70003).
+- Snapshots per character: `stock.bags` = every item in the bags (`Client:ScanBags`, in place) on
+  `BAGS_CHANGED`, while the bank is open also `stock.bank` (`Client:ScanBank`); on `BANK_CLOSED` the
+  bank snapshot's items and everything seen in the bags meanwhile are recounted from the live counts.
+  Once after login (`Stock.LOGIN_DELAY_SECONDS` 10) the bags are captured too, unless the scan is empty
+  while a snapshot with items exists (bag data not loaded). Not on `PLAYER_LOGOUT`: in game the counts
+  were already 0 there. User decision 2026-10-23: no manual bookkeeping, everything the account owns is
+  known. A character's bank is known after its first bank visit with 0.10.0.
+- `Stock.OthersFor` lists other characters of the realm with the item (same faction counted).
+  `Stock.Sanitize` (in `DB.VALIDATORS`) removes invalid snapshot entries on load.
+- Labels (savings goals) are user text: control characters and `|` removed, max. 50 characters
+  (`Materials.CleanLabel`).
 
 ## Gold buffer (stage 4)
 
@@ -149,42 +172,45 @@ Per character (`characters[charKey]`): `materialGoals[id] = { label, crafts, ite
   checkpoints (login, gold change, bag change, logout), each gap capped at 30 min. Net per hour over
   14 days, shown from 1 h online. Assumption to confirm in game: `GetMoney()` is valid at
   `PLAYER_LOGIN`; guard: a gain within 30 s after a login that read 0 gold is not counted.
-- Sourcing: `settings.useReservesInSourcing = false` limits the budget to the free gold. The plan
-  shows the reserve use of its cost and the time value (cost / net per hour).
+- The wants plan compares its purchases with the free gold (gold minus reserves) and warns when it is
+  short; the setting `useReservesInSourcing` of 0.3.0 to 0.9.0 is gone (migration 1 -> 2).
 
-## Farm tab
+## Farm window and farm tab (0.10.0)
 
-The buttons call `Slash.Handle("farm …")`, so the window and the chat share one code path (and the
-chat confirms every action). Status, item and estimate lines come from `FarmCommands.StatusLine`,
-`ItemLines`, `EstimateLines`. The status line is rewritten by the 1 s ticker (see Events and timers).
+User decision 2026-10-23: runs are controlled in a small window (`UI/FarmWindow.lua`: Start, Pause /
+Fortsetzen, Anreise / Angekommen, Beenden; `/bof farm`, right click on the minimap button, opened by
+`farm start`), the Farm tab lists the recorded routes per zone (`GoldRoutes.Current({ minSeconds = 0,
+minCopper = 0 })`, loot per hour in the tooltip). Runs have no activity type any more (`activity` is
+stored as `OTHER`, old values validate), "Beenden" saves at once and drops unclear gains
+(`FarmRuns.Finish`), the review state is gone. The buttons call `Inputs.Run("farm …")`, one code path
+with the chat. The status line is rewritten by the 1 s ticker (see Events and timers).
 
-## Craft evaluation (stage 3)
+## Gear rating (stage 3, reduced in 0.10.0)
 
-0.5.0: rated stats include `ARMOR` (per point) and `DPS` (weapon damage per second); their default
-weights are 0 so older evaluations do not change; templates set them. A planned alternative gets a
-verdict (`CraftCommands.VerdictLine`): the craft stays better, or it bridges the time until the
-alternative (with its time effort if known). `CraftEval.LevelLock` marks items above the character
-level.
+`Core/CraftEval.lua` compares an item with the equipped gear using the character's weights
+(`craftEval.weights`, 0–10, STR, AGI, STA, INT, SPI, ARMOR, DPS; defaults 1/1/1/1/1/0/0, templates in
+`Core/WeightTemplates.lua`). Shown as one line in the professions detail for gear recipes
+(`CraftCommands.GearLine`), in the tooltip of wanted gear (`TooltipLines`) and by `/bof craft <item>`.
+The weights are edited in the settings tab (boxes plus "Vorschlag"). The alternatives editor, the
+quest reward offers and the sourcing cost per score point of 0.3.0 to 0.9.0 are gone (user decision
+2026-10-23).
 
-- Stats: `GetItemStats(link)` (global function, confirmed in game in Classic Era 70003; no
-  `C_Item.GetItemStats`). The adapter maps Blizzard keys (`ITEM_MOD_STRENGTH_SHORT`, …,
-  `RESISTANCE0_NAME`) to `STR, AGI, STA, INT, SPI, ARMOR`; the core never sees Blizzard keys.
-- Score = Σ stat × weight over STR, AGI, STA, INT, SPI (`characters[k].craftEval.weights`, 0–10,
-  default 1). Armor is read but not rated (feature description: not evaluated yet).
+- Stats: `GetItemStats(link)` (global function, confirmed in game in Classic Era 70003); the adapter
+  maps Blizzard keys to `STR, AGI, STA, INT, SPI, ARMOR, DPS`; the core never sees Blizzard keys.
 - Slots (adapter, from `C_Item.GetItemInfoInstant` equip location): rings and trinkets replace the
   weaker equipped one, two-handed weapons replace main and off hand together (`.sum`), one-handed
   weapons are compared with the main hand only, empty slots count 0.
-- Evaluation of a goal (`CraftCommands.EvaluationLines`, used by `/bof craft` and the Craft tab):
-  craft item = output of the goal's recipe; comparison; sourcing plan of this goal (current
-  strategy and budget) and cost/farm time per score point; value of owned materials (bags + bank
-  of the character, capped at the need) at vendor price (`GetSellPrice`) and planning price;
-  alternatives (`craftEval.alternatives = { { itemID, kind = PLANNED|POSSIBLE, note, at, copper?,
-  seconds?, requires? } }`, max. 20, note and requires = cleaned user text; the optional cost,
-  time effort and requirements are user input, absent = unknown) compared with the craft; the
-  details are shown next to the craft's sourcing cost and farm time. Optional fields need no schema
-  change (old data has none).
-- `CraftEval.Sanitize` (in `DB.VALIDATORS`) resets invalid weights to 1, drops invalid alternatives and
-  invalid optional details (negative or too large cost/time, wrong types).
+- `CraftEval.LevelLock` marks items above the character level. `CraftEval.Sanitize` resets invalid
+  weights.
+
+### Gold routes (0.5.0, zone-based since 0.10.0)
+
+`Core/GoldRoutes.lua`: saved runs grouped by `uiMapID` (`GoldRoutes.Key`), value = loot x
+`GoldRoutes.SaleValue` (lowest current AUCTION / MANUAL / AUCTIONATOR price minus `AUCTION_CUT` 5 %, or
+the vendor sell price if higher) plus looted coins, split into sure and auction gold; rating = sure +
+auction x (1 - `ahDiscountPercent`); travel = average per run. `List` filters by `minSeconds` (default
+`MIN_SECONDS` 600) and `minCopper` (default 1). The best route's rating per hour is the time value of
+farming in the wants plan.
 
 ## Sourcing plan (stage 2g)
 
@@ -392,7 +418,8 @@ window by hand.
 `/bof recipe [crafts]` reads the recipe selected in the open profession window through
 `Client:ReadSelectedRecipe()`, validates it (`Recipes.Normalize`: key, ids, counts, at most
 `Recipes.MAX_REAGENTS`, duplicates merged), stores it in `db.recipes[key]` (account-wide; an import
-replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
+replaces an older one) and adds the wants of `Wants.OfRecipe` (product x crafts, or the reagents of an
+enchantment). `/bof recipe key <key> [crafts]` does the same for a stored recipe (`Recipes.Stored`).
 
 - Key: `spell:<id>` when the client gives a spell/enchant link, else `item:<outputItemID>`.
 - `db.recipes[key] = { outputItemID, outputMin, outputMax, reagents, origin = "IMPORT", at }`. No names
@@ -414,33 +441,35 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 |---|---|---|---|---|
 | `ADDON_LOADED` | `Main.onAddonLoaded` | file load, unregistered after the own addon loaded | once per load | loads the database |
 | `PLAYER_LOGIN` | `Main.onPlayerLogin` | file load, unregistered after the first call | once | character key, `EnsureCharacter` |
-| `BAG_UPDATE_DELAYED` → `BAGS_CHANGED` | `Stock` | always | once per bag-change burst (the client coalesces `BAG_UPDATE`) | snapshot of the tracked items only (`GetItemCount` per item) |
-| `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock` | always | per bank visit | snapshot of the tracked items |
+| `BAG_UPDATE_DELAYED` → `BAGS_CHANGED` | `Stock`, `WantPlan` (invalidate) | always | once per bag-change burst (the client coalesces `BAG_UPDATE`) | one bag scan into the reused snapshot table (about 100 slots, `GetContainerItemID` + `GetItemCount`, no garbage); the bank too while it is open |
+| `BANKFRAME_OPENED` / `_CLOSED` → `BANK_OPENED` / `BANK_CLOSED` | `Stock`, `WantPlan` (invalidate on close) | always | per bank visit | bank scan on open; recount of the bank snapshot from live counts on close |
 | `TRADE_SKILL_SHOW` / `_CLOSE`, `CRAFT_SHOW` / `_CLOSE` | Classic Era adapter (own frame) | always | per profession window open/close | sets two flags, no API calls |
-| `ITEM_DATA_LOAD_RESULT` → `ITEM_LOADED` | Material tab | only while the window is shown | per item whose data arrives | requests one refresh |
+| `ITEM_DATA_LOAD_RESULT` → `ITEM_LOADED` | window tabs, farm window | only while shown | per item whose data arrives | requests one refresh |
 | `MERCHANT_SHOW` / `MERCHANT_CLOSED` | `PriceCapture` | always | per merchant visit | reads the merchant list once, stores tracked items |
 | `MERCHANT_UPDATE` → `MERCHANT_CHANGED` | `PriceCapture` | only while a merchant is open | when merchant data changes | same as above |
 | `AUCTION_HOUSE_SHOW` / `AUCTION_HOUSE_CLOSED` | `PriceCapture` | always | per auction house visit | flags, scan list reset |
 | `BAGS_CHANGED`, `LOOT_OPENED`, `LOOT_CLOSED`, `LOGOUT` (signals) | `FarmCapture` | only while a farm run is running (start/resume/login-continue on; pause/stop/discard off) | per bag update / loot window | bag scan of the carried bags (about 100 slots), diff with reused count tables |
-| `PLAYER_EQUIPMENT_CHANGED` → `EQUIPMENT_CHANGED` | Craft tab | only while the Craft tab is shown | per equipment change | requests one refresh |
-| `PLAYER_MONEY` → `MONEY_CHANGED` | `IncomeCapture` (always), Sourcing and Gold tab (while shown) | always | per gold change | one income record update (no allocation once the day exists); tabs request a refresh |
+| `PLAYER_EQUIPMENT_CHANGED` → `EQUIPMENT_CHANGED` | `TooltipLines` | always | per equipment change | dirty flag |
+| `PLAYER_MONEY` → `MONEY_CHANGED` | `IncomeCapture` (always), Wants and Gold tab (while shown) | always | per gold change | one income record update (no allocation once the day exists); tabs request a refresh |
 | `BAGS_CHANGED`, `LOGOUT` (signals) | `IncomeCapture` | always | per bag-change burst / logout | online-time checkpoint (two number updates) |
 | `AUCTION_ITEM_LIST_UPDATE` → `AUCTION_RESULTS` | `PriceCapture` | only while the auction house is open | per result page and when row data arrives | reads one page (max. 50 rows), stores the lowest unit buyout of tracked items |
-| `BAGS_CHANGED`, `BANK_OPENED`, `BANK_CLOSED`, `DATA_CHANGED` (signals) | Material tab | handler added on show, removed on hide (the WoW events stay registered for `Stock`) | see above | requests one refresh |
+| `BAGS_CHANGED`, `BANK_CLOSED`, `ITEM_LOADED`, `DATA_CHANGED`, `PRICES_CHANGED`, `MONEY_CHANGED`, `RECIPES_CHANGED`, `AUCTION_*`, `SETTINGS_CHANGED` (signals) | Wants tab | handler added on show, removed on hide (the WoW events stay registered for `Stock` etc.) | see above | one coalesced refresh: reads the cached plan (rebuilt at most once per invalidating signal), fills 10 want rows and 11 tree rows |
+| `BAGS_CHANGED`, `BANK_CLOSED`, `PRICES_CHANGED`, `DATA_CHANGED`, `RECIPES_CHANGED`, `SETTINGS_CHANGED` (signals) | `WantPlan` | always | per change | clears the cached plan (one assignment); the plan is rebuilt lazily by the next reader |
 | `MERCHANT_*`, `BANK_*`, `AUCTION_*`, `MAIL_*`, `TRADE_*`, `COMBAT_STARTED` (signals) | `FarmCapture` | only while a farm run is running | per window / combat start | flag updates; combat start notes activity (idle time) |
-| `PLAYER_FLAGS_CHANGED`, `PLAYER_UPDATE_RESTING`, `PLAYER_CONTROL_LOST/GAINED` | `FarmAssist` | only while a farm run exists (not in review); synced on `DATA_CHANGED` | per AFK/resting/flight change | at most one `/bof farm` command; control loss starts one `C_Timer.After(1)` taxi check |
-| `FARM_CHANGED` (internal) | `FarmAssist` | always (raised only during runs) | per counted bag update | target check (`Stock.Rows` over all goals) only until the target was reported |
-| `LOOT_OPENED`, `LOOT_CLOSED`, `BAGS_CHANGED` (signals) | `FarmSuggest` | only while `farmSuggestStart` is on | per loot window / bag burst | counts of the selected goal's missing items at loot open, compared after the loot |
+| `PLAYER_FLAGS_CHANGED`, `PLAYER_UPDATE_RESTING`, `PLAYER_CONTROL_LOST/GAINED` | `FarmAssist` | only while a farm run exists; synced on `DATA_CHANGED` | per AFK/resting/flight change | at most one `/bof farm` command; control loss starts one `C_Timer.After(1)` taxi check |
+| `FARM_CHANGED` (internal) | `FarmAssist`, farm window and tab (while shown) | always (raised only during runs) | per counted bag update | target check (`Stock.Rows` over the plan's requirements) only until the target was reported |
+| `LOOT_OPENED`, `LOOT_CLOSED`, `BAGS_CHANGED` (signals) | `FarmSuggest` | only while `farmSuggestStart` is on | per loot window / bag burst | counts of the plan's items still to get at loot open, compared after the loot |
 | `LOOT_*`, `QUEST_REWARDS/CLOSED`, `MERCHANT_*`, `TRAINER_*`, `MAIL_*`, `AUCTION_*`, `TRADE_*` (signals) | `MoneyContext` | always | per window | one flag each (source of the next gold change) |
-| `DATA_CHANGED`, `BAGS_CHANGED`, `BANK_CLOSED`, `EQUIPMENT_CHANGED`, `SETTINGS_CHANGED` (signals) | `TooltipLines` | always | per change | sets a dirty flag; the tooltip cache is rebuilt on the next item tooltip |
+| `DATA_CHANGED`, `BAGS_CHANGED`, `BANK_CLOSED`, `EQUIPMENT_CHANGED`, `SETTINGS_CHANGED`, `PRICES_CHANGED`, `RECIPES_CHANGED` (signals) | `TooltipLines` | always | per change | sets a dirty flag; the tooltip cache is rebuilt on the next item tooltip |
 | `PLAYER_MONEY` → `MONEY_CHANGED` | `ShopHints` (while a merchant is open), `GoldAuto` (always; acts only with `goldAutoDistribute`) | see column | per gold change | hint text and reserve check; `GoldAuto` distributes only after a gain |
-| `QUEST_DETAIL`, `QUEST_COMPLETE` | `QuestAlternatives` | always | per quest frame | reads the rewards, one slot check per reward item |
 | `TRADE_SKILL_SHOW`, `CRAFT_SHOW` → `PROFESSION_OPENED`; `TRADE_SKILL_UPDATE`, `CRAFT_UPDATE` → `PROFESSION_CHANGED` | `RecipeBook` | always | per window open; updates in bursts (casts, filters) | one `C_Timer.After(1)` per burst, then one read of all visible recipes (`ReadAllRecipes`) |
 | `MERCHANT_*`, `AUCTION_*`, `BANK*`, `MAIL_*`, `PROFESSION_OPENED/CLOSED` (signals) | `Advisor` | always | per window | updates the open-window list; raises `ADVISOR_CONTEXT` on change |
 | `ADVISOR_CONTEXT`, `SETTINGS_CHANGED` (signals) | `AdvisorSide` | always | per window | shows/hides the side cards; refresh signals only while shown |
 | `BAGS_CHANGED`, `DATA_CHANGED`, `PRICES_CHANGED`, `MONEY_CHANGED`, `ITEM_LOADED`, `ADVISOR_CONTEXT`, `SETTINGS_CHANGED`, `MERCHANT_CHANGED` | `AdvisorWindow` | only while shown | see above | one coalesced refresh (`Advisor.Collect`) |
 | `PLAYER_MONEY` → `MONEY_CHANGED` with source `LOOT` | `IncomeCapture` → `FarmRuns.AddLootCopper` | always | per looted coin | one number added to the running run |
-| `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
+| `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED`, `MONEY_CHANGED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
+| `FARM_CHANGED`, `DATA_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED` (signals) | Farm tab (routes) | handler added on show, removed on hide | see above | one coalesced refresh: routes from the saved runs (at most 500) |
+| `FARM_CHANGED`, `DATA_CHANGED`, `ITEM_LOADED` (signals) | Farm window | only while shown | see above | button states and one status line |
 | `BAGS_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED`, `DATA_CHANGED`, `RECIPES_CHANGED` (signals) | Professions tab | handler added on show, removed on hide | see above; `RECIPES_CHANGED` once per profession window burst | one coalesced refresh: groups the recipes of one profession (at most a few hundred rows, categories cached per recipe), fills 15 rows and the detail panel |
 
 Window refreshes are coalesced: any number of refresh requests in one frame lead to one
@@ -448,7 +477,7 @@ Window refreshes are coalesced: any number of refresh requests in one frame lead
 created on first open and hidden, never destroyed; rows are a fixed pool of 10 frames.
 
 No `OnUpdate` scripts. One-shot `C_Timer.After` callbacks: `0` for coalescing window refreshes; `1` s
-taxi check after control loss (`FarmAssist`); `5` s login summary; `10` s price cleanup after login;
+taxi check after control loss (`FarmAssist`); `5` s login summary; `10` s price cleanup and bag snapshot after login;
 `1` s recipe book capture after profession window events; `7` s advisor check after login; `0.3` s
 between sell batches (only after a confirmed click, stops when the merchant closes); `0` s retry of
 the advisor side cards for the load-on-demand auction window; `30` s auto-hide of the prompt bars (each callback checks a sequence number, so an older timer does
@@ -478,7 +507,7 @@ only sets flags.
   key binding names `BINDING_HEADER_BUYORFARMFOREVER`, `BINDING_NAME_BUYORFARMFOREVER_TOGGLE`,
   `BINDING_NAME_BUYORFARMFOREVER_FARM` (the client reads them for `Bindings.xml`).
 - Position: `settings.window.point/x/y`, saved on drag stop, restored on creation (unknown points
-  fall back to `CENTER`). `settings.window.allGoals` (default false) stores the "all goals" view.
+  fall back to `CENTER`). `settings.window.tab` stores the shown tab (default `WANTS`).
 - The Material tab reads `Stock.Rows` (shared with `/bof stock`) and uses `UIShared.ItemText` /
   `UIShared.GoalName` for names. Buttons: previous/next goal (wraps), "all goals", recipe import
   (`Recipes.ImportSelected`, 1 craft). Mouse wheel scrolls 1 row. Tooltip: item hyperlink plus one
@@ -522,11 +551,15 @@ path; chat commands stay as fallback.
    entries are flushed into the database.
 3. `PLAYER_LOGIN`: character key, `DB.EnsureCharacter`, build info logged (debug mode).
 
-## SavedVariables (schema 1)
+## SavedVariables (schema 2)
 
 One account-wide variable `BuyOrFarmForeverDB`. Defaults: `Core/DB.lua` (`DB.DEFAULTS`,
-`DB.CHARACTER_DEFAULTS`). Fields not used yet (savings goals, income) already exist with
-empty defaults so later stages need no migration.
+`DB.CHARACTER_DEFAULTS`). Schema 2 (0.10.0): `characters[k].wants` replaces `materialGoals`,
+`activeGoalID`, `nextGoalID` and `craftEval.alternatives`; the settings `strategy`, `budgetCopper`,
+`farmTimeLimitMinutes`, `useReservesInSourcing`, `farmAutoReview`, `questAlternatives`,
+`window.allGoals` are removed and `window.tab` is reset. Migration 1 -> 2 (`Core/Wants.lua`): a goal
+with a recipe that makes an item becomes a want of that item (crafts x smallest output), every other goal
+its materials x crafts; duplicates and the cap are handled by `Wants.Sanitize` on load.
 
 `DB.Load` statuses:
 
@@ -549,12 +582,15 @@ table is only replaced when all steps succeed.
 
 | Term | Meaning |
 |---|---|
-| material | an item a goal needs (`materialGoals[].items`); the user-facing word ("Material") |
-| reagent | an item a recipe consumes (`recipe.reagents`); a recipe goal copies its reagents as materials |
+| want | an item the player wants with a count (`characters[].wants`); user-facing "Ziel" |
+| plan / node | the acquisition plan of the wants and one item in it with its method (HAVE, BUY, FARM, CRAFT, OPEN) |
+| hour value | copper one hour of farming is worth in the plan (setting, else the best route's rating per hour) |
+| reagent | an item a recipe consumes (`recipe.reagents`); planned like any other item |
 | recipe book | the recipes a character has seen in its own profession windows (`characters[].recipeBook`) |
 | profession key | client-neutral profession id (`COOKING`, ...), never a localized name |
 | category | what a recipe's product is good for (`STR`, `HEAL`, `CLASS_7`, ...), see Professions tab |
-| goal | a material goal; "savings goal" is the gold buffer's goal |
+| route | the saved farm runs of one zone with their gold per hour (`GoldRoutes`) |
+| savings goal | the gold buffer's goal |
 
 ## Performance measurement (`/bof perf`)
 

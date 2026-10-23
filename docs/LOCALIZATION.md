@@ -26,7 +26,7 @@
 
 Some keys are built from a fixed set of values: `CATEGORY_<key>` (`RecipeCategories.ORDER` and `LOADING`),
 `PROF_MATS_<mode>` / `PROF_MATS_TIP_<mode>` (`ProfessionView.MATS`), `PROF_DIFFICULTY_<DIFFICULTY>`
-(`RecipeBook.DIFFICULTIES`), `TEMPLATE_<key>`, `STAT_SHORT_<stat>`. The check script cannot see them; a unit
+(`RecipeBook.DIFFICULTIES`), `TEMPLATE_<key>`, `STAT_SHORT_<stat>`, `SLOT_<slot>`, `SOURCE_<source>`, `GOLDPLAN_<kind>`. The check script cannot see them; a unit
 test (`work/tests/test_professions.lua`) checks that every value has a label. Item class names
 (`CLASS_<id>` categories) and profession names come from the client.
 

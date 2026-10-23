@@ -1,73 +1,41 @@
 # Kaufen oder farmen?
 
-**Version 0.9.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer, Goldplaner,
-Ratgeber und Berufsansicht, alles im Fenster bedienbar. Bis 0.8.0 in WoW Classic Era 1.15.9 getestet;
-das Herstellen aus dem Reiter „Berufe“ (neu in 0.9.0) ist nur außerhalb des Spiels geprüft. Nicht in
-Forever getestet.**
+**Version 0.10.0-alpha.1 (Testversion) – Ziele mit dem günstigsten Weg, Farmfenster, Berufsansicht,
+Goldpuffer, Goldplaner und Ratgeber. Bis 0.8.0 in WoW Classic Era 1.15.9 getestet; die Neuerungen von
+0.9.0 und 0.10.0 sind nur außerhalb des Spiels geprüft. Nicht in Forever getestet.**
 
-„Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
-kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
-Bestand, den Preisen, die du siehst, und deinem gemessenen Farmtempo.
+„Kaufen oder farmen?“ sagt dir, wie du ein Item **am günstigsten** bekommst. Du nimmst ein Item in
+deine Ziele auf, und das Addon prüft von selbst:
 
-Diese Version enthält die **Materialbeschaffung**:
+- **Hast du es schon?** In deinen Taschen, deiner Bank oder bei deinen anderen Charakteren auf dem
+  Realm. Den Bestand erfasst das Addon automatisch, du musst nichts eintragen.
+- **Kannst du es kaufen?** Preise vom Händler, aus dem Auktionshaus (mit AH-Scan), deine eigenen
+  oder die von Auctionator.
+- **Kannst du es farmen?** Aus deinen aufgezeichneten Farmrunden weiß das Addon, wo und wie schnell
+  du es bekommst.
+- **Kannst du es herstellen?** Mit einem gelernten Rezept, auch eines deiner Twinks. Dann prüft es
+  für jede Zutat genauso: haben, kaufen, farmen oder wieder herstellen.
 
-- **Materialziele:** Zutaten und Anzahl Herstellungen, von Hand oder aus einem Rezept im
-  Berufsfenster (auch Verzauberkunst).
-- **Bestand:** Taschen und Bank, auch deiner anderen Charaktere auf dem Realm.
-- **Preise:** eigene Eingabe, Händler und Auktionshaus (mit AH-Scan), getrennt nach Realm und
-  Fraktion, veraltete Preise markiert; optional die Preise von Auctionator.
-- **Farmrunden:** Farmzeit, Anreise und Ertrag messen; daraus schätzt das Addon, wie lange du für
-  die fehlenden Materialien brauchst.
-- **Vergleich Kaufen/Farmen:** wie viel du kaufen und wie viel du farmen solltest, mit Kosten,
-  Farmzeit und Budget – nach der Strategie „Zeit sparen“, „Gold sparen“ oder „Selbst farmen“.
+Dann schlägt es den günstigsten Weg vor: „kaufen“, „farmen“ oder „herstellen“. Farmzeit rechnet es
+dabei in Gold um, mit dem, was dir deine beste Farmroute pro Stunde bringt. Bei Gleichstand gewinnt
+Kaufen, weil es am schnellsten geht. Herstellen und Farmen startest du direkt aus dem Plan.
 
-Neu in 0.3.0: **Lohnt sich der Craft?** – der hergestellte Gegenstand eines Rezept-Ziels wird
-mit deiner angelegten Ausrüstung verglichen (nach deinen Gewichten für Stärke, Beweglichkeit,
-Ausdauer, Intelligenz und Willenskraft), dazu Beschaffungskosten und Farmzeit pro
-Verbesserungspunkt, der Wert schon vorhandener Zutaten und eingeplante oder mögliche Alternativen
-mit deren Kosten, Zeitaufwand und Voraussetzungen.
+Weitere Teile:
 
-Ebenfalls neu: der **Goldpuffer** – Sparziele (Reiten, Training, Berufsausbau, ein weiterer Craft)
-mit Priorität, einmaliges Verteilen deines Golds, Übersicht über Rücklagen, freies Gold und
-ungedeckte Ziele, Hinweis, ob ein Einkauf deine Rücklagen angreift, dein Nettoerlös pro Stunde und
-daraus der **Zeitgegenwert** eines Einkaufs („2g entsprechen etwa 30 Min. Spielzeit“).
-
-Neu in 0.4.0: **weniger tippen, mehr Automatik.** Alles geht im Fenster – Felder anklicken, Wert
-eintippen, Enter; Gegenstände ziehst du aus den Taschen in ein Feld oder fügst sie mit Umschalt+Klick
-ein. Farmrunden zählen Leerlauf nicht mit, pausieren bei AFK und in Städten, werten Flugrouten als
-Anreise und speichern sich selbst, wenn nichts unklar ist. Das Addon schlägt eine Farmrunde vor,
-wenn du ein fehlendes Material erbeutest, zeigt im Tooltip, was dir noch fehlt, warnt beim Händler,
-wenn ein Einkauf deine Rücklagen angreift, bietet passende Questbelohnungen als Alternative an und
-fasst deine letzte Sitzung zusammen. Jede Automatik lässt sich im Tab „Einstellungen“ abschalten.
-
-Neu in 0.5.0: **Zeitlimit** für die Beschaffung, gemeinsame Auswertung von Materialien aus derselben
-Farmrunde („nebenbei“), der **andere Weg** (etwas anderes farmen, verkaufen und davon kaufen),
-**Rüstung und Waffen-DPS** in der Craft-Bewertung, Vergleich mit einem geplanten Ersatz, Hinweis auf
-die nötige Stufe und optional die Preise von **Auctionator**.
-
-Neu in 0.6.0: der **Goldplaner** – wie du in 1, 2, 4 Stunden oder einer beliebigen Zeit am meisten
-Gold machst: Taschen ausräumen (Händler, Auktionshaus oder Entzaubern), mit Gewinn herstellen,
-Abklingzeiten nutzen und die beste Farmroute aus deinen Farmrunden, mit der Anreise verrechnet.
-Gold aus dem Auktionshaus steht getrennt („bis zu“), weil Verkäufe dort nicht sicher sind.
-
-Neu in 0.7.0: der **Ratgeber** – ein kleines Fenster mit fünf Zeilen „Mach das“: Verkaufen,
-Entzaubern (wenn du es kannst), Herstellen, Sparziel und deine beste Stunde. Am Händler, im Auktionshaus, in der Bank und
-am Briefkasten erscheinen passende Karten direkt neben dem Fenster. Beim Händler verkauft „Verkaufen“
-die vorgeschlagenen Gegenstände und „Kaufen“ besorgt fehlende Zutaten – jeweils erst nach deiner
-Bestätigung.
-
-Neu in 0.8.0: der Reiter **„Berufe“** – pro Beruf eine eigene Ansicht mit deinen gelernten Rezepten,
-sortiert nach dem, wofür sie gut sind: Essen und Elixiere nach Stärke, Beweglichkeit, Intelligenz,
-Angeln usw., Ausrüstung nach ihrem stärksten Wert, Verzauberungen nach ihrem Effekt. Dazu deine
-Fertigkeit, eine Suche und der Filter **Zutaten**: alle Rezepte, nur die, von deren Zutaten du schon
-etwas hast, oder nur die, die du jetzt herstellen kannst. Rechts siehst du Zutaten, Kosten, Wert und
-Gewinn und legst mit einem Klick ein Materialziel an.
+- **Farmfenster:** ein kleines Fenster mit Start, Pause, Anreise und Beenden. Der Reiter „Farmen“
+  zeigt deine Farmrouten mit Gold pro Stunde.
+- **Berufe:** deine gelernten Rezepte nach Zweck sortiert (Essen nach Werten, Ausrüstung nach ihrem
+  stärksten Wert …), mit Kosten, Wert, Gewinn, Vergleich mit deiner Ausrüstung und Herstellen per
+  Klick.
+- **Goldpuffer und Goldplaner:** Sparziele mit Rücklagen und wie du in 1, 2 oder 4 Stunden am meisten
+  Gold machst.
+- **Ratgeber:** ein kleines Fenster mit „Mach das“: verkaufen, entzaubern, herstellen, sparen.
 
 ## Unterstützte Spielversion
 
 | Client | Version | Status |
 |---|---|---|
-| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet (deutscher Client) |
+| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet bis 0.8.0 (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
 ## Installation
@@ -78,14 +46,14 @@ Gewinn und legst mit einem Klick ein Materialziel an.
 
 ## Schnellstart
 
-1. Klick auf den Knopf an der Minimap (oder `/bof show`) öffnet das Fenster.
-2. Ziel anlegen: Berufsfenster öffnen, Rezept anklicken, im Tab „Material“ die Anzahl eintragen und
-   „Rezept übernehmen“ – oder „Neues Ziel“ und Gegenstände in das Feld unten links ziehen.
-3. Tab „Material“: Bedarf, Bestand, Fehlmenge und Preise. Am Händler und im Auktionshaus sammelt
-   das Addon Preise automatisch; einen eigenen Preis trägst du per Klick in die Preisspalte ein.
-4. Farmen: Tab „Farmen“, das Zielmaterial ist schon ausgewählt, „Start: Gegner“ oder
-   „Start: Sammeln“. Pausen, Anreise und Speichern erledigt das Addon weitgehend selbst.
-5. Tab „Beschaffung“: was du kaufen und was du farmen solltest.
+1. Klick auf den Knopf an der Minimap (oder `/bof show`) öffnet das Fenster, Reiter „Ziele“.
+2. Ein Item, das du haben willst, in das Feld oben links ziehen (oder mit Umschalt+Klick einfügen),
+   Anzahl eintragen, „Hinzufügen“.
+3. Rechts steht, wie du es am günstigsten bekommst, für Zutaten genauso. Unten stehen die Summen.
+4. Öffne einmal deine Berufsfenster, damit das Addon deine Rezepte kennt. Besuche einmal mit jedem
+   Charakter die Bank, damit es auch dort den Bestand kennt.
+5. Damit das Addon farmen vorschlagen kann, zeichne Farmrunden auf: Farmfenster (`/bof farm` oder
+   Rechtsklick auf den Minimap-Knopf), „Start“ im Farmgebiet, „Beenden“ zum Speichern.
 
 ## Befehle
 
@@ -102,71 +70,54 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof show` | öffnet oder schließt das Fenster |
 | `/bof version` | Addon-Version, Interface-Version und Build des Spiels |
 | `/bof debug` | Debug-Modus ein/aus |
-| `/bof perf` | Speicher, Anteil an der Frame-Zeit und Rechenzeit des Addons |
+| `/bof perf` | Speicher, Anteil an der Frame-Zeit und Rechenzeit des Plans |
 | `/bof reset` | setzt die Einstellungen zurück (bestätigen mit `/bof reset confirm` innerhalb von 30 Sekunden); Ziele, Preise und Messungen bleiben |
-| `/bof set [Einstellung Wert]` | Einstellungen anzeigen oder ändern, z. B. `/bof set farmIdleMinutes 10`, `/bof set tooltipEnabled off` |
+| `/bof set [Einstellung Wert]` | Einstellungen anzeigen oder ändern, z. B. `/bof set hourValueGold 5`, `/bof set tooltipEnabled off` |
 
-**Ziele und Bestand**
+**Ziele**
 
 | Befehl | Wirkung |
 |---|---|
-| `/bof goal` | listet deine Ziele |
-| `/bof goal new <Name>` | legt ein Ziel an und wählt es aus |
-| `/bof goal name <Name>` | benennt das ausgewählte Ziel um |
-| `/bof goal select <Nr.>` | wählt ein Ziel aus |
-| `/bof goal add <Gegenstand> [Menge]` | Zutat pro Herstellung hinzufügen (Menge wird addiert, ohne Angabe 1) |
-| `/bof goal set <Gegenstand> <Menge>` | Menge pro Herstellung setzen (0 entfernt die Zutat) |
-| `/bof goal remove <Gegenstand>` | Zutat entfernen |
-| `/bof goal crafts <Anzahl>` | wie oft du herstellen willst |
-| `/bof goal delete <Nr.>` | Ziel löschen (bestätigen mit `/bof goal delete <Nr.> confirm`) |
-| `/bof recipe [Anzahl]` | Ziel aus dem im Berufsfenster ausgewählten Rezept (ohne Anzahl: 1×); hat ein Ziel das Rezept schon, wird es um die Anzahl erhöht |
-| `/bof recipe new [Anzahl]` | legt immer ein neues Ziel aus dem Rezept an |
-| `/bof stock` / `/bof stock all` | Bedarf, Bestand und Fehlmenge des ausgewählten bzw. aller Ziele |
-| `/bof stock others` | Mitzählen deiner anderen Charaktere ein/aus (Standard: an) |
+| `/bof want` | deine Ziele mit dem günstigsten Weg und den Summen |
+| `/bof want add <Gegenstand> [Anzahl]` | Ziel aufnehmen (Anzahl wird addiert, ohne Angabe 1) |
+| `/bof want set <Gegenstand> <Anzahl>` | Anzahl setzen (0 entfernt das Ziel) |
+| `/bof want remove <Gegenstand>` | Ziel entfernen |
+| `/bof recipe [Anzahl]` | nimmt das Produkt des im Berufsfenster ausgewählten Rezepts als Ziel auf (bei Verzauberungen die Zutaten) |
+| `/bof make <Rezept> [Anzahl\|all]` | stellt ein gelerntes Rezept her (wie die Knöpfe „Herstellen“) |
 
 **Preise**
 
 | Befehl | Wirkung |
 |---|---|
-| `/bof price` | Preise der Zutaten des ausgewählten Ziels |
+| `/bof price` | Preise der Items deiner Ziele und ihrer möglichen Zutaten |
 | `/bof price <Gegenstand> <Preis>` | eigener Preis pro Stück, z. B. `1g 20s 5k`, `35s`, `80k` |
 | `/bof price <Gegenstand> clear` | eigenen Preis löschen |
-| `/bof price scan` | im offenen Auktionshaus das nächste fehlende Material suchen |
+| `/bof price scan` | im offenen Auktionshaus das nächste Item ohne aktuellen Preis suchen |
 
 **Farmrunden**
 
 | Befehl | Wirkung |
 |---|---|
-| `/bof farm` | Stand der Runde |
-| `/bof farm start [gather\|mobs\|other] [Gegenstand]` | Runde starten (Sammeln, Gegner, Sonstiges; optional mit Zielmaterial) |
+| `/bof farm` | öffnet oder schließt das Farmfenster |
+| `/bof farm start [Gegenstand]` | Runde in der aktuellen Zone starten (optional mit Zielmaterial) |
 | `/bof farm travel` | zwischen Anreise und Farmen umschalten (der Chat sagt, was gerade zählt) |
 | `/bof farm pause` / `resume` | pausieren / fortsetzen (Pausen zählen nicht) |
-| `/bof farm stop` | Runde beenden, danach prüfen |
-| `/bof farm keep <Gegenstand>` / `keep all` | unklare Zugänge eines bzw. aller Gegenstände doch mitzählen |
-| `/bof farm save` / `discard` | beendete Runde speichern / verwerfen |
-| `/bof farm list` | deine letzten 5 Runden |
-| `/bof farm estimate` | geschätzte Farmzeit für die fehlenden Materialien |
-| `/bof farm scope` | Schätzung nur aus diesem Charakter oder aus allen |
+| `/bof farm stop` | Runde beenden und speichern (nur Beute zählt) |
+| `/bof farm discard` | laufende Runde verwerfen |
+| `/bof farm status` / `list` | Stand der Runde / deine letzten 5 Runden |
+| `/bof farm scope` | Farmzeiten nur aus diesem Charakter oder aus allen |
 
-**Craft-Bewertung**
+**Ausrüstung**
 
 | Befehl | Wirkung |
 |---|---|
-| `/bof craft` | Bewertung des ausgewählten Ziels (Rezept mit Gegenstand) |
-| `/bof craft <Gegenstand>` | einen beliebigen Gegenstand mit deiner Ausrüstung vergleichen |
+| `/bof craft <Gegenstand>` | einen Gegenstand mit deiner Ausrüstung vergleichen |
 | `/bof weights` | deine Gewichte anzeigen |
 | `/bof weights str\|agi\|sta\|int\|spi\|armor\|dps <Zahl>` | Gewicht setzen (0 bis 10, z. B. `/bof weights int 2`; Rüstung pro Punkt, z. B. `/bof weights armor 0,05`) |
 | `/bof weights template caster\|healer\|agility\|strength\|tank` | Gewichte aus einer Vorlage (Zauber, Heiler, Beweglichkeit, Stärke, Tank) |
 | `/bof weights suggest` | Vorlage passend zu Klasse und Talenten |
-| `/bof alt` | deine Alternativen |
-| `/bof alt add <Gegenstand> planned\|drop [Quelle/Notiz]` | Alternative: eingeplant (z. B. Questbelohnung) oder möglicher Drop |
-| `/bof alt remove <Nr.>` | Alternative entfernen |
-| `/bof alt kind <Nr.> planned\|drop` | Art ändern: eingeplant oder möglicher Drop |
-| `/bof alt cost <Nr.> <Betrag>` | Kosten der Alternative, z. B. `1g 50s` |
-| `/bof alt time <Nr.> <Dauer>` | Zeitaufwand der Alternative, z. B. `45m` oder `1h 30m` |
-| `/bof alt req <Nr.> <Text>` | Voraussetzung, z. B. `Stufe 20, Questreihe in Westfall` (`clear` löscht einen Wert) |
 
-**Goldpuffer**
+**Gold**
 
 | Befehl | Wirkung |
 |---|---|
@@ -178,21 +129,11 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof gold done <Nr.>` / `delete <Nr.>` | Sparziel erreicht (Rücklage wird frei) / löschen |
 | `/bof gold distribute` | dein aktuelles Gold einmalig nach Priorität auf die Sparziele verteilen |
 | `/bof gold undo` | die letzte Verteilung rückgängig machen |
-| `/bof gold reserves` | ob die Beschaffung Rücklagen verwenden darf (Standard: ja) |
 | `/bof gold check <Betrag>` | greift ein Einkauf dieser Höhe deine Rücklagen an? Zeitgegenwert |
-
-**Beschaffung**
-
-| Befehl | Wirkung |
-|---|---|
-| `/bof plan [all]` | was du kaufen und was du farmen solltest (ausgewähltes bzw. alle Ziele) |
-| `/bof strategy time\|gold\|farm` | Strategie: Zeit sparen, Gold sparen, selbst farmen |
-| `/bof budget [Betrag\|clear]` | eigenes Budget für Käufe; ohne Budget zählt dein aktuelles Gold |
-| `/bof advisor` | Ratgeber öffnen oder schließen (auch Umschalt+Klick auf den Minimap-Knopf) |
 | `/bof goldplan [Dauer]` | was du in der Zeit am besten tust, um Gold zu machen (ohne Dauer: 1, 2 und 4 Std.) |
 | `/bof goldsources` | deine Farmrouten mit Gold pro Stunde (sicher und im AH) und Anreise |
 | `/bof goldkeep [Gegenstand]` | Gegenstand auf die Behalten-Liste setzen oder davon nehmen; ohne Gegenstand: die Liste |
-| `/bof timelimit [Dauer\|clear]` | höchste Farmzeit im Plan, z. B. `2h` oder `1h 30m`; der Rest wird gekauft, soweit das Budget reicht |
+| `/bof advisor` | Ratgeber öffnen oder schließen (auch Umschalt+Klick auf den Minimap-Knopf) |
 
 ## Bedienung
 
@@ -200,260 +141,186 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 Gegenstände ziehst du aus den Taschen in ein Feld mit Gegenstandssymbol oder fügst sie mit
 Umschalt+Klick ein, während das Fenster offen ist. Löschen fragt immer nach.
 
-**Fenster, Tab „Material“:** das ausgewählte Ziel mit Menge pro Herstellung (Feld), Bedarf, Bestand in
-Taschen und Bank, Bestand deiner anderen Charaktere („Twinks“), Fehlmenge (rot/grün) und Preis pro
-Stück (grau = veraltet). Oben: `<` und `>` wechseln das Ziel, Name und Herstellungen direkt ändern,
-„Neues Ziel“, „Löschen“; „Alle Ziele zusammen“ und „Twinks mitzählen“. In jeder Zeile: Menge ändern
-(0 entfernt), „x“ entfernt, ein Klick auf den Preis öffnet ein Feld für deinen eigenen Preis (leer =
-löschen). Unten: Gegenstand ins Feld ziehen, Menge, „Hinzufügen“ (ohne Ziel wird eines angelegt);
-„Rezept übernehmen“ mit Anzahl; „AH-Scan“ (nur am Auktionshaus) sucht pro Klick ein fehlendes Material.
+**Reiter „Ziele“:** Oben ziehst du ein Item in das Feld, trägst die Anzahl ein und klickst
+„Hinzufügen“. Links stehen deine Ziele mit ihrer Anzahl (direkt änderbar, „x“ entfernt); ein Klick
+wählt eines aus, das Mausrad blättert die Liste. Rechts steht der Plan des ausgewählten Ziels als Baum:
 
-**Fenster, Tab „Beschaffung“:** oben wechseln `<` und `>` das Ziel; pro fehlendem Material, wie viel du kaufen und wie viel du farmen
-solltest, mit Kosten und Farmzeit (inklusive Anreise), darunter die Summe und das Restbudget.
-Strategien:
+- **hast du** (grün): genug im Bestand, auch bei deinen Twinks.
+- **kaufen: 4 für 40s (AH)**: so viele fehlen, der Kauf kostet so viel; die Quelle steht dabei.
+- **farmen: 12 in etwa 18 Min. (Brachland)**: aus deinen Farmrunden; „Farmen“ startet eine Runde mit
+  diesem Item als Ziel.
+- **herstellen: 2×**: darunter die Zutaten mit ihrem eigenen Weg; „Herstellen“ stellt her (wie im
+  Reiter „Berufe“). Kann nur ein Twink das Rezept, steht sein Name dabei.
+- **offen** (rot): kein Preis, keine Farmrunde, kein Rezept. Der Knopf „AH-Scan“ (nur am
+  Auktionshaus) sucht Items ohne Preis.
 
-- **Zeit sparen:** kaufen, was einen Preis hat. Reicht das Budget nicht, wird zuerst gekauft, was
-  pro Gold am meisten Farmzeit spart (auch Teilkäufe); der Rest wird gefarmt.
-- **Gold sparen:** farmen, was du schon einmal gefarmt hast; kaufen nur, was du nicht farmen kannst.
-- **Selbst farmen:** nichts kaufen.
+Der Tooltip einer Zeile zeigt den Preis pro Stück, die Anreise und, wo dein Bestand liegt (deine
+Taschen und Bank, jeder Twink mit Stand). Unten stehen die Summen: Gold zum Ausgeben, Farmzeit mit
+Anreise, Anzahl Herstellungen. Reicht dein freies Gold (ohne Rücklagen) nicht, steht das dort; ebenso,
+wie viel eine Stunde Farmen gerade wert ist.
 
-Was weder einen Preis im Budget noch eine Farmmessung hat, steht als „offen“ (rot). Der Tooltip
-zeigt Farmzeit und Anreise getrennt. Ein eigenes Budget trägst du oben ins Feld „Budget“ ein (leer =
-dein aktuelles Gold), ein Zeitlimit oben rechts ins Feld „Zeitlimit“ (leer = keins). Fallen in deinen
-Farmrunden mehrere fehlende Materialien zusammen an, zählt das Addon, was beim längsten Farmen
-nebenbei mitkommt („nebenbei“ im Tooltip und im Chat). Unter dem Plan steht der **andere Weg**: die
-Farmroute aus deinen Runden, die am meisten Gold pro Stunde bringt (Ziel einer Runde ist kein
-fehlendes Material, mindestens 10 Minuten gemessen), und wie lange du damit für den Kauf von allem
-Fehlenden brauchst.
+**So entscheidet das Addon:** Zuerst zählt der Bestand. Für den Rest vergleicht es: Kaufen kostet den
+Preis. Farmen kostet Zeit, gerechnet mit dem Gold pro Stunde deiner besten Farmroute (oder mit deiner
+Einstellung „1 Std. Farmen ist wert“); ohne gemessene Route kostet Farmen kein Gold. Herstellen kostet,
+was die Zutaten auf ihrem günstigsten Weg kosten; Zutaten aus deinem Bestand zählen mit dem, was sie
+beim Verkauf bringen würden. Der niedrigste Wert gewinnt, bei Gleichstand Kaufen. Rezepte werden
+höchstens drei Ebenen tief aufgelöst.
+
+**Farmfenster:** `/bof farm`, Rechtsklick auf den Minimap-Knopf oder „Farmfenster öffnen“ im Reiter
+„Farmen“. Knöpfe: **Start** (Runde in der aktuellen Zone), **Pause**/**Fortsetzen**,
+**Anreise**/**Angekommen** und **Beenden** (speichert die Runde). Darüber laufen Zustand, Zone,
+Farmzeit und Anreise mit.
 
 **Farmrunden:** Während einer Runde vergleicht das Addon nach jeder Taschenänderung den Inhalt
-deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als **geplündert**. Was du bei offenem
-Händler, Bank, Auktionshaus, Briefkasten oder Handel bekommst, zählt nicht. Alles andere ist
-**unklar** – das prüfst du nach dem Beenden und zählst es mit „mitzählen“ mit oder lässt es weg;
-gibt es nichts Unklares, speichert sich die Runde selbst und zeigt ihr Ergebnis. Zeit ohne
-Aktivität (Beute, Taschenänderung, Kampf) zählt höchstens 5 Minuten am Stück. Bei AFK und in Städten
-oder Gasthäusern pausiert die Runde und läuft danach weiter; auf Flugrouten zählt die Zeit als
-Anreise. Nach `/reload` läuft eine Runde weiter; nach Ausloggen ist sie pausiert.
+deiner Taschen. Was bei offenem Beutefenster dazukommt, zählt als Beute. Was du bei offenem
+Händler, Bank, Auktionshaus, Briefkasten oder Handel bekommst, zählt nicht; andere Zugänge auch
+nicht. Zeit ohne Aktivität (Beute, Taschenänderung, Kampf) zählt höchstens 5 Minuten am Stück. Bei
+AFK und in Städten oder Gasthäusern pausiert die Runde und läuft danach weiter; auf Flugrouten zählt
+die Zeit als Anreise. Nach `/reload` läuft eine Runde weiter; nach Ausloggen ist sie pausiert.
 
-**Fenster, Tab „Farmen“:** Knöpfe für die Farmrunde (Start mit Sammeln, Gegner oder Sonstiges,
-Pause/Fortsetzen, Anreise/Angekommen, Beenden; nach dem Beenden „Unklare mitzählen“, Speichern,
-Verwerfen), das Zielmaterial (vorausgewählt: das erste fehlende Material des Ziels, mit `<` `>`
-änderbar), der Stand der Runde mit laufender Zeit und den Gegenständen (bei unklaren Zugängen je ein
-Knopf „mitzählen“) und die geschätzte Farmzeit für die fehlenden Materialien des ausgewählten Ziels.
+**Reiter „Farmen“:** deine Farmrouten, eine Zeile pro Zone: Anzahl Runden, gemessene Farmzeit, Gold
+pro Stunde (sicher: Händlerwert der Beute und gelootetes Gold) und was das Auktionshaus darüber hinaus
+bringt. Der Tooltip zeigt die Anreise und die Beute pro Stunde. Gold pro Stunde zählt auf die
+Farmzeit, die Anreise einmal pro Ausflug.
 
-**Fenster, Tab „Craft“:** die Craft-Bewertung des ausgewählten Ziels: Wertung des hergestellten
-Gegenstands gegen das, was du an diesem Platz trägst (bei Ringen und Schmuck gegen den schwächeren,
-Zweihandwaffen gegen Haupt- und Nebenhand zusammen), Beschaffungskosten und Farmzeit, Kosten pro
-Wertungspunkt, Wert vorhandener Zutaten (beim Händler und nach deinen Preisen) und deine
-Alternativen. Die Wertung ist die Summe der Werte (fünf Grundwerte, Rüstung, Waffen-DPS) mal deinem
-Gewicht. Bei eingeplanten Alternativen steht, ob der Craft auch danach besser bleibt oder nur die Zeit
-bis dahin überbrückt; was du noch nicht tragen kannst, ist mit der nötigen Stufe markiert. Aktualisiert sich,
-wenn du Ausrüstung wechselst. Unten trägst du die Gewichte direkt ein oder übernimmst eine Vorlage
-(Zauber, Heiler, Beweglichkeit, Stärke, Tank; ein Vorschlag passend zu Klasse und Talenten steht
-dabei). Der Knopf „Alternativen“ oben rechts öffnet die Liste deiner Alternativen: Art umschalten,
-Kosten, Zeit (z. B. `1h 30m`) und Voraussetzung eintragen, entfernen, neue per Feld hinzufügen.
-
-**Fenster, Tab „Berufe“:** links die Symbole deiner Berufe (ein Klick wechselt den Beruf), daneben
+**Reiter „Berufe“:** links die Symbole deiner Berufe (ein Klick wechselt den Beruf), daneben
 deine Fertigkeit, eine Suche und die Zutaten-Filter „Alle“, „Teilweise“ (mindestens eine Zutat in der
 nötigen Menge in den Taschen) und „Komplett“ (jetzt herstellbar). Die Rezepte stehen in Gruppen wie
 „Stärke“, „Ausdauer & Willenskraft“, „Heilung“ oder „Handwerkswaren“; ein Klick auf die Gruppe klappt
 sie zu oder auf. Die Farbe des Namens zeigt wie im Berufsfenster, ob ein Fertigkeitspunkt kommt;
 rechts steht, wie oft deine Taschen reichen („3×“) oder wie viele Zutaten du hast („1/2“). Rechts im
-Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, was die Zutaten wert sind (Zutaten aus
-deiner Tasche mit dem, was sie beim Verkauf bringen würden – im AH nach 5 % Gebühr –, fehlende mit dem
-Kaufpreis), Wert beim Händler und im AH (nach Gebühr) und Gewinn pro Herstellung. „Als Ziel anlegen“ macht daraus ein
-Materialziel (oder erhöht ein vorhandenes). Unten stellst du direkt her: Anzahl ins Feld und
-„Herstellen“, oder „Alle: n“ (so oft die Zutaten reichen) bzw. „Stapel: n“ (ein voller Stapel). Ist das
-Berufsfenster zu, öffnet der erste Klick es, der zweite stellt her. Im Kampf geht das nicht;
-Verzauberungen wendest du wie gewohnt im Verzauberkunstfenster an. Das Addon kennt die Rezepte, sobald du das Berufsfenster
-einmal geöffnet hast. Mausrad blättert.
+Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, was die Zutaten wert sind, Wert beim
+Händler und im AH (nach Gebühr), Gewinn pro Herstellung und bei Ausrüstung die Wertung gegenüber
+deiner angelegten Ausrüstung. „Als Ziel anlegen“ nimmt das Produkt in deine Ziele auf. Unten stellst
+du direkt her: Anzahl ins Feld und „Herstellen“, oder „Alle: n“ bzw. „Stapel: n“. Ist das Berufsfenster
+zu, öffnet der erste Klick es, der zweite stellt her. Im Kampf geht das nicht; Verzauberungen wendest
+du wie gewohnt im Verzauberkunstfenster an.
 
-**Fenster, Tab „Hilfe“:** alle Befehle (dieselben wie bei `/bof help`), mit dem Mausrad blätterbar.
+**Ausrüstung bewerten:** Die Wertung ist die Summe der Werte (Stärke, Beweglichkeit, Ausdauer,
+Intelligenz, Willenskraft, Rüstung, Waffen-DPS) mal deinem Gewicht, verglichen mit dem, was du an
+diesem Platz trägst (bei Ringen und Schmuck mit dem schwächeren, bei Zweihandwaffen mit Haupt- und
+Nebenhand zusammen). Die Gewichte stehen im Reiter „Einstellungen“ unten, mit dem Knopf „Vorschlag“
+passend zu Klasse und Talenten.
 
-**Fenster, Tab „Goldpuffer“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele als
+**Reiter „Goldpuffer“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele als
 Zeilen (Name und Betrag direkt ändern, „hoch“, „erreicht“, „x“), eine Zeile „Neu“ zum Anlegen,
-„Einkauf prüfen“, dein Nettoerlös mit Quellen und Knöpfe für „Gold verteilen“, „Rückgängig“ und
-„Rücklagen an/aus“. Der Tab „Beschaffung“ zeigt unter dem Plan, ob die Käufe deine Rücklagen
-angreifen, und den Zeitgegenwert der Kosten.
-
-**Fenster, Tab „Goldpuffer“, Ansicht „Goldplaner“** (Knopf oben rechts): Zeit wählen (1, 2, 4 Std.
-oder eigene Dauer), darunter der Plan Schritt für Schritt mit sicherem Gold und Gold „bis zu“ im AH,
-andere Möglichkeiten und deine Farmrouten. Ein Gegenstand, den du ins Feld unten links ziehst, kommt
-auf die Behalten-Liste (nochmal ziehen nimmt ihn herunter).
-
-So entsteht eine **Farmroute**: Jede gespeicherte Farmrunde gehört zu einer Route aus Zone (wo du
-startest), Art (Sammeln, Gegner, Sonstiges) und Zielmaterial. Ihr Wert ist die Beute zu aktuellen
-Preisen plus das gelootete Gold (seit 0.6.0 erfasst). Gold pro Stunde zählt auf die Farmzeit, die
-Anreise einmal pro Ausflug. Eine Route braucht mindestens 10 Minuten Messung.
+„Einkauf prüfen“, dein Nettoerlös mit Quellen und Knöpfe für „Gold verteilen“ und „Rückgängig“.
+Die Ansicht **„Goldplaner“** (Knopf oben rechts): Zeit wählen (1, 2, 4 Std. oder eigene Dauer),
+darunter der Plan Schritt für Schritt mit sicherem Gold und Gold „bis zu“ im AH, andere Möglichkeiten
+und deine Farmrouten. Ein Gegenstand, den du ins Feld unten links ziehst, kommt auf die Behalten-Liste.
 
 **Rezepte und Abklingzeiten:** Öffnest du ein Berufsfenster, merkt sich das Addon alle sichtbaren
 Rezepte dieses Charakters (nur gelernte). Haben Produkt und Zutaten Preise, schlägt der Goldplaner
-gewinnbringende Crafts vor: Verkaufswert beim Händler und im AH minus Zutaten. Zutaten in deinen
-Taschen zählen mit dem, was sie roh beim Verkauf bringen würden; Zutaten zum Kaufen mit dem
-Kaufpreis. Hat eine Zutat keinen Preis, aber du hast sie schon einmal gefarmt (gemessene Farmrunde),
-rechnet das Addon sie als „farmen“: kein Gold, dafür die geschätzte Farmzeit. Mit Zutaten in der Tasche so viele Crafts, wie sie reichen, sonst höchstens 5. Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine
-Restzeit zeigt; ist sie vorbei, nennt der Login sie.
+gewinnbringende Crafts vor. Rezepte mit Abklingzeit erkennt es, sobald das Fenster eine Restzeit
+zeigt; ist sie vorbei, nennt der Login sie.
 
 **Ratgeber:** Umschalt+Klick auf den Minimap-Knopf, `/bof advisor` oder eine Taste (Tastaturbelegung).
-Die Zeilen stehen immer in dieser Reihenfolge:
+Die Zeilen: **Verkaufen**, **Entzaubern** (nur wenn du entzaubern kannst), **Herstellen** (Herstellungen
+deiner Ziele, deren Zutaten in den Taschen sind, bereite Abklingzeiten, dann Rezepte mit Gewinn),
+**Sparziel** und **Deine beste Stunde**. Ein Klick auf eine Zeile führt sie aus. Am Händler, im
+Auktionshaus, in der Bank und am Briefkasten erscheinen passende Karten neben dem Fenster (zum Beispiel
+„kaufen“ für Items deiner Ziele, die der Händler hat, oder „aus der Bank nehmen“).
 
-- **Verkaufen:** Kram für den Händler und Waren fürs Auktionshaus; warnt bei vollen Taschen.
-- **Entzaubern** (nur wenn du entzaubern kannst): was als Verzauberungsmaterial mehr bringt als
-  verkauft; der Tooltip nennt den Unterschied pro Gegenstand (braucht Auctionator).
-- **Herstellen:** nur gelernte Rezepte – bereite Ziele und Abklingzeiten, dann Rezepte mit Gewinn,
-  zuerst die, deren Zutaten du schon hast. Der Tooltip zeigt pro Rezept Händler- und AH-Wert, den
-  Wert der Zutaten und wann wartende Abklingzeiten bereit sind.
-- **Sparziel** und **Deine beste Stunde**.
-
-Ein Klick auf eine Zeile führt sie aus („Verkaufen“ beim Händler, „Sparziel“ öffnet den Goldpuffer,
-„Deine beste Stunde“ den Goldplaner). Jede Zeile hat einen farbigen Streifen (gelb: Gold, blau:
-Hinweis, orange: Warnung, grau: gerade nichts zu tun), eine Überschrift, den Goldwert und eine
-Erklärung; der Tooltip zeigt die Gegenstände oder Rezepte. Unten im Ratgeber schaltest du die Karten an den Spielfenstern und das Öffnen nach dem
-Login ab. Nach dem Login öffnet er sich von selbst, wenn etwas Wichtiges ansteht (volle Taschen,
-Abklingzeit, herstellbares Ziel).
-
-**Fenster, Tab „Einstellungen“:** alle Einstellungen zum An- und Abschalten (Farm-Automatik,
-Preise, Goldpuffer, Anzeige), Debug-Modus, Leistung anzeigen und Zurücksetzen.
+**Reiter „Einstellungen“:** alle Einstellungen zum An- und Abschalten (Farm-Automatik, Bestand und
+Preise, Gold, Anzeige), die Gewichte für die Ausrüstung, Debug-Modus, Leistung anzeigen und
+Zurücksetzen.
 
 **Hinweise ohne Eingabe:** Der Tooltip eines Gegenstands zeigt, wie viel dir für deine Ziele noch
-fehlt, und bei einem Craft-Ziel die Verbesserung gegenüber deiner Ausrüstung. Am Händler steht unter
-dem Fenster dein freies Gold und deine Rücklagen; greift ein Einkauf die Rücklagen an, warnt das
-Addon einmal. Im Auktionshaus nennt es, wie viele fehlende Materialien noch keinen Preis haben.
-Erbeutest du ein fehlendes Material ohne laufende Runde, schlägt es eine Farmrunde vor; zeigt das
-Questfenster eine Belohnung für den Platz eines Craft-Ziels, bietet es sie als Alternative an. Nach
-dem Login fasst es deine letzte Sitzung zusammen. Wer möchte, lässt neues Gold automatisch auf die
-Sparziele verteilen (Einstellung, standardmäßig aus).
+fehlt, und bei gewünschter Ausrüstung die Verbesserung gegenüber deiner. Am Händler steht unter dem
+Fenster dein freies Gold und deine Rücklagen; greift ein Einkauf die Rücklagen an, warnt das Addon
+einmal. Im Auktionshaus nennt es, wie viele Items für deine Ziele noch keinen Preis haben. Erbeutest
+du ein Item, das dein Plan noch braucht, ohne laufende Runde, schlägt es eine Farmrunde vor. Nach dem
+Login fasst es deine letzte Sitzung zusammen.
 
-**Minimap und Tasten:** Linksklick auf den Minimap-Knopf öffnet das Fenster, Rechtsklick pausiert
-oder setzt die Farmrunde fort. Die Position stellst du in den Einstellungen ein (Grad). Unter
-Esc → Tastaturbelegung → AddOns kannst du Tasten für Fenster und Farmrunde vergeben.
+**Minimap und Tasten:** Linksklick auf den Minimap-Knopf öffnet das Fenster, Rechtsklick öffnet das
+Farmfenster bzw. pausiert oder setzt die Farmrunde fort. Unter Esc → Tastaturbelegung → AddOns kannst
+du Tasten für Fenster und Farmrunde vergeben.
 
 **Nettoerlös:** Jede Änderung deines Golds, während du online bist, zählt – Beute, Quests,
 Verkäufe ebenso wie Einkäufe, Reparaturen, Post und Handel. Dazu zählt die Spielzeit (Pausen ohne
 Aktivität höchstens 30 Minuten am Stück). Aus den letzten 14 Tagen ergibt sich der Nettoerlös pro
-Stunde; ab einer Stunde Spielzeit gibt es den Zeitgegenwert. Seit 0.4.0 merkt sich das Addon, woher
-das Gold kommt (Beute, Quests, Händler, Lehrer, Post, Auktionshaus, Handel, Sonstiges).
+Stunde; ab einer Stunde Spielzeit gibt es den Zeitgegenwert.
 
-Das Fenster lässt sich verschieben, merkt sich Position und Tab und schließt mit Escape.
+Das Fenster lässt sich verschieben, merkt sich Position und Reiter und schließt mit Escape.
 
 ## Abhängigkeiten
 
 Keine. Optional: **Auctionator** – ist es installiert, nutzt das Addon dessen Auktionspreise als
-zusätzliche Preisquelle „Auctionator“ (abschaltbar im Tab „Einstellungen“). Für Tests wird BugSack mit
-BugGrabber empfohlen.
+zusätzliche Preisquelle „Auctionator“ (abschaltbar im Reiter „Einstellungen“). Für Tests wird BugSack
+mit BugGrabber empfohlen.
 
 ## Gespeicherte Daten
 
 `WTF\Account\<Account>\SavedVariables\BuyOrFarmForever.lua` (eine Datei für alle Charaktere).
 WoW schreibt sie beim Ausloggen, Beenden und bei `/reload`. Die Daten enthalten eine
 Schema-Version; stammen sie aus einer neueren Addon-Version, verändert das Addon sie nicht und
-weist darauf hin.
+weist darauf hin. Beim ersten Start von 0.10.0 werden deine alten Materialziele zu Zielen: ein Ziel
+aus einem Rezept wird zu dessen Produkt, ein selbst angelegtes Ziel zu seinen Zutaten.
 
 ## Bekannte Einschränkungen
 
-- Der Bestand anderer Charaktere ist der Stand von deren letzter Taschenänderung, ihrem letzten
-  Bankbesuch oder `/bof stock`. Neue Zutaten kennen sie erst nach ihrem nächsten Login.
-- Rezeptimport nur für das ausgewählte Rezept, nur feste Zutaten.
-- Automatisch erfasst werden nur Preise von Materialien aus deinen Zielen. AH- und eigene Preise
-  gelten nach 7 Tagen als veraltet, Händlerpreise nicht. Pro AH-Suche wird nur die erste Seite
-  gelesen; bei sehr vielen Angeboten kann der günstigste Preis fehlen.
-- Farmrunden zählen nur die Taschen, nicht die Bank.
-- Stürzt das Spiel ab, fehlt alles seit dem letzten Speichern, auch eine in dieser Sitzung
-  gestartete Farmrunde.
+- Bestand: Taschen werden bei jeder Änderung und kurz nach dem Login erfasst, die Bank nur, während
+  sie offen ist. Die Bank eines Twinks kennt das Addon also erst nach dessen erstem Bankbesuch mit
+  dieser Version. Gezählt werden Twinks auf demselben Realm und derselben Fraktion.
+- Farmen kennt das Addon nur aus **deinen** Farmrunden (keine Drop-Datenbank). Gefarmte Nebenbeute
+  verringert die Kosten des Farmens nicht. Ohne gemessene Farmroute (mindestens 10 Minuten) kostet
+  Farmen im Vergleich kein Gold.
+- Herstellen kennt das Addon nur für gelernte Rezepte, die du im Berufsfenster gesehen hast, höchstens
+  drei Ebenen tief. Ein Ziel wird ganz gekauft, ganz gefarmt oder ganz hergestellt, nicht gemischt.
+  Rezepte mit mehreren möglichen Ergebnissen rechnen mit dem Durchschnitt.
+- Für Twinks plant der Ratgeber am Briefkasten nur mit ihren Ziel-Items, nicht mit deren Zutaten.
+- Preise: automatisch erfasst werden nur Preise der Items deiner Ziele und ihrer möglichen Zutaten.
+  AH- und eigene Preise gelten nach 7 Tagen als veraltet, Händlerpreise nicht. Pro AH-Suche wird nur
+  die erste Seite gelesen. Alte Preise löscht das Addon nach 60 Tagen (einstellbar, 0 = nie); deine
+  eigenen Preise bleiben.
+- Farmrunden zählen nur die Taschen, nicht die Bank. Zugänge ohne Beutefenster (Post, Handel …)
+  zählen nicht. Stürzt das Spiel ab, fehlt alles seit dem letzten Speichern.
 - Gold, das du per Post zwischen deinen Charakteren schickst, zählt beim einen als Einnahme, beim
-  anderen als Ausgabe (Quelle „Post“). Questbelohnungen erkennt das Addon am offenen Questfenster;
-  kommt das Gold erst nach dem Schließen, zählt es als „Sonstiges“. Sparziele und Nettoerlös gelten
-  pro Charakter.
-- Die Craft-Bewertung rechnet mit Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft,
-  Rüstung und Waffen-DPS. Effekte und Setboni werden nicht bewertet. Einhandwaffen
-  werden nur mit der Haupthand verglichen. Die Gewichte-Vorlagen sind ein Startpunkt des Addons,
-  keine offiziellen Werte.
-- Der Tab „Craft“ zeigt höchstens 12 Zeilen; bei vielen Alternativen steht der Rest nur im Chat
-  (`/bof craft`).
-- Alte Preise vom Händler und aus dem Auktionshaus löscht das Addon nach 60 Tagen (einstellbar,
-  0 = nie); deine eigenen Preise bleiben.
-- Das Zeitlimit wird schrittweise eingehalten (erst das, was pro Gold am meisten Zeit spart), nicht
-  mit der rechnerisch besten Kombination. Der andere Weg rechnet mit der AH-Gebühr von 5 %, nicht mit
-  der Einstellgebühr, und nur mit aktuellen Preisen.
-- Goldplaner: Verkäufe im Auktionshaus sind nicht garantiert (Preis vom letzten Scan, Nachfrage
-  unbekannt, Einstellgebühr nicht abgezogen); die Anreise ist der Durchschnitt deiner Runden, nicht
-  der Weg von deinem Standort; der Weg in die Stadt zum Verkaufen ist nicht eingerechnet. Die
-  Zeiten pro Verkauf, Entzaubern und Craft sind Schätzungen des Addons. Rezepte kennt das Addon erst
-  nach dem Öffnen des Berufsfensters; Abklingzeiten erst, wenn das Fenster einmal eine Restzeit zeigte.
-- Ratgeber: Verkaufen und Kaufen gehen nur beim Händler und nur nach Bestätigung; im Auktionshaus
-  und am Briefkasten zeigt er nur, was zu tun ist. Verkauft werden genau die Gegenstände der Liste
-  (ohne Behalten-Liste und Material deiner Ziele); beim Händler kannst du sie zurückkaufen.
-- Berufe: nur gelernte Rezepte, und erst nachdem du das Berufsfenster einmal geöffnet hast (Rezepte
-  aus älteren Versionen ohne Beruf erscheinen unter „Sonstige“, bis du das Fenster wieder öffnest).
-  Angeln hat keine Rezepte. Die Gruppen für Essen, Tränke und Verzauberungen stammen aus einer
-  Datentabelle (Wowhead Classic, Stand 23.10.2026), nicht aus dem Spiel; einzelne Zuordnungen können
-  abweichen. Ausrüstung kommt in die Gruppe ihres größten Grundwerts. Die Suche unterscheidet bei
-  Umlauten Groß- und Kleinschreibung. Gewinn nur, wenn alle Zutaten und das Produkt einen Preis haben.
+  anderen als Ausgabe. Sparziele und Nettoerlös gelten pro Charakter.
+- Ausrüstungswertung: Effekte und Setboni werden nicht bewertet; Einhandwaffen werden nur mit der
+  Haupthand verglichen. Die Gewichte-Vorlagen sind ein Startpunkt des Addons, keine offiziellen Werte.
+- Goldplaner: Verkäufe im Auktionshaus sind nicht garantiert (Preis vom letzten Scan, Einstellgebühr
+  nicht abgezogen); die Anreise ist der Durchschnitt deiner Runden.
+- Ratgeber: Verkaufen und Kaufen gehen nur beim Händler und nur nach Bestätigung; verkauft werden
+  nie Items deiner Ziele, ihre möglichen Zutaten und die Behalten-Liste.
+- Berufe: nur gelernte Rezepte, erst nachdem du das Berufsfenster einmal geöffnet hast. Die Gruppen
+  für Essen, Tränke und Verzauberungen stammen aus einer Datentabelle (Wowhead Classic, Stand
+  23.10.2026), nicht aus dem Spiel. Herstellen aus dem Reiter: beim ersten Klick nur Öffnen des
+  Berufsfensters, wenn es zu ist.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
 ## Durchgeführte Tests
 
-**Außerhalb des Spiels** (Version 0.8.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
+**Außerhalb des Spiels** (Version 0.10.0-alpha.1): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 298
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
-Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
-Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
-Craft-Bewertung mit Rüstung, Waffen-DPS und geplantem Ersatz, Goldpuffer, Goldplaner mit Routen,
-Taschen, Rezeptbuch und Abklingzeiten, Ratgeber, Berufsansicht mit Gruppen, Filtern und Suche,
-Einstellungen, Hinweise).
-Die Neuerungen von 0.5.0 wurden am 19.10.2026 in 0.5.0-alpha.1 und 0.5.0-alpha.2 in Classic Era im
-Spiel getestet (mit Auctionator); die fehlenden Ziel-Pfeile im Tab „Beschaffung“ wurden in
-0.5.0-alpha.2 ergänzt und bestätigt. Die Version 0.5.0 unterscheidet sich von 0.5.0-alpha.2 nur in
-Versionsnummer und Dokumentation.
-Der Goldplaner (0.6.0) wurde am 19.10.2026 in 0.6.0-alpha.1 und 0.6.0-alpha.2 in Classic Era im
-Spiel getestet (Entzaubern, Auctionator-Entzauberungswerte, Taschen, Rezepte, Behalten-Liste;
-Farmrouten mit Beispieldaten eines Entwickler-Addons statt echter Farmrunden). Ein Fehler in den
-Eingabefeldern für neue Sparziele wurde in 0.6.0-alpha.2 behoben und bestätigt. Die Version 0.6.0
-unterscheidet sich von 0.6.0-alpha.2 nur in Versionsnummer und Dokumentation.
+Daten, Übernahme alter Ziele, alle Befehle, Fenster-Eingaben, Bestand mit Bank und Twinks, Planer
+mit Kaufen, Farmen, Herstellen über mehrere Ebenen, Farmfenster und Routen, Preise mit Auctionator,
+Ausrüstungswertung, Goldpuffer, Goldplaner, Ratgeber, Berufsansicht, Herstellen, Hinweise).
 
-**Im Spiel** (Classic Era 1.15.9, deutscher Client, 18.10.2026, Charaktere auf zwei Realms und
-beiden Fraktionen): alle Teile während der Entwicklung (Zwischenversionen 0.1.0 bis 0.2.0-alpha.10)
-getestet, ohne Lua-Fehler: Grundgerüst und Befehle, Kampf, Ziele, Bestand mit Bank und Twinks,
-Rezeptimport (Schmiedekunst, Schneiderei, Verzauberkunst, zwei offene Fenster), Fenster, Preise
-(eigene, Händler, Auktionshaus, AH-Scan), Farmrunden (Plündern, Anreise, Speichern, `/reload`),
-Beschaffungsplan mit Strategien und Budget, `/bof perf` (259 KB Speicher, Spitze 0,13 % der
-Frame-Zeit).
+**Im Spiel** (Classic Era 1.15.9, deutscher Client, Charaktere auf zwei Realms und beiden
+Fraktionen), jeweils ohne Lua-Fehler:
 
-Nicht im Spiel geprüft: andere Spielsprachen, Zusammenspiel mit anderen Addons; als „getestet“
-nur nach deiner Rückmeldung, ohne Spur in den gespeicherten Daten: unklare Zugänge mit `keep`,
-Pause einer Farmrunde nach dem Ausloggen. Die Version 0.2.0 selbst unterscheidet sich von
-0.2.0-alpha.10 nur in Versionsnummer und Dokumentation.
+- 0.1.0 bis 0.2.0 (18.10.2026): Grundgerüst und Befehle, Kampf, Ziele, Bestand mit Bank und Twinks,
+  Rezeptimport, Fenster, Preise (eigene, Händler, Auktionshaus, AH-Scan), Farmrunden, `/bof perf`
+  (259 KB Speicher, Spitze 0,13 % der Frame-Zeit).
+- 0.3.0 bis 0.7.0 (18. und 19.10.2026): Craft-Bewertung, Farmen, Goldpuffer, Hilfe, Automatik und
+  Eingaben im Fenster, Zeitlimit und Auctionator, Goldplaner (Farmrouten mit Beispieldaten), Ratgeber.
+- 0.8.0 (23.10.2026): Reiter „Berufe“ (Kochkunst, Erste Hilfe, Schneiderei, Verzauberkunst; die
+  übrigen Berufe nicht im Spiel geprüft), Bewertung der Zutaten aus der Tasche. `/bof perf`: 1640 KB
+  Speicher, Spitze 7,54 % der Frame-Zeit.
+- 0.9.0 (Herstellen aus dem Reiter „Berufe“) und 0.10.0 (Ziele mit günstigstem Weg, Farmfenster,
+  vollständiger Bestand): **noch nicht im Spiel getestet.**
 
-Die Neuerungen von 0.3.0 (Craft-Bewertung mit Alternativen, Tab „Farmen“, Goldpuffer, Tab „Hilfe“)
-wurden am 18. und 19.10.2026 in den Zwischenversionen 0.3.0-alpha.1 bis 0.3.0-alpha.3 im Spiel
-getestet, ohne Lua-Fehler; zwei Darstellungsfehler im Tab „Craft“ wurden dabei gefunden und
-behoben. Einnahmen und Ausgaben beim Nettoerlös: getestet nach deiner Rückmeldung, ohne Spur in
-den gespeicherten Daten. Die Version 0.3.0 unterscheidet sich von 0.3.0-alpha.3 nur in
-Versionsnummer und Dokumentation.
-
-Die Neuerungen von 0.4.0 wurden am 19.10.2026 in 0.4.0-alpha.1 im Spiel getestet, ohne Lua-Fehler;
-überlappende Knopftexte im Tab „Craft“ wurden in 0.4.0-alpha.2 behoben und im Spiel bestätigt. Die
-Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dokumentation.
-
-Der Ratgeber (0.7.0) wurde am 19.10.2026 in 0.7.0-alpha.1 bis 0.7.0-alpha.6 in Classic Era im Spiel
-getestet, ohne Lua-Fehler.
-
-Der Reiter „Berufe“ wurde am 23.10.2026 in 0.8.0-alpha.1 in Classic Era im Spiel getestet (Kochkunst,
-Erste Hilfe, Schneiderei, Verzauberkunst; Namen und Fertigkeiten der Berufsfenster per `/dump`
-bestätigt). Bergbau, Alchemie, Lederverarbeitung, Schmiedekunst und Ingenieurskunst wurden nicht im
-Spiel geprüft. `/bof perf`: 1640 KB Speicher, Durchschnitt 0,01 %, Spitze 7,54 % der Frame-Zeit. Die
-Version 0.8.0 unterscheidet sich von 0.8.0-alpha.1 durch eine kleine Absicherung beim
-Fertigkeitsbalken und eine Korrektur, die du im Spiel gefunden hast: Zutaten aus der Tasche zählen jetzt
-mit ihrem Verkaufswert statt mit dem Kaufpreis. Die Korrektur wurde am 23.10.2026 im Spiel bestätigt
-(Leinenstoffballen: Werte stimmen mit den Preisen von Auctionator überein).
+Nicht im Spiel geprüft: andere Spielsprachen, Zusammenspiel mit anderen Addons.
 
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.9.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.10.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

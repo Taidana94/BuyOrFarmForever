@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/bof want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
 | 0.9.0-alpha.1 | 2026-10-23 | 324 checks passed, 0 failed (306 unit tests); 8 new tests in `test_make.lua` (craft counts, crafting in the open window with cap and "all", opening a closed or other window, combat/no reagents/unknown/enchantment refused, collapsed categories, smelting spell for Mining, detail buttons); mutation check: crafting in another profession's window fails 1 |
 | 0.8.0 | 2026-10-23 | 316 checks passed, 0 failed (298 unit tests); against 0.8.0-alpha.1: skill bar guard (with test; mutation check: removing the guard fails 1) and the fix for the user's in-game finding (linen bolt showed a loss because owned reagents counted at their buy price; now at their sale value after the cut, like `CraftTasks`; the new test fails without the fix), version and documentation |
 | 0.8.0-alpha.1 | 2026-10-23 | 315 checks passed, 0 failed; 14 new tests in `test_professions.lua` (book with profession/difficulty/skill, smelting as mining, enchantments kept, categories from facts, effect data keys, labels, grouping, reagent filter, search, economics, sanitizing, tab list/collapse/detail/filter/search, goal button, gear by stats); layout test includes the new tab; level 1c exempts `Data/` from the file length (data tables) |
@@ -260,6 +261,28 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.10.0-alpha.1 (Classic Era, wants, stock, farm window)
+
+Before: back up `WTF/.../SavedVariables/BuyOrFarmForever.lua` (the migration rewrites the goals).
+
+1. `/reload`, `/bof version` → `0.10.0-alpha.1`. BugSack empty. Chat: no repair warnings beyond the
+   migration. Tabs: Ziele, Farmen, Berufe, Goldpuffer, Einstellungen, Hilfe.
+2. Tab "Ziele": the old goals appear as wants (recipe goal → its product). Add Leinenstoffballen x5 via
+   the slot: the tree shows "herstellen: 5×" with Leinenstoff below (hast du / kaufen / farmen), the
+   summary lines and the hour value line.
+3. Tooltip of a tree row with stock: "Du: Taschen n, Bank n" and the alts with their stand.
+4. Click "Herstellen" in the tree: tailoring window opens (first click) / crafts (second click).
+5. Bank: open and close the bank once, then `/reload`; a want covered by bank items shows "hast du".
+   Log an alt in, wait 15 s, log the main in: the alt's bags count in the tooltip.
+6. Farm: `/bof farm` opens the small window; Start → status line counts; Beenden → "Farmrunde
+   gespeichert (nur Beute zählt)." and a row in tab "Farmen" with gold per hour. Right click on the
+   minimap button opens the window / pauses.
+7. Settings tab: weight boxes and "Vorschlag" at the bottom; "1 Std. Farmen ist wert" box; `/bof set
+   hourValueGold 2` changes the hour value line in "Ziele".
+8. `/bof perf` idle and with "Ziele" open; `/bof want` in chat.
+9. Advisor at the merchant / bank: cards name items of the wants; sell suggestions leave wanted items
+   and their reagents out.
 
 ### Checklist 0.9.0-alpha.1 (Classic Era, crafting from the professions tab)
 

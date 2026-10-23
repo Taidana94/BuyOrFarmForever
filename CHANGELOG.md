@@ -3,6 +3,40 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.10.0-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Reiter „Ziele“:** Du nimmst ein Item auf, das du haben willst. Das Addon prüft, ob du es hast
+  (Taschen, Bank, Twinks), kaufen, farmen oder herstellen kannst, und zeigt den günstigsten Weg, für
+  Zutaten genauso. Farmzeit zählt mit dem Gold pro Stunde deiner besten Farmroute (einstellbar: „1 Std.
+  Farmen ist wert“). „Herstellen“ und „Farmen“ starten direkt aus dem Plan. Unten: Summen, Hinweis, wenn
+  dein freies Gold nicht reicht. Im Chat: `/bof want`.
+- **Bestand automatisch:** alle Items in Taschen und Bank jedes Charakters werden erfasst (Bank beim
+  Bankbesuch), auch kurz nach dem Login. Nichts muss mehr eingetragen werden.
+- **Farmfenster:** kleines Fenster mit Start, Pause/Fortsetzen, Anreise/Angekommen, Beenden (`/bof farm`,
+  Rechtsklick auf den Minimap-Knopf). Der Reiter „Farmen“ zeigt deine Farmrouten pro Zone mit Gold pro
+  Stunde und Beute pro Stunde.
+- Reiter „Berufe“: bei Ausrüstung die Wertung gegenüber deiner angelegten Ausrüstung.
+
+### Geändert
+
+- Die Reiter „Material“, „Beschaffung“ und „Craft“ sind im Reiter „Ziele“ aufgegangen. Alte
+  Materialziele werden beim ersten Start übernommen (Rezeptziel → Produkt, Handziel → Zutaten).
+- Farmrunden haben keine Art mehr (Sammeln/Gegner); „Beenden“ speichert sofort, nur Beute zählt.
+  Farmrouten sind jetzt eine pro Zone.
+- Die Gewichte für die Ausrüstungswertung stehen im Reiter „Einstellungen“ (mit „Vorschlag“).
+- `/bof recipe` nimmt das Produkt des Rezepts als Ziel auf.
+
+### Entfernt
+
+- Strategien, Budget und Zeitlimit der Beschaffung, Alternativen und Questbelohnungen der
+  Craft-Bewertung, `/bof goal`, `/bof stock`, `/bof plan`, `/bof alt`, `/bof gold reserves`, die
+  Einstellungen „Unklare Zugänge automatisch einordnen“, „Beschaffung darf Rücklagen verwenden“ und
+  „Questbelohnungen als Alternative vorschlagen“.
+
 ## [0.9.0-alpha.1] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
