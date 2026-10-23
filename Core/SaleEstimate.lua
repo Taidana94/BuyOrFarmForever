@@ -85,17 +85,17 @@ end
 
 -- Units of an item to make or buy for the auction house: `max` scaled by the sale chance and at most
 -- what the realm sells in a day (when the market watch knows it); one test unit without any results.
--- Returns units, chance.
+-- Returns units, chance, untested (true when capped to the test unit).
 function SaleEstimate.PlanUnits(itemID, max, now)
 	if not ns.db.settings.useSaleChance then
-		return max, 1
+		return max, 1, false
 	end
 	local estimate = SaleEstimate.For(itemID, now)
 	local units = SaleEstimate.Units(max, estimate.chance)
 	if not SaleEstimate.HasResults(estimate) then
-		units = math.min(units, UNTESTED_UNITS)
+		return math.min(units, UNTESTED_UNITS), estimate.chance, true
 	elseif estimate.perDay then
 		units = math.min(units, math.max(1, math.floor(estimate.perDay + ROUND)))
 	end
-	return units, estimate.chance
+	return units, estimate.chance, false
 end

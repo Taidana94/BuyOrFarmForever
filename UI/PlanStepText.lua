@@ -25,6 +25,7 @@ local function taskDetails(task, details)
 	if task.chance and task.chance < 1 then
 		details[#details + 1] = Util.Format(L.STEP_CHANCE, math.floor(task.chance * PERCENT + 0.5))
 	end
+	details[#details + 1] = task.untested and L.STEP_UNTESTED or nil
 	if task.charKey then
 		details[#details + 1] = Util.Format(L.STEP_ON_ALT, (ns.Stock.SplitKey(task.charKey)))
 	end

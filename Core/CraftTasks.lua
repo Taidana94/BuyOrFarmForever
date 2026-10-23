@@ -111,7 +111,7 @@ function CraftTasks.TaskFor(key, entry, now)
 	end
 	local fromBags = craftsFromBags(recipe)
 	-- Without a known demand, as many crafts as the sale chance suggests (at least one).
-	local cap, chance = ns.SaleEstimate.PlanUnits(recipe.outputItemID, CraftTasks.MAX_CRAFTS, now)
+	local cap, chance, untested = ns.SaleEstimate.PlanUnits(recipe.outputItemID, CraftTasks.MAX_CRAFTS, now)
 	local crafts = entry.cooldown and 1 or (fromBags > 0 and math.min(fromBags, cap)) or cap
 	local value = CraftTasks.Value(recipe, crafts, now)
 	if not value then
@@ -119,6 +119,7 @@ function CraftTasks.TaskFor(key, entry, now)
 	end
 	value.kind = entry.cooldown and "COOLDOWN" or "CRAFT"
 	value.itemID, value.crafts, value.fromBags, value.chance = recipe.outputItemID, crafts, fromBags, chance
+	value.untested = untested and not entry.cooldown
 	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT + value.farmSeconds
 	return value
 end

@@ -79,6 +79,7 @@ local function extrasText(task)
 		parts[i] = Util.Format(L.GOLDPLAN_BUY_PART, entry.units, UIShared.ItemText(entry.itemID))
 	end
 	local chance = task.chance and task.chance < 1 and Util.Format(L.GOLDPLAN_CHANCE, math.floor(task.chance * 100 + 0.5)) or ""
+	chance = chance .. (task.untested and L.GOLDPLAN_UNTESTED or "")
 	return chance .. (#parts > 0 and Util.Format(L.GOLDPLAN_BUY_FIRST, table.concat(parts, L.PLAN_SEPARATOR)) or "")
 end
 
