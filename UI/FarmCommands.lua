@@ -1,5 +1,6 @@
--- /bof farm: start, pause, resume, travel, stop, review and save farm runs; list runs and show
--- farm time estimates for missing materials.
+-- /bof farm: start, pause, resume, travel and stop farm runs (the farm window's buttons run the same
+-- commands), list runs. Stopping saves the run at once: only looted items count (user decision 0.10.0,
+-- no review step). Without a subcommand the farm window opens or closes.
 local _, ns = ...
 
 local L = ns.L
@@ -15,9 +16,7 @@ ns.FarmCommands = FarmCommands
 
 local LIST_LIMIT = 5
 local SECONDS_PER_MINUTE, SECONDS_PER_HOUR = 60, 3600
-local ACTIVITY_WORDS = { gather = "GATHER", mobs = "MOBS", other = "OTHER" }
-local ACTIVITY_NAMES = { GATHER = "FARM_ACTIVITY_GATHER", MOBS = "FARM_ACTIVITY_MOBS", OTHER = "FARM_ACTIVITY_OTHER" }
-local STATE_NAMES = { FARM = "FARM_STATE_FARM", TRAVEL = "FARM_STATE_TRAVEL", PAUSED = "FARM_STATE_PAUSED", REVIEW = "FARM_STATE_REVIEW" }
+local STATE_NAMES = { FARM = "FARM_STATE_FARM", TRAVEL = "FARM_STATE_TRAVEL", PAUSED = "FARM_STATE_PAUSED", REVIEW = "FARM_STATE_PAUSED" }
 
 local function now()
 	return ns.Client:GetServerTime()
@@ -27,46 +26,44 @@ local function mapName(uiMapID)
 	return uiMapID > 0 and ns.Client:GetMapName(uiMapID) or L.UNKNOWN_VALUE
 end
 
--- Name of a farm route (GoldRoutes): "Gegner in Westfall – [Leinenstoff]" / "Sammeln in Brachland".
+-- Name of a farm route (GoldRoutes): its zone.
 function FarmCommands.RouteName(route)
-	local name = Util.Format(L.ROUTE_NAME, L[ACTIVITY_NAMES[route.activity]], mapName(route.uiMapID))
-	if route.targetItemID > 0 then
-		name = name .. Util.Format(L.ROUTE_TARGET_PART, ns.UIShared.ItemText(route.targetItemID))
-	end
-	return name
+	return mapName(route.uiMapID)
 end
 
--- Items of the run in id order: { { itemID, unclear, line = "[Item]: 7 geplündert, 2 unklar" } }
--- (shared with the Farm tab).
-function FarmCommands.ItemEntries(run)
-	local entries = {}
-	for itemID, entry in pairs(run.items) do
-		entries[#entries + 1] = {
-			itemID = itemID,
-			unclear = entry.unclear,
-			line = Util.Format(L.FARM_ITEM_LINE, UIShared.ItemText(itemID), entry.confirmed, entry.unclear),
-		}
+local function itemTotal(items)
+	local total = 0
+	for _, amount in pairs(items) do
+		total = total + amount
 	end
-	table.sort(entries, function(a, b)
-		return a.itemID < b.itemID
-	end)
-	return entries
+	return total
 end
 
+-- Looted items of the run in id order, as "[Item]: 7" lines.
 function FarmCommands.ItemLines(run)
+	local ids = {}
+	for itemID, entry in pairs(run.items) do
+		if entry.confirmed > 0 then
+			ids[#ids + 1] = itemID
+		end
+	end
+	table.sort(ids)
 	local lines = {}
-	for i, entry in ipairs(FarmCommands.ItemEntries(run)) do
-		lines[i] = entry.line
+	for i, itemID in ipairs(ids) do
+		lines[i] = Util.Format(L.FARM_ITEM_LINE, UIShared.ItemText(itemID), run.items[itemID].confirmed)
 	end
 	return lines
 end
 
--- Status line of a run with the times up to `at` (shared with the Farm tab).
+-- Status line of a run with the times up to `at` (shared with the farm window and the minimap tooltip).
 function FarmCommands.StatusLine(run, at)
 	local active, travel = FarmRuns.Elapsed(run, at)
-	local target = run.targetItemID > 0 and UIShared.ItemText(run.targetItemID) or L.FARM_NO_TARGET
-	return Util.Format(L.FARM_STATUS, L[STATE_NAMES[run.state]], L[ACTIVITY_NAMES[run.activity]],
-		Util.FormatDuration(active), Util.FormatDuration(travel), target, mapName(run.uiMapID))
+	local line = Util.Format(L.FARM_STATUS, L[STATE_NAMES[run.state]], mapName(run.uiMapID),
+		Util.FormatDuration(active), Util.FormatDuration(travel))
+	if run.targetItemID > 0 then
+		line = line .. Util.Format(L.FARM_STATUS_TARGET, UIShared.ItemText(run.targetItemID))
+	end
+	return line
 end
 
 function FarmCommands.PrintStatus(charData)
@@ -79,25 +76,24 @@ function FarmCommands.PrintStatus(charData)
 	for _, line in ipairs(FarmCommands.ItemLines(run)) do
 		Log.Print(line)
 	end
-	if run.state == "REVIEW" then
-		Log.Print(L.FARM_REVIEW_HINT)
-	end
 end
 
--- "start [gather|mobs|other] [item]"
+-- "Ergebnis: 12 Gegenstände in 20 Min. Farmzeit (36 pro Stunde)" for a saved run.
+local function printRunSummary(saved)
+	local total = itemTotal(saved.items)
+	local perHour = saved.activeSeconds > 0 and math.floor(total * SECONDS_PER_HOUR / saved.activeSeconds) or 0
+	Log.Print(Util.Format(L.FARM_RUN_SUMMARY, total, Util.FormatDuration(saved.activeSeconds), perHour))
+end
+
+-- "start [item]": the optional item is the run's target material.
 local function start(charData, argument)
-	local word, rest = Slash.SplitCommand(argument)
-	local activity = ACTIVITY_WORDS[word]
-	if not activity then
-		activity, rest = "GATHER", argument
-	end
-	local targetItemID = Util.Trim(rest) ~= "" and Util.ParseItemArg(rest) or nil
-	if Util.Trim(rest) ~= "" and not targetItemID then
+	local targetItemID = Util.Trim(argument) ~= "" and Util.ParseItemArg(argument) or nil
+	if Util.Trim(argument) ~= "" and not targetItemID then
 		UIShared.PrintError("invalid_item")
 		return
 	end
 	local run, err = FarmRuns.Start(charData, {
-		activity = activity, targetItemID = targetItemID, uiMapID = ns.Client:GetCurrentMapID(), now = now(),
+		targetItemID = targetItemID, uiMapID = ns.Client:GetCurrentMapID(), now = now(),
 		idleSeconds = ns.db.settings.farmIdleMinutes * SECONDS_PER_MINUTE,
 	})
 	if not run then
@@ -105,7 +101,19 @@ local function start(charData, argument)
 		return
 	end
 	FarmCapture.Activate(true)
-	Log.Print(Util.Format(L.FARM_STARTED, L[ACTIVITY_NAMES[activity]], mapName(run.uiMapID)))
+	Log.Print(Util.Format(L.FARM_STARTED, mapName(run.uiMapID)))
+	ns.FarmWindow.Show()
+end
+
+local function stop(charData)
+	local index, err = FarmRuns.Finish(ns.db, ns.charKey, charData, now())
+	FarmCapture.Deactivate()
+	if not index then
+		UIShared.PrintError(err)
+		return
+	end
+	Log.Print(L.FARM_SAVED)
+	printRunSummary(ns.db.farmRuns[index])
 end
 
 -- Commands that change the state and print the status afterwards.
@@ -130,34 +138,7 @@ local STEPS = {
 		end
 		return run, err
 	end,
-	stop = function(charData)
-		local run, err = FarmRuns.Stop(charData, now())
-		FarmCapture.Deactivate()
-		return run, err
-	end,
 }
-
--- "Ergebnis: 12 Gegenstände in 20 Min. Farmzeit (36 pro Stunde)" for a saved run.
-local function printRunSummary(saved)
-	local total = 0
-	for _, amount in pairs(saved.items) do
-		total = total + amount
-	end
-	local perHour = saved.activeSeconds > 0 and math.floor(total * SECONDS_PER_HOUR / saved.activeSeconds) or 0
-	Log.Print(Util.Format(L.FARM_RUN_SUMMARY, total, Util.FormatDuration(saved.activeSeconds), perHour))
-end
-
--- With farmAutoReview, a stopped run without unclear gains needs no review and is saved.
-local function autoSave(charData, run)
-	if not (ns.db.settings.farmAutoReview and run.state == "REVIEW" and not FarmRuns.HasUnclear(run)) then
-		return false
-	end
-	FarmCommands.PrintStatus(charData)
-	FarmRuns.Save(ns.db, ns.charKey, charData)
-	Log.Print(L.FARM_AUTO_SAVED)
-	printRunSummary(ns.db.farmRuns[#ns.db.farmRuns])
-	return true
-end
 
 local function step(charData, name)
 	local run, err = STEPS[name](charData)
@@ -165,42 +146,7 @@ local function step(charData, name)
 		UIShared.PrintError(err)
 		return
 	end
-	if not autoSave(charData, run) then
-		FarmCommands.PrintStatus(charData)
-	end
-end
-
-local function keep(charData, argument)
-	if string.lower(Util.Trim(argument)) == "all" then
-		local changed, err = FarmRuns.KeepAllUnclear(charData)
-		if not changed then
-			UIShared.PrintError(err)
-			return
-		end
-		Log.Print(Util.Format(L.FARM_KEPT_ALL, changed))
-		return
-	end
-	local itemID = Util.ParseItemArg(argument)
-	if not itemID then
-		UIShared.PrintError("invalid_item")
-		return
-	end
-	local confirmed, err = FarmRuns.KeepUnclear(charData, itemID)
-	if not confirmed then
-		UIShared.PrintError(err)
-		return
-	end
-	Log.Print(Util.Format(L.FARM_KEPT, UIShared.ItemText(itemID), confirmed))
-end
-
-local function save(charData)
-	local count, err = FarmRuns.Save(ns.db, ns.charKey, charData)
-	if not count then
-		UIShared.PrintError(err)
-		return
-	end
-	Log.Print(L.FARM_SAVED)
-	printRunSummary(ns.db.farmRuns[count])
+	FarmCommands.PrintStatus(charData)
 end
 
 local function discard(charData)
@@ -220,26 +166,12 @@ local function list()
 		local run = ns.db.farmRuns[i]
 		if run.charKey == ns.charKey and shown < LIST_LIMIT then
 			shown = shown + 1
-			local total = 0
-			for _, amount in pairs(run.items) do
-				total = total + amount
-			end
-			Log.Print(Util.Format(L.FARM_LIST_LINE, Util.FormatAge(now() - run.endedAt), L[ACTIVITY_NAMES[run.activity]],
-				mapName(run.uiMapID), Util.FormatDuration(run.activeSeconds), total))
+			Log.Print(Util.Format(L.FARM_LIST_LINE, Util.FormatAge(now() - run.endedAt), mapName(run.uiMapID),
+				Util.FormatDuration(run.activeSeconds), itemTotal(run.items)))
 		end
 	end
 	if shown == 0 then
 		Log.Print(L.FARM_LIST_EMPTY)
-	end
-end
-
-local function estimate(charData)
-	local goal = UIShared.ActiveGoal(charData)
-	if not goal then
-		return
-	end
-	for _, line in ipairs(ns.FarmReports.EstimateLines(charData, goal)) do
-		Log.Print(line)
 	end
 end
 
@@ -251,17 +183,17 @@ end
 
 local WRITE_COMMANDS = {
 	start = start,
-	keep = keep,
-	save = save,
+	stop = stop,
 	discard = discard,
 	scope = toggleScope,
 }
 
 local READ_COMMANDS = {
-	[""] = FarmCommands.PrintStatus,
+	[""] = function()
+		ns.FarmWindow.Toggle()
+	end,
 	status = FarmCommands.PrintStatus,
 	list = list,
-	estimate = estimate,
 }
 
 local function farmCommand(argument)

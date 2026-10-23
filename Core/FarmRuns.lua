@@ -3,8 +3,10 @@
 -- stored account-wide in db.farmRuns (newest last, capped at MAX_RUNS). Pure logic on plain
 -- tables; times are server time in seconds, passed in by the caller.
 --
--- States: FARM (farming), TRAVEL (on the way), PAUSED, REVIEW (stopped, unclear gains can be
--- kept before saving). Yield per item: confirmed (looted) and unclear (other bag gains).
+-- States: FARM (farming), TRAVEL (on the way), PAUSED, REVIEW (stopped; Finish saves it at once).
+-- Yield per item: confirmed (looted) and unclear (other bag gains, e.g. mail or trade; not saved).
+-- Runs have no activity type any more (user decision 0.10.0: a farm is a farm); new runs store
+-- "OTHER" so runs saved before keep validating.
 -- Idle time: with run.idleSeconds > 0, farm time without any activity (loot, bag change, combat;
 -- reported with NoteActivity) counts only up to idleSeconds. The gap is cut when the next
 -- activity arrives or the segment ends, so no timer is needed.
@@ -13,6 +15,7 @@ local _, ns = ...
 local FarmRuns = {}
 ns.FarmRuns = FarmRuns
 
+-- Activity types of stored runs (older versions asked for one).
 FarmRuns.ACTIVITIES = { GATHER = true, MOBS = true, OTHER = true }
 FarmRuns.MAX_RUNS = 500
 -- A run that was running at login continues if the last sign of life is this recent (a /reload);
@@ -64,19 +67,15 @@ function FarmRuns.Elapsed(run, now)
 	return active, travel
 end
 
--- Starts a run. opts = { activity, targetItemID (optional), uiMapID (optional), idleSeconds
--- (optional, 0 = count all time), now }.
--- Returns the run, or nil plus "run_exists" | "invalid_activity".
+-- Starts a run. opts = { targetItemID (optional), uiMapID (optional), idleSeconds (optional, 0 =
+-- count all time), now }. Returns the run, or nil plus "run_exists".
 function FarmRuns.Start(charData, opts)
 	if charData.currentRun then
 		return nil, "run_exists"
 	end
-	if not FarmRuns.ACTIVITIES[opts.activity] then
-		return nil, "invalid_activity"
-	end
 	charData.currentRun = {
 		state = "FARM",
-		activity = opts.activity,
+		activity = "OTHER",
 		targetItemID = opts.targetItemID or 0,
 		uiMapID = opts.uiMapID or 0,
 		items = {},
@@ -197,49 +196,7 @@ function FarmRuns.AddGain(run, itemID, amount, isLoot, now)
 	run.lastSeenAt = now
 end
 
--- True if any item of the run has an unclear amount.
-function FarmRuns.HasUnclear(run)
-	for _, entry in pairs(run.items) do
-		if entry.unclear > 0 then
-			return true
-		end
-	end
-	return false
-end
-
--- In REVIEW: counts the unclear amount of an item as confirmed. Returns the new confirmed amount.
-function FarmRuns.KeepUnclear(charData, itemID)
-	local run, err = requireState(charData, { REVIEW = true })
-	if not run then
-		return nil, err
-	end
-	local entry = run.items[itemID]
-	if not (entry and entry.unclear > 0) then
-		return nil, "nothing_unclear"
-	end
-	entry.confirmed = entry.confirmed + entry.unclear
-	entry.unclear = 0
-	return entry.confirmed
-end
-
--- In REVIEW: counts all unclear amounts as confirmed. Returns the number of items changed.
-function FarmRuns.KeepAllUnclear(charData)
-	local run, err = requireState(charData, { REVIEW = true })
-	if not run then
-		return nil, err
-	end
-	local changed = 0
-	for _, entry in pairs(run.items) do
-		if entry.unclear > 0 then
-			entry.confirmed = entry.confirmed + entry.unclear
-			entry.unclear = 0
-			changed = changed + 1
-		end
-	end
-	return changed
-end
-
--- Saves a reviewed run: unclear amounts are dropped, the run goes to db.farmRuns.
+-- Saves a stopped run: unclear amounts are dropped, the run goes to db.farmRuns.
 function FarmRuns.Save(db, charKey, charData)
 	local run, err = requireState(charData, { REVIEW = true })
 	if not run then
@@ -268,6 +225,20 @@ function FarmRuns.Save(db, charKey, charData)
 	end
 	charData.currentRun = nil
 	return #db.farmRuns
+end
+
+-- Stops the run (if not stopped yet) and saves it: only looted items count, unclear gains are
+-- dropped (user decision 0.10.0: no review step). Returns the index of the saved run, or nil plus
+-- "no_run".
+function FarmRuns.Finish(db, charKey, charData, now)
+	local run = charData.currentRun
+	if not run then
+		return nil, "no_run"
+	end
+	if run.state ~= "REVIEW" then
+		FarmRuns.Stop(charData, now)
+	end
+	return FarmRuns.Save(db, charKey, charData)
 end
 
 function FarmRuns.Discard(charData)

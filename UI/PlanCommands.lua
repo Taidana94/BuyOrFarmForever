@@ -79,7 +79,7 @@ function PlanCommands.RouteText(inputs)
 			unpriced = unpriced + 1
 		end
 	end
-	local route = cost > 0 and ns.GoldRoutes.Current(excluded)[1]
+	local route = cost > 0 and ns.GoldRoutes.Current({ excluded = excluded })[1]
 	if not route then
 		return ""
 	end

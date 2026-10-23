@@ -456,7 +456,7 @@ not hide a newer offer). One ticker:
 
 | Ticker | File | Why no event | Interval | Runs while | Cost |
 |---|---|---|---|---|---|
-| Farm time display | `UI/FarmTab.lua` | passing time has no event | 1 s | the Farm tab is visible **and** a run is running; cancelled on stop, pause, hide | rewrites one font string (status line) |
+| Farm time display | `UI/FarmWindow.lua` | passing time has no event | 1 s | the farm window is shown **and** a run is running; cancelled on stop, pause, hide | rewrites one font string (status line) |
 
 Hooks added in 0.4.0, post-hooks installed once at `CHARACTER_READY` through the adapter:
 `GameTooltip:HookScript("OnTooltipSetItem")` and the same for `ItemRefTooltip` (tooltip lines, cache
@@ -501,9 +501,10 @@ path; chat commands stay as fallback.
 - **Settings** (`Core/Settings.lua`): one schema (type, default, range, group, label) feeds
   `DB.DEFAULTS.settings`, `DB.MIN`/`DB.MAX`, the settings tab and `/bof set`. One account-wide profile.
 - **Farm automation:** idle time is cut at the next activity (`FarmRuns.NoteActivity`, no timer;
-  `run.idleSeconds` from `farmIdleMinutes` at start). With `farmAutoReview`, an open loot window decides
-  first, then open merchant/bank/AH/mail/trade windows (the gain is left out), then the 2 s loot grace;
-  a stopped run without unclear gains is saved. `FarmAssist` pauses on AFK/resting and switches to
+  `run.idleSeconds` from `farmIdleMinutes` at start). An open loot window decides first, then open
+  merchant/bank/AH/mail/trade windows (the gain is left out), then the 2 s loot grace. Since 0.10.0
+  "Beenden" saves the run at once and drops unclear gains (`FarmRuns.Finish`); the `farmAutoReview`
+  setting and the review step are gone. `FarmAssist` pauses on AFK/resting and switches to
   travel on flight paths, and only undoes what it did itself (`run.autoPaused`, `run.autoTravel`).
 - **Optional fields, no schema change:** `currentRun.idleSeconds/lastActivityAt/targetNotified/
   autoPaused/autoTravel`, `alternative.copper/seconds/requires`, `income[day].bySource`,

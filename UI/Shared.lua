@@ -67,9 +67,6 @@ local ERRORS = {
 	wrong_state = function()
 		return L.FARM_ERR_WRONG_STATE
 	end,
-	nothing_unclear = function()
-		return L.FARM_ERR_NOTHING_UNCLEAR
-	end,
 }
 
 function UIShared.PrintError(code)

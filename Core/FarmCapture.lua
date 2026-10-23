@@ -1,9 +1,9 @@
 -- Yield capture of the running farm run: compares the carried bags after every bag update with
 -- the previous state. A gain is confirmed (looted) if a loot window is open or was closed at most
--- LOOT_GRACE_SECONDS ago (autoloot and gathering also use the loot window). With the setting
--- farmAutoReview, gains while a merchant, bank, auction house, mailbox or trade window is open are
--- not farm yield and are left out; all other gains are unclear and can be kept or dropped when the
--- run is reviewed. Bag changes, loot and combat start count as activity (idle time, FarmRuns).
+-- LOOT_GRACE_SECONDS ago (autoloot and gathering also use the loot window). Gains while a merchant,
+-- bank, auction house, mailbox or trade window is open are not farm yield and are left out; all
+-- other gains are unclear and are dropped when the run is saved. Bag changes, loot and combat start
+-- count as activity (idle time, FarmRuns).
 -- Language-independent: no chat messages are parsed.
 -- The signals are registered only while a run is running.
 local _, ns = ...
@@ -41,9 +41,9 @@ local function isLootGain()
 	return lootClosedAt ~= nil and ns.Client:GetUptime() - lootClosedAt <= FarmCapture.LOOT_GRACE_SECONDS
 end
 
--- Gains that are clearly not yield (purchase, mail, trade, bank) are left out with the setting.
+-- Gains that are clearly not yield (purchase, mail, trade, bank) are left out.
 local function isForeignGain()
-	return ns.db.settings.farmAutoReview and next(openWindows) ~= nil
+	return next(openWindows) ~= nil
 end
 
 -- An open loot window decides first; then an open merchant/bank/mail/trade/auction window (the

@@ -1,12 +1,9 @@
--- Farm time estimates as text: one line per missing material of a goal, with the data basis
--- (shared by /bof farm estimate and the Farm tab).
+-- Farm time estimate of a material as text, with its data basis.
 local _, ns = ...
 
 local L = ns.L
 local Util = ns.Util
-local Stock = ns.Stock
 local FarmEstimates = ns.FarmEstimates
-local UIShared = ns.UIShared
 
 local FarmReports = {}
 ns.FarmReports = FarmReports
@@ -29,19 +26,4 @@ function FarmReports.EstimateText(itemID, missing)
 			Util.FormatDuration(high), travel, source)
 	end
 	return Util.Format(L.FARM_ESTIMATE, Util.FormatDuration(seconds), travel, source)
-end
-
--- Estimate lines for the missing materials of a goal (shared with the Farm tab).
-function FarmReports.EstimateLines(charData, goal)
-	local lines = {}
-	for _, row in ipairs(Stock.Rows(charData, { goal })) do
-		if row.missing > 0 then
-			lines[#lines + 1] = Util.Format(L.FARM_ESTIMATE_LINE, UIShared.ItemText(row.itemID), row.missing,
-				FarmReports.EstimateText(row.itemID, row.missing))
-		end
-	end
-	if #lines == 0 then
-		lines[1] = L.FARM_NOTHING_MISSING
-	end
-	return lines
 end

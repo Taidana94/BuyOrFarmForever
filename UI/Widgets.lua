@@ -62,10 +62,12 @@ function Widgets.CreateGoalNavigation(tab, frame)
 	return tab.next
 end
 
--- Table layout from columns = { { key, header (locale key), width } } after the name column.
--- Returns { nameWidth, columns, columnX, rowWidth, rowHeight }.
-function Widgets.TableLayout(nameWidth, columns)
-	local layout = { nameWidth = nameWidth, columns = columns, columnX = {}, rowHeight = ROW_HEIGHT }
+-- Table layout from columns = { { key, header (locale key), width } } after the name column, whose
+-- header is the locale key nameHeader (default COL_MATERIAL).
+-- Returns { nameWidth, nameHeader, columns, columnX, rowWidth, rowHeight }.
+function Widgets.TableLayout(nameWidth, columns, nameHeader)
+	local layout = { nameWidth = nameWidth, nameHeader = nameHeader or "COL_MATERIAL", columns = columns, columnX = {},
+		rowHeight = ROW_HEIGHT }
 	local x = NAME_X + nameWidth
 	for i, column in ipairs(columns) do
 		layout.columnX[i] = x
@@ -78,7 +80,7 @@ end
 function Widgets.CreateHeader(parent, layout)
 	local name = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	name:SetPoint("TOPLEFT", NAME_X, 0)
-	name:SetText(L.COL_MATERIAL)
+	name:SetText(L[layout.nameHeader])
 	for i, column in ipairs(layout.columns) do
 		local text = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 		text:SetPoint("TOPLEFT", layout.columnX[i], 0)

@@ -42,9 +42,9 @@ local function missingItems(data)
 	return list
 end
 
-local function start(kind, itemID)
+local function start(itemID)
 	return function()
-		ns.Slash.Handle("farm start " .. kind .. " " .. itemID)
+		ns.Slash.Handle("farm start " .. itemID)
 	end
 end
 
@@ -52,8 +52,7 @@ local function offer(itemID)
 	offered[itemID] = true
 	bar = bar or ns.PromptBar.Create(BAR_Y)
 	ns.PromptBar.Show(bar, Util.Format(L.FARM_SUGGEST, UIShared.ItemText(itemID)), {
-		{ L.FARM_BTN_MOBS, start("mobs", itemID) },
-		{ L.FARM_BTN_GATHER, start("gather", itemID) },
+		{ L.FARM_BTN_START, start(itemID) },
 		{ L.INPUT_NO },
 	}, FarmSuggest.SHOW_SECONDS)
 end
