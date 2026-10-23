@@ -41,7 +41,8 @@ end
 
 -- Value of `need` units of a reagent: units in the bags at their raw value (sure, auction), the rest
 -- at the planning price, or farmed without one. Returns sure, auction, bought (units to buy),
--- farmed (seconds), or nil if neither a price nor farm runs are known.
+-- farmed (seconds), spend (copper paid for the bought units), or nil if neither a price nor farm runs
+-- are known.
 local function reagentValue(itemID, need, now)
 	local have = math.min(need, ns.Client:GetBagCount(itemID))
 	local buyPrice = ns.PriceCapture.Best(itemID, now)
@@ -63,31 +64,34 @@ local function reagentValue(itemID, need, now)
 		if not seconds then
 			return nil
 		end
-		return sure, auction, 0, seconds
+		return sure, auction, 0, seconds, 0
 	end
-	return sure + missing * (buyPrice or 0), auction, missing, 0
+	local spend = missing * (buyPrice or 0)
+	return sure + spend, auction, missing, 0, spend
 end
 
 -- Value of `crafts` crafts: { sure, auction (profit parts), saleVendor, saleAuction (products sold
 -- to a vendor / on the auction house after the cut), reagents (their value), buys (reagents to
--- buy), farmSeconds (time to farm the others) }, or nil if a price is missing.
+-- buy), farmSeconds (time to farm the others), spend (gold paid up front for bought reagents) }, or
+-- nil if a price is missing.
 function CraftTasks.Value(recipe, crafts, now)
 	local vendor, extra = ns.GoldRoutes.SaleParts(recipe.outputItemID, now)
 	if not vendor then
 		return nil
 	end
 	local made = crafts * (recipe.outputMin + recipe.outputMax) / 2
-	local costSure, costAuction, buys, farmed = 0, 0, 0, 0
+	local costSure, costAuction, buys, farmed, spend = 0, 0, 0, 0, 0
 	for _, reagent in ipairs(recipe.reagents) do
-		local sure, auction, bought, seconds = reagentValue(reagent.itemID, reagent.count * crafts, now)
+		local sure, auction, bought, seconds, paid = reagentValue(reagent.itemID, reagent.count * crafts, now)
 		if not sure then
 			return nil
 		end
-		costSure, costAuction, farmed = costSure + sure, costAuction + auction, farmed + seconds
+		costSure, costAuction, farmed, spend = costSure + sure, costAuction + auction, farmed + seconds, spend + paid
 		buys = buys + (bought > 0 and 1 or 0)
 	end
 	return { sure = made * vendor - costSure, auction = made * extra - costAuction, saleVendor = made * vendor,
-		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys, farmSeconds = farmed }
+		saleAuction = made * (vendor + extra), reagents = costSure + costAuction, buys = buys, farmSeconds = farmed,
+		spend = spend }
 end
 
 local function isReady(entry, now)

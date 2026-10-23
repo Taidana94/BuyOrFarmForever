@@ -48,7 +48,7 @@ end
 
 local function planOptions(charData, seconds)
 	local now = ns.Client:GetServerTime()
-	return { seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now),
+	return { seconds = seconds, tasks = ns.GoldPlan.Tasks(charData, now), capital = ns.GoldPlan.Capital(charData),
 		methods = ns.Conversion.Methods(charData, now), discountPercent = ns.db.settings.ahDiscountPercent }
 end
 
@@ -88,10 +88,20 @@ local STEP_TEXTS = {
 	end,
 }
 
+-- What the plan pays up front and what the free gold did not cover ("" when nothing).
+function GoldPlanCommands.CapitalText(plan)
+	local text = plan.spend > 0 and Util.Format(L.GOLDPLAN_SPEND, Money.Format(plan.spend)) or ""
+	if plan.skipped.count > 0 then
+		text = text .. Util.Format(L.GOLDPLAN_SKIPPED, plan.skipped.count, Money.Format(plan.skipped.spend))
+	end
+	return text
+end
+
 -- Numbered step lines, the summary line and the alternatives line ("" without alternatives).
 function GoldPlanCommands.PlanTexts(plan, seconds)
 	if #plan.steps == 0 then
-		return {}, Util.Format(L.GOLDPLAN_EMPTY, Util.FormatDuration(ns.GoldRoutes.MIN_SECONDS)), ""
+		return {}, Util.Format(L.GOLDPLAN_EMPTY, Util.FormatDuration(ns.GoldRoutes.MIN_SECONDS))
+			.. GoldPlanCommands.CapitalText(plan), ""
 	end
 	local steps = {}
 	for i, step in ipairs(plan.steps) do
@@ -105,7 +115,7 @@ function GoldPlanCommands.PlanTexts(plan, seconds)
 			Util.FormatDuration(ns.GoldRoutes.MIN_SECONDS))
 	end
 	local summary = Util.Format(L.GOLDPLAN_SUMMARY, Util.FormatDuration(seconds), Money.Format(plan.sure),
-		Money.Format(plan.auction), Money.Format(plan.rating))
+		Money.Format(plan.auction), Money.Format(plan.rating)) .. GoldPlanCommands.CapitalText(plan)
 	local others = {}
 	for _, alternative in ipairs(plan.alternatives) do
 		others[#others + 1] = Util.Format(L.GOLDPLAN_ALTERNATIVE_PART, ns.FarmCommands.RouteName(alternative.method),

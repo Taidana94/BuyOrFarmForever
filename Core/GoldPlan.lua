@@ -1,13 +1,15 @@
 -- Gold plan: what to do in a given time to make the most gold. Pure logic.
 --
--- Inputs: one-off tasks (sell bag items, disenchant, craft; each { kind, seconds, sure, auction })
+-- Inputs: one-off tasks (sell bag items, disenchant, craft; each { kind, seconds, sure, auction,
+-- spend? (gold paid up front) })
 -- and repeatable methods (farm routes from GoldRoutes.List: surePerHour, auctionPerHour,
 -- ratingPerHour, travelSeconds per trip). Sure gold is certain (vendor, coins); auction gold is
 -- not guaranteed and counts with the discount (GoldRoutes.Rating) when choosing.
 --
 -- Choice: tasks in order of rating per second, each taken if it beats what the best method would
 -- make in the same time; the rest of the time goes to the one method with the highest value
--- rating x (rest - travel). With linear rates and travel paid once per trip, one method is best for
+-- rating x (rest - travel). With opts.capital (free gold) a task whose spend would exceed what is
+-- left of it is skipped and counted in plan.skipped. With linear rates and travel paid once per trip, one method is best for
 -- the rest; switching would only add travel.
 local _, ns = ...
 
@@ -82,16 +84,28 @@ local function alternatives(methods, chosen, seconds)
 	return list
 end
 
--- Plan for opts = { seconds, tasks, methods, discountPercent }.
+local function worthIt(task, methods, rest)
+	return task.seconds <= rest
+		and task.rating + select(2, bestMethod(methods, rest - task.seconds)) >= select(2, bestMethod(methods, rest))
+end
+
+local function affordable(plan, task, capital)
+	return not capital or plan.spend + (task.spend or 0) <= capital
+end
+
+-- Plan for opts = { seconds, tasks, methods, discountPercent, capital? }.
 -- Returns { steps = { { kind = "TASK" | "TRAVEL" | "METHOD", task | method, seconds, sure, auction } },
--- seconds, sure, auction, rating, alternatives = { { method, rating } } }.
+-- seconds, sure, auction, rating, spend (gold paid up front), skipped = { count, spend } (tasks the
+-- capital did not cover), alternatives = { { method, rating } } }.
 function GoldPlan.Plan(opts)
-	local plan = { steps = {}, seconds = 0, sure = 0, auction = 0 }
+	local plan = { steps = {}, seconds = 0, sure = 0, auction = 0, spend = 0, skipped = { count = 0, spend = 0 } }
 	local rest, methods = opts.seconds, opts.methods
 	for _, task in ipairs(sortedTasks(opts.tasks, opts.discountPercent)) do
-		local fits = task.seconds <= rest
-		if fits and task.rating + select(2, bestMethod(methods, rest - task.seconds)) >= select(2, bestMethod(methods, rest)) then
+		if worthIt(task, methods, rest) and not affordable(plan, task, opts.capital) then
+			plan.skipped.count, plan.skipped.spend = plan.skipped.count + 1, plan.skipped.spend + task.spend
+		elseif worthIt(task, methods, rest) then
 			addStep(plan, { kind = "TASK", task = task, seconds = task.seconds, sure = task.sure, auction = task.auction })
+			plan.spend = plan.spend + (task.spend or 0)
 			rest = rest - task.seconds
 		end
 	end

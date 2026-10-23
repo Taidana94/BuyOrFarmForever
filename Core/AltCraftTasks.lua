@@ -52,6 +52,11 @@ function AltCraftTasks.Collect(charData, now)
 	return list
 end
 
+-- Start capital of the gold plan: the character's free gold (carried gold minus savings reserves).
+function ns.GoldPlan.Capital(charData)
+	return ns.SavingsGoals.Overview(charData, ns.Client:GetMoney() or 0).free
+end
+
 -- All one-off tasks of the character now: bags (vendor, auction, disenchant), own crafts, crafts
 -- on alts and resales on the auction house. Lives here because this file loads after BagTasks, GoldPlan and CraftTasks.
 function ns.GoldPlan.Tasks(charData, now)

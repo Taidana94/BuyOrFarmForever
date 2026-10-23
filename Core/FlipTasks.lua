@@ -4,7 +4,7 @@
 -- auction house cut at least MIN_MARGIN of the price paid. The gain is auction gold only (not
 -- guaranteed: the listing may be gone, the item may not sell); units are capped by MAX_UNITS
 -- because the demand is unknown. Pure logic; task { kind = "FLIP", itemID, units, buy, sell, sure,
--- auction, seconds }.
+-- auction, seconds, spend }.
 local _, ns = ...
 
 local FlipTasks = {}
@@ -32,7 +32,7 @@ local function taskFor(itemID, item, now)
 	end
 	local units = math.min(item.lastCount, FlipTasks.MAX_UNITS)
 	return { kind = "FLIP", itemID = itemID, units = units, buy = item.last * units, sell = reference,
-		sure = 0, auction = math.floor(gain * units), seconds = FlipTasks.SECONDS_PER_FLIP }
+		sure = 0, auction = math.floor(gain * units), seconds = FlipTasks.SECONDS_PER_FLIP, spend = item.last * units }
 end
 
 -- The best resale tasks on the realm (largest gain first), at most MAX_TASKS.
