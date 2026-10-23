@@ -1,6 +1,7 @@
--- Stock: live bag and bank counts of the current character, and stored snapshots of every
--- character for the items used in any goal, so other characters' stock can be shown.
--- The live bank count is correct with a closed bank (confirmed in game, Classic Era 70003).
+-- Stock: live bag and bank counts of the current character, and stored snapshots of every item in the
+-- bags and the bank of every character, so other characters' stock is known without asking the player.
+-- The live bank count is correct with a closed bank (confirmed in game, Classic Era 70003); the bank's
+-- contents can only be listed while it is open, so a character's bank snapshot needs one bank visit.
 local _, ns = ...
 
 local Log = ns.Log
@@ -9,7 +10,8 @@ local Stock = {}
 ns.Stock = Stock
 
 local bankOpen = false
-local trackedScratch = {} -- reused by CaptureCurrent
+-- Items seen in the bags while the bank is open: candidates for deposits, recounted on close.
+local seenAtBank = {}
 
 function Stock.IsBankOpen()
 	return bankOpen
@@ -30,25 +32,36 @@ function Stock.Count(itemID)
 	return bags, bank
 end
 
-local function dropUntracked(counts, tracked)
-	for itemID in pairs(counts) do
-		if not tracked[itemID] then
-			counts[itemID] = nil
-		end
+local function noteSeen(bags)
+	for itemID in pairs(bags) do
+		seenAtBank[itemID] = true
 	end
 end
 
--- Stores bag and bank counts of the tracked items ({ [itemID] = true }) in the character's
--- snapshot, also zeros, so "0" and "never seen" differ. Untracked items are dropped. Updates the
--- stored tables in place (no new tables per bag event).
-function Stock.Capture(charData, tracked, now)
-	local bags, bank = charData.stock.bags, charData.stock.bank
-	dropUntracked(bags, tracked)
-	dropUntracked(bank, tracked)
-	for itemID in pairs(tracked) do
-		bags[itemID], bank[itemID] = Stock.Count(itemID)
-	end
+-- Snapshot of every item in the bags (a full scan, stored in place, no new table per bag event). While
+-- the bank is open, the bank is scanned too.
+function Stock.CaptureBags(charData, now)
+	ns.Client:ScanBags(charData.stock.bags)
 	charData.stock.bagsAt = now
+	if bankOpen then
+		noteSeen(charData.stock.bags)
+		ns.Client:ScanBank(charData.stock.bank)
+		charData.stock.bankAt = now
+	end
+end
+
+-- On closing the bank: recount the bank snapshot's items and everything seen in the bags meanwhile
+-- from the live counts (correct with a closed bank), in case the last container scan missed a change.
+function Stock.CaptureBankClosed(charData, now)
+	local bank = charData.stock.bank
+	for itemID in pairs(bank) do
+		seenAtBank[itemID] = true
+	end
+	for itemID in pairs(seenAtBank) do
+		local _, count = Stock.Count(itemID)
+		bank[itemID] = count and count > 0 and count or nil
+		seenAtBank[itemID] = nil
+	end
 	charData.stock.bankAt = now
 end
 
@@ -144,18 +157,21 @@ ns.DB.VALIDATORS[#ns.DB.VALIDATORS + 1] = Stock.Sanitize
 
 -- Snapshot of the current character ---------------------------------------------------
 
--- Stores the current character's counts of all tracked items. Only call it while bag data is
+local function currentCharacter()
+	if not (ns.db and not ns.readOnly and ns.charKey) then
+		return nil
+	end
+	return ns.db.characters[ns.charKey]
+end
+
+-- Stores the current character's bags (and the bank while open). Only call it while bag data is
 -- loaded (after a bag change, at the bank, or on a user command).
 function Stock.CaptureCurrent(reason)
-	if not (ns.db and not ns.readOnly and ns.charKey) then
-		return
-	end
-	local charData = ns.db.characters[ns.charKey]
+	local charData = currentCharacter()
 	if not charData then
 		return
 	end
-	ns.Materials.CollectTrackedItems(ns.db, trackedScratch)
-	Stock.Capture(charData, trackedScratch, ns.Client:GetServerTime())
+	Stock.CaptureBags(charData, ns.Client:GetServerTime())
 	if Log.IsDebug() then
 		Log.Trace("stock snapshot (" .. reason .. ")")
 	end
@@ -172,7 +188,10 @@ if ns.Client then
 		Stock.CaptureCurrent("bank opened")
 	end)
 	ns.Events.OnSignal("BANK_CLOSED", function()
-		Stock.CaptureCurrent("bank closed")
+		local charData = bankOpen and currentCharacter()
 		bankOpen = false
+		if charData then
+			Stock.CaptureBankClosed(charData, ns.Client:GetServerTime())
+		end
 	end)
 end

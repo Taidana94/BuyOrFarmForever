@@ -57,9 +57,10 @@ read_globals = {
 	"CastSpellByName",
 	"InCombatLockdown",
 	-- bags and map (documented in 70003; NUM_BAG_SLOTS from Blizzard_FrameXMLBase/Classic/Constants.lua)
-	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo", "GetContainerNumFreeSlots", "UseContainerItem" } },
+	C_Container = { fields = { "GetContainerNumSlots", "GetContainerItemInfo", "GetContainerItemID", "GetContainerNumFreeSlots", "UseContainerItem" } },
 	C_Map = { fields = { "GetBestMapForUnit", "GetMapInfo" } },
 	"NUM_BAG_SLOTS",
+	"NUM_BANKBAGSLOTS",
 	"GetMoney", -- used by Blizzard_AuctionUI (Classic) in 70003
 	-- cursor (documented in 70003; item id return unverified, see Adapters/ClassicEraUI.lua)
 	"GetCursorInfo",
@@ -146,7 +147,7 @@ read_globals = {
 	C_AddOnProfiler = { fields = { "IsEnabled", "GetAddOnMetric", "GetApplicationMetric", "GetOverallMetric" } },
 	Enum = { fields = {
 		AddOnProfilerMetric = { fields = { "RecentAverageTime", "SessionAverageTime", "PeakTime" } },
-		BagIndex = { fields = { "Backpack" } },
+		BagIndex = { fields = { "Backpack", "Bank" } },
 		ItemClass = { fields = { "Weapon", "Armor" } },
 	} },
 	"DEFAULT_CHAT_FRAME",

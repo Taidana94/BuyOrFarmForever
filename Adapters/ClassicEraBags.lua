@@ -11,23 +11,65 @@ ns.ClassicEraBags = Bags
 local BACKPACK = Enum and Enum.BagIndex and Enum.BagIndex.Backpack or 0
 local DEFAULT_BAG_SLOTS = 4
 
--- Fills counts with { [itemID] = total count } over the backpack and the equipped bags.
--- The table is cleared and reused, so a bag update creates no new count table.
-function Bags.ScanBags(counts)
+-- Bank containers of the Vanilla BankFrame (Blizzard_UIPanels_Game/Vanilla/BankFrame.lua): the bank
+-- itself (Enum.BagIndex.Bank = -1) and the bank bags NUM_BAG_SLOTS + 1 .. NUM_BAG_SLOTS + NUM_BANKBAGSLOTS.
+local BANK = Enum and Enum.BagIndex and Enum.BagIndex.Bank or -1
+local DEFAULT_BANK_BAG_SLOTS = 6
+
+-- Adds every item of a container once: GetContainerItemID per slot (a number, no table per slot, so
+-- frequent bag events create no garbage), the count from GetItemCount (bags only, or bags and bank).
+local function addContainer(counts, bag, countOf)
+	for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
+		local itemID = C_Container.GetContainerItemID(bag, slot)
+		if itemID and not counts[itemID] then
+			counts[itemID] = countOf(itemID)
+		end
+	end
+end
+
+local function canScan()
+	return C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerItemID and C_Item
+		and C_Item.GetItemCount
+end
+
+local function clear(counts)
 	for itemID in pairs(counts) do
 		counts[itemID] = nil
 	end
-	if not (C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerItemInfo) then
+end
+
+local function bagCount(itemID)
+	return C_Item.GetItemCount(itemID, false)
+end
+
+local function bankCount(itemID)
+	return C_Item.GetItemCount(itemID, true) - C_Item.GetItemCount(itemID, false)
+end
+
+-- Fills counts with { [itemID] = total count } over the backpack and the equipped bags.
+-- The table is cleared and reused, so a bag update creates no new count table.
+function Bags.ScanBags(counts)
+	clear(counts)
+	if not canScan() then
 		return counts
 	end
-	local lastBag = BACKPACK + (NUM_BAG_SLOTS or DEFAULT_BAG_SLOTS)
-	for bag = BACKPACK, lastBag do
-		for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
-			local info = C_Container.GetContainerItemInfo(bag, slot)
-			if info and info.itemID and info.stackCount then
-				counts[info.itemID] = (counts[info.itemID] or 0) + info.stackCount
-			end
-		end
+	for bag = BACKPACK, BACKPACK + (NUM_BAG_SLOTS or DEFAULT_BAG_SLOTS) do
+		addContainer(counts, bag, bagCount)
+	end
+	return counts
+end
+
+-- Fills counts with { [itemID] = count in the bank } for the items in the bank and the bank bags
+-- (cleared first). Only meaningful while the bank is open: the client lists the bank containers then.
+function Bags.ScanBank(counts)
+	clear(counts)
+	if not canScan() then
+		return counts
+	end
+	addContainer(counts, BANK, bankCount)
+	local firstBag = (NUM_BAG_SLOTS or DEFAULT_BAG_SLOTS) + 1
+	for bag = firstBag, firstBag + (NUM_BANKBAGSLOTS or DEFAULT_BANK_BAG_SLOTS) - 1 do
+		addContainer(counts, bag, bankCount)
 	end
 	return counts
 end

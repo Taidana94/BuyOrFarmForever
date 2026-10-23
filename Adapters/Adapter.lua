@@ -44,6 +44,7 @@ Adapter.REQUIRED = {
 	"CanQueryAuction", -- () -> bool: an auction search can be sent now
 	"QueryAuction", -- (itemName) -> bool: exact-name search sent (call only from a click or command)
 	"ScanBags", -- (counts) -> counts: fills { [itemID] = count } for the carried bags (table is cleared first)
+	"ScanBank", -- (counts) -> counts: same for the bank and the bank bags; only valid while the bank is open
 	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
 	"GetMapName", -- (uiMapID) -> localized map name, or nil
 	"GetMoney", -- () -> copper the character carries, or nil
