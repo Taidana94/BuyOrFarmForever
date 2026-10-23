@@ -73,23 +73,28 @@ function Trade.ReadAuctionResults()
 	return results
 end
 
--- Every auction of the current result list with seller and time left (GetAuctionItemInfo returns
--- the owner as 14th value, GetAuctionItemTimeLeft 1..4 short..very long; both used this way by the
--- Classic Era AuctionUI, 70003): { { itemID, count, buyout, owner, timeLeft } }. After a full scan
--- the list holds the whole auction house.
-function Trade.ReadAuctionListings()
-	local listings = {}
+-- Reads a full scan (the current result list holds the whole auction house). GetAuctionItemInfo
+-- returns the owner as 14th value, GetAuctionItemTimeLeft 1..4 short..very long; both used this
+-- way by the Classic Era AuctionUI, 70003. Returns lows (ns.PriceHistory.AddLow) of every item,
+-- the listings { { itemID, count, buyout, owner, timeLeft } } of the watched items ({ [itemID] =
+-- true }) and the number of auctions read. Only watched items get a table per auction.
+function Trade.ReadAuctionScan(watched)
+	local lows, listings, total = {}, {}, 0
 	if not (GetNumAuctionItems and GetAuctionItemInfo and GetAuctionItemTimeLeft) then
-		return listings
+		return lows, listings, total
 	end
 	for i = 1, GetNumAuctionItems("list") or 0 do
 		local _, _, count, _, _, _, _, _, _, buyout, _, _, _, owner, _, _, itemID, hasAllInfo = GetAuctionItemInfo("list", i)
 		if hasAllInfo ~= false and type(itemID) == "number" and type(count) == "number" and type(buyout) == "number" then
-			listings[#listings + 1] = { itemID = itemID, count = count, buyout = buyout, owner = owner or "",
-				timeLeft = GetAuctionItemTimeLeft("list", i) or 0 }
+			total = total + 1
+			ns.PriceHistory.AddLow(lows, itemID, count, buyout)
+			if watched[itemID] then
+				listings[#listings + 1] = { itemID = itemID, count = count, buyout = buyout, owner = owner or "",
+					timeLeft = GetAuctionItemTimeLeft("list", i) or 0 }
+			end
 		end
 	end
-	return listings
+	return lows, listings, total
 end
 
 -- Number of auctions in the current result list (a full scan returns the whole house at once).

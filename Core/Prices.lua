@@ -28,21 +28,13 @@ function Prices.RealmKey(charKey, faction)
 	return realm .. "-" .. faction
 end
 
-local function itemPrices(db, realmKey, itemID, create)
+local function findItem(db, realmKey, itemID)
 	local realm = db.prices[realmKey]
-	if not realm then
-		if not create then
-			return nil
-		end
-		realm = {}
-		db.prices[realmKey] = realm
-	end
-	local item = realm[itemID]
-	if not item and create then
-		item = {}
-		realm[itemID] = item
-	end
-	return item
+	return realm and realm[itemID]
+end
+
+local function ensureItem(db, realmKey, itemID)
+	return ns.Util.Ensure(ns.Util.Ensure(db.prices, realmKey, {}), itemID, {})
 end
 
 -- Stores a unit price. Returns true, or nil plus "invalid_item" | "invalid_money".
@@ -53,13 +45,13 @@ function Prices.Set(db, realmKey, itemID, source, copper, now)
 	if not (Prices.SOURCES[source] and isValidCopper(copper)) then
 		return nil, "invalid_money"
 	end
-	itemPrices(db, realmKey, itemID, true)[source] = { copper = copper, at = now or 0 }
+	ensureItem(db, realmKey, itemID)[source] = { copper = copper, at = now or 0 }
 	return true
 end
 
 -- Removes the price of one source. Returns true if there was one.
 function Prices.Clear(db, realmKey, itemID, source)
-	local item = itemPrices(db, realmKey, itemID, false)
+	local item = findItem(db, realmKey, itemID)
 	if not (item and item[source]) then
 		return false
 	end
@@ -72,7 +64,7 @@ end
 
 -- Records of all sources for an item: { MANUAL = { copper, at }, ... } or nil.
 function Prices.Get(db, realmKey, itemID)
-	return itemPrices(db, realmKey, itemID, false)
+	return findItem(db, realmKey, itemID)
 end
 
 -- Merchant prices are fixed, so they never become outdated.
@@ -101,7 +93,7 @@ end
 -- `external` (optional) adds live records of other addons: { [source] = { copper, at } }.
 -- Returns copper, source, at, isOutdated, or nil if there is no price.
 function Prices.Best(db, realmKey, itemID, now, maxAgeDays, external)
-	local item = itemPrices(db, realmKey, itemID, false) or {}
+	local item = findItem(db, realmKey, itemID) or {}
 	local pick = {}
 	for _, source in ipairs(Prices.SOURCE_ORDER) do
 		consider(pick, source, item[source], now, maxAgeDays)
@@ -128,29 +120,15 @@ function Prices.RecordMerchant(db, realmKey, offers, tracked, now)
 	end
 end
 
--- Lowest unit buyout per tracked item in one page of auction results
--- ({ { itemID, count, buyout } }; auctions without buyout are skipped).
-local function lowestUnitPrices(results, tracked)
-	local lowest = {}
-	for _, auction in ipairs(results) do
-		local ok = tracked[auction.itemID] and auction.count > 0 and auction.buyout > 0
-		local unit = ok and auction.buyout / auction.count
-		if unit and (not lowest[auction.itemID] or unit < lowest[auction.itemID]) then
-			lowest[auction.itemID] = unit
-		end
-	end
-	return lowest
-end
-
--- Stores the lowest unit buyout per tracked item. Pages of the same search (within
--- AUCTION_MERGE_SECONDS) are merged by keeping the minimum.
-function Prices.RecordAuction(db, realmKey, results, tracked, now)
-	for itemID, unit in pairs(lowestUnitPrices(results, tracked)) do
-		local item = itemPrices(db, realmKey, itemID, false)
+-- Stores the lowest unit buyout per tracked item from the lows of a search (PriceHistory.Lows).
+-- Pages of the same search (within AUCTION_MERGE_SECONDS) are merged by keeping the minimum.
+function Prices.RecordAuction(db, realmKey, lows, tracked, now)
+	for itemID, low in pairs(lows) do
+		local item = tracked[itemID] and findItem(db, realmKey, itemID)
 		local previous = item and item.AUCTION
 		local recent = previous and now - previous.at <= Prices.AUCTION_MERGE_SECONDS
-		if not (recent and previous.copper <= unit) then
-			Prices.Set(db, realmKey, itemID, "AUCTION", unit, now)
+		if tracked[itemID] and not (recent and previous.copper <= low.unit) then
+			Prices.Set(db, realmKey, itemID, "AUCTION", low.unit, now)
 		end
 	end
 end

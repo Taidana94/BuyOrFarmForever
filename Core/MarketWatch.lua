@@ -30,11 +30,11 @@ local function dayStats(item, day)
 	return ns.Util.Ensure(item.days, day, EMPTY_DAY)
 end
 
--- Listings of the watched items in this scan: { [itemID] = { [key] = { count, unit, timeLeft } } }.
-local function current(listings, watched)
+-- Listings per item in this scan: { [itemID] = { [key] = { count, unit, timeLeft } } }.
+local function current(listings)
 	local byItem = {}
 	for _, listing in ipairs(listings) do
-		if watched[listing.itemID] and listing.count > 0 and listing.buyout > 0 then
+		if listing.count > 0 and listing.buyout > 0 then
 			local list = byItem[listing.itemID] or {}
 			byItem[listing.itemID] = list
 			list[listingKey(listing)] = { count = listing.count, unit = listing.buyout / listing.count,
@@ -59,13 +59,14 @@ local function compare(item, gap, listings, day)
 	end
 end
 
--- Compares a full scan (listings with owner and timeLeft) with the previous one for the watched
--- items ({ [itemID] = true }) and stores it. Returns the number of auctions counted as sold.
+-- Compares a full scan (the listings of the watched items, with owner and timeLeft) with the
+-- previous one and stores it; watched ({ [itemID] = true }) finds items whose auctions
+-- are all gone. Returns the number of auctions counted as sold.
 function MarketWatch.RecordScan(db, realmKey, listings, watched, now)
 	local market = ns.Util.Ensure(db.market, realmKey, EMPTY_MARKET)
 	local gap, day, sold = now - market.scanAt, ns.PriceHistory.Day(now), 0
 	local compareScans = market.scanAt > 0 and gap <= MAX_SCAN_GAP_SECONDS
-	local byItem = current(listings, watched)
+	local byItem = current(listings)
 	-- Items whose auctions are all gone are compared too.
 	for itemID, item in pairs(market.items) do
 		if watched[itemID] and next(item.listings) ~= nil and not byItem[itemID] then

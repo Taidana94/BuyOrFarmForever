@@ -17,26 +17,33 @@ function PriceHistory.Day(now)
 	return math.floor(now / SECONDS_PER_DAY)
 end
 
--- Lowest unit buyout and its units per item on one page ({ { itemID, count, buyout } }).
-local function lowest(results)
-	local out = {}
-	for _, auction in ipairs(results) do
-		if auction.count > 0 and auction.buyout > 0 then
-			local unit = auction.buyout / auction.count
-			local entry = out[auction.itemID]
-			if not entry then
-				entry = { unit = unit, count = 0, units = 0 }
-				out[auction.itemID] = entry
-			end
-			entry.units = entry.units + auction.count
-			if unit < entry.unit then
-				entry.unit, entry.count = unit, auction.count
-			elseif unit == entry.unit then
-				entry.count = entry.count + auction.count
-			end
-		end
+-- Adds one auction to `lows` = { [itemID] = { unit (lowest unit buyout), count (units at it),
+-- units (all units) } }; auctions without buyout are skipped. Used per auction of a full scan.
+function PriceHistory.AddLow(lows, itemID, count, buyout)
+	if count <= 0 or buyout <= 0 then
+		return
 	end
-	return out
+	local unit = buyout / count
+	local entry = lows[itemID]
+	if not entry then
+		entry = { unit = unit, count = 0, units = 0 }
+		lows[itemID] = entry
+	end
+	entry.units = entry.units + count
+	if unit < entry.unit then
+		entry.unit, entry.count = unit, count
+	elseif unit == entry.unit then
+		entry.count = entry.count + count
+	end
+end
+
+-- The lows of one page of auction results ({ { itemID, count, buyout } }).
+function PriceHistory.Lows(results)
+	local lows = {}
+	for _, auction in ipairs(results) do
+		PriceHistory.AddLow(lows, auction.itemID, auction.count, auction.buyout)
+	end
+	return lows
 end
 
 -- Units on the market: pages of one search (within the merge time) add up, a new search starts over.
@@ -61,16 +68,21 @@ local function record(item, low, day, now)
 	item.lows[day] = math.min(item.lows[day] or low.unit, low.unit)
 end
 
--- Stores one page of auction results. Pages of one search are merged like Prices.RecordAuction.
-function PriceHistory.Record(db, realmKey, results, now)
-	local realm = db.priceHistory[realmKey] or {}
-	db.priceHistory[realmKey] = realm
+local EMPTY_ITEM = { lows = {} }
+
+-- Stores the lows of one search (PriceHistory.Lows). Pages of one search are merged like
+-- Prices.RecordAuction.
+function PriceHistory.RecordLows(db, realmKey, lows, now)
+	local realm = ns.Util.Ensure(db.priceHistory, realmKey, {})
 	local day = PriceHistory.Day(now)
-	for itemID, low in pairs(lowest(results)) do
-		local item = realm[itemID] or { lows = {} }
-		realm[itemID] = item
-		record(item, low, day, now)
+	for itemID, low in pairs(lows) do
+		record(ns.Util.Ensure(realm, itemID, EMPTY_ITEM), low, day, now)
 	end
+end
+
+-- Stores one page of auction results ({ { itemID, count, buyout } }).
+function PriceHistory.Record(db, realmKey, results, now)
+	PriceHistory.RecordLows(db, realmKey, PriceHistory.Lows(results), now)
 end
 
 -- Median of the daily lows before `day`, and the number of such days.

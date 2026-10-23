@@ -67,15 +67,12 @@ local function watchedItems(db, tracked)
 	return watched
 end
 
-local function recordResults(results)
-	local db, realmKey, tracked = context()
-	if not db then
-		return nil
-	end
+-- Stores the lows of a search (PriceHistory.Lows) as prices and history.
+local function recordLows(db, realmKey, tracked, lows)
 	local now = ns.Client:GetServerTime()
-	Prices.RecordAuction(db, realmKey, results, tracked, now)
-	ns.PriceHistory.Record(db, realmKey, results, now)
-	return db, realmKey, tracked, now
+	Prices.RecordAuction(db, realmKey, lows, tracked, now)
+	ns.PriceHistory.RecordLows(db, realmKey, lows, now)
+	return now
 end
 
 -- A full scan arrives in several result updates: it is read once, FULL_SCAN_SETTLE_SECONDS after the
@@ -87,13 +84,17 @@ local function captureFullScan(sequence)
 	if sequence ~= fullScanSequence or not auctionOpen then
 		return
 	end
-	local listings = ns.Client:ReadAuctionListings()
-	local db, realmKey, tracked, now = recordResults(listings)
-	if db then
-		local sold = ns.MarketWatch.RecordScan(db, realmKey, listings, watchedItems(db, tracked), now)
-		Log.Debug("full scan: " .. #listings .. " auctions, " .. sold .. " sold since the last scan")
-		Events.Emit("PRICES_CHANGED")
+	local db, realmKey, tracked = context()
+	if not db then
+		return
 	end
+	-- Only the watched items get one table per auction; all others only update their lows.
+	local watched = watchedItems(db, tracked)
+	local lows, listings, total = ns.Client:ReadAuctionScan(watched)
+	local now = recordLows(db, realmKey, tracked, lows)
+	local sold = ns.MarketWatch.RecordScan(db, realmKey, listings, watched, now)
+	Log.Debug("full scan: " .. total .. " auctions, " .. sold .. " sold since the last scan")
+	Events.Emit("PRICES_CHANGED")
 end
 
 local function captureAuction()
@@ -105,7 +106,9 @@ local function captureAuction()
 		end)
 		return
 	end
-	if recordResults(ns.Client:ReadAuctionResults()) then
+	local db, realmKey, tracked = context()
+	if db then
+		recordLows(db, realmKey, tracked, ns.PriceHistory.Lows(ns.Client:ReadAuctionResults()))
 		Events.Emit("PRICES_CHANGED")
 	end
 end
