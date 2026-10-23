@@ -498,7 +498,7 @@ Window refreshes are coalesced: any number of refresh requests in one frame lead
 `C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
 created on first open and hidden, never destroyed; rows are a fixed pool of 10 frames.
 
-No `OnUpdate` scripts. One-shot `C_Timer.After` callbacks: `0` for coalescing window refreshes; `1` s
+One `OnUpdate` script: `MinimapButton` while the button is dragged (set on drag start, removed on drag stop; per frame one cursor read and one `SetPoint`). One-shot `C_Timer.After` callbacks: `0` for coalescing window refreshes; `1` s
 taxi check after control loss (`FarmAssist`); `5` s login summary; `10` s price cleanup and bag snapshot after login;
 `1` s recipe book capture after profession window events; `7` s advisor check after login; `0.3` s
 between sell batches (only after a confirmed click, stops when the merchant closes); `0` s retry of

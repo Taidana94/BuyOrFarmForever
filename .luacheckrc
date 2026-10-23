@@ -132,6 +132,7 @@ read_globals = {
 	"BACKDROP_DIALOG_32_32",
 	"BACKDROP_TOAST_12_12",
 	"IsShiftKeyDown",
+	"GetCursorPosition",
 	C_Timer = { fields = { "After", "NewTicker" } },
 	-- merchant and auction house (called by MerchantFrame.lua / Blizzard_AuctionUI, Vanilla, 70003)
 	"GetMerchantNumItems",

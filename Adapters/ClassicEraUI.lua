@@ -74,6 +74,14 @@ function UI.GetMinimap()
 	return Minimap
 end
 
+-- Cursor position in the coordinates of `frame` (GetCursorPosition divided by its effective scale,
+-- as FloatingChatFrame.lua does in the Classic Era UI source).
+function UI.GetCursorIn(frame)
+	local x, y = GetCursorPosition()
+	local scale = frame:GetEffectiveScale()
+	return x / scale, y / scale
+end
+
 -- Blizzard's frame of a context, to attach the advisor card: MerchantFrame, AuctionFrame (load on
 -- demand, exists after the first auction house visit), BankFrame, MailFrame (frame names from the
 -- Classic Era UI source, 70003). nil for other contexts or a missing frame.
