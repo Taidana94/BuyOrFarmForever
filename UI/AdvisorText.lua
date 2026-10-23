@@ -114,7 +114,8 @@ local TEXTS = {
 		return title, L.ADVISOR_FULL_SCAN_DETAIL
 	end,
 	MAIL_SEND = function(s)
-		return Util.Format(L.ADVISOR_MAIL_SEND, s.name, s.count, itemText(s)), Util.Format(L.ADVISOR_MAIL_SEND_DETAIL, s.name)
+		local detail = s.reason == "CRAFT" and L.ADVISOR_MAIL_SEND_CRAFT or L.ADVISOR_MAIL_SEND_DETAIL
+		return Util.Format(L.ADVISOR_MAIL_SEND, s.name, s.count, itemText(s)), Util.Format(detail, s.name)
 	end,
 	MAIL_ASK = function(s)
 		return Util.Format(L.ADVISOR_MAIL_ASK, s.name, s.count, itemText(s)), Util.Format(L.ADVISOR_MAIL_ASK_DETAIL, s.name)

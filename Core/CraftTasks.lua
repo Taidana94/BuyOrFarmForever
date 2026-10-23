@@ -119,7 +119,7 @@ function CraftTasks.TaskFor(key, entry, now)
 	end
 	value.kind = entry.cooldown and "COOLDOWN" or "CRAFT"
 	value.itemID, value.crafts, value.fromBags, value.chance = recipe.outputItemID, crafts, fromBags, chance
-	value.untested = untested and not entry.cooldown
+	value.untested, value.recipeKey = untested and not entry.cooldown, key
 	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT + value.farmSeconds
 	return value
 end

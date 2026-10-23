@@ -100,36 +100,17 @@ local function auctionSuggestions(env, out)
 	end
 end
 
--- What another character of the same realm and faction still misses of its wanted items (not
--- their reagents: the plan exists only for the logged-in character): { [itemID] = n }.
-local function missingOf(other)
-	local missing = {}
-	for _, want in ipairs(other.wants) do
-		local have = ns.Stock.SnapshotCount(other, want.itemID)
-		if want.count > have then
-			missing[want.itemID] = want.count - have
-		end
-	end
-	return missing
+local function bagCount(itemID)
+	return ns.Client:GetBagCount(itemID) or 0
 end
 
-local function addMailFor(env, out, other, name)
-	for itemID, count in pairs(missingOf(other)) do
-		local send = math.min(count, ns.Client:GetBagCount(itemID))
-		if send > 0 then
-			out[#out + 1] = suggestion(env, "MAIL_SEND", { itemID = itemID, count = send, name = name })
-		end
-	end
-end
-
--- Mailbox: send own items to other characters (same realm and faction) who want them.
+-- Mailbox: send own items to other characters (same realm and faction) who want them or craft with
+-- them in the running plan (Core/MailPrep.lua).
 local function mailSuggestions(env, out)
-	local _, realm = ns.Stock.SplitKey(ns.charKey)
-	for key, other in pairs(ns.db.characters) do
-		local name, otherRealm = ns.Stock.SplitKey(key)
-		if key ~= ns.charKey and otherRealm == realm and other.faction == env.charData.faction then
-			addMailFor(env, out, other, name)
-		end
+	local steps = env.charData.activePlan and env.charData.activePlan.steps or {}
+	for _, entry in ipairs(ns.MailPrep.Collect(env.charData, steps, bagCount)) do
+		out[#out + 1] = suggestion(env, "MAIL_SEND", { itemID = entry.itemID, count = entry.count, name = entry.name,
+			reason = entry.reason })
 	end
 end
 
