@@ -1,8 +1,10 @@
 -- Start suggestion (setting farmSuggestStart): when the player loots an item the plan of the wants
 -- still has to get and no farm run exists, a small bar offers to start a run with that item as
--- target. Never starts by itself; each material is offered once per
--- session; the bar hides after SHOW_SECONDS.
--- Loot and bag signals are registered only while the setting is on. Before the loot, the bag
+-- target. Each material is offered once per session; the bar hides after SHOW_SECONDS.
+-- Automatic start (setting farmAutoStart, wins over the suggestion): any loot outside a city or inn
+-- with no farm run starts one, with a looted missing material as target. The loot that started it
+-- is not counted (the run begins after it). The idle time ends such a run like any other.
+-- Loot and bag signals are registered only while one of the settings is on. Before the loot, the bag
 -- counts of the missing materials are noted; after it, a higher count is the looted material.
 local _, ns = ...
 
@@ -74,17 +76,37 @@ local function onLootClosed()
 	lootClosedAt = ns.Client:GetUptime()
 end
 
+-- A missing material whose bag count rose since the loot window opened, or nil.
+local function lootedMissing(skipOffered)
+	for itemID, count in pairs(before) do
+		if not (skipOffered and offered[itemID]) and ns.Client:GetBagCount(itemID) > count then
+			return itemID
+		end
+	end
+	return nil
+end
+
+local function autoStart()
+	if ns.Client:IsResting() then
+		return
+	end
+	local itemID = lootedMissing(false)
+	ns.Slash.Handle("farm start" .. (itemID and " " .. itemID or ""))
+end
+
 local function onBagsChanged()
 	local recent = lootOpen or (lootClosedAt and ns.Client:GetUptime() - lootClosedAt <= LOOT_GRACE_SECONDS)
 	local data = charData()
 	if not recent or not data or data.currentRun then
 		return
 	end
-	for itemID, count in pairs(before) do
-		if not offered[itemID] and ns.Client:GetBagCount(itemID) > count then
-			offer(itemID)
-			return
-		end
+	if ns.db.settings.farmAutoStart then
+		autoStart()
+		return
+	end
+	local itemID = ns.db.settings.farmSuggestStart and lootedMissing(true)
+	if itemID then
+		offer(itemID)
 	end
 end
 
@@ -93,7 +115,8 @@ local active = false
 
 -- Registers the loot and bag handlers while the setting is on.
 local function sync()
-	local wanted = ns.db ~= nil and not ns.readOnly and ns.db.settings.farmSuggestStart
+	local settings = ns.db and ns.db.settings
+	local wanted = settings ~= nil and not ns.readOnly and (settings.farmSuggestStart or settings.farmAutoStart)
 	if wanted == active then
 		return
 	end

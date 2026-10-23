@@ -25,6 +25,7 @@ Settings.SCHEMA = {
 	{ key = "farmAutoPauseAfk", type = "boolean", default = true, group = "FARM", label = "SET_FARM_PAUSE_AFK" },
 	{ key = "farmAutoPauseResting", type = "boolean", default = true, group = "FARM", label = "SET_FARM_PAUSE_RESTING" },
 	{ key = "farmAutoTravelTaxi", type = "boolean", default = true, group = "FARM", label = "SET_FARM_TAXI" },
+	{ key = "farmAutoStart", type = "boolean", default = true, group = "FARM", label = "SET_FARM_AUTO_START" },
 	{ key = "farmSuggestStart", type = "boolean", default = true, group = "FARM", label = "SET_FARM_SUGGEST" },
 	{ key = "farmNotifyComplete", type = "boolean", default = true, group = "FARM", label = "SET_FARM_COMPLETE" },
 	{ key = "countOtherCharacters", type = "boolean", default = true, group = "MATERIAL", label = "SET_COUNT_OTHERS" },
