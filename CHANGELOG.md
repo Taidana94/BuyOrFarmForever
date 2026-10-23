@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.6] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Über das Addon:** Reiter „Hilfe“ → Knopf „Über“ (zurück mit „Befehle“) oder `/bof about`:
+  was das Addon kann, Version, Entwickler (Taidana aka zuerich3), Lizenz. In der Addon-Liste steht
+  Taidana (zuerich3) als Autor.
+
 ## [0.11.0-alpha.5] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

@@ -318,9 +318,13 @@ Nicht im Spiel geprüft: andere Spielsprachen, Zusammenspiel mit anderen Addons.
 
 **Nicht in Forever getestet.**
 
+## Über
+
+Entwickelt von **Taidana** aka **zuerich3**. Im Spiel: Reiter „Hilfe“ → „Über“ oder `/bof about`.
+
 ## Version
 
-0.10.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.11.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
