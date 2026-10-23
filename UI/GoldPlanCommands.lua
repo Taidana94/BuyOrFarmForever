@@ -1,7 +1,7 @@
 -- Gold planner commands: /bof goldplan [duration] (what to do in that time), /bof compare [duration]
 -- (the strategies side by side), /bof goldsources (the character's farm routes with gold per hour),
 -- /bof goldkeep [item] (items never to sell), and the text lines shared with the planner view of the
--- Gold buffer tab.
+-- Gold tab.
 local _, ns = ...
 
 local L = ns.L

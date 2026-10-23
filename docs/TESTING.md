@@ -445,7 +445,7 @@ this addon (only an old `/dump` typo of session 44). The SavedVariables (written
 5. Profession character (open the profession window once): Herstellen names a recipe; with the
    reagents in the bags "Zutaten vorhanden"; tooltip lists further recipes. Without prices:
    "Rezepte ohne Preis: n – scannen".
-6. Click on Sparziel → Gold buffer tab; click on Deine beste Stunde → planner.
+6. Click on Sparziel → Gold tab; click on Deine beste Stunde → planner.
 
 ### Result 0.7.0-alpha.3 (Classic Era, 2026-10-19)
 
@@ -505,7 +505,7 @@ looted-coin capture of real runs is covered by unit tests only.
 
 New handlers: `RecipeBook` on profession window events (always registered; one 1 s timer per burst,
 then one read of the visible recipes); looted coins added in the existing `MONEY_CHANGED` handler
-(one number). The Gold buffer tab adds `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` only while
+(one number). The Gold tab adds `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` only while
 shown; the planner view recomputes bag tasks (one bag pass, ~100 slots), craft tasks (recipe book,
 at most 500 recipes) and routes (at most 500 runs, values cached per item) once per coalesced
 refresh. No `OnUpdate`, no ticker. Verdict: ok.
@@ -514,7 +514,7 @@ refresh. No `OnUpdate`, no ticker. Verdict: ok.
 
 Reported by the user: `C_SpellBook.IsSpellKnown(13262)` = true on an enchanter (Disenchant spell ID
 confirmed); `Auctionator.API.v1.GetDisenchantPriceByItemID("Test", 9515)` = 4874 (function present).
-Bugs: (1) the "Neu" row of the Gold buffer tab lost the typed name/amount on focus loss, so
+Bugs: (1) the "Neu" row of the Gold tab lost the typed name/amount on focus loss, so
 "Anlegen" did nothing – input boxes restored their shown value on focus loss; fixed with draft boxes
 (`opts.draft`) for form fields (also purchase check and the Material tab count boxes), regression
 test added. (2) the keep list was not visible – the planner now labels the slot and names the kept
@@ -527,7 +527,7 @@ items. Both in 0.6.0-alpha.2.
    Auctionator, `/dump Auctionator.API.v1.GetDisenchantPriceByItemID("Test", <green item id>)`.
 3. Farm run with mobs (loot coins), save it: `/bof goldsources` shows the route "Gegner in <zone>"
    with gold per hour (sure includes the coins). Runs from before 0.6.0 are marked "ohne Beutegold".
-4. Gold buffer tab: buttons "Goldpuffer" / "Goldplaner" top right; "Einkauf prüfen" now right of the
+4. Gold tab: buttons "Goldpuffer" / "Goldplaner" top right; "Einkauf prüfen" now right of the
    goal header; nothing overlaps. "Goldplaner": time buttons, duration box `1h 30m`, steps, routes.
 5. Bags with greys, a green item and stackable materials: steps "Beim Händler verkaufen", "Im AH
    einstellen", (enchanter) "Entzaubern …". Drag an item onto the keep slot → no longer suggested.

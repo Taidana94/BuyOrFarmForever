@@ -1,7 +1,7 @@
 # Kaufen oder farmen?
 
 **Version 0.11.0 – Ziele mit dem günstigsten Weg, „Was lohnt sich?“ für deine Spielzeit, automatische
-Farmrouten, Berufsansicht mit Herstellen, Goldpuffer, Goldplaner und Ratgeber. Getestet in WoW Classic
+Farmrouten, Berufsansicht mit Herstellen, Sparziele, Goldplaner und Ratgeber. Getestet in WoW Classic
 Era 1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ sagt dir, wie du ein Item **am günstigsten** bekommst. Du nimmst ein Item in
@@ -27,7 +27,7 @@ Weitere Teile:
 - **Berufe:** deine gelernten Rezepte nach Zweck sortiert (Essen nach Werten, Ausrüstung nach ihrem
   stärksten Wert …), mit Kosten, Wert, Gewinn, Vergleich mit deiner Ausrüstung und Herstellen per
   Klick.
-- **Goldpuffer und Goldplaner:** Sparziele mit Rücklagen und wie du in 1, 2 oder 4 Stunden am meisten
+- **Reiter „Gold“ – Sparziele und Goldplaner:** Sparziele mit Rücklagen und wie du in 1, 2 oder 4 Stunden am meisten
   Gold machst.
 - **Ratgeber:** ein kleines Fenster mit „Mach das“: verkaufen, entzaubern, herstellen, sparen.
 
@@ -224,7 +224,7 @@ diesem Platz trägst (bei Ringen und Schmuck mit dem schwächeren, bei Zweihandw
 Nebenhand zusammen). Die Gewichte stehen im Reiter „Einstellungen“ unten, mit dem Knopf „Vorschlag“
 passend zu Klasse und Talenten.
 
-**Reiter „Goldpuffer“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele als
+**Reiter „Gold“, Ansicht „Sparziele“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele als
 Zeilen (Name und Betrag direkt ändern, „hoch“, „erreicht“, „x“), eine Zeile „Neu“ zum Anlegen,
 „Einkauf prüfen“, dein Nettoerlös mit Quellen und Knöpfe für „Gold verteilen“ und „Rückgängig“.
 Die Ansicht **„Goldplaner“** (Knopf oben rechts): Zeit wählen (1, 2, 4 Std. oder eigene Dauer),
@@ -320,7 +320,7 @@ ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit un
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
 Daten, Übernahme alter Ziele, alle Befehle, Fenster-Eingaben, Bestand mit Bank und Twinks, Planer
 mit Kaufen, Farmen, Herstellen über mehrere Ebenen, Farmfenster und Routen, Preise mit Auctionator,
-Ausrüstungswertung, Goldpuffer, Goldplaner, Ratgeber, Berufsansicht, Herstellen, Hinweise).
+Ausrüstungswertung, Sparziele, Goldplaner, Ratgeber, Berufsansicht, Herstellen, Hinweise).
 
 **Im Spiel** (Classic Era 1.15.9, deutscher Client, Charaktere auf zwei Realms und beiden
 Fraktionen), jeweils ohne Lua-Fehler:

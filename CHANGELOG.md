@@ -3,7 +3,18 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.12.0-alpha.1] – 2026-10-23 (Testversion)
+## [0.12.0-alpha.2] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- Der Reiter „Goldpuffer“ heißt jetzt **„Gold“**, mit den Ansichten **„Sparziele“** und **„Goldplaner“**
+  (auch in Hilfe, Einstellungen, Ratgeber, Befehlstexten und README).
+- Goldplaner: Die Schritte stehen mit etwas Abstand unter der Zusammenfassung und rücken mit, wenn sie
+  zweizeilig ist.
+
+## [0.12.0-alpha.1] – 2026-10-23 (Testversion, im Spiel bestätigt 2026-10-24)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
 Enthält 0.11.1-alpha.1 (unten).

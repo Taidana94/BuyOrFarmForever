@@ -274,7 +274,7 @@ farming in the wants plan.
 - Time constants (design assumptions): vendor 2 s per stack, auction 20 s per stack, disenchant
   10 s per item, craft 5 s + post 20 s per craft, buying 20 s per reagent.
 - UI: `UI/GoldPlanCommands.lua` (`/bof goldplan`, `/bof goldsources`, `/bof goldkeep`),
-  `UI/GoldPlanPanel.lua` (planner view of the Gold buffer tab).
+  `UI/GoldPlanPanel.lua` (planner view of the Gold tab).
 
 ### Strategy comparison (0.11.0)
 
@@ -489,7 +489,7 @@ enchantment). `/bof recipe key <key> [crafts]` does the same for a stored recipe
 | `ADVISOR_CONTEXT`, `SETTINGS_CHANGED` (signals) | `AdvisorSide` | always | per window | shows/hides the side cards; refresh signals only while shown |
 | `BAGS_CHANGED`, `DATA_CHANGED`, `PRICES_CHANGED`, `MONEY_CHANGED`, `ITEM_LOADED`, `ADVISOR_CONTEXT`, `SETTINGS_CHANGED`, `MERCHANT_CHANGED` | `AdvisorWindow` | only while shown | see above | one coalesced refresh (`Advisor.Collect`) |
 | `PLAYER_MONEY` → `MONEY_CHANGED` with source `LOOT` | `IncomeCapture` → `FarmRuns.AddLootCopper` | always | per looted coin | one number added to the running run |
-| `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED`, `MONEY_CHANGED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
+| `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED`, `MONEY_CHANGED` (signals) | Gold tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
 | `FARM_CHANGED`, `DATA_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED` (signals) | Farm tab (routes) | handler added on show, removed on hide | see above | one coalesced refresh: routes from the saved runs (at most 500) |
 | `FARM_CHANGED`, `DATA_CHANGED`, `ITEM_LOADED` (signals) | Farm window | only while shown | see above | button states and one status line |
 | `BAGS_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED`, `DATA_CHANGED`, `RECIPES_CHANGED` (signals) | Professions tab | handler added on show, removed on hide | see above; `RECIPES_CHANGED` once per profession window burst | one coalesced refresh: groups the recipes of one profession (at most a few hundred rows, categories cached per recipe), fills 15 rows and the detail panel |

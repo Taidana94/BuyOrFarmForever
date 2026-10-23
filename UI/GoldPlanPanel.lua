@@ -1,4 +1,4 @@
--- Planner view of the Gold buffer tab: time buttons (1, 2, 4 hours) and a duration box, three view
+-- Planner view of the Gold tab: time buttons (1, 2, 4 hours) and a duration box, three view
 -- buttons, and below them either the plan for that time (summary, steps, alternatives, the farm
 -- routes with gold per hour), the comparison of the strategies, or the account overview; an item
 -- slot for the keep list. Same lines as /bof goldplan, /bof goldsources, /bof compare and
@@ -19,7 +19,9 @@ local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, GAP = 60, 70, 80
 -- Views of the lower part, in button order; the view is not stored (the plan shows first).
 local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
 -- The view buttons get their own row: the time row shares its height with the Gold tab's mode buttons.
-local VIEW_ROW_Y, SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -32, -60, -82, -212, -234, -250
+local VIEW_ROW_Y, SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -32, -62, -92, -222, -244, -260
+-- Space between the summary (one or two lines) and the steps or list below it.
+local SUMMARY_GAP = 10
 local LINE_GAP, SOURCE_GAP, TEXT_WIDTH, KEEP_TEXT_WIDTH = 4, 2, 700, 600
 -- Kept items shown as icons next to the slot (right-click removes one); more are counted.
 local MAX_KEEP_ICONS, KEEP_ICON_SIZE = 12, 20
@@ -114,6 +116,11 @@ function Panel.Build(parent)
 	panel.list = Widgets.CreateTextStack(frame, {
 		count = MAX_LIST, font = "GameFontHighlightSmall", y = STEPS_Y, width = TEXT_WIDTH, gap = LINE_GAP,
 	})
+	-- The steps and lists follow the summary, however many lines it wraps to.
+	for _, stack in ipairs({ panel.steps, panel.list }) do
+		stack[1]:ClearAllPoints()
+		stack[1]:SetPoint("TOPLEFT", panel.summary, "BOTTOMLEFT", 0, -SUMMARY_GAP)
+	end
 	buildKeepRow(panel, frame)
 	return panel
 end
