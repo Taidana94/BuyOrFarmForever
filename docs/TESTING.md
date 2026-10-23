@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.11.0-alpha.4 | 2026-10-23 | 297 checks passed, 0 failed; new tests: automatic farm start (not resting, target from missing loot, any loot, setting off), crafts on alts (task on the alt, plan text, not when known by the character), price history and resale (daily lows, units at the lowest price, median of earlier days, gain after the cut, stale listing, comparison line, pruning) |
 | 0.11.0-alpha.3 | 2026-10-23 | 294 checks passed, 0 failed; new tests: route cache (reuse, copy, rebuild on a saved run, a signal and age), mailbox stock (only read at the mailbox, attachments summed, gold in mail, own count, account total, taken mail removed) |
 | 0.11.0-alpha.1 | 2026-10-23 | 292 checks passed, 0 failed; new `test_strategies.lua` (gold per character, account rows and `/bof account`, fishing detection and fishing routes, crafted routes, comparison ranking and missing families, `/bof compare`, planner views) |
 | 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/bof want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
@@ -263,6 +264,19 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.11.0-alpha.4 (Classic Era, automatic farm start, alt crafts, resale)
+
+1. `/reload`, `/bof version` → `0.11.0-alpha.4`. BugSack empty. Settings tab: new check box
+   "Farmrunde beim Looten automatisch starten" fits.
+2. In a city loot something (e.g. a quest item or a chest in an inn): no run starts. Outside, kill and
+   loot a mob: the farm window opens with a running run. Stand still for the idle time: the run ends.
+3. Log in an alt with a profession window opened once, then the main: "Goldplaner" → "Plan"/"Vergleich"
+   may list "… – auf <Alt> (Zutaten per Post)" when that recipe makes a profit.
+4. Resale needs AH searches on 3 different days for the same item; then a clearly cheaper listing
+   shows "Im AH kaufen und neu einstellen" in "Vergleich". On day 1 the comparison names the
+   missing data ("im AH an mindestens 3 Tagen suchen").
+5. `/bof perf` after browsing several AH pages.
 
 ### Checklist 0.11.0-alpha.3 (Classic Era, mailbox stock, route cache)
 

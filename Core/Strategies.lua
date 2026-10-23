@@ -8,16 +8,16 @@
 -- Compare: one gold plan (Core/GoldPlan.lua) per family of tasks and methods, best rating first:
 -- BAGS (sell or disenchant what the bags hold), CRAFT (learned recipes, reagents from the bags or
 -- bought), FARM (farm routes, loot sold), FISHING (fishing routes), FARM_CRAFT (routes with crafted
--- loot) and BEST (everything together, the gold plan itself).
+-- loot), FLIP (buy below the usual price on the auction house and post again) and BEST (everything together, the gold plan itself).
 local _, ns = ...
 
 local Strategies = {}
 ns.Strategies = Strategies
 
 local SECONDS_PER_HOUR = 3600
-Strategies.FAMILIES = { "BEST", "BAGS", "CRAFT", "FARM", "FISHING", "FARM_CRAFT" }
+Strategies.FAMILIES = { "BEST", "BAGS", "CRAFT", "FARM", "FISHING", "FARM_CRAFT", "FLIP" }
 local TASK_FAMILIES = { SELL_VENDOR = "BAGS", SELL_AUCTION = "BAGS", DISENCHANT = "BAGS", CRAFT = "CRAFT",
-	COOLDOWN = "CRAFT" }
+	COOLDOWN = "CRAFT", FLIP = "FLIP" }
 
 -- Adds the converted loot of a route: changes per hour, craft seconds per hour, main product.
 local function convertLoot(route, convertOf)

@@ -1,6 +1,7 @@
 -- Automatic price capture: merchant offers while a merchant window is open, auction results
 -- while the auction house is open (whatever the user searches, plus the scan of missing
--- materials started by the user). Only items in goals of any character are stored.
+-- materials started by the user). Only items in goals of any character are stored as prices; the
+-- price history (Core/PriceHistory.lua) keeps the daily lows of every item the results show.
 -- MERCHANT_CHANGED and AUCTION_RESULTS are registered only while the window is open.
 -- Raises the internal signal PRICES_CHANGED after storing prices.
 local _, ns = ...
@@ -52,7 +53,9 @@ local function captureAuction()
 	if not db then
 		return
 	end
-	Prices.RecordAuction(db, realmKey, ns.Client:ReadAuctionResults(), tracked, ns.Client:GetServerTime())
+	local results, now = ns.Client:ReadAuctionResults(), ns.Client:GetServerTime()
+	Prices.RecordAuction(db, realmKey, results, tracked, now)
+	ns.PriceHistory.Record(db, realmKey, results, now)
 	Events.Emit("PRICES_CHANGED")
 end
 
@@ -89,7 +92,9 @@ function PriceCapture.PruneOld()
 	if not ns.db or ns.readOnly then
 		return 0
 	end
-	local removed = Prices.Prune(ns.db, ns.Client:GetServerTime(), ns.db.settings.priceKeepDays)
+	local now = ns.Client:GetServerTime()
+	ns.PriceHistory.Prune(ns.db, now)
+	local removed = Prices.Prune(ns.db, now, ns.db.settings.priceKeepDays)
 	if removed > 0 then
 		ns.Log.Debug("removed " .. removed .. " old prices")
 	end

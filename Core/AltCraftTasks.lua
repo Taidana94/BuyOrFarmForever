@@ -52,14 +52,17 @@ function AltCraftTasks.Collect(charData, now)
 	return list
 end
 
--- All one-off tasks of the character now: bags (vendor, auction, disenchant), own crafts and crafts
--- on alts. Lives here because this file loads after BagTasks, GoldPlan and CraftTasks.
+-- All one-off tasks of the character now: bags (vendor, auction, disenchant), own crafts, crafts
+-- on alts and resales on the auction house. Lives here because this file loads after BagTasks, GoldPlan and CraftTasks.
 function ns.GoldPlan.Tasks(charData, now)
 	local tasks = ns.BagTasks.Collect(charData, now, ns.db.settings.ahDiscountPercent)
 	for _, task in ipairs(ns.CraftTasks.Collect(charData, now)) do
 		tasks[#tasks + 1] = task
 	end
 	for _, task in ipairs(AltCraftTasks.Collect(charData, now)) do
+		tasks[#tasks + 1] = task
+	end
+	for _, task in ipairs(ns.FlipTasks.Collect(ns.db, ns.PriceCapture.CurrentRealmKey(), now)) do
 		tasks[#tasks + 1] = task
 	end
 	return tasks

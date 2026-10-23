@@ -32,6 +32,7 @@ DB.DEFAULTS = {
 		},
 	},
 	prices = {},
+	priceHistory = {}, -- auction house lows per day (Core/PriceHistory.lua)
 	recipes = {},
 	farmRuns = {},
 	characters = {},

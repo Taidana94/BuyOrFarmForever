@@ -67,6 +67,10 @@ local function taskText(task)
 			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds))
 		return task.charKey and text .. Util.Format(L.GOLDPLAN_ON_ALT, (ns.Stock.SplitKey(task.charKey))) or text
 	end
+	if task.kind == "FLIP" then
+		return Util.Format(L.GOLDPLAN_FLIP, task.units, UIShared.ItemText(task.itemID), Money.Format(task.buy),
+			Money.Format(task.sell), Money.Format(task.auction))
+	end
 	local amount = task.kind == "SELL_VENDOR" and task.sure or task.auction
 	return Util.Format(L[TASK_TEXTS[task.kind]], task.units, Money.Format(amount), Util.FormatDuration(task.seconds))
 end

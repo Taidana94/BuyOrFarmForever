@@ -3,6 +3,24 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.4] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Farmrunde startet von selbst:** Lootest du außerhalb von Städten und Gasthäusern und läuft keine
+  Runde, startet eine (fehlt dir das gelootete Material, ist es das Ziel). Der erste Loot zählt nicht
+  mit; die Leerlaufzeit beendet die Runde wie sonst. Abschaltbar in den Einstellungen („Farmrunde beim
+  Looten automatisch starten“), dann gilt wieder der Vorschlag.
+- **Rezepte deiner Twinks im Goldplaner:** Kennt ein Twink (gleicher Realm, gleiche Fraktion) ein
+  lohnendes Rezept, das du nicht kennst, plant der Goldplaner es mit ein („– auf Name (Zutaten per
+  Post)“, 3 Min. für Post und Umloggen eingerechnet).
+- **Preisverlauf und Weiterverkauf:** Jede AH-Suche speichert den niedrigsten Preis je Gegenstand und
+  Tag (14 Tage). Liegt ein aktuelles Angebot deutlich unter dem üblichen Preis (mindestens 3 Tage
+  Verlauf, mindestens 20 % Gewinn nach AH-Gebühr), schlägt der Goldplaner „Im AH kaufen und neu
+  einstellen“ vor; im Vergleich als eigener Weg. Höchstens 20 Stück, da die Nachfrage unbekannt ist.
+
 ## [0.11.0-alpha.3] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
