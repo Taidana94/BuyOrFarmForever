@@ -70,6 +70,11 @@ printed and `Core/Main.lua` registers nothing.
 | `GetSellPrice(itemID)` | vendor sell price per unit, or nil while loading |
 | `QueryAuction(itemName)` | bool; exact-name search, first page, all qualities; only from a click or command |
 | `ReadSelectedRecipe()` | `{ key, outputItemID (0 = none), outputMin, outputMax, reagents = { { itemID, count } } }`, or nil + `"no_window"` \| `"no_selection"` \| `"loading"` |
+| `ReadAllRecipes()` | every recipe of the open profession windows like `ReadSelectedRecipe` plus `cooldownSeconds`, `profession` (key, `"OTHER"` if unknown) and `difficulty` (raw skill type); second return true if entries were still loading |
+| `ReadProfessionSkills()` | `{ { profession, rank, maxRank } }` of the open profession windows (raw numbers) |
+| `GetProfessionInfo(key)` | localized profession name, icon file id; nil, nil for `OTHER` |
+| `GetEffectCategory(kind, id)` | category key of the client's effect data for `"item"` (item id) or `"spell"` (enchantment), or nil |
+| `GetItemClassID(itemID)` / `GetItemClassName(classID)` | item class id (`C_Item.GetItemInfoInstant`, no cache needed) / its localized name, or nil |
 | `GetCursorItem()` / `ClearCursor()` | item id on the cursor or nil / drop it (drag and drop into item slots) |
 | `IsAFK()`, `IsResting()`, `IsOnTaxi()` | bool (legacy returns 1/nil are normalized) |
 | `GetClass()` | class file name, e.g. `"PRIEST"`, or nil |
@@ -82,8 +87,8 @@ printed and `Core/Main.lua` registers nothing.
 | `GetExternalPrice(itemID)` | copper, ageDays (nil if unknown) of the price addon; nil if none; nil, nil, error if the price addon raised an error (caught with `pcall`) |
 | `events` (table) | WoW event name → client-neutral signal |
 
-Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`, `ClassicEraExternal`) are exposed as
-methods by a loop in `Adapters/ClassicEra.lua`.
+Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`, `ClassicEraExternal`,
+`ClassicEraBags`, `ClassicEraProfessionInfo`) are exposed as methods by a loop in `Adapters/ClassicEra.lua`.
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
 `MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`, `LOOT_OPENED`,
@@ -94,7 +99,8 @@ Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `ME
 signals: `DATA_CHANGED` (raised by `Slash.Handle` after every registered command), `PRICES_CHANGED`
 (raised by `PriceCapture` after storing prices and when the auction house opens or closes),
 `CHARACTER_READY` (raised by `Main` after `EnsureCharacter` at login), `FARM_CHANGED` (after a bag
-update was counted for a running run), `SETTINGS_CHANGED` (after `/bof set` or a reset). Core code subscribes with
+update was counted for a running run), `SETTINGS_CHANGED` (after `/bof set` or a reset), `RECIPES_CHANGED`
+(after the recipe book read the profession windows). Core code subscribes with
 `Events.OnSignal(signal, fn)` and never names WoW events. `Events.Emit(signal, ...)` raises a signal.
 `Events.OffSignal(signal, fn)` removes a handler; when a signal has no handlers left, its WoW events
 are unregistered.
@@ -269,6 +275,42 @@ level.
   merchant stacks, at most `GetMerchantItemMaxStack` per call). Both ask first
   (`Inputs.Confirm`). Auction house and mail stay manual.
 
+### Professions tab (0.8.0)
+
+User request 2026-10-23 (plan: `work/notes/professions-view-plan.md` in the development folder): one view per
+profession with the character's learned recipes, grouped by what the product is good for, a reagent filter
+and a nicer look (inspired by a screenshot of another addon, not copied).
+
+- **Recipe book** (`Core/RecipeBook.lua`): entries get `profession` (key) and `difficulty` (`optimal` |
+  `medium` | `easy` | `trivial`) from the window; `characters[key].professions[key] = { rank, maxRank, at }`
+  holds the skill bars. Enchantments (no output item) are kept now; every user that needs an item skips
+  `outputItemID == 0` (`CraftTasks`, `AdvisorSources`, `LoginSummary`). Cap `MAX_RECIPES` 1000. After a
+  capture the internal signal `RECIPES_CHANGED` is raised.
+- **Profession keys** (`RecipeBook.PROFESSIONS`, display order): `ALCHEMY`, `BLACKSMITHING`, `ENCHANTING`,
+  `ENGINEERING`, `LEATHERWORKING`, `TAILORING`, `MINING`, `COOKING`, `FIRST_AID`, `POISONS`, `OTHER`.
+  The Classic Era adapter recognizes a window by comparing `GetTradeSkillLine()` / `GetCraftDisplaySkillLine()`
+  with `C_TradeSkillUI.GetTradeSkillDisplayName(skillLine)` and the profession spell names
+  (`Data/ClassicEra/Professions.lua`); nothing localized is stored. Smelting (2656) counts as Mining.
+  No match → `OTHER`. Fishing has no recipes in Classic Era.
+- **Categories** (`Core/RecipeCategories.lua`, `FromFacts` pure): effect data of the client
+  (`Data/ClassicEra/EffectData.lua`: consumables and enchantments) → gear by its largest primary stat
+  (STR, AGI, STA, INT, SPI; ties in that order; none → `WEAPON` with DPS, else `ARMOR`) → item class
+  (`CLASS_<classID>`, label from `C_Item.GetItemClassInfo`) → `UTILITY` for enchantments without data.
+  Results are cached per recipe key for the session; nil (gear stats still loading) is not cached and shows
+  as `LOADING`. Classic Era consumables have no reliable sub-classes (the Classic auction UI only uses them
+  from TBC on), hence the data table.
+- **View model** (`Core/ProfessionView.lua`): `Professions(charData)`, `Build(charData, profession,
+  { search, mats })` (groups in category order, rows by client name; `mats` = `ALL` | `SOME` (at least one
+  reagent with enough units in the bags) | `COMPLETE` (all of them)), `Economics(recipe, now)` (reagent cost
+  at buy prices, vendor and auction value after the cut, profit = best sale − cost; nil when a price is
+  missing). Search is a plain substring of the lower-cased name (`string.lower` folds ASCII only).
+- **UI**: `UI/ProfessionTabLayout.lua` (profession icons, skill bar, search box, three filter buttons, pool
+  of 15 rows for headers and recipes, mouse wheel), `UI/ProfessionDetail.lua` (product, category, skill-up
+  chance, up to 8 reagents with bags/need and bank, crafts possible, cost/value/profit, button "Als Ziel
+  anlegen" → `/bof recipe key <key>` → `Recipes.GoalFromStored`), `UI/ProfessionTab.lua` (state and
+  refresh). Settings: `settings.window.profession` (key, "" = first), `settings.window.professionMats`.
+  Search, scroll, collapsed categories and the selected recipe last for the session.
+
 ## Farm runs (stage 2f)
 
 - States: `FARM`, `TRAVEL`, `PAUSED`, `REVIEW`. Current run: `characters[charKey].currentRun`
@@ -373,6 +415,7 @@ replaces an older one) and creates a goal with `Materials.CreateRecipeGoal`.
 | `BAGS_CHANGED`, `DATA_CHANGED`, `PRICES_CHANGED`, `MONEY_CHANGED`, `ITEM_LOADED`, `ADVISOR_CONTEXT`, `SETTINGS_CHANGED`, `MERCHANT_CHANGED` | `AdvisorWindow` | only while shown | see above | one coalesced refresh (`Advisor.Collect`) |
 | `PLAYER_MONEY` → `MONEY_CHANGED` with source `LOOT` | `IncomeCapture` → `FarmRuns.AddLootCopper` | always | per looted coin | one number added to the running run |
 | `BAGS_CHANGED`, `PRICES_CHANGED`, `ITEM_LOADED` (signals) | Gold buffer tab | handler added on show, removed on hide | see above | requests one refresh; the planner view recomputes bag tasks, craft tasks and routes |
+| `BAGS_CHANGED`, `ITEM_LOADED`, `PRICES_CHANGED`, `DATA_CHANGED`, `RECIPES_CHANGED` (signals) | Professions tab | handler added on show, removed on hide | see above; `RECIPES_CHANGED` once per profession window burst | one coalesced refresh: groups the recipes of one profession (at most a few hundred rows, categories cached per recipe), fills 15 rows and the detail panel |
 
 Window refreshes are coalesced: any number of refresh requests in one frame lead to one
 `C_Timer.After(0, ...)` callback, which redraws only if the window is still visible. The window is
@@ -474,6 +517,17 @@ Character entries that are not tables are removed. Debug log entries without a s
 
 Migrations: `DB.MIGRATIONS[n](db)` upgrades schema n to n + 1. They run on a deep copy; the stored
 table is only replaced when all steps succeed.
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| material | an item a goal needs (`materialGoals[].items`); the user-facing word ("Material") |
+| reagent | an item a recipe consumes (`recipe.reagents`); a recipe goal copies its reagents as materials |
+| recipe book | the recipes a character has seen in its own profession windows (`characters[].recipeBook`) |
+| profession key | client-neutral profession id (`COOKING`, ...), never a localized name |
+| category | what a recipe's product is good for (`STR`, `HEAL`, `CLASS_7`, ...), see Professions tab |
+| goal | a material goal; "savings goal" is the gold buffer's goal |
 
 ## Performance measurement (`/bof perf`)
 

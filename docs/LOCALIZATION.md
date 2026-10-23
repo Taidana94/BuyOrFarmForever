@@ -22,6 +22,14 @@
   (verified in Classic Era 1.15.9 on 2026-10-19). `→` shows as a box there. The check script
   (level 1b) rejects every other character. Forever fonts are not verified yet.
 
+## Keys built at runtime
+
+Some keys are built from a fixed set of values: `CATEGORY_<key>` (`RecipeCategories.ORDER` and `LOADING`),
+`PROF_MATS_<mode>` / `PROF_MATS_TIP_<mode>` (`ProfessionView.MATS`), `PROF_DIFFICULTY_<DIFFICULTY>`
+(`RecipeBook.DIFFICULTIES`), `TEMPLATE_<key>`, `STAT_SHORT_<stat>`. The check script cannot see them; a unit
+test (`work/tests/test_professions.lua`) checks that every value has a label. Item class names
+(`CLASS_<id>` categories) and profession names come from the client.
+
 ## Exception: debug messages
 
 Messages written with `Log.Info/Warn/Error/Trace/Debug` are technical English. They are meant for

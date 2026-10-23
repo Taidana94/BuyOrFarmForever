@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.8.0-alpha.1 | 2026-10-23 | 315 checks passed, 0 failed; 14 new tests in `test_professions.lua` (book with profession/difficulty/skill, smelting as mining, enchantments kept, categories from facts, effect data keys, labels, grouping, reagent filter, search, economics, sanitizing, tab list/collapse/detail/filter/search, goal button, gear by stats); layout test includes the new tab; level 1c exempts `Data/` from the file length (data tables) |
 | 0.4.0-alpha.2 | 2026-10-19 | 226 checks passed, 0 failed (208 unit tests); new layout test: every button label must fit its button (6.4 px per character + 4 px, calibrated on the in-game screenshot); it flagged the two overflowing labels, fixed by shorter texts |
 | 0.4.0-alpha.1 | 2026-10-19 | 225 checks passed, 0 failed (207 unit tests); new tests per stage of the player relief plan; mutation checks: no sanitizing of alternative details fails 1, loot grace before merchant window in the farm capture fails 1; tests found and fixed: editable rows in the all-goals view, `Settings.Set` returning `false` for "off", read-only `false` run in `FarmAssist`, loot grace winning over an open merchant window (income sources and farm capture) |
 | 0.3.0 | 2026-10-19 | 175 checks passed, 0 failed (157 unit tests); only version and documentation changed against 0.3.0-alpha.3 |
@@ -257,6 +258,27 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.8.0-alpha.1 (Classic Era, professions tab)
+
+1. `/reload`, `/bof version` → `0.8.0-alpha.1`. BugSack empty.
+2. Facts to report: `/dump GetTradeSkillLine()` with the cooking window open, the same with the
+   smelting window open (expected "Bergbau" or "Verhüttung"), `/dump C_TradeSkillUI.GetTradeSkillDisplayName(185)`.
+3. Open each profession window once (also Enchanting), then `/bof show` → tab "Berufe": one icon per
+   profession (correct icon, tooltip with the number of recipes); name and skill bar match the window.
+   No profession ends up under "Sonstige" (question mark icon), except old entries until their window
+   was opened.
+4. Cooking: groups such as "Ausdauer & Willenskraft", "Stärke", "Beweglichkeit", "Heilung"; names coloured
+   like in the window (orange/yellow/green/grey). Click a group header: it collapses ("+"), click again.
+5. A gear profession (Tailoring/Leatherworking/Blacksmithing): gear grouped by its largest stat; items
+   without stats under "Rüstung & Verteidigung" or "Waffen"; bolts, bars etc. under the client's item class
+   (e.g. "Handwerkswaren"). Enchanting: enchantments grouped by stat; nothing cut off.
+6. Filter "Teilweise" / "Komplett" with some reagents in the bags; "3×" and "1/2" on the right are
+   plausible. The filter is still set after `/reload`. Search: type part of a name; umlauts work.
+7. Detail: icon tooltip, reagent lines (bags/need, "+n in der Bank"), costs, value, profit; "Als Ziel
+   anlegen" creates a goal (tab "Material"), a second click increases it.
+8. Mouse wheel scrolls a long list; nothing overlaps (screenshot welcome), the 8 tab buttons fit.
+9. `/bof perf` with the tab closed and open; report the numbers.
 
 ### Result 0.7.0-alpha.6 (Classic Era, 2026-10-19)
 

@@ -1,8 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.7.0-alpha.6 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
-Goldplaner und Ratgeber. Die Version 0.6.0 ist in WoW Classic Era 1.15.9 getestet; der Ratgeber
-(neu in 0.7.0) ist im Spiel getestet, seine Zeilen aus 0.7.0-alpha.4 bis 6 noch nicht. Nicht in Forever
+**Version 0.8.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer,
+Goldplaner, Ratgeber und die neue Berufsansicht. Bis 0.7.0-alpha.6 in WoW Classic Era 1.15.9 im Spiel
+getestet; der Reiter „Berufe“ (neu in 0.8.0) ist nur außerhalb des Spiels geprüft. Nicht in Forever
 getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
@@ -55,6 +55,13 @@ Entzaubern (wenn du es kannst), Herstellen, Sparziel und deine beste Stunde. Am 
 am Briefkasten erscheinen passende Karten direkt neben dem Fenster. Beim Händler verkauft „Verkaufen“
 die vorgeschlagenen Gegenstände und „Kaufen“ besorgt fehlende Zutaten – jeweils erst nach deiner
 Bestätigung.
+
+Neu in 0.8.0: der Reiter **„Berufe“** – pro Beruf eine eigene Ansicht mit deinen gelernten Rezepten,
+sortiert nach dem, wofür sie gut sind: Essen und Elixiere nach Stärke, Beweglichkeit, Intelligenz,
+Angeln usw., Ausrüstung nach ihrem stärksten Wert, Verzauberungen nach ihrem Effekt. Dazu deine
+Fertigkeit, eine Suche und der Filter **Zutaten**: alle Rezepte, nur die, von deren Zutaten du schon
+etwas hast, oder nur die, die du jetzt herstellen kannst. Rechts siehst du Zutaten, Kosten, Wert und
+Gewinn und legst mit einem Klick ein Materialziel an.
 
 ## Unterstützte Spielversion
 
@@ -246,6 +253,17 @@ wenn du Ausrüstung wechselst. Unten trägst du die Gewichte direkt ein oder üb
 dabei). Der Knopf „Alternativen“ oben rechts öffnet die Liste deiner Alternativen: Art umschalten,
 Kosten, Zeit (z. B. `1h 30m`) und Voraussetzung eintragen, entfernen, neue per Feld hinzufügen.
 
+**Fenster, Tab „Berufe“:** links die Symbole deiner Berufe (ein Klick wechselt den Beruf), daneben
+deine Fertigkeit, eine Suche und die Zutaten-Filter „Alle“, „Teilweise“ (mindestens eine Zutat in der
+nötigen Menge in den Taschen) und „Komplett“ (jetzt herstellbar). Die Rezepte stehen in Gruppen wie
+„Stärke“, „Ausdauer & Willenskraft“, „Heilung“ oder „Handwerkswaren“; ein Klick auf die Gruppe klappt
+sie zu oder auf. Die Farbe des Namens zeigt wie im Berufsfenster, ob ein Fertigkeitspunkt kommt;
+rechts steht, wie oft deine Taschen reichen („3×“) oder wie viele Zutaten du hast („1/2“). Rechts im
+Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, Zutatenkosten nach deinen Preisen, Wert
+beim Händler und im AH (nach Gebühr) und Gewinn pro Herstellung. „Als Ziel anlegen“ macht daraus ein
+Materialziel (oder erhöht ein vorhandenes). Das Addon kennt die Rezepte, sobald du das Berufsfenster
+einmal geöffnet hast. Mausrad blättert.
+
 **Fenster, Tab „Hilfe“:** alle Befehle (dieselben wie bei `/bof help`), mit dem Mausrad blätterbar.
 
 **Fenster, Tab „Goldpuffer“:** Übersicht (Gold, Rücklagen, frei, ungedeckt), deine Sparziele als
@@ -361,6 +379,12 @@ weist darauf hin.
 - Ratgeber: Verkaufen und Kaufen gehen nur beim Händler und nur nach Bestätigung; im Auktionshaus
   und am Briefkasten zeigt er nur, was zu tun ist. Verkauft werden genau die Gegenstände der Liste
   (ohne Behalten-Liste und Material deiner Ziele); beim Händler kannst du sie zurückkaufen.
+- Berufe: nur gelernte Rezepte, und erst nachdem du das Berufsfenster einmal geöffnet hast (Rezepte
+  aus älteren Versionen ohne Beruf erscheinen unter „Sonstige“, bis du das Fenster wieder öffnest).
+  Angeln hat keine Rezepte. Die Gruppen für Essen, Tränke und Verzauberungen stammen aus einer
+  Datentabelle (Wowhead Classic, Stand 23.10.2026), nicht aus dem Spiel; einzelne Zuordnungen können
+  abweichen. Ausrüstung kommt in die Gruppe ihres größten Grundwerts. Die Suche unterscheidet bei
+  Umlauten Groß- und Kleinschreibung. Gewinn nur, wenn alle Zutaten und das Produkt einen Preis haben.
 - Nur deutsche Texte; Clients in anderen Sprachen zeigen ebenfalls Deutsch.
 - Nur Classic Era. Auf anderen Clients startet das Addon nicht und meldet das.
 
@@ -408,11 +432,18 @@ Die Neuerungen von 0.4.0 wurden am 19.10.2026 in 0.4.0-alpha.1 im Spiel getestet
 überlappende Knopftexte im Tab „Craft“ wurden in 0.4.0-alpha.2 behoben und im Spiel bestätigt. Die
 Version 0.4.0 unterscheidet sich von 0.4.0-alpha.2 nur in Versionsnummer und Dokumentation.
 
+Der Ratgeber (0.7.0) wurde am 19.10.2026 in 0.7.0-alpha.1 bis 0.7.0-alpha.6 in Classic Era im Spiel
+getestet, ohne Lua-Fehler.
+
+Der Reiter „Berufe“ (0.8.0-alpha.1) ist **nur außerhalb des Spiels geprüft; kein echter In-Game-Test
+durchgeführt** (315 automatische Prüfungen, davon 14 neue Tests für Berufe, Gruppen, Filter, Suche,
+Kosten und den Reiter).
+
 **Nicht in Forever getestet.**
 
 ## Version
 
-0.7.0-alpha.6 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.8.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -3,6 +3,26 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.8.0-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Neu
+
+- **Reiter „Berufe“:** pro Beruf eine Ansicht mit deinen gelernten Rezepten, gruppiert nach dem, wofür
+  sie gut sind – Essen, Elixiere und Verzauberungen nach ihrem Effekt (Stärke, Beweglichkeit, Ausdauer &
+  Willenskraft, Zaubermacht, Angeln, Heilung …), Ausrüstung nach ihrem stärksten Wert, alles andere nach
+  Gegenstandsart. Gruppen lassen sich zuklappen.
+- Fertigkeitsbalken, Suche und Zutaten-Filter: **Alle**, **Teilweise** (mindestens eine Zutat in den
+  Taschen) und **Komplett** (jetzt herstellbar). Der Filter bleibt gespeichert.
+- Detail rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, Zutatenkosten,
+  Wert beim Händler und im AH, Gewinn pro Herstellung und „Als Ziel anlegen“.
+- `/bof recipe key <Rezept> [Anzahl]`: Ziel aus einem gemerkten Rezept (nutzt der Knopf im Reiter).
+
+### Geändert
+
+- Das Rezeptbuch merkt sich jetzt auch Beruf, Fertigkeit und Schwierigkeit sowie Verzauberungen.
+
 ## [0.7.0-alpha.6] – 2026-10-19 (Testversion)
 
 Nur außerhalb des Spiels geprüft; nicht in Forever getestet.
