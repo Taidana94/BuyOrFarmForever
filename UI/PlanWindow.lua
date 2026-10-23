@@ -13,12 +13,12 @@ local PlanWindow = {}
 ns.PlanWindow = PlanWindow
 
 PlanWindow.SCALE = 0.85
-local WIDTH, PADDING, HEADER_HEIGHT, ROW_HEIGHT, FOOTER_HEIGHT = 540, 14, 56, 20, 44
--- Space between two steps; a step that wraps gets the height of its text.
-local ROW_GAP = 4
+local WIDTH, PADDING, HEADER_HEIGHT, ROW_HEIGHT, FOOTER_HEIGHT = 520, 14, 56, 16, 44
+-- Space between two steps; the detail line below a title gets the height of its wrapped text.
+local ROW_GAP, CHECK_SIZE, VALUE_WIDTH, TEXT_X, DETAIL_GAP = 8, 16, 120, 22, 2
 local BUTTON_WIDTH = 100
-local CHECK_ON = "|TInterface\\Buttons\\UI-CheckBox-Check:16|t "
-local CHECK_OFF = "|TInterface\\Buttons\\UI-CheckBox-Up:16|t "
+local CHECK_ON = "Interface\\Buttons\\UI-CheckBox-Check"
+local CHECK_OFF = "Interface\\Buttons\\UI-CheckBox-Up"
 local DONE_COLOR, COLOR_END = "|cff808080", "|r"
 local REFRESH_SIGNALS = { "PLAN_CHANGED", "MONEY_CHANGED", "ITEM_LOADED", "DATA_CHANGED", "BAGS_CHANGED" }
 
@@ -68,11 +68,21 @@ local function buildRow(win, frame, index)
 	else
 		row:SetPoint("TOPLEFT", win.rows[index - 1], "BOTTOMLEFT", 0, -ROW_GAP)
 	end
-	row.text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	row.text:SetPoint("TOPLEFT")
-	row.text:SetWidth(WIDTH - 2 * PADDING)
+	row.check = row:CreateTexture(nil, "ARTWORK")
+	row.check:SetSize(CHECK_SIZE, CHECK_SIZE)
+	row.check:SetPoint("TOPLEFT", 0, 1)
+	row.value = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	row.value:SetPoint("TOPRIGHT")
+	row.value:SetWidth(VALUE_WIDTH)
+	row.value:SetJustifyH("RIGHT")
+	row.text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	row.text:SetPoint("TOPLEFT", TEXT_X, 0)
+	row.text:SetWidth(WIDTH - 2 * PADDING - TEXT_X - VALUE_WIDTH)
 	row.text:SetJustifyH("LEFT")
-	row.text:SetJustifyV("TOP")
+	row.detail = row:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+	row.detail:SetPoint("TOPLEFT", row.text, "BOTTOMLEFT", 0, -DETAIL_GAP)
+	row.detail:SetWidth(WIDTH - 2 * PADDING - TEXT_X)
+	row.detail:SetJustifyH("LEFT")
 	row:SetScript("OnClick", function()
 		ns.Inputs.Run("plan " .. index)
 	end)
@@ -110,13 +120,16 @@ local function create()
 	return win
 end
 
-local function stepLine(index, step, ctx)
-	local text = Util.Format(L.GOLD_SOURCE_NUMBERED, index, ns.GoldPlanCommands.StepText(step))
+-- Fills a row with step `index` (tick, title, gold, grey details); returns its height.
+local function drawRow(row, index, step, ctx)
 	local gone, total = ns.ActivePlan.ItemProgress(step, ctx)
-	if gone and not step.done then
-		text = text .. Util.Format(L.PLAN_ITEM_PROGRESS, gone, total)
-	end
-	return step.done and CHECK_ON .. DONE_COLOR .. text .. COLOR_END or CHECK_OFF .. text
+	local title, value, detail = ns.PlanStepText.Parts(step, not step.done and gone or nil, total)
+	title = Util.Format(L.GOLD_SOURCE_NUMBERED, index, title)
+	row.check:SetTexture(step.done and CHECK_ON or CHECK_OFF)
+	row.text:SetText(step.done and DONE_COLOR .. title .. COLOR_END or title)
+	row.value:SetText(value)
+	row.detail:SetText(detail)
+	return (row.text:GetStringHeight() or ROW_HEIGHT) + DETAIL_GAP + (row.detail:GetStringHeight() or ROW_HEIGHT)
 end
 
 function Window:Refresh()
@@ -126,10 +139,9 @@ function Window:Refresh()
 	local listHeight = 0
 	for i, row in ipairs(self.rows) do
 		Widgets.SetShown(row, steps[i] ~= nil)
-		row.text:SetText(steps[i] and stepLine(i, steps[i], ctx) or "")
-		local height = math.max(ROW_HEIGHT, row.text:GetStringHeight() or 0)
-		row:SetHeight(height)
 		if steps[i] then
+			local height = math.max(ROW_HEIGHT, drawRow(row, i, steps[i], ctx))
+			row:SetHeight(height)
 			listHeight = listHeight + height + ROW_GAP
 		end
 	end

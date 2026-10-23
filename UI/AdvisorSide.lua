@@ -87,6 +87,9 @@ end
 -- Shows the panel next to the window of the current context, or hides it. The auction house
 -- window is loaded by Blizzard on the first visit, possibly after our handler: one retry a frame
 -- later.
+-- Blizzard frames whose OnHide closes their context (hooked once; no fields are written on them).
+local closeHooked = {}
+
 function AdvisorSide.Update(retried)
 	local context = ns.Advisor.Context()
 	local anchor = ns.Client:GetContextFrame(context)
@@ -104,6 +107,12 @@ function AdvisorSide.Update(retried)
 		return
 	end
 	panel = panel or create()
+	if not closeHooked[anchor] then
+		closeHooked[anchor] = true
+		anchor:HookScript("OnHide", function()
+			ns.Advisor.Close(context)
+		end)
+	end
 	panel.frame:ClearAllPoints()
 	panel.frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 0, 0)
 	panel.frame:Show()

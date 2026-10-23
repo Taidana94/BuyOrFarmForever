@@ -3,6 +3,21 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.8] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- „Jetzt tun“ übersichtlicher: pro Schritt ein Häkchen, ein kurzer Titel („Herstellen: 2× [Leinenumhang]“),
+  das Gold rechtsbündig und darunter eine kleine graue Zeile mit Zeit, Verkaufschance, „vorher kaufen …“
+  und Fortschritt.
+
+### Behoben
+
+- Die Ratgeber-Karte am Briefkasten (und an Händler, Bank, AH) blieb manchmal nach dem Schließen stehen;
+  sie verschwindet jetzt mit dem Fenster des Spiels, auch ohne Schließen-Ereignis.
+
 ## [0.12.0-alpha.7] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

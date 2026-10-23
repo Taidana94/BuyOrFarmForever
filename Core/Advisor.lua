@@ -31,6 +31,16 @@ local function setOpen(context, isOpen)
 	end
 end
 
+-- Marks a context window as closed (its Blizzard frame was hidden, also when the client sent no
+-- close event, e.g. after walking away from the mailbox) and raises ADVISOR_CONTEXT on a change.
+function Advisor.Close(context)
+	local before = Advisor.Context()
+	setOpen(context, false)
+	if Advisor.Context() ~= before then
+		ns.Events.Emit("ADVISOR_CONTEXT")
+	end
+end
+
 -- The current context: "MERCHANT" | "AUCTION" | "BANK" | "MAIL" | "PROFESSION" | "ANY".
 function Advisor.Context()
 	return open[#open] or "ANY"
