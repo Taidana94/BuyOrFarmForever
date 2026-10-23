@@ -1,5 +1,5 @@
 -- Widgets of the Wants tab ("Ziele"): the add line (item slot, count, "Hinzufügen", AH scan), the
--- list of wants on the left (count box, remove button), the plan tree of the selected want on the
+-- list of wants on the left (count box, "Alle"/"Neu" stock mode, remove button), the plan tree of the selected want on the
 -- right (indented rows with a "Herstellen" or "Farmen" button) and the summary lines at the bottom.
 -- Logic: UI/WantsTab.lua.
 local _, ns = ...
@@ -18,7 +18,7 @@ Layout.INDENT = 14
 local GAP, WIDE_GAP = 4, 10
 local COUNT_WIDTH, ADD_WIDTH, SCAN_WIDTH = 44, 100, 120
 local HEADER_Y, LIST_Y = -34, -52
-local WANT_WIDTH, WANT_ROW_HEIGHT, WANT_NAME_WIDTH, REMOVE_WIDTH = 236, 24, 150, 22
+local WANT_WIDTH, WANT_ROW_HEIGHT, WANT_NAME_WIDTH, REMOVE_WIDTH, MODE_WIDTH = 236, 24, 114, 22, 34
 local TREE_X, TREE_WIDTH, TREE_ROW_HEIGHT, TREE_TEXT_WIDTH, ACTION_WIDTH = 252, 484, 22, 384, 86
 local ICON_SIZE = 16
 local SUMMARY_LINE_HEIGHT, SUMMARY_BOTTOM, TEXT_WIDTH = 17, 4, 736
@@ -97,6 +97,16 @@ local function buildWantRow(tab, list, index)
 		tab:RemoveWant(row)
 	end)
 	row.remove:SetPoint("RIGHT", 0, 0)
+	row.mode = button(row, L.WANT_BTN_ALL, MODE_WIDTH, function()
+		tab:ToggleOnlyNew(row)
+	end)
+	row.mode:SetPoint("RIGHT", row.remove, "LEFT", -GAP / 2, 0)
+	row.mode:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:AddLine(self.tip, 1, 1, 1, true)
+		GameTooltip:Show()
+	end)
+	row.mode:SetScript("OnLeave", hideTooltip)
 	row:SetScript("OnClick", function()
 		tab:SelectWant(row.index)
 	end)

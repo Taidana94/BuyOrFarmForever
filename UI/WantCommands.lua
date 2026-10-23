@@ -143,12 +143,31 @@ local function changeWant(charData, argument, setExact)
 	end
 end
 
+-- Only new items count for the want of itemID (the current stock is kept back), or all again.
+function WantCommands.SetOnlyNew(charData, itemID, onlyNew)
+	local available = itemID and ns.WantPlan.Available(charData, itemID)
+	if not (itemID and ns.Wants.SetOnlyNew(charData, itemID, onlyNew, available)) then
+		Log.Print(L.WANT_NOT_FOUND)
+		return
+	end
+	local text = onlyNew and Util.Format(L.WANT_ONLY_NEW_ON, UIShared.ItemText(itemID), available)
+		or Util.Format(L.WANT_ONLY_NEW_OFF, UIShared.ItemText(itemID))
+	Log.Print(text)
+	ns.WantPlan.Invalidate()
+end
+
 local WRITE = {
 	add = function(charData, rest)
 		changeWant(charData, rest, false)
 	end,
 	set = function(charData, rest)
 		changeWant(charData, rest, true)
+	end,
+	new = function(charData, rest)
+		WantCommands.SetOnlyNew(charData, Util.ParseItemArg(rest), true)
+	end,
+	all = function(charData, rest)
+		WantCommands.SetOnlyNew(charData, Util.ParseItemArg(rest), false)
 	end,
 	remove = function(charData, rest)
 		local itemID = Util.ParseItemArg(rest)

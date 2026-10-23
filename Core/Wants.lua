@@ -1,6 +1,7 @@
 -- Wants: the items a character wants ("Ich will dieses Item", 0.10.0), with a count each, in the
 -- order they were added (earlier wants get the stock first in the plan, Core/Acquire.lua).
--- charData.wants = { { itemID, count, createdAt } }. Pure logic on the SavedVariables tables; the
+-- charData.wants = { { itemID, count, createdAt, baseline? } }. baseline (only new items count): the
+-- units in stock when the player chose it; they stay reserved, only what comes on top counts. Pure logic on the SavedVariables tables; the
 -- schema 1 -> 2 migration turns the material goals of older versions into wants.
 local _, ns = ...
 
@@ -60,6 +61,27 @@ function Wants.Set(charData, itemID, count, now)
 	end
 	entry.count = count
 	return count
+end
+
+-- Only new items count (true: the current stock `available` becomes the baseline) or all (false).
+-- Returns true, or nil plus "not_found".
+function Wants.SetOnlyNew(charData, itemID, onlyNew, available)
+	local entry = Wants.Find(charData, itemID)
+	if not entry then
+		return nil, "not_found"
+	end
+	entry.baseline = onlyNew and math.max(0, math.floor(available or 0)) or nil
+	return true
+end
+
+-- Lowers baselines to the stock (availableOf(itemID)) when old units were used or sold, so the
+-- items counted as new are never taken back.
+function Wants.ClampBaselines(charData, availableOf)
+	for _, entry in ipairs(charData.wants) do
+		if entry.baseline then
+			entry.baseline = math.min(entry.baseline, math.max(0, availableOf(entry.itemID)))
+		end
+	end
 end
 
 function Wants.Remove(charData, itemID)
@@ -141,7 +163,8 @@ function Wants.Sanitize(charData, path, repairs)
 			byID[entry.itemID].count = math.min(Materials.MAX_COUNT, byID[entry.itemID].count + entry.count)
 		elseif ok and #clean < Wants.MAX_WANTS then
 			local want = { itemID = entry.itemID, count = entry.count,
-				createdAt = type(entry.createdAt) == "number" and entry.createdAt or 0 }
+				createdAt = type(entry.createdAt) == "number" and entry.createdAt or 0,
+				baseline = Materials.IsValidCount(entry.baseline) and entry.baseline or nil }
 			byID[entry.itemID] = want
 			clean[#clean + 1] = want
 		end

@@ -50,7 +50,8 @@ function WantPlan.HourValue()
 	return 0, "NONE"
 end
 
-local function available(charData, itemID)
+-- Units of an item in stock: own bags, bank and mail, plus other characters when counted.
+function WantPlan.Available(charData, itemID)
 	local bags, bank, mail = ns.Stock.Count(itemID)
 	local others = ns.db.settings.countOtherCharacters
 		and ns.Stock.OthersFor(ns.db, ns.charKey, charData.faction, itemID) or 0
@@ -72,7 +73,7 @@ function WantPlan.Context(charData, now)
 	local recipes = learnedRecipes(charData)
 	return {
 		available = function(itemID)
-			return available(charData, itemID)
+			return WantPlan.Available(charData, itemID)
 		end,
 		buyPrice = function(itemID)
 			local price, source = ns.PriceCapture.Best(itemID, now)
@@ -97,8 +98,15 @@ function WantPlan.Current()
 		return nil
 	end
 	if not cached then
+		ns.Wants.ClampBaselines(charData, function(itemID)
+			return WantPlan.Available(charData, itemID)
+		end)
 		cached = ns.Acquire.Plan(charData.wants, WantPlan.Context(charData, ns.Client:GetServerTime()))
 		cached.hourValue, cached.hourSource, cached.hourRoute = WantPlan.HourValue()
+		cached.baselines = {}
+		for _, want in ipairs(charData.wants) do
+			cached.baselines[want.itemID] = want.baseline
+		end
 	end
 	return cached
 end
@@ -122,7 +130,8 @@ function WantPlan.EachNode(plan, fn)
 end
 
 -- What the plan needs in the bags (everything but the items it crafts): { { itemID, need } } in
--- order of first appearance, duplicates merged (the shape Stock.Rows takes).
+-- order of first appearance, duplicates merged (the shape Stock.Rows takes). Units kept back by wants
+-- that count only new items (plan.baselines) are added, since Stock.Rows counts the whole stock.
 function WantPlan.Requirements(plan)
 	local list, byID = {}, {}
 	WantPlan.EachNode(plan, function(node)
@@ -136,6 +145,9 @@ function WantPlan.Requirements(plan)
 			row.need = row.need + node.need
 		end
 	end)
+	for _, row in ipairs(list) do
+		row.need = row.need + (plan.baselines and plan.baselines[row.itemID] or 0)
+	end
 	return list
 end
 

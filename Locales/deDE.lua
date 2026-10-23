@@ -29,8 +29,14 @@ L.READ_ONLY_NO_ACCESS = "Nicht möglich: Die gespeicherten Daten haben ein Forma
 L.READ_ONLY_REFUSED = "Nicht möglich: Die gespeicherten Daten stammen aus einer neueren Addon-Version und werden nicht verändert."
 
 -- Material goals (provisional chat commands)
-L.HELP_LINE_WANT = "/bof want – deine Ziele und wie du sie am günstigsten bekommst; add <Gegenstand> [Anzahl], set <Gegenstand> <Anzahl>, remove <Gegenstand> (einfacher im Reiter „Ziele“)"
-L.WANT_USAGE = "Ziele: /bof want | add <Gegenstand> [Anzahl] | set <Gegenstand> <Anzahl> (0 entfernt) | remove <Gegenstand>"
+L.HELP_LINE_WANT = "/bof want – deine Ziele und wie du sie am günstigsten bekommst; add <Gegenstand> [Anzahl], set <Gegenstand> <Anzahl>, remove <Gegenstand>, new <Gegenstand> (nur neu dazukommende zählen), all <Gegenstand> (wieder alle zählen) (einfacher im Reiter „Ziele“)"
+L.WANT_ONLY_NEW_ON = "%1$s: Es zählt nur noch, was neu dazukommt (%2$d vorhandene bleiben außen vor)."
+L.WANT_ONLY_NEW_OFF = "%1$s: Der ganze Bestand zählt wieder."
+L.WANT_BTN_ALL = "Alle"
+L.WANT_BTN_NEW = "Neu"
+L.WANT_TIP_COUNT_ALL = "Zählt: dein ganzer Bestand (alle Charaktere). Klick: nur noch neu dazukommende zählen."
+L.WANT_TIP_COUNT_NEW = "Zählt: nur, was neu dazukommt – %1$d vorhandene bleiben außen vor. Klick: wieder alles zählen."
+L.WANT_USAGE = "Ziele: /bof want | add <Gegenstand> [Anzahl] | set <Gegenstand> <Anzahl> (0 entfernt) | remove <Gegenstand> | new <Gegenstand> | all <Gegenstand>"
 L.WANT_LIST_EMPTY = "Noch keine Ziele. Nimm eines auf mit /bof want add <Gegenstand> [Anzahl] oder im Reiter „Ziele“."
 L.WANT_NOT_FOUND = "Dieser Gegenstand ist nicht in deinen Zielen."
 L.WANT_SET = "Ziel %1$s: jetzt %2$d."

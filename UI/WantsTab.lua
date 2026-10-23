@@ -169,6 +169,14 @@ function Tab:Scroll(delta)
 	end
 end
 
+function Tab:ToggleOnlyNew(row)
+	local charData = currentCharacter()
+	local want = charData and row.itemID and ns.Wants.Find(charData, row.itemID)
+	if want then
+		Inputs.Run((want.baseline and "want all " or "want new ") .. row.itemID)
+	end
+end
+
 -- Refresh --------------------------------------------------------------------------------
 
 local function drawWantRow(row, index, want, node, selected)
@@ -180,6 +188,8 @@ local function drawWantRow(row, index, want, node, selected)
 	row.icon:SetTexture(ns.Client:GetItemIcon(want.itemID))
 	row.name:SetText(UIShared.ItemText(want.itemID))
 	Inputs.SetValue(row.countBox, tostring(want.count))
+	row.mode:SetText(want.baseline and L.WANT_BTN_NEW or L.WANT_BTN_ALL)
+	row.mode.tip = want.baseline and Util.Format(L.WANT_TIP_COUNT_NEW, want.baseline) or L.WANT_TIP_COUNT_ALL
 	Widgets.SetShown(row.highlight, selected)
 	row.tooltipLines = { node and WantCommands.NodeText(node) or nil }
 	row:Show()

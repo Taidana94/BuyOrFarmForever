@@ -179,6 +179,12 @@ end
 function Acquire.Plan(wants, ctx)
 	local pool, nodes = {}, {}
 	local totals = { copper = 0, farmSeconds = 0, travelByMap = {}, crafts = {}, open = {} }
+	-- Stock kept back by wants that count only new items (want.baseline) is used for nothing.
+	for _, want in ipairs(wants) do
+		if want.baseline then
+			takeFromPool(pool, ctx, want.itemID, want.baseline)
+		end
+	end
 	for i, want in ipairs(wants) do
 		nodes[i] = planItem(ctx, want.itemID, want.count, 0, {}, pool)
 		addTotals(totals, nodes[i])

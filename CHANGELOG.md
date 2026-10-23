@@ -3,6 +3,17 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.11] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Ziele: „Alle“ oder „Neu“ zählen.** Jedes Ziel hat einen Knopf neben „X“. „Alle“ (Standard): dein
+  ganzer Bestand aller Charaktere zählt. „Neu“: Der Bestand beim Umschalten bleibt außen vor (er wird
+  auch nicht als Zutat verplant); es zählt nur, was danach dazukommt. Verbrauchst du davon etwas, sinkt
+  die zurückgehaltene Menge mit. Im Chat: `/bof want new <Gegenstand>`, `/bof want all <Gegenstand>`.
+
 ## [0.11.0-alpha.10] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
