@@ -3,6 +3,16 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.17] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- Einstellung „Zutaten und Kosten in der Herstellung zeigen“ (Anzeige): blendet im Tooltip nur die
+  Zutatenliste mit Kosten aus; Beruf und „gelernt“ bleiben. Der ganze Block bleibt mit „Herstellung
+  im Gegenstands-Tooltip“ abschaltbar.
+
 ## [0.11.0-alpha.16] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

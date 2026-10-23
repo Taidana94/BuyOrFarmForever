@@ -4,7 +4,8 @@
 -- reagent with its count and its cost right-aligned in coins, and the total. Lines are texts or
 -- { left, right } pairs (UI/TooltipLines.lua). Prices are planning prices (Core/PriceCapture.lua);
 -- a reagent without one is marked and the total becomes "at least". Built on demand per item and
--- cached by UI/TooltipLines.lua until the data changes.
+-- cached by UI/TooltipLines.lua until the data changes. Setting tooltipReagents off: only the
+-- profession lines.
 local _, ns = ...
 
 local L = ns.L
@@ -109,6 +110,9 @@ function TooltipRecipe.Lines(itemID, index, now)
 	end
 	local lines = { " ", HEADING_COLOR .. L.TOOLTIP_RECIPE_HEAD .. COLOR_END,
 		Util.Format(L.TOOLTIP_RECIPE_BY, professions and professionNames(professions) or L.PROF_OTHER, knownText(names)) }
+	if not ns.db.settings.tooltipReagents then
+		return lines
+	end
 	if not recipe then
 		lines[4] = DIM_COLOR .. L.TOOLTIP_RECIPE_UNKNOWN .. COLOR_END
 		return lines
