@@ -83,7 +83,10 @@ end
 -- Stores the skill bars (raw adapter data { profession, rank, maxRank }); invalid rows are skipped.
 function RecipeBook.SetSkills(charData, rawSkills, now)
 	for _, raw in ipairs(rawSkills) do
-		if PROFESSION_SET[raw.profession] and isSkill(raw.rank) and isSkill(raw.maxRank) then
+		-- GetTradeSkillLine() answers "unknown", 0, 0 when no window is open (seen in game, Classic Era
+		-- 1.15.9, 2026-10-23). The adapter only reads open windows; this guard keeps such a reply out
+		-- anyway, since a max rank of 0 is never a real skill bar.
+		if PROFESSION_SET[raw.profession] and isSkill(raw.rank) and isSkill(raw.maxRank) and raw.maxRank > 0 then
 			charData.professions[raw.profession] = { rank = raw.rank, maxRank = raw.maxRank, at = now }
 		end
 	end
