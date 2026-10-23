@@ -18,7 +18,8 @@ local MAX_STEPS, MAX_SOURCES, MAX_LIST = 8, 4, 10
 local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, GAP = 60, 70, 80, 6
 -- Views of the lower part, in button order; the view is not stored (the plan shows first).
 local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
-local SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -30, -52, -186, -208, -224
+-- The view buttons get their own row: the time row shares its height with the Gold tab's mode buttons.
+local VIEW_ROW_Y, SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -32, -60, -82, -212, -234, -250
 local LINE_GAP, SOURCE_GAP, TEXT_WIDTH, KEEP_TEXT_WIDTH = 4, 2, 700, 600
 -- Kept items named next to the slot; more are counted.
 local MAX_KEEP_NAMES = 6
@@ -59,16 +60,14 @@ end
 
 local function buildViewButtons(panel, frame)
 	panel.viewButtons = {}
-	local previous = panel.durationBox
-	for _, view in ipairs(VIEWS) do
+	for i, view in ipairs(VIEWS) do
 		local button = Widgets.CreateButton(frame, L["GOLDPLAN_VIEW_" .. view], VIEW_BUTTON_WIDTH)
-		button:SetPoint("LEFT", previous, "RIGHT", previous == panel.durationBox and GAP * 3 or GAP, 0)
+		button:SetPoint("TOPLEFT", (i - 1) * (VIEW_BUTTON_WIDTH + GAP), VIEW_ROW_Y)
 		button:SetScript("OnClick", function()
 			panel.view = view
 			Panel.Refresh(panel)
 		end)
 		panel.viewButtons[view] = button
-		previous = button
 	end
 end
 

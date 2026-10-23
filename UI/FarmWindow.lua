@@ -12,8 +12,9 @@ local FarmWindow = {}
 ns.FarmWindow = FarmWindow
 
 FarmWindow.SCALE = 0.85
-local WIDTH, HEIGHT, PADDING = 340, 104, 14
-local BUTTON_WIDTH, BUTTON_GAP = 74, 4
+-- "Angekommen" overflowed 74 px in game (0.11.0-alpha.1 screenshot).
+local WIDTH, HEIGHT, PADDING = 384, 104, 14
+local BUTTON_WIDTH, BUTTON_GAP = 86, 4
 local STATUS_Y = -38
 local TIMER_SECONDS = 1
 local REFRESH_SIGNALS = { "FARM_CHANGED", "DATA_CHANGED", "ITEM_LOADED" }
