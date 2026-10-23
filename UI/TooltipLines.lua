@@ -1,5 +1,6 @@
 -- Item tooltip lines (setting tooltipEnabled): for items the plan of the character's wants needs the
--- missing amount, for wanted gear the score against the equipped gear. The hook only reads a cache;
+-- missing amount, for wanted gear the score against the equipped gear; at the bottom the recipe lines
+-- (UI/TooltipRecipe.lua, setting tooltipRecipes). The hook only reads a cache;
 -- the cache is rebuilt once after wants, bags, bank, prices or equipment changed (dirty flag), not on
 -- every tooltip. The hook is installed once at login through the adapter.
 local _, ns = ...
@@ -15,6 +16,8 @@ ns.TooltipLines = TooltipLines
 
 local LINE_COLOR = { 0.4, 0.9, 1 }
 local cache, dirty = {}, true
+-- itemID -> recipe lines, or false when the addon knows no recipe; filled on demand.
+local recipeCache, recipeIndex = {}, nil
 
 local function charData()
 	if not (ns.db and not ns.readOnly and ns.charKey) then
@@ -50,6 +53,10 @@ local function rebuild()
 	for itemID in pairs(cache) do
 		cache[itemID] = nil
 	end
+	for itemID in pairs(recipeCache) do
+		recipeCache[itemID] = nil
+	end
+	recipeIndex = nil
 	dirty = false
 	local data = charData()
 	if not data then
@@ -71,13 +78,33 @@ function TooltipLines.For(itemID)
 	return cache[itemID]
 end
 
-local function onTooltip(tooltip, itemID)
-	if not (ns.db and not ns.readOnly and ns.db.settings.tooltipEnabled) then
-		return
+-- Recipe lines for an item (cached until the data changes), or nil.
+function TooltipLines.RecipeFor(itemID)
+	if dirty then
+		rebuild()
 	end
-	local lines = TooltipLines.For(itemID)
+	if recipeCache[itemID] == nil then
+		recipeIndex = recipeIndex or ns.TooltipRecipe.Index(ns.db)
+		recipeCache[itemID] = ns.TooltipRecipe.Lines(itemID, recipeIndex, ns.Client:GetServerTime()) or false
+	end
+	return recipeCache[itemID] or nil
+end
+
+local function addLines(tooltip, lines)
 	for _, text in ipairs(lines or {}) do
 		tooltip:AddLine(text, LINE_COLOR[1], LINE_COLOR[2], LINE_COLOR[3])
+	end
+end
+
+local function onTooltip(tooltip, itemID)
+	if not (ns.db and not ns.readOnly) then
+		return
+	end
+	if ns.db.settings.tooltipEnabled then
+		addLines(tooltip, TooltipLines.For(itemID))
+	end
+	if ns.db.settings.tooltipRecipes then
+		addLines(tooltip, TooltipLines.RecipeFor(itemID))
 	end
 end
 

@@ -3,6 +3,22 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.13] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Herstellung im Gegenstands-Tooltip** (ganz unten, abschaltbar unter Einstellungen → Anzeige):
+  welcher Beruf das Item herstellt, welche deiner Charaktere das Rezept kennen, jede Zutat in einer
+  Zeile mit Anzahl („x12“) und Preis sowie die Gesamtkosten (bei mehreren Stück pro Herstellung auch
+  je Stück). Der Beruf ist für alle herstellbaren Items bekannt (Wowhead-Daten); Zutaten und Kosten
+  erscheinen, sobald einer deiner Charaktere das Rezept im Berufsfenster gesehen hat.
+
+### Geändert
+
+- Entwicklername: Zuerich3.
+
 ## [0.11.0-alpha.12] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

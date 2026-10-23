@@ -77,6 +77,15 @@ function Info.GetEffectCategory(kind, id)
 	return list and list[id]
 end
 
+-- Professions that make an item (Data/ClassicEra/CraftedBy.lua): a list of profession keys, or nil.
+function Info.GetCraftedBy(itemID)
+	local entry = ns.ClassicEraCraftedBy and ns.ClassicEraCraftedBy[itemID]
+	if type(entry) == "string" then
+		return { entry }
+	end
+	return entry
+end
+
 -- Item classes (the category of products without effect data) ------------------------
 
 -- Item class id (Enum.ItemClass, e.g. 7 = trade goods) from C_Item.GetItemInfoInstant (no cache

@@ -41,6 +41,7 @@ Settings.SCHEMA = {
 	{ key = "goldReserveWarning", type = "boolean", default = true, group = "GOLD", label = "SET_RESERVE_WARNING" },
 	{ key = "tooltipEnabled", type = "boolean", default = true, group = "DISPLAY", label = "SET_TOOLTIP" },
 	{ key = "auctionHint", type = "boolean", default = true, group = "DISPLAY", label = "SET_AUCTION_HINT" },
+	{ key = "tooltipRecipes", type = "boolean", default = true, group = "DISPLAY", label = "SET_TOOLTIP_RECIPES" },
 	{ key = "minimapButton", type = "boolean", default = true, group = "DISPLAY", label = "SET_MINIMAP" },
 	{ key = "minimapAngle", type = "number", default = 225, min = 0, max = 359, group = "DISPLAY", label = "SET_MINIMAP_ANGLE" },
 	{ key = "loginSummary", type = "boolean", default = true, group = "DISPLAY", label = "SET_LOGIN_SUMMARY" },
