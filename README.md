@@ -342,11 +342,11 @@ Nicht im Spiel geprüft: andere Spielsprachen, Zusammenspiel mit anderen Addons.
 
 ## Über
 
-Entwickelt von **Taidana** aka **zuerich3**. Im Spiel: Reiter „Hilfe“ → „Über“ oder `/bof about`.
+Entwickelt von **Taidana** aka **zuerich3**. Fragen, Wünsche, Fehler oder Verbesserungsvorschläge: bitte als Kommentar auf der CurseForge-Seite; bei Fehlern die Meldung von BugSack/BugGrabber mitschicken. Im Spiel: Reiter „Hilfe“ → „Über“ oder `/bof about`.
 
 ## Version
 
-0.11.0-alpha.8 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.11.0-alpha.9 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.11.0-alpha.9] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Geändert
+
+- „Über“ hat einen Abschnitt „Feedback“: Fragen, Wünsche, Fehler und Vorschläge als Kommentar auf
+  der CurseForge-Seite, bei Fehlern die BugSack/BugGrabber-Meldung mitschicken.
+
 ## [0.11.0-alpha.8] – 2026-10-23 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
