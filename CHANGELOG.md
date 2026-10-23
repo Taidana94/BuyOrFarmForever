@@ -15,7 +15,8 @@ Ratgeber und Berufsansicht. Getestet in WoW Classic Era 1.15.9; nicht in Forever
   Willenskraft, Zaubermacht, Angeln, Heilung …), Ausrüstung nach ihrem stärksten Wert, alles andere nach
   Gegenstandsart. Gruppen lassen sich zuklappen. Dazu Fertigkeitsbalken, Suche und der Zutaten-Filter
   **Alle**, **Teilweise** (mindestens eine Zutat in den Taschen) und **Komplett** (jetzt herstellbar).
-  Rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, Zutatenkosten, Wert beim
+  Rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, was die Zutaten wert sind
+  (aus der Tasche zum Verkaufswert nach AH-Gebühr, fehlende zum Kaufpreis – wie beim Ratgeber), Wert beim
   Händler und im AH, Gewinn pro Herstellung und „Als Ziel anlegen“.
 - **Ratgeber** (`/bof advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): ein kleines Fenster mit
   festen Zeilen **Verkaufen**, **Entzaubern** (nur wenn dein Charakter entzaubern kann), **Herstellen**,

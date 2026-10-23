@@ -258,8 +258,9 @@ nötigen Menge in den Taschen) und „Komplett“ (jetzt herstellbar). Die Rezep
 „Stärke“, „Ausdauer & Willenskraft“, „Heilung“ oder „Handwerkswaren“; ein Klick auf die Gruppe klappt
 sie zu oder auf. Die Farbe des Namens zeigt wie im Berufsfenster, ob ein Fertigkeitspunkt kommt;
 rechts steht, wie oft deine Taschen reichen („3×“) oder wie viele Zutaten du hast („1/2“). Rechts im
-Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, Zutatenkosten nach deinen Preisen, Wert
-beim Händler und im AH (nach Gebühr) und Gewinn pro Herstellung. „Als Ziel anlegen“ macht daraus ein
+Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, was die Zutaten wert sind (Zutaten aus
+deiner Tasche mit dem, was sie beim Verkauf bringen würden – im AH nach 5 % Gebühr –, fehlende mit dem
+Kaufpreis), Wert beim Händler und im AH (nach Gebühr) und Gewinn pro Herstellung. „Als Ziel anlegen“ macht daraus ein
 Materialziel (oder erhöht ein vorhandenes). Das Addon kennt die Rezepte, sobald du das Berufsfenster
 einmal geöffnet hast. Mausrad blättert.
 
@@ -391,7 +392,7 @@ weist darauf hin.
 
 **Außerhalb des Spiels** (Version 0.8.0): Struktur und TOC, Lua-Syntax (Lua 5.1), luacheck
 ohne Warnungen, Übersetzungsschlüssel, Zeichen der Spielschrift, Sauberkeit und Leistung
-(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 297
+(Funktionslänge, keine Skripte pro Bild, kein Speicherzuwachs bei Taschenänderungen) und 298
 automatische Tests in einer nachgebauten Spielumgebung (Start, `/reload`, beschädigte und neuere
 Daten, alle Befehle, alle Fenster-Eingaben, Ziele, Bestand, Rezeptimport, Preise mit Auctionator,
 Farmrunden mit Automatik, Beschaffungsplan mit Zeitlimit, Nebenbei-Materialien und anderem Weg,
@@ -439,8 +440,9 @@ Der Reiter „Berufe“ wurde am 23.10.2026 in 0.8.0-alpha.1 in Classic Era im S
 Erste Hilfe, Schneiderei, Verzauberkunst; Namen und Fertigkeiten der Berufsfenster per `/dump`
 bestätigt). Bergbau, Alchemie, Lederverarbeitung, Schmiedekunst und Ingenieurskunst wurden nicht im
 Spiel geprüft. `/bof perf`: 1640 KB Speicher, Durchschnitt 0,01 %, Spitze 7,54 % der Frame-Zeit. Die
-Version 0.8.0 unterscheidet sich von 0.8.0-alpha.1 nur durch eine kleine Absicherung beim
-Fertigkeitsbalken, die Versionsnummer und die Dokumentation.
+Version 0.8.0 unterscheidet sich von 0.8.0-alpha.1 durch eine kleine Absicherung beim
+Fertigkeitsbalken und eine Korrektur, die du im Spiel gefunden hast: Zutaten aus der Tasche zählen jetzt
+mit ihrem Verkaufswert statt mit dem Kaufpreis. Diese Korrektur ist nur außerhalb des Spiels geprüft.
 
 **Nicht in Forever getestet.**
 
