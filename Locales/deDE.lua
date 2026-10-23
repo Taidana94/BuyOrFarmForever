@@ -281,6 +281,10 @@ L.GOLD_SOURCES_HEADER = "Goldquellen aus deinen Farmrunden (AH-Gold zählt für 
 L.GOLD_SOURCES_NONE = "Noch keine Farmroute mit genug Daten (mindestens %1$s Farmzeit). Miss deine Routen mit Farmrunden im Tab „Farmen“."
 L.GOLD_SOURCE_NUMBERED = "%1$d. %2$s"
 L.GOLD_SOURCE_LINE = "%1$s: %2$s pro Std. sicher + %3$s im AH, Anreise %4$s (%5$d Runden, %6$s)"
+L.ROUTE_RELIABILITY_FEW = " – erst %1$d Runde(n), noch unsicher"
+L.ROUTE_RELIABILITY_VARIES = " – schwankt stark"
+L.ROUTE_RELIABILITY_STABLE = "Zuverlässig: die Runden liegen nah beieinander"
+L.ROUTE_DAMPED = " – %1$d Ausreißer (seltener Drop) gedämpft"
 L.GOLD_SOURCE_NO_COINS = " – %1$d Runde(n) von vor 0.6.0 ohne erfasstes Beutegold"
 L.PLAN_SEPARATOR = ", "
 

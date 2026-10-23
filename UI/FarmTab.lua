@@ -52,6 +52,8 @@ local function showTooltip(row)
 	GameTooltip:SetOwner(row, "ANCHOR_RIGHT")
 	GameTooltip:AddLine(ns.FarmCommands.RouteName(route))
 	GameTooltip:AddLine(Util.Format(L.FARM_ROUTE_TRAVEL, Util.FormatDuration(route.travelSeconds)), 1, 1, 1)
+	local reliability = ns.GoldPlanCommands.ReliabilityText(route)
+	GameTooltip:AddLine(reliability ~= "" and reliability:gsub("^ – ", "") or L.ROUTE_RELIABILITY_STABLE, 1, 0.82, 0)
 	for i, entry in ipairs(lootByAmount(route)) do
 		if i > TOOLTIP_ITEMS then
 			break

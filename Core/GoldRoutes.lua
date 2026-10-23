@@ -14,6 +14,13 @@ GoldRoutes.MIN_SECONDS = 600
 -- Classic auction house cut on sales; the deposit is not counted.
 GoldRoutes.AUCTION_CUT = 0.05
 local SECONDS_PER_HOUR = 3600
+-- Reliability: with fewer runs a route is "FEW"; a spread (standard deviation / mean of the runs' gold
+-- per hour) above VARIES_SPREAD makes it "VARIES", else "STABLE". From DAMP_MIN_RUNS runs on, a run
+-- above OUTLIER_FACTOR x the median rate (a rare drop) counts only up to that cap.
+GoldRoutes.RELIABLE_RUNS = 3
+local VARIES_SPREAD = 0.5
+local DAMP_MIN_RUNS = 3
+local OUTLIER_FACTOR = 2
 local PERCENT = 100
 -- Price sources a sale on the auction house can reach (merchant prices are buy prices).
 local SALE_SOURCES = { "AUCTION", "MANUAL" }
@@ -33,16 +40,17 @@ local function addRun(routes, run, partsOf)
 	local route = routes[key]
 	if not route then
 		route = { key = key, uiMapID = run.uiMapID, fishing = run.activity == "FISHING", items = {}, sure = 0, auction = 0, activeSeconds = 0,
-			travelSeconds = 0, runs = 0, runsWithoutCoins = 0 }
+			travelSeconds = 0, runs = 0, runsWithoutCoins = 0, samples = {} }
 		routes[key] = route
 	end
+	local runSure, runAuction = run.lootCopper or 0, 0
 	for itemID, amount in pairs(run.items) do
 		route.items[itemID] = (route.items[itemID] or 0) + amount
 		local sure, auction = partsOf(itemID)
-		route.sure = route.sure + amount * sure
-		route.auction = route.auction + amount * auction
+		runSure, runAuction = runSure + amount * sure, runAuction + amount * auction
 	end
-	route.sure = route.sure + (run.lootCopper or 0)
+	route.sure, route.auction = route.sure + runSure, route.auction + runAuction
+	route.samples[#route.samples + 1] = { sure = runSure, auction = runAuction, seconds = run.activeSeconds }
 	if run.lootCopper == nil then
 		route.runsWithoutCoins = route.runsWithoutCoins + 1
 	end
@@ -65,7 +73,57 @@ local function cachedParts(partsOf)
 	end
 end
 
+local function sampleRate(sample)
+	return (sample.sure + sample.auction) / sample.seconds
+end
+
+local function median(values)
+	table.sort(values)
+	local mid = math.floor((#values + 1) / 2)
+	return #values % 2 == 1 and values[mid] or (values[mid] + values[mid + 1]) / 2
+end
+
+-- Caps runs far above the median rate (rare drops) and sets route.dampedRuns.
+local function dampOutliers(route)
+	route.dampedRuns = 0
+	if #route.samples < DAMP_MIN_RUNS then
+		return
+	end
+	local rates = {}
+	for i, sample in ipairs(route.samples) do
+		rates[i] = sampleRate(sample)
+	end
+	local cap = OUTLIER_FACTOR * median(rates)
+	for _, sample in ipairs(route.samples) do
+		local value = sampleRate(sample)
+		if cap > 0 and value > cap then
+			local cut = 1 - cap / value
+			route.sure, route.auction = route.sure - sample.sure * cut, route.auction - sample.auction * cut
+			route.dampedRuns = route.dampedRuns + 1
+		end
+	end
+end
+
+-- "FEW" | "VARIES" | "STABLE" from the runs' spread of gold per hour.
+local function reliability(route)
+	local count = #route.samples
+	if count < GoldRoutes.RELIABLE_RUNS then
+		return "FEW"
+	end
+	local sum, squares = 0, 0
+	for _, sample in ipairs(route.samples) do
+		local value = sampleRate(sample)
+		sum, squares = sum + value, squares + value * value
+	end
+	local mean = sum / count
+	local spread = mean > 0 and math.sqrt(math.max(0, squares / count - mean * mean)) / mean or 0
+	return spread > VARIES_SPREAD and "VARIES" or "STABLE"
+end
+
 local function rate(route, discountPercent)
+	route.reliability = reliability(route)
+	dampOutliers(route)
+	route.samples = nil
 	local perSecond = SECONDS_PER_HOUR / route.activeSeconds
 	route.surePerHour = route.sure * perSecond
 	route.auctionPerHour = route.auction * perSecond
@@ -78,7 +136,8 @@ end
 -- partsOf (itemID -> sure, auction copper per unit), excluded ({ [target itemID] = true }, optional),
 -- discountPercent, minSeconds, minCopper }.
 -- Each route: { key, uiMapID, fishing, items ({ [itemID] = amount }), surePerHour, auctionPerHour,
--- ratingPerHour, travelSeconds (per trip), activeSeconds, runs, runsWithoutCoins }.
+-- ratingPerHour, travelSeconds (per trip), activeSeconds, runs, runsWithoutCoins, reliability ("FEW" |
+-- "VARIES" | "STABLE"), dampedRuns (runs capped as outliers) }.
 function GoldRoutes.List(db, opts)
 	local partsOf, excluded = cachedParts(opts.partsOf), opts.excluded or {}
 	local routes = {}

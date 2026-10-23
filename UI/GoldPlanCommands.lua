@@ -30,7 +30,17 @@ function GoldPlanCommands.RouteLine(route)
 	if route.runsWithoutCoins > 0 then
 		line = line .. Util.Format(L.GOLD_SOURCE_NO_COINS, route.runsWithoutCoins)
 	end
-	return line
+	return line .. GoldPlanCommands.ReliabilityText(route)
+end
+
+-- " – erst 2 Runden, noch unsicher", " – schwankt stark", plus damped outliers; "" for stable routes.
+function GoldPlanCommands.ReliabilityText(route)
+	local text = route.reliability and route.reliability ~= "STABLE"
+		and Util.Format(L["ROUTE_RELIABILITY_" .. route.reliability], route.runs) or ""
+	if (route.dampedRuns or 0) > 0 then
+		text = text .. Util.Format(L.ROUTE_DAMPED, route.dampedRuns)
+	end
+	return text
 end
 
 -- Lines of all routes (best first), or one line explaining that data is missing.
