@@ -72,24 +72,25 @@ local TASK_TEXTS = {
 	SELL_VENDOR = "GOLDPLAN_SELL_VENDOR", SELL_AUCTION = "GOLDPLAN_SELL_AUCTION", DISENCHANT = "GOLDPLAN_DISENCHANT",
 }
 
--- " – vorher kaufen: 5× [Grober Faden], 2× [Leinenstoffballen]" for crafts with reagents to buy.
-local function buyText(task)
+-- " – Verkaufschance 40 %" (below 100 %) and " – vorher kaufen: 5× [Grober Faden], …" for a task.
+local function extrasText(task)
 	local parts = {}
 	for i, entry in ipairs(task.toBuy or {}) do
 		parts[i] = Util.Format(L.GOLDPLAN_BUY_PART, entry.units, UIShared.ItemText(entry.itemID))
 	end
-	return #parts > 0 and Util.Format(L.GOLDPLAN_BUY_FIRST, table.concat(parts, L.PLAN_SEPARATOR)) or ""
+	local chance = task.chance and task.chance < 1 and Util.Format(L.GOLDPLAN_CHANCE, math.floor(task.chance * 100 + 0.5)) or ""
+	return chance .. (#parts > 0 and Util.Format(L.GOLDPLAN_BUY_FIRST, table.concat(parts, L.PLAN_SEPARATOR)) or "")
 end
 
 local function taskText(task)
 	if task.kind == "CRAFT" or task.kind == "COOLDOWN" then
 		local text = Util.Format(L["GOLDPLAN_" .. task.kind], task.crafts, UIShared.ItemText(task.itemID),
-			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds)) .. buyText(task)
+			Money.Format(task.sure + task.auction), Util.FormatDuration(task.seconds)) .. extrasText(task)
 		return task.charKey and text .. Util.Format(L.GOLDPLAN_ON_ALT, (ns.Stock.SplitKey(task.charKey))) or text
 	end
 	if task.kind == "FLIP" then
 		return Util.Format(L.GOLDPLAN_FLIP, task.units, UIShared.ItemText(task.itemID), Money.Format(task.buy),
-			Money.Format(task.sell), Money.Format(task.auction))
+			Money.Format(task.sell), Money.Format(task.auction)) .. extrasText(task)
 	end
 	local amount = task.kind == "SELL_VENDOR" and task.sure or task.auction
 	return Util.Format(L[TASK_TEXTS[task.kind]], task.units, Money.Format(amount), Util.FormatDuration(task.seconds))

@@ -19,6 +19,10 @@ local mailOpen = false
 -- Items seen in the bags while the bank is open: candidates for deposits, recounted on close.
 local seenAtBank = {}
 
+function Stock.IsMailOpen()
+	return mailOpen
+end
+
 function Stock.IsBankOpen()
 	return bankOpen
 end

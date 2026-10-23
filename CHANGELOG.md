@@ -3,6 +3,24 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.7] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Verkaufschance im AH:** Das Spiel liefert keine Verkaufszahlen anderer Spieler; das Addon schätzt
+  deshalb selbst: aus deinen eigenen AH-Ergebnissen (Briefkasten: „Auktion erfolgreich“ / „abgelaufen“,
+  automatisch, Mails bleiben ungelesen, jede Mail zählt einmal) und aus der Angebotsmenge bei deinen
+  AH-Suchen (viele Stück im Angebot = geringe Chance). Ohne Daten gelten vorsichtig 40 %.
+  AH-Erlöse zählen nur mit dieser Chance (was nicht verkauft wird, geht an den Händler); Herstellen und
+  Weiterverkauf planen entsprechend weniger Stück; Plan-Schritte nennen die Chance; der
+  Gegenstands-Tooltip zeigt „AH-Absatz: …“. Abschaltbar (Einstellungen → Gold).
+- **„AH einplanen“** (Haken im Goldplaner): ohne Haken plant der Goldplaner nur Händlerverkäufe,
+  Herstellen für den Händler und Farmen.
+- **Ausreißer-Schutz:** Ein einzelnes überteuertes Angebot zählt höchstens 1,5× den üblichen Preis
+  (sobald 3 Tage Preisverlauf da sind).
+
 ## [0.12.0-alpha.6] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

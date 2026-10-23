@@ -26,13 +26,17 @@ local function taskFor(itemID, item, now)
 	if not reference or days < FlipTasks.MIN_DAYS then
 		return nil
 	end
-	local gain = reference * (1 - ns.GoldRoutes.AUCTION_CUT) - item.last
+	-- Expected per unit: resold with the sale chance, else sold to the vendor.
+	local chance = ns.SaleEstimate.Chance(itemID, now)
+	local resale = chance * reference * (1 - ns.GoldRoutes.AUCTION_CUT) + (1 - chance) * (ns.Client:GetSellPrice(itemID) or 0)
+	local gain = resale - item.last
 	if gain < item.last * FlipTasks.MIN_MARGIN then
 		return nil
 	end
-	local units = math.min(item.lastCount, FlipTasks.MAX_UNITS)
+	local units = math.min(item.lastCount, ns.SaleEstimate.Units(FlipTasks.MAX_UNITS, chance))
 	return { kind = "FLIP", itemID = itemID, units = units, buy = item.last * units, sell = reference,
-		sure = 0, auction = math.floor(gain * units), seconds = FlipTasks.SECONDS_PER_FLIP, spend = item.last * units }
+		sure = 0, auction = math.floor(gain * units), seconds = FlipTasks.SECONDS_PER_FLIP, spend = item.last * units,
+		chance = chance }
 end
 
 -- The best resale tasks on the realm (largest gain first), at most MAX_TASKS.

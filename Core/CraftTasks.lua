@@ -110,14 +110,16 @@ function CraftTasks.TaskFor(key, entry, now)
 		return nil
 	end
 	local fromBags = craftsFromBags(recipe)
-	local crafts = entry.cooldown and 1 or (fromBags > 0 and math.min(fromBags, CraftTasks.MAX_CRAFTS))
-		or CraftTasks.MAX_CRAFTS
+	-- Without a known demand, as many crafts as the sale chance suggests (at least one).
+	local chance = ns.SaleEstimate.Chance(recipe.outputItemID, now)
+	local cap = ns.SaleEstimate.Units(CraftTasks.MAX_CRAFTS, chance)
+	local crafts = entry.cooldown and 1 or (fromBags > 0 and math.min(fromBags, cap)) or cap
 	local value = CraftTasks.Value(recipe, crafts, now)
 	if not value then
 		return nil
 	end
 	value.kind = entry.cooldown and "COOLDOWN" or "CRAFT"
-	value.itemID, value.crafts, value.fromBags = recipe.outputItemID, crafts, fromBags
+	value.itemID, value.crafts, value.fromBags, value.chance = recipe.outputItemID, crafts, fromBags, chance
 	value.seconds = crafts * (CRAFT_SECONDS + POST_SECONDS) + value.buys * BUY_SECONDS_PER_REAGENT + value.farmSeconds
 	return value
 end

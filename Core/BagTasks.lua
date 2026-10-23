@@ -33,7 +33,9 @@ local function waysOut(stack, now, canDisenchant)
 	end
 	local net = not stack.isBound and ns.GoldRoutes.AuctionNet(stack.itemID, now)
 	if net then
-		ways[#ways + 1] = { kind = "SELL_AUCTION", sure = 0, auction = net }
+		-- Expected: sold with the sale chance, else back to the vendor.
+		local chance = ns.SaleEstimate.Chance(stack.itemID, now)
+		ways[#ways + 1] = { kind = "SELL_AUCTION", sure = (1 - chance) * (vendor or 0), auction = chance * net }
 	end
 	local disenchant = canDisenchant and ns.Client:IsDisenchantable(stack.itemID) and ns.Client:GetDisenchantPrice(stack.itemID)
 	if disenchant then

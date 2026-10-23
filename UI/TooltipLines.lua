@@ -101,12 +101,31 @@ local function addLines(tooltip, lines)
 	end
 end
 
+local PERCENT = 100
+
+-- "AH-Absatz: 75 % – 3 von 4 deiner Auktionen verkauft" for items with an auction price, or nil.
+function TooltipLines.SaleLine(itemID)
+	local now = ns.Client:GetServerTime()
+	if not (ns.db.settings.useSaleChance and ns.GoldRoutes.AuctionNet(itemID, now)) then
+		return nil
+	end
+	local estimate = ns.SaleEstimate.For(itemID, now)
+	local percent = math.floor(estimate.chance * PERCENT + 0.5)
+	if estimate.source == "OWN" then
+		return Util.Format(L.TOOLTIP_SALE_OWN, percent, estimate.sold, estimate.sold + estimate.expired)
+	elseif estimate.source == "MARKET" then
+		return Util.Format(L.TOOLTIP_SALE_MARKET, percent, estimate.supply)
+	end
+	return Util.Format(L.TOOLTIP_SALE_NONE, percent)
+end
+
 local function onTooltip(tooltip, itemID)
 	if not (ns.db and not ns.readOnly) then
 		return
 	end
 	if ns.db.settings.tooltipEnabled then
 		addLines(tooltip, TooltipLines.For(itemID))
+		addLines(tooltip, { TooltipLines.SaleLine(itemID) })
 	end
 	if ns.db.settings.tooltipRecipes then
 		addLines(tooltip, TooltipLines.RecipeFor(itemID))

@@ -1,7 +1,8 @@
 -- Price history of the auction house: the lowest unit buyout per item and day, for every item the
 -- player's searches show (not only tracked ones), plus the last lowest listing with its units. The
 -- base of the resale check (Core/FlipTasks.lua). Pure logic on db.priceHistory:
--- { [realmKey] = { [itemID] = { lows = { [day] = copper }, last, lastCount, lastAt } } }.
+-- { [realmKey] = { [itemID] = { lows = { [day] = copper }, last, lastCount, lastAt, supply, supplyAt } } }.
+-- supply: units listed in the last search (pages of one search summed), the market's stock.
 local _, ns = ...
 
 local PriceHistory = {}
@@ -23,8 +24,13 @@ local function lowest(results)
 		if auction.count > 0 and auction.buyout > 0 then
 			local unit = auction.buyout / auction.count
 			local entry = out[auction.itemID]
-			if not entry or unit < entry.unit then
-				out[auction.itemID] = { unit = unit, count = auction.count }
+			if not entry then
+				entry = { unit = unit, count = 0, units = 0 }
+				out[auction.itemID] = entry
+			end
+			entry.units = entry.units + auction.count
+			if unit < entry.unit then
+				entry.unit, entry.count = unit, auction.count
 			elseif unit == entry.unit then
 				entry.count = entry.count + auction.count
 			end
@@ -33,7 +39,15 @@ local function lowest(results)
 	return out
 end
 
+-- Units on the market: pages of one search (within the merge time) add up, a new search starts over.
+local function recordSupply(item, units, now)
+	local sameSearch = item.supplyAt and now - item.supplyAt <= ns.Prices.AUCTION_MERGE_SECONDS
+	item.supply = (sameSearch and item.supply or 0) + units
+	item.supplyAt = now
+end
+
 local function record(item, low, day, now)
+	recordSupply(item, low.units, now)
 	local merge = item.lastAt and PriceHistory.Day(item.lastAt) == day and now - item.lastAt <= ns.Prices.AUCTION_MERGE_SECONDS
 	if merge and item.last < low.unit then
 		return

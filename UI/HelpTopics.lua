@@ -57,7 +57,7 @@ HelpTopics.LIST = {
 		{ "H_GOLD_MORE_HEAD", { "H_GOLD_MORE_1", "H_GOLD_MORE_2", "H_GOLD_MORE_3" } },
 	}) },
 	{ id = "PLANNER", label = "H_TOPIC_PLANNER", lines = sections({
-		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3" } },
+		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3", "H_PLAN_4" } },
 		{ "H_PLAN_TIME_HEAD", { "H_PLAN_TIME_1", "H_PLAN_TIME_2" } },
 		{ "H_PLAN_VIEWS_HEAD", { "H_PLAN_VIEWS_1", "H_PLAN_VIEWS_2", "H_PLAN_VIEWS_3" } },
 		{ "H_PLAN_NOW_HEAD", { "H_PLAN_NOW_1", "H_PLAN_NOW_2", "H_PLAN_NOW_3", "H_PLAN_NOW_4" } },

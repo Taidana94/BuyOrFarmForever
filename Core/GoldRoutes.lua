@@ -208,15 +208,17 @@ function GoldRoutes.AuctionNet(itemID, now)
 	return auction and capByHistory(itemID, auction, now) * (1 - GoldRoutes.AUCTION_CUT)
 end
 
--- What one unit brings when sold: the vendor price (sure) and what the auction house brings on top
--- after its cut (0 if it brings less or no price is known). nil, nil if neither is known.
+-- What one unit brings when sold: the vendor price (sure) and what the auction house is expected to
+-- bring on top after its cut, times the sale chance (Core/SaleEstimate.lua; an unsold unit still goes
+-- to the vendor). 0 if it brings less or no price is known; nil, nil if neither is known.
 function GoldRoutes.SaleParts(itemID, now)
 	local net = GoldRoutes.AuctionNet(itemID, now)
 	local vendor = ns.Client:GetSellPrice(itemID)
 	if not (net or vendor) then
 		return nil, nil
 	end
-	return vendor or 0, math.max(0, (net or 0) - (vendor or 0))
+	local extra = math.max(0, (net or 0) - (vendor or 0))
+	return vendor or 0, extra > 0 and extra * ns.SaleEstimate.Chance(itemID, now) or 0
 end
 
 -- The best price of one unit (vendor or auction after the cut), or nil if neither is known.

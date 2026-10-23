@@ -45,3 +45,70 @@ function Mail.ScanMail(counts)
 	end
 	return counts, money
 end
+
+-- Auction house mails -----------------------------------------------------------------------
+-- Recognized by the client's own localized subject templates, e.g. "Auktion erfolgreich: %s". The
+-- global names AUCTION_SOLD_MAIL_SUBJECT, AUCTION_EXPIRED_MAIL_SUBJECT and AUCTION_REMOVED_MAIL_SUBJECT
+-- come from the client's GlobalStrings and are NOT in the UI source of this project: unverified, used
+-- only when present. Mails are never opened (GetInboxText would mark them read).
+local SUBJECT_GLOBALS = {
+	SOLD = "AUCTION_SOLD_MAIL_SUBJECT", EXPIRED = "AUCTION_EXPIRED_MAIL_SUBJECT", CANCELLED = "AUCTION_REMOVED_MAIL_SUBJECT",
+}
+
+-- "Auktion erfolgreich: %s" -> "^Auktion erfolgreich: (.+)$" (magic characters escaped).
+local function subjectPattern(template)
+	local escaped = template:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0"):gsub("%%%%s", "(.+)")
+	return "^" .. escaped .. "$"
+end
+
+local function subjectPatterns()
+	local patterns = {}
+	for kind, name in pairs(SUBJECT_GLOBALS) do
+		local template = _G[name]
+		if type(template) == "string" and template:find("%s", 1, true) then
+			patterns[kind] = subjectPattern(template)
+		end
+	end
+	return patterns
+end
+
+-- Item id of a cached item by its localized name (C_Item.GetItemInfo takes names of items in the
+-- client cache; the player's own auctions are), or nil.
+local function itemIDByName(name)
+	if not (C_Item and C_Item.GetItemInfo) then
+		return nil
+	end
+	local _, link = C_Item.GetItemInfo(name)
+	local _, itemID = ns.Util.ParseLink(link)
+	return itemID
+end
+
+local function auctionMail(index, patterns)
+	local _, _, _, subject, money, _, daysLeft, itemCount = GetInboxHeaderInfo(index)
+	for kind, pattern in pairs(patterns) do
+		local name = type(subject) == "string" and subject:match(pattern)
+		if name then
+			local _, itemID, _, count = GetInboxItem(index, 1)
+			return { kind = kind, name = name, itemID = itemID or itemIDByName(name), count = itemCount and itemCount > 0
+				and count or nil, money = money or 0, daysLeft = daysLeft or 0, subject = subject }
+		end
+	end
+	return nil
+end
+
+-- Auction house mails in the open inbox: { { kind = "SOLD" | "EXPIRED" | "CANCELLED", name, itemID?,
+-- count?, money, daysLeft, subject } }. Empty without the API or the subject templates.
+function Mail.ReadAuctionMails()
+	local mails = {}
+	if not canScan() then
+		return mails
+	end
+	local patterns = subjectPatterns()
+	if next(patterns) == nil then
+		return mails
+	end
+	for index = 1, math.min(GetInboxNumItems() or 0, MAX_MAILS) do
+		mails[#mails + 1] = auctionMail(index, patterns)
+	end
+	return mails
+end

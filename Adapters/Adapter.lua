@@ -48,6 +48,7 @@ Adapter.REQUIRED = {
 	"ScanBags", -- (counts) -> counts: fills { [itemID] = count } for the carried bags (table is cleared first)
 	"ScanBank", -- (counts) -> counts: same for the bank and the bank bags; only valid while the bank is open
 	"ScanMail", -- (counts) -> counts, copper: items and gold attached to received mail; only valid at the mailbox
+	"ReadAuctionMails", -- () -> { { kind SOLD|EXPIRED|CANCELLED, name, itemID?, count?, money, daysLeft, subject } }; at the mailbox
 	"GetCurrentMapID", -- () -> uiMapID of the player's map, or 0
 	"GetMapName", -- (uiMapID) -> localized map name, or nil
 	"GetMoney", -- () -> copper the character carries, or nil

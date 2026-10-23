@@ -18,7 +18,7 @@ local ActivePlan = {}
 ns.ActivePlan = ActivePlan
 
 ActivePlan.MAX_STEPS = 12
-local TASK_FIELDS = { "kind", "itemID", "crafts", "units", "seconds", "sure", "auction", "buy", "sell", "charKey", "spend" }
+local TASK_FIELDS = { "kind", "itemID", "crafts", "units", "seconds", "sure", "auction", "buy", "sell", "charKey", "spend", "chance" }
 local METHOD_FIELDS = { "uiMapID", "fishing", "crafted", "productItemID", "travelSeconds" }
 
 local function copyFields(source, fields)
