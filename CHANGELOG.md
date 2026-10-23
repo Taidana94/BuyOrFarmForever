@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.6] – 2026-10-24 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Behoben
+
+- „Jetzt tun“: Mehrzeilige Schritte überlappten sich und wurden abgeschnitten. Jede Zeile ist jetzt so
+  hoch wie ihr Text, mit etwas Abstand zur nächsten; das Fenster ist breiter und wächst mit.
+
 ## [0.12.0-alpha.5] – 2026-10-24 (Testversion)
 
 Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.

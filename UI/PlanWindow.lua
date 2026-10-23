@@ -13,7 +13,9 @@ local PlanWindow = {}
 ns.PlanWindow = PlanWindow
 
 PlanWindow.SCALE = 0.85
-local WIDTH, PADDING, HEADER_HEIGHT, ROW_HEIGHT, FOOTER_HEIGHT = 460, 14, 56, 20, 44
+local WIDTH, PADDING, HEADER_HEIGHT, ROW_HEIGHT, FOOTER_HEIGHT = 540, 14, 56, 20, 44
+-- Space between two steps; a step that wraps gets the height of its text.
+local ROW_GAP = 4
 local BUTTON_WIDTH = 100
 local CHECK_ON = "|TInterface\\Buttons\\UI-CheckBox-Check:16|t "
 local CHECK_OFF = "|TInterface\\Buttons\\UI-CheckBox-Up:16|t "
@@ -61,10 +63,16 @@ end
 local function buildRow(win, frame, index)
 	local row = CreateFrame("Button", nil, frame)
 	row:SetSize(WIDTH - 2 * PADDING, ROW_HEIGHT)
-	row:SetPoint("TOPLEFT", PADDING, -HEADER_HEIGHT - (index - 1) * ROW_HEIGHT)
+	if index == 1 then
+		row:SetPoint("TOPLEFT", PADDING, -HEADER_HEIGHT)
+	else
+		row:SetPoint("TOPLEFT", win.rows[index - 1], "BOTTOMLEFT", 0, -ROW_GAP)
+	end
 	row.text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	row.text:SetAllPoints()
+	row.text:SetPoint("TOPLEFT")
+	row.text:SetWidth(WIDTH - 2 * PADDING)
 	row.text:SetJustifyH("LEFT")
+	row.text:SetJustifyV("TOP")
 	row:SetScript("OnClick", function()
 		ns.Inputs.Run("plan " .. index)
 	end)
@@ -115,9 +123,15 @@ function Window:Refresh()
 	local active = ns.PlanCommands.Active()
 	local steps = active and active.steps or {}
 	local ctx = ns.PlanCommands.Context()
+	local listHeight = 0
 	for i, row in ipairs(self.rows) do
 		Widgets.SetShown(row, steps[i] ~= nil)
 		row.text:SetText(steps[i] and stepLine(i, steps[i], ctx) or "")
+		local height = math.max(ROW_HEIGHT, row.text:GetStringHeight() or 0)
+		row:SetHeight(height)
+		if steps[i] then
+			listHeight = listHeight + height + ROW_GAP
+		end
 	end
 	if active then
 		local done, total = ns.ActivePlan.Progress(active)
@@ -128,7 +142,7 @@ function Window:Refresh()
 	end
 	Widgets.SetEnabled(self.stop, active ~= nil)
 	Widgets.SetEnabled(self.start, active == nil)
-	self.frame:SetHeight(HEADER_HEIGHT + FOOTER_HEIGHT + math.max(1, #steps) * ROW_HEIGHT)
+	self.frame:SetHeight(HEADER_HEIGHT + FOOTER_HEIGHT + math.max(ROW_HEIGHT, listHeight))
 end
 
 function PlanWindow.Toggle()
