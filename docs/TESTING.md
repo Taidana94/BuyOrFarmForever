@@ -259,6 +259,22 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Facts 0.8.0-alpha.1 (Classic Era 1.15.9, deDE, 2026-10-23, screenshots of the user)
+
+- `GetTradeSkillLine()` with the window open: `"Kochkunst", 178, 225` and `"Schneiderei", 142, 225`.
+- `GetCraftDisplaySkillLine()` with the enchanting window open: `"Verzauberkunst", 110, 150`.
+- `C_TradeSkillUI.GetTradeSkillDisplayName(185)` = `"Kochkunst"`: exists in Classic Era and returns the same
+  name as the window, so profession recognition by skill line id works (confirmed for Cooking).
+- `GetTradeSkillLine()` without an open window: `"unknown", 0, 0`. The adapter reads skill lines only while
+  a window is open.
+- Smelting/Mining: not checked (the test character has no Mining).
+
+### Result 0.8.0-alpha.1 (Classic Era, 2026-10-23)
+
+User checked the professions tab (Cooking, Tailoring, Enchanting, First Aid on the test character) and
+confirmed: "Passt soweit!". No details reported on single checklist points, no numbers from `/bof perf`.
+Not checked: Mining/Smelting, Alchemy, Leatherworking, Blacksmithing, Engineering, Poisons.
+
 ### Checklist 0.8.0-alpha.1 (Classic Era, professions tab)
 
 1. `/reload`, `/bof version` → `0.8.0-alpha.1`. BugSack empty.
