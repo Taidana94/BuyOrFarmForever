@@ -133,18 +133,33 @@ function ProfessionView.Build(charData, profession, opts)
 	return groups
 end
 
--- Economics of one craft: { cost (copper of the reagents at their buy price), costComplete (every
--- reagent has a price), made (average units made), vendor (vendor price of the products) or nil,
--- auction (auction value after the cut) or nil, profit (best sale minus cost) or nil }.
+-- Value of `count` units of a reagent, like the advisor's craft tasks (Core/CraftTasks.lua): units in
+-- the bags at what selling them would bring (GoldRoutes.SaleValue, auction after the cut), the rest
+-- at the buy price. Returns copper (known part), whether every unit has a price, units from the bags.
+local function reagentCost(itemID, count, now)
+	local owned = math.min(count, ns.Client:GetBagCount(itemID))
+	local buyPrice = ns.PriceCapture.Best(itemID, now)
+	local saleValue = ns.GoldRoutes.SaleValue(itemID, now)
+	-- Without a sale value (or one of 0) the buy price counts, so the profit is not overstated.
+	local ownedPrice = (saleValue and saleValue > 0) and saleValue or buyPrice
+	local missing = count - owned
+	local complete = (owned == 0 or ownedPrice ~= nil) and (missing == 0 or buyPrice ~= nil)
+	return owned * (ownedPrice or 0) + missing * (buyPrice or 0), complete, owned
+end
+
+-- Economics of one craft: { cost (copper of the reagents, see reagentCost), costComplete (every
+-- reagent has a price), owned (units taken from the bags), made (average units made), vendor (vendor
+-- price of the products) or nil, auction (auction value after the cut) or nil, profit (best sale minus
+-- cost) or nil }.
 function ProfessionView.Economics(recipe, now)
-	local cost, complete = 0, true
+	local cost, complete, owned = 0, true, 0
 	for _, reagent in ipairs(recipe.reagents) do
-		local price = ns.PriceCapture.Best(reagent.itemID, now)
-		cost = cost + (price or 0) * reagent.count
-		complete = complete and price ~= nil
+		local copper, known, fromBags = reagentCost(reagent.itemID, reagent.count, now)
+		cost, owned = cost + copper, owned + fromBags
+		complete = complete and known
 	end
 	local made = (recipe.outputMin + recipe.outputMax) / 2
-	local result = { cost = cost, costComplete = complete, made = made }
+	local result = { cost = cost, costComplete = complete, owned = owned, made = made }
 	if recipe.outputItemID == 0 then
 		return result
 	end

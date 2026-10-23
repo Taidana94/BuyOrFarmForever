@@ -185,7 +185,7 @@ end
 
 local function costLine(economics)
 	if economics.costComplete then
-		return Util.Format(L.PROF_COST, money(economics.cost))
+		return Util.Format(economics.owned > 0 and L.PROF_COST_OWNED or L.PROF_COST, money(economics.cost))
 	end
 	return economics.cost > 0 and Util.Format(L.PROF_COST_PARTIAL, money(economics.cost)) or L.PROF_COST_UNKNOWN
 end
