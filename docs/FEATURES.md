@@ -24,6 +24,7 @@ folder. Priority: material sourcing → craft evaluation → gold buffer.
 | Gold planner: farm routes (zone + activity + target, looted coins), bag tasks (vendor / auction / disenchant, keep list), recipe book with craft profit and cooldowns, time plans for 1/2/4 h or any duration (`/bof goldplan`, planner view in the Gold buffer tab) | 0.6.0, tested in Classic Era (routes with developer sample runs) |
 | Advisor ("Ratgeber"): context-aware suggestion cards in an own window and next to merchant, auction house, bank and mailbox; sell and buy at the merchant on click; window rows sell, disenchant, craft, savings goal, best hour (0.7.0-alpha.4) | 0.8.0 (developed as 0.7.0, not released separately), tested in Classic Era |
 | Professions tab ("Berufe"): one view per profession with the learned recipes grouped by what they are good for (food/elixirs/enchantments per buffed stat, gear per stat, else item class), skill bar, search, reagent filter (all / some / complete), detail with reagents, crafts possible, cost, value and profit, button to create a material goal (user request 2026-10-23: learned recipes only, new tab) | 0.8.0, tested in Classic Era (Cooking, First Aid, Tailoring, Enchanting; other professions out of game only) |
+| Crafting from the professions tab: count box, "Alle", "Stapel"; opens the profession window if needed (second click crafts); `/bof make` (user request 2026-10-23) | 0.9.0-alpha.1, out of game only |
 | Forever support (second adapter and TOC) | phase B, after Forever launch |
 | English localization | phase 2 |
 

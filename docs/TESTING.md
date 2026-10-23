@@ -29,6 +29,7 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.2.0-alpha.2 | 2026-10-18 | 84 checks passed, 0 failed (72 unit tests); mutation check: removing the faction or the realm filter fails 3 tests each |
 | 0.2.0-alpha.2 (fix) | 2026-10-18 | 85 checks passed, 0 failed (73 unit tests); mutation check: restoring the logout snapshot fails the snapshot test |
 | 0.2.0-alpha.3 | 2026-10-18 | 95 checks passed, 0 failed (83 unit tests); mutation checks: no window fallback, no header check, no reagent merge each fail 1 test |
+| 0.9.0-alpha.1 | 2026-10-23 | 324 checks passed, 0 failed (306 unit tests); 8 new tests in `test_make.lua` (craft counts, crafting in the open window with cap and "all", opening a closed or other window, combat/no reagents/unknown/enchantment refused, collapsed categories, smelting spell for Mining, detail buttons); mutation check: crafting in another profession's window fails 1 |
 | 0.8.0 | 2026-10-23 | 316 checks passed, 0 failed (298 unit tests); against 0.8.0-alpha.1: skill bar guard (with test; mutation check: removing the guard fails 1) and the fix for the user's in-game finding (linen bolt showed a loss because owned reagents counted at their buy price; now at their sale value after the cut, like `CraftTasks`; the new test fails without the fix), version and documentation |
 | 0.8.0-alpha.1 | 2026-10-23 | 315 checks passed, 0 failed; 14 new tests in `test_professions.lua` (book with profession/difficulty/skill, smelting as mining, enchantments kept, categories from facts, effect data keys, labels, grouping, reagent filter, search, economics, sanitizing, tab list/collapse/detail/filter/search, goal button, gear by stats); layout test includes the new tab; level 1c exempts `Data/` from the file length (data tables) |
 | 0.4.0-alpha.2 | 2026-10-19 | 226 checks passed, 0 failed (208 unit tests); new layout test: every button label must fit its button (6.4 px per character + 4 px, calibrated on the in-game screenshot); it flagged the two overflowing labels, fixed by shorter texts |
@@ -259,6 +260,22 @@ Bugs found (screenshot):
    line offsets. Fixed in 0.3.0-alpha.2 (`Widgets.CreateTextStack`, also used for the Gold tab goals).
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
+
+### Checklist 0.9.0-alpha.1 (Classic Era, crafting from the professions tab)
+
+1. `/reload`, `/bof version` → `0.9.0-alpha.1`. BugSack empty.
+2. Tab "Berufe", Tailoring, select Leinenstoffballen with linen in the bags: bottom row "[1] Herstellen ·
+   Alle: n · Stapel: n"; "Als Ziel anlegen" now right of "Zutaten".
+3. Profession window closed: click "Herstellen" → the tailoring window opens, chat asks for a second click,
+   no error message. Click again → 1 bolt is crafted.
+4. Box "3" + Enter or "Herstellen" → 3 crafts; "Alle" → as many as the linen allows; moving cancels.
+5. Cooking window open, then "Herstellen" on a tailoring recipe → the tailoring window replaces it.
+6. In combat: "Im Kampf kann nichts hergestellt werden."; no "action blocked" message anywhere.
+7. Enchanting recipe: no craft buttons, hint text instead.
+8. Collapse a category in the tailoring window, then craft a recipe from it → it still works.
+9. Experiment for a later single-click flow (only if you like): open the tailoring window, select the bolt,
+   then `/run C_Timer.After(2, function() DoTradeSkill(GetTradeSkillSelectionIndex(), 1) end)` and wait 2 s.
+   Report whether a bolt is crafted or an "action blocked"/"Interface action failed" message appears.
 
 ### Facts 0.8.0-alpha.1 (Classic Era 1.15.9, deDE, 2026-10-23, screenshots of the user)
 

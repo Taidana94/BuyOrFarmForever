@@ -74,6 +74,11 @@ printed and `Core/Main.lua` registers nothing.
 | `ReadProfessionSkills()` | `{ { profession, rank, maxRank } }` of the open profession windows (raw numbers) |
 | `GetProfessionInfo(key)` | localized profession name, icon file id; nil, nil for `OTHER` |
 | `GetEffectCategory(kind, id)` | category key of the client's effect data for `"item"` (item id) or `"spell"` (enchantment), or nil |
+| `IsInCombat()` | bool (`InCombatLockdown`) |
+| `OpenProfession(professionKey)` | bool: `CastSpellByName(<client spell name>)` was sent (Mining: Smelting 2656); false for Enchanting and unknown keys. Only from a click or command |
+| `GetOpenTradeProfession()` | profession key of the open trade skill window (not the craft window), or nil |
+| `CraftRecipe(recipeKey, count)` | true after `SelectTradeSkill` + `DoTradeSkill(index, count)`; false + `"combat"` \| `"no_window"` \| `"not_listed"`. Collapsed categories are expanded once (`ExpandTradeSkillSubClass(0)`), the window's filters are left alone. Only from a click or command |
+| `GetItemStackSize(itemID)` | units per stack (8th return of `C_Item.GetItemInfo`), or nil while loading |
 | `GetItemClassID(itemID)` / `GetItemClassName(classID)` | item class id (`C_Item.GetItemInfoInstant`, no cache needed) / its localized name, or nil |
 | `GetCursorItem()` / `ClearCursor()` | item id on the cursor or nil / drop it (drag and drop into item slots) |
 | `IsAFK()`, `IsResting()`, `IsOnTaxi()` | bool (legacy returns 1/nil are normalized) |
@@ -88,7 +93,7 @@ printed and `Core/Main.lua` registers nothing.
 | `events` (table) | WoW event name → client-neutral signal |
 
 Parts without adapter state (`ClassicEraUI`, `ClassicEraPlayer`, `ClassicEraQuest`, `ClassicEraExternal`,
-`ClassicEraBags`, `ClassicEraProfessionInfo`) are exposed as methods by a loop in `Adapters/ClassicEra.lua`.
+`ClassicEraBags`, `ClassicEraProfessionInfo`, `ClassicEraCrafting`) are exposed as methods by a loop in `Adapters/ClassicEra.lua`.
 
 Signals so far: `BANK_OPENED`, `BANK_CLOSED`, `BAGS_CHANGED`, `ITEM_LOADED`, `MERCHANT_OPENED`,
 `MERCHANT_CHANGED`, `MERCHANT_CLOSED`, `AUCTION_OPENED`, `AUCTION_CLOSED`, `AUCTION_RESULTS`, `LOOT_OPENED`,
@@ -310,6 +315,27 @@ and a nicer look (inspired by a screenshot of another addon, not copied).
   anlegen" → `/bof recipe key <key>` → `Recipes.GoalFromStored`), `UI/ProfessionTab.lua` (state and
   refresh). Settings: `settings.window.profession` (key, "" = first), `settings.window.professionMats`.
   Search, scroll, collapsed categories and the selected recipe last for the session.
+
+### Crafting from the professions tab (0.9.0)
+
+User request 2026-10-23: craft directly from the tab (count, all, one stack) without opening the profession
+window by hand.
+
+- `/bof make <recipeKey> [count|all]` (`UI/MakeCommand.lua`); the tab's buttons run it through `Inputs.Run`,
+  so chat and window share messages and checks. Learned recipes only; enchantments are refused (they need a
+  target item, `DoCraft`); the count is capped at what the bags allow (`ProfessionView.ReagentState`).
+- Window closed or showing another profession: the command only opens the right window
+  (`Client:OpenProfession`) and asks for a second click. Crafting right after `TRADE_SKILL_SHOW` would run
+  outside the hardware event of the click; whether the client allows `DoTradeSkill` there is not verified, and
+  a blocked call would show the client's "action blocked" message. Open question for a later single-click flow
+  (in-game check in `docs/TESTING.md`).
+- In combat nothing is opened or crafted (`IsInCombat`).
+- Sources: warcraft.wiki.gg `API_DoTradeSkill` (no restriction tag) and `API_CastSpellByName` (protected, "can
+  still open trade skill windows ... from a tainted execution path"), 2026-10-23, community; the Vanilla
+  TradeSkillUI calls `DoTradeSkill` and `ExpandTradeSkillSubClass(0)` itself.
+- UI: `UI/ProfessionMakeRow.lua` (box, "Herstellen", "Alle: n", "Stapel: n" = `ProfessionView.CraftCounts`:
+  crafts for one stack of the product, rounded up, at most what the bags allow). The goal button moved to the
+  right of the reagent label.
 
 ## Farm runs (stage 2f)
 

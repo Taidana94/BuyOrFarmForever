@@ -1,8 +1,9 @@
 # Kaufen oder farmen?
 
-**Version 0.8.0 – Materialbeschaffung, Craft-Bewertung, Goldpuffer, Goldplaner, Ratgeber und
-Berufsansicht, alles im Fenster bedienbar. Getestet in WoW Classic Era 1.15.9. Nicht in Forever
-getestet.**
+**Version 0.9.0-alpha.1 (Testversion) – Materialbeschaffung, Craft-Bewertung, Goldpuffer, Goldplaner,
+Ratgeber und Berufsansicht, alles im Fenster bedienbar. Bis 0.8.0 in WoW Classic Era 1.15.9 getestet;
+das Herstellen aus dem Reiter „Berufe“ (neu in 0.9.0) ist nur außerhalb des Spiels geprüft. Nicht in
+Forever getestet.**
 
 „Kaufen oder farmen?“ hilft dir zu entscheiden, wie du fehlende Herstellungsmaterialien beschaffst:
 kaufen, selbst farmen oder beides. Die Empfehlungen beruhen auf deinen eigenen Daten – deinem
@@ -261,7 +262,10 @@ rechts steht, wie oft deine Taschen reichen („3×“) oder wie viele Zutaten d
 Detail: Zutaten (Taschen/Bedarf, dazu die Bank), herstellbar, was die Zutaten wert sind (Zutaten aus
 deiner Tasche mit dem, was sie beim Verkauf bringen würden – im AH nach 5 % Gebühr –, fehlende mit dem
 Kaufpreis), Wert beim Händler und im AH (nach Gebühr) und Gewinn pro Herstellung. „Als Ziel anlegen“ macht daraus ein
-Materialziel (oder erhöht ein vorhandenes). Das Addon kennt die Rezepte, sobald du das Berufsfenster
+Materialziel (oder erhöht ein vorhandenes). Unten stellst du direkt her: Anzahl ins Feld und
+„Herstellen“, oder „Alle: n“ (so oft die Zutaten reichen) bzw. „Stapel: n“ (ein voller Stapel). Ist das
+Berufsfenster zu, öffnet der erste Klick es, der zweite stellt her. Im Kampf geht das nicht;
+Verzauberungen wendest du wie gewohnt im Verzauberkunstfenster an. Das Addon kennt die Rezepte, sobald du das Berufsfenster
 einmal geöffnet hast. Mausrad blättert.
 
 **Fenster, Tab „Hilfe“:** alle Befehle (dieselben wie bei `/bof help`), mit dem Mausrad blätterbar.
@@ -449,7 +453,7 @@ mit ihrem Verkaufswert statt mit dem Kaufpreis. Die Korrektur wurde am 23.10.202
 
 ## Version
 
-0.8.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.9.0-alpha.1 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 

@@ -3,6 +3,22 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.9.0-alpha.1] – 2026-10-23 (Testversion)
+
+Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+
+### Hinzugefügt
+
+- **Herstellen im Reiter „Berufe“:** unten im Detail ein Feld für die Anzahl, „Herstellen“, „Alle: n“ (so oft
+  die Zutaten in deinen Taschen reichen) und „Stapel: n“ (ein voller Stapel des Produkts). Ist das
+  Berufsfenster zu oder zeigt einen anderen Beruf, öffnet der erste Klick das richtige Fenster; der zweite
+  Klick stellt her. Verzauberungen gehen weiterhin nur im Verzauberkunstfenster.
+- `/bof make <Rezept> [Anzahl|all]` – dasselbe im Chat.
+
+### Geändert
+
+- „Als Ziel anlegen“ steht jetzt oben rechts neben „Zutaten“.
+
 ## [0.8.0] – 2026-10-23
 
 Ratgeber und Berufsansicht. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet. Die Version
