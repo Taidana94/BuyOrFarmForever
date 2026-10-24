@@ -455,6 +455,23 @@ enchantment). `/bof recipe key <key> [crafts]` does the same for a stored recipe
   and an enchant link otherwise (plan Q-T4, to be confirmed in game).
 - Only fixed reagents exist in Classic Era. Optional/quality reagents are a Forever topic.
 
+## Gold tools (0.12.0)
+
+| Module | Role |
+|---|---|
+| `Core/SalesLog.lua` | own auction results from the mailbox (sold, expired, cancelled) |
+| `Core/MarketWatch.lua` | realm sales estimated by comparing two full scans; `ScanAge` for the "full scan due" card |
+| `Core/SaleEstimate.lua` | sale chance and planned units; one test unit while no sale was seen (`HasResults`) |
+| `Core/ShoppingList.lua` + `UI/ShopCommand.lua` | AH purchases of the plan and the wants; export via adapter `CreateShoppingList` (Auctionator) |
+| `Core/MailPrep.lua` + `UI/MailCommand.lua` | what to mail to which alt (WANT, CRAFT); also the mailbox advisor card |
+| `Core/WeekReview.lua` + `UI/WeekCommand.lua` | last 7 days vs. the 7 before, sources, finished plans (`characters[key].planResults`, max. 30) |
+| `Core/SkillUp.lua` + `UI/SkillUpCommand.lua` | cheapest recipes per skill point from the stored recipe colours |
+
+Full scans are read by `Trade.ReadAuctionScan(watched)` in one pass: every auction updates the
+per-item lows (`PriceHistory.AddLow`), only watched items get a listing table for `MarketWatch`.
+`Conversion` indexes the recipes of every character of the realm and faction; a conversion by an
+alt carries `crafterKey`, which the crafted route and its plan step keep.
+
 ## Events and timers
 
 | Event | Handler | Registered | Frequency | Cost / effect |

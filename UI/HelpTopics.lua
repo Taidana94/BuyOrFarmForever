@@ -50,14 +50,17 @@ HelpTopics.LIST = {
 		{ "H_PROF_HEAD", { "H_PROF_1", "H_PROF_2" } },
 		{ "H_PROF_LIST_HEAD", { "H_PROF_LIST_1", "H_PROF_LIST_2", "H_PROF_LIST_3", "H_PROF_LIST_4" } },
 		{ "H_PROF_DETAIL_HEAD", { "H_PROF_DETAIL_1", "H_PROF_DETAIL_2", "H_PROF_DETAIL_3", "H_PROF_DETAIL_4" } },
+		{ "H_PROF_SKILLUP_HEAD", { "H_PROF_SKILLUP_1", "H_PROF_SKILLUP_2" } },
 	}) },
 	{ id = "GOLD", label = "H_TOPIC_GOLD", lines = sections({
 		{ "H_GOLD_HEAD", { "H_GOLD_1", "H_GOLD_2" } },
 		{ "H_GOLD_GOALS_HEAD", { "H_GOLD_GOALS_1", "H_GOLD_GOALS_2", "H_GOLD_GOALS_3", "H_GOLD_GOALS_4" } },
 		{ "H_GOLD_MORE_HEAD", { "H_GOLD_MORE_1", "H_GOLD_MORE_2", "H_GOLD_MORE_3" } },
+		{ "H_GOLD_WEEK_HEAD", { "H_GOLD_WEEK_1", "H_GOLD_WEEK_2" } },
 	}) },
 	{ id = "PLANNER", label = "H_TOPIC_PLANNER", lines = sections({
-		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3", "H_PLAN_4" } },
+		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3", "H_PLAN_4", "H_PLAN_5" } },
+		{ "H_PLAN_SALES_HEAD", { "H_PLAN_SALES_1", "H_PLAN_SALES_2", "H_PLAN_SALES_3" } },
 		{ "H_PLAN_TIME_HEAD", { "H_PLAN_TIME_1", "H_PLAN_TIME_2" } },
 		{ "H_PLAN_VIEWS_HEAD", { "H_PLAN_VIEWS_1", "H_PLAN_VIEWS_2", "H_PLAN_VIEWS_3" } },
 		{ "H_PLAN_NOW_HEAD", { "H_PLAN_NOW_1", "H_PLAN_NOW_2", "H_PLAN_NOW_3", "H_PLAN_NOW_4", "H_PLAN_NOW_5" } },
@@ -66,7 +69,7 @@ HelpTopics.LIST = {
 	{ id = "ADVISOR", label = "H_TOPIC_ADVISOR", lines = sections({
 		{ "H_ADV_HEAD", { "H_ADV_1", "H_ADV_2" } },
 		{ "H_ADV_WINDOW_HEAD", { "H_ADV_WINDOW_1", "H_ADV_WINDOW_2", "H_ADV_WINDOW_3" } },
-		{ "H_ADV_SIDE_HEAD", { "H_ADV_SIDE_1", "H_ADV_SIDE_2" } },
+		{ "H_ADV_SIDE_HEAD", { "H_ADV_SIDE_1", "H_ADV_SIDE_2", "H_ADV_SIDE_3", "H_ADV_SIDE_4" } },
 	}) },
 	{ id = "EXTRAS", label = "H_TOPIC_EXTRAS", lines = sections({
 		{ "H_EXTRA_MINIMAP_HEAD", { "H_EXTRA_MINIMAP_1", "H_EXTRA_MINIMAP_2", "H_EXTRA_MINIMAP_3",

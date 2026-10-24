@@ -153,6 +153,11 @@ eingefügte Zeilen setzt das Spiel zu einer Zeile zusammen.
 | `/bof gold undo` | die letzte Verteilung rückgängig machen |
 | `/bof gold check <Betrag>` | greift ein Einkauf dieser Höhe deine Rücklagen an? Zeitgegenwert |
 | `/bof goldplan [Dauer]` | was du in der Zeit am besten tust, um Gold zu machen (ohne Dauer: 1, 2 und 4 Std.) |
+| `/bof plan [start [Dauer] \| stop \| <Nr.>]` | „Jetzt tun“: Goldplan als Checkliste starten, Schritt ab-/aufhaken, beenden; ohne Angabe: Fenster |
+| `/bof shop` | AH-Einkaufsliste des laufenden Plans und deiner Ziele; mit Auctionator als dessen Einkaufsliste „BuyOrFarm“ |
+| `/bof mail` | Post vorbereiten: was du an welchen Twink schickst (seine Ziele, Zutaten für Herstell-Schritte im Plan) |
+| `/bof week` | Wochenrückblick: Gold gegen die Vorwoche, Quellen, Pläne gegen ihr Ergebnis, Farmrunden |
+| `/bof skillup` | Berufe leveln: je Beruf die günstigsten Rezepte für den nächsten Fertigkeitspunkt |
 | `/bof goldsources` | deine Farmrouten mit Gold pro Stunde (sicher und im AH) und Anreise |
 | `/bof goldkeep [Gegenstand]` | Gegenstand auf die Behalten-Liste setzen oder davon nehmen; ohne Gegenstand: die Liste |
 | `/bof advisor` | Ratgeber öffnen oder schließen (auch Umschalt+Klick auf den Minimap-Knopf) |

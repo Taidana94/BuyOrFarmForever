@@ -266,6 +266,18 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.12.0-alpha.11 (Classic Era, gold tools)
+
+1. `/bof shop` with a want bought on the AH: chat list; with Auctionator the list "BuyOrFarm"
+   appears in its "Einkaufen" tab and searches each item exactly.
+2. Plan window: the button "Einkaufsliste" prints the same list.
+3. `/bof mail` on a character carrying something an alt wants: "An <Alt>:" with the items; at the
+   mailbox the card shows the same.
+4. `/bof week` after a finished plan: the plan counts as "1 beendet".
+5. `/bof skillup` after opening a profession window: up to three recipes per profession.
+6. At the auction house without a recent full scan: card "Vollscan fällig".
+7. Full scan with Auctionator on a busy realm: no long freeze; debug line "full scan: N auctions".
+
 ### Checklist 0.11.0-alpha.4 (Classic Era, automatic farm start, alt crafts, resale)
 
 1. `/reload`, `/bof version` → `0.11.0-alpha.4`. BugSack empty. Settings tab: new check box

@@ -23,6 +23,9 @@ review `work/research/wowhead-effects.json` before replacing the data file.
 | Texture paths of the professions tab (`Interface\Icons\INV_Misc_QuestionMark`, `Interface\Icons\Spell_Holy_GreaterHeal`, `Interface\TargetingFrame\UI-StatusBar`, `Interface\Buttons\ButtonHilight-Square`, `Interface\Buttons\CheckButtonHilight`) and the skill-up colours (values of `TradeSkillTypeColor` in the Vanilla `Blizzard_TradeSkillUI.lua`, 70003) | `UI/ProfessionTab*.lua`, `UI/ProfessionDetail.lua` | common client paths; **unverified in game** for 1.15.9 | 2026-10-23 | Classic Era |
 | Texture paths of the minimap button (`Interface\Icons\INV_Misc_Coin_01`, `Interface\Minimap\MiniMap-TrackingBorder`) | `UI/MinimapButton.lua` | common client paths; **unverified in game** for 1.15.9 | 2026-10-19 | Classic Era |
 
+| Skill-up chance per recipe colour (orange 1, yellow 0.75, green 0.25, gray 0) | `Core/SkillUp.lua` | own estimate; Classic Era does not expose the chance | 2026-10-24 | any |
+| One test unit while no sale was seen; full scan suggested after 3 h | `Core/SaleEstimate.lua`, `Core/AdvisorSources.lua` | own choice | 2026-10-24 | any |
+
 ## API references used for development
 
 | Source | Client | Version / date | Use |
@@ -37,3 +40,10 @@ review `work/research/wowhead-effects.json` before replacing the data file.
 | In game: `/dump GetBuildInfo()` | Classic Era | 1.15.9 (70003), 2026-10-18 | client version and interface |
 
 Details and checksums: `work/research/README.md` and `work/notes/forever-facts.md` in the development folder.
+
+## Other addons
+
+- Auctionator shopping lists: `Auctionator.API.v1.CreateShoppingList(callerID, name, searchStrings)`
+  and `ConvertToSearchString(callerID, { searchString, isExact, quantity })`, read in
+  `Source/API/v1/ShoppingLists.lua` of the installed Auctionator 341 (Classic Era), 2026-10-24.
+  Used by `Adapters/ClassicEraExternal.lua` (`CreateShoppingList`), called inside `pcall`.

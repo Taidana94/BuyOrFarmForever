@@ -3,6 +3,31 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.11] – 2026-10-24 (Testversion)
+
+### Neu
+- **AH-Einkaufsliste** (`/bof shop`, Knopf „Einkaufsliste“ im Fenster „Jetzt tun“): was der laufende
+  Plan (vorher kaufen, Weiterverkauf) und deine Ziele im Auktionshaus kaufen. Mit Auctionator wird
+  daraus dessen Einkaufsliste „BuyOrFarm“, die Auctionator im AH unter „Einkaufen“ sucht.
+- **Post vorbereiten** (`/bof mail`): was du an welchen Twink schickst, für seine Ziele und als
+  Zutaten, wenn er im laufenden Plan etwas herstellt. Die Karte am Briefkasten zeigt das ebenso.
+- **Wochenrückblick** (`/bof week`): Netto-Gold der letzten 7 Tage gegen die Vorwoche, Spielzeit,
+  Gold pro Stunde, Quellen, beendete Pläne gegen ihr Ergebnis und Farmrunden.
+- **Twink-Rezepte beim Verarbeiten**: Gefarmtes kann auch mit dem Rezept eines Twinks verarbeitet
+  werden; die Route nennt den Twink („… (auf Name)“).
+- **Berufe leveln** (`/bof skillup`): je Beruf die drei günstigsten Rezepte für den nächsten Punkt.
+- **„Vollscan fällig“** am Auktionshaus, wenn der letzte Vollscan älter als 3 Stunden ist.
+- Plan-Schritte mit Testmenge sagen es: „nur 1 Stück als Test: noch keine Verkäufe gesehen“.
+- Hilfe: neue Abschnitte „Verkaufschance und Testmengen“, „Wochenrückblick“, „Berufe leveln“ und
+  die neuen Befehle.
+
+### Geändert
+- Vollscans werden in einem Durchgang gelesen; nur beobachtete Items bekommen pro Angebot einen
+  Eintrag (weniger Speicher und kürzere Ruckler bei großen Auktionshäusern).
+- Code aufgeräumt: ungenutzte Funktionen und Texte entfernt, gemeinsame Hilfsfunktion statt
+  sechsfach gleichem Code, ein Funktionsparameter-Schalter in zwei Funktionen aufgeteilt; neue Tests
+  für das Layout von „Jetzt tun“ und den ganzen Vollscan-Ablauf.
+
 ## [0.12.0-alpha.10] – 2026-10-24 (Testversion)
 
 ### Geändert
