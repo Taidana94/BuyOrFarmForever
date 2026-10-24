@@ -1,7 +1,7 @@
 # Data sources
 
 The addon ships game data only in `Data/ClassicEra/` (since 0.8.0). It applies to Classic Era only and must
-not be reused for Forever without verification (CLAUDE.md section 4).
+not be reused for Forever without verification (project guidelines, client separation).
 
 ## Game data (Classic Era)
 

@@ -517,7 +517,7 @@ looted-coin capture of real runs is covered by unit tests only.
 
 ### Release check 0.6.0 (2026-10-19)
 
-| Step (CLAUDE.md section 9) | Result |
+| Release step | Result |
 |---|---|
 | Checks levels 0, 1, 1b, 1c, 2 | 275 passed, 0 failed (255 addon tests + 2 developer-addon tests) |
 | In-game test (Classic Era) | 0.6.0-alpha.1 (spell and Auctionator checks; two findings) and 0.6.0-alpha.2 (all items) passed; 0.6.0 = 0.6.0-alpha.2 code |
@@ -637,7 +637,7 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 
 ### Release check 0.5.0 (2026-10-19)
 
-| Step (CLAUDE.md section 9) | Result |
+| Release step | Result |
 |---|---|
 | Checks levels 0, 1, 1b, 1c, 2 | 256 passed, 0 failed |
 | In-game test (Classic Era) | 0.5.0-alpha.1 (Auctionator, DPS key; one finding: no goal arrows in the Sourcing tab) and 0.5.0-alpha.2 (all checklist items) passed; 0.5.0 = 0.5.0-alpha.2 code |
@@ -659,7 +659,7 @@ while the tab is shown. The time limit re-settles the plan at most once per plan
 
 ### Release check 0.4.0 (2026-10-19)
 
-| Step (CLAUDE.md section 9) | Result |
+| Release step | Result |
 |---|---|
 | Checks levels 0, 1, 1b, 1c, 2 | 226 passed, 0 failed |
 | In-game test (Classic Era) | 0.4.0-alpha.1 (all checklist items, one layout finding) and 0.4.0-alpha.2 (fix) passed; 0.4.0 = 0.4.0-alpha.2 code |
@@ -690,7 +690,7 @@ lookup per item tooltip after the first rebuild. Verdict: ok; no in-game numbers
 
 ### Release check 0.3.0 (2026-10-19)
 
-| Step (CLAUDE.md section 9) | Result |
+| Release step | Result |
 |---|---|
 | Checks levels 0, 1, 1b, 1c, 2 | 175 passed, 0 failed |
 | In-game test (Classic Era) | every feature tested in 0.3.0-alpha.1 to alpha.3 (results above); 0.3.0 = 0.3.0-alpha.3 code |
@@ -720,7 +720,7 @@ Only what changed since the review before 0.2.0:
 
 ### Release check 0.2.0 (2026-10-18)
 
-| Step (CLAUDE.md section 9) | Result |
+| Release step | Result |
 |---|---|
 | Checks levels 0, 1, 1b, 1c, 2 | 146 passed, 0 failed |
 | In-game test (Classic Era) | every feature tested in the alpha versions (results above); 0.2.0 = 0.2.0-alpha.10 code |
