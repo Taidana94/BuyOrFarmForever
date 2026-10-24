@@ -266,6 +266,10 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Result 0.12.0-alpha.12 (Classic Era, 2026-10-24)
+
+Week view, skill-up tooltip and shopping list card: passed in game (user: "Funktioniert alles").
+
 ### Checklist 0.12.0-alpha.11 (Classic Era, gold tools)
 
 Result 2026-10-24: all steps passed in game (user: "alles geklappt").
