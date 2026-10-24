@@ -39,13 +39,6 @@ Weitere Teile:
 | WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet bis 0.13.0 (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
-## Umstieg von „Kaufen oder farmen?“
-
-Bis 0.13.0 hieß das Addon „Kaufen oder farmen?“ (Ordner `BuyOrFarmForever`, Befehle `/bof`, `/kof`).
-Deine Daten übernimmst du so: Spiel beenden, in `WTF\Account\<Konto>\SavedVariables` die Datei
-`BuyOrFarmForever.lua` kopieren und die Kopie `GoldCompass.lua` nennen. Den alten Addon-Ordner löschen.
-Tastenbelegungen einmal neu setzen.
-
 ## Sprache
 
 Deutsch und Englisch. Standard ist „wie das Spiel“: ein deutscher Client zeigt Deutsch, jeder andere
