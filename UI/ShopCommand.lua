@@ -61,5 +61,5 @@ function ShopCommand.Run()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("shop", ShopCommand.Run, L.HELP_LINE_SHOP)
+	ns.Slash.AddCommand("shop", ShopCommand.Run, "HELP_LINE_SHOP")
 end

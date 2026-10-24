@@ -51,5 +51,5 @@ local function perfCommand()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("perf", perfCommand, L.HELP_LINE_PERF)
+	ns.Slash.AddCommand("perf", perfCommand, "HELP_LINE_PERF")
 end

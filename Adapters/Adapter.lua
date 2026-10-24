@@ -14,6 +14,7 @@ Adapter.REQUIRED = {
 	"IsCurrentClient", -- () -> bool: true if this adapter matches the running client
 	"GetBuildInfo", -- () -> { version, build, date, interface }
 	"GetLocale", -- () -> locale code, e.g. "deDE"
+	"ReloadUI", -- () reloads the interface (only from a click)
 	"GetAddOnVersion", -- (addonName) -> version string from the TOC, or nil
 	"GetCharacterKey", -- () -> { key, name, realm, normalizedRealm, faction } or nil before login
 	"GetServerTime", -- () -> server time in seconds since the epoch
@@ -139,6 +140,6 @@ function Adapter.Register(adapter)
 		return false
 	end
 	ns.Client = adapter
-	ns.Locale.SetActive(adapter:GetLocale())
+	ns.Locale.SetActive(ns.Locale.Resolve("AUTO", adapter:GetLocale()))
 	return true
 end

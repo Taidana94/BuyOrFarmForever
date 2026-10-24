@@ -234,5 +234,5 @@ local function goldCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("gold", goldCommand, L.HELP_LINE_GOLD)
+	Slash.AddCommand("gold", goldCommand, "HELP_LINE_GOLD")
 end

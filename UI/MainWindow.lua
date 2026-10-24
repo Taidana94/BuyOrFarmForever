@@ -185,5 +185,5 @@ function MainWindow.GetFrame()
 end
 
 if ns.Client then
-	Slash.AddCommand("show", MainWindow.Toggle, L.HELP_LINE_SHOW)
+	Slash.AddCommand("show", MainWindow.Toggle, "HELP_LINE_SHOW")
 end

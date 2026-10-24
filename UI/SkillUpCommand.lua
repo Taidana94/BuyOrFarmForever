@@ -57,5 +57,5 @@ local function skillUpCommand()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("skillup", skillUpCommand, L.HELP_LINE_SKILLUP)
+	ns.Slash.AddCommand("skillup", skillUpCommand, "HELP_LINE_SKILLUP")
 end

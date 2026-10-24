@@ -148,7 +148,7 @@ local function openAtLogin()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("advisor", AdvisorWindow.Toggle, L.HELP_LINE_ADVISOR)
+	ns.Slash.AddCommand("advisor", AdvisorWindow.Toggle, "HELP_LINE_ADVISOR")
 	ns.Events.OnSignal("CHARACTER_READY", function()
 		C_Timer.After(AdvisorWindow.LOGIN_DELAY_SECONDS, openAtLogin)
 	end)

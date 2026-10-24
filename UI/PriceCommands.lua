@@ -110,5 +110,5 @@ local function priceCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("price", priceCommand, L.HELP_LINE_PRICE)
+	Slash.AddCommand("price", priceCommand, "HELP_LINE_PRICE")
 end

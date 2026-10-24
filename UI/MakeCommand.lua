@@ -95,5 +95,5 @@ function MakeCommand.Run(key, count)
 end
 
 if ns.Client then
-	Slash.AddCommand("make", makeCommand, L.HELP_LINE_MAKE)
+	Slash.AddCommand("make", makeCommand, "HELP_LINE_MAKE")
 end

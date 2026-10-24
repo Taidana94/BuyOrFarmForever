@@ -36,5 +36,5 @@ local function mailCommand()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("mail", mailCommand, L.HELP_LINE_MAIL)
+	ns.Slash.AddCommand("mail", mailCommand, "HELP_LINE_MAIL")
 end

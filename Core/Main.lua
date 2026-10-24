@@ -21,6 +21,10 @@ local function onAddonLoaded(event, loadedName)
 	})
 	BuyOrFarmForeverDB = db
 	ns.db = db
+	-- Data from a newer version is not validated: its settings may be missing.
+	local settings = type(db.settings) == "table" and db.settings or {}
+	ns.Locale.SetActive(ns.Locale.Resolve(settings.language, client:GetLocale()))
+	ns.Events.Emit("LOCALE_CHANGED")
 	ns.readOnly = (status == "newer" or status == "migration_failed")
 	Log.Flush()
 	Log.Info("loaded " .. addonName .. " " .. version .. ", database status " .. status)

@@ -13,23 +13,24 @@ Slash.RESET_CONFIRM_SECONDS = 30
 
 local resetPendingUntil = nil
 
--- Subcommands registered by other modules: name -> { handler = fn(argument), helpLine = text }
+-- Subcommands registered by other modules: name -> { handler = fn(argument), helpKey = locale key }.
+-- Help lines are stored as keys: the language is chosen after the files are loaded.
 local commands = {}
 local commandOrder = {}
 
-function Slash.AddCommand(name, handler, helpLine)
+function Slash.AddCommand(name, handler, helpKey)
 	if not commands[name] then
 		commandOrder[#commandOrder + 1] = name
 	end
-	commands[name] = { handler = handler, helpLine = helpLine }
+	commands[name] = { handler = handler, helpKey = helpKey }
 end
 
 -- The help lines of the base commands and all registered commands (chat help and Help tab).
 function Slash.HelpLines()
 	local lines = { L.HELP_LINE_HELP, L.HELP_LINE_VERSION, L.HELP_LINE_DEBUG, L.HELP_LINE_RESET }
 	for _, name in ipairs(commandOrder) do
-		if commands[name].helpLine then
-			lines[#lines + 1] = commands[name].helpLine
+		if commands[name].helpKey then
+			lines[#lines + 1] = L[commands[name].helpKey]
 		end
 	end
 	return lines

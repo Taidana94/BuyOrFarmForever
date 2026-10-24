@@ -293,8 +293,8 @@ local function keepCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("goldplan", planCommand, L.HELP_LINE_GOLDPLAN)
-	Slash.AddCommand("compare", compareCommand, L.HELP_LINE_COMPARE)
-	Slash.AddCommand("goldsources", sourcesCommand, L.HELP_LINE_GOLDSOURCES)
-	Slash.AddCommand("goldkeep", keepCommand, L.HELP_LINE_GOLDKEEP)
+	Slash.AddCommand("goldplan", planCommand, "HELP_LINE_GOLDPLAN")
+	Slash.AddCommand("compare", compareCommand, "HELP_LINE_COMPARE")
+	Slash.AddCommand("goldsources", sourcesCommand, "HELP_LINE_GOLDSOURCES")
+	Slash.AddCommand("goldkeep", keepCommand, "HELP_LINE_GOLDKEEP")
 end

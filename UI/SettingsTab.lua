@@ -16,7 +16,7 @@ ns.SettingsTab = SettingsTab
 local COLUMNS = { { "FARM", "MATERIAL", "ADVISOR" }, { "GOLD", "DISPLAY" } }
 local COLUMN_WIDTH = 370
 local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 20, 20, 8
-local BOX_WIDTH, LABEL_GAP = 44, 6
+local BOX_WIDTH, LABEL_GAP, CHOICE_WIDTH = 44, 6, 110
 local BUTTON_WIDTH, BUTTON_GAP = 160, 10
 local WEIGHTS_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP, SUGGEST_WIDTH = 30, 32, 6, 100
 local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi", ARMOR = "armor", DPS = "dps" }
@@ -49,9 +49,36 @@ local function buildNumber(tab, frame, entry, x, y)
 	tab.boxes[entry.key] = box
 end
 
+-- A choice setting: label text, then a button that switches to the next choice. Changing the
+-- language offers a reload, so every window gets the new texts.
+local function buildChoice(tab, frame, entry, x, y)
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	label:SetPoint("TOPLEFT", x + LABEL_GAP, y - LABEL_GAP)
+	label:SetText(L[entry.label])
+	local button = Widgets.CreateButton(frame, "", CHOICE_WIDTH)
+	button:SetPoint("LEFT", label, "RIGHT", LABEL_GAP * 2, 0)
+	button:SetScript("OnClick", function()
+		local current = ns.db.settings[entry.key]
+		local nextChoice = entry.choices[1]
+		for i, choice in ipairs(entry.choices) do
+			if choice == current then
+				nextChoice = entry.choices[i % #entry.choices + 1]
+			end
+		end
+		run("set " .. entry.key .. " " .. nextChoice)
+		Inputs.Confirm(L.SET_LANGUAGE_RELOAD_ASK, function()
+			ns.Client:ReloadUI()
+		end)
+	end)
+	tab.choices[entry.key] = button
+end
+
 local function buildEntry(tab, frame, entry, x, y)
 	if entry.type == "number" then
 		buildNumber(tab, frame, entry, x, y)
+		return
+	elseif entry.type == "choice" then
+		buildChoice(tab, frame, entry, x, y)
 		return
 	end
 	local check = Widgets.CreateCheck(frame, L[entry.label], function(checked)
@@ -123,7 +150,7 @@ local function buildBottom(tab, frame)
 end
 
 function SettingsTab.Create(parent)
-	local tab = setmetatable({ checks = {}, boxes = {} }, Tab)
+	local tab = setmetatable({ checks = {}, boxes = {}, choices = {} }, Tab)
 	local frame = Widgets.CreateTabFrame(parent)
 	tab.frame = frame
 	for i, groups in ipairs(COLUMNS) do
@@ -147,6 +174,10 @@ function Tab:Refresh()
 	end
 	for key, box in pairs(self.boxes) do
 		Inputs.SetValue(box, tostring(settings[key]))
+	end
+	for key, button in pairs(self.choices) do
+		button:SetText(ns.SettingsCommands.ValueText(Settings.Find(key), settings[key]))
+		Widgets.SetEnabled(button, canWrite)
 	end
 	local charData = ns.charKey and ns.db.characters[ns.charKey]
 	for stat, box in pairs(self.weightBoxes) do

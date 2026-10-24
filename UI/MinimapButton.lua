@@ -151,11 +151,18 @@ local function update()
 	end
 end
 
--- Names in the client's key binding list (Bindings.xml). Global by the client's convention.
-BINDING_HEADER_BUYORFARMFOREVER = L.ADDON_TITLE
-BINDING_NAME_BUYORFARMFOREVER_TOGGLE = L.BINDING_TOGGLE
-BINDING_NAME_BUYORFARMFOREVER_FARM = L.BINDING_FARM
-BINDING_NAME_BUYORFARMFOREVER_ADVISOR = L.BINDING_ADVISOR
+-- Names in the client's key binding list (Bindings.xml). Global by the client's convention; set
+-- again when the language is chosen.
+local function setBindingNames()
+	BINDING_HEADER_BUYORFARMFOREVER = L.ADDON_TITLE
+	BINDING_NAME_BUYORFARMFOREVER_TOGGLE = L.BINDING_TOGGLE
+	BINDING_NAME_BUYORFARMFOREVER_FARM = L.BINDING_FARM
+	BINDING_NAME_BUYORFARMFOREVER_ADVISOR = L.BINDING_ADVISOR
+end
+setBindingNames()
+if ns.Client then
+	ns.Events.OnSignal("LOCALE_CHANGED", setBindingNames)
+end
 
 -- The button, or nil while it was never shown (for tests).
 function MinimapButton.GetButton()

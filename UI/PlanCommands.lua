@@ -129,7 +129,7 @@ local function planCommand(argument)
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("plan", planCommand, L.HELP_LINE_PLAN)
+	ns.Slash.AddCommand("plan", planCommand, "HELP_LINE_PLAN")
 	for _, signal in ipairs(CHECK_SIGNALS) do
 		Events.OnSignal(signal, PlanCommands.Check)
 	end

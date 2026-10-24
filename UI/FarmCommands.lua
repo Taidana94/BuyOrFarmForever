@@ -227,5 +227,5 @@ local function farmCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("farm", farmCommand, L.HELP_LINE_FARM)
+	Slash.AddCommand("farm", farmCommand, "HELP_LINE_FARM")
 end

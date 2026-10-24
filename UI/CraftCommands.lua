@@ -129,6 +129,6 @@ local function weightsCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("craft", craftCommand, L.HELP_LINE_CRAFT)
-	Slash.AddCommand("weights", weightsCommand, L.HELP_LINE_WEIGHTS)
+	Slash.AddCommand("craft", craftCommand, "HELP_LINE_CRAFT")
+	Slash.AddCommand("weights", weightsCommand, "HELP_LINE_WEIGHTS")
 end

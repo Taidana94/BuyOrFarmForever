@@ -240,6 +240,6 @@ local function recipeCommand(argument)
 end
 
 if ns.Client then
-	Slash.AddCommand("want", wantCommand, L.HELP_LINE_WANT)
-	Slash.AddCommand("recipe", recipeCommand, L.HELP_LINE_RECIPE)
+	Slash.AddCommand("want", wantCommand, "HELP_LINE_WANT")
+	Slash.AddCommand("recipe", recipeCommand, "HELP_LINE_RECIPE")
 end

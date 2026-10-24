@@ -47,5 +47,5 @@ local function weekCommand()
 end
 
 if ns.Client then
-	ns.Slash.AddCommand("week", weekCommand, L.HELP_LINE_WEEK)
+	ns.Slash.AddCommand("week", weekCommand, "HELP_LINE_WEEK")
 end

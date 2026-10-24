@@ -52,5 +52,5 @@ local function accountCommand()
 end
 
 if ns.Client then
-	Slash.AddCommand("account", accountCommand, L.HELP_LINE_ACCOUNT)
+	Slash.AddCommand("account", accountCommand, "HELP_LINE_ACCOUNT")
 end

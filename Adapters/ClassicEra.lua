@@ -74,6 +74,10 @@ function ClassicEra:GetLocale()
 	return GetLocale()
 end
 
+function ClassicEra:ReloadUI()
+	ReloadUI()
+end
+
 function ClassicEra:GetAddOnVersion(addonName)
 	if C_AddOns and C_AddOns.GetAddOnMetadata then
 		return C_AddOns.GetAddOnMetadata(addonName, "Version")

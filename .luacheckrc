@@ -30,6 +30,7 @@ read_globals = {
 	-- client identity
 	"GetBuildInfo",
 	"GetLocale",
+	"ReloadUI",
 	"WOW_PROJECT_ID",
 	"WOW_PROJECT_CLASSIC",
 	C_AddOns = { fields = { "GetAddOnMetadata" } },

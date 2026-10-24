@@ -1,6 +1,7 @@
 -- Localization: locale tables, active locale and the read-only lookup table ns.L.
 -- Fallback chain: active locale -> base locale (deDE) -> the key itself.
--- The active locale is set later from the client adapter (Locale.SetActive).
+-- The active locale is set from the client's language when the adapter registers and again from
+-- the setting "language" once the saved variables are loaded (Locale.Resolve).
 local _, ns = ...
 
 local Locale = {}
@@ -32,6 +33,15 @@ function Locale.SetActive(code)
 		active = Locale.BASE
 	end
 	return active
+end
+
+-- The locale for a choice of the setting "language": a German client gets German, every other
+-- client English, unless the player picked one.
+function Locale.Resolve(choice, clientLocale)
+	if choice == "deDE" or choice == "enUS" then
+		return choice
+	end
+	return clientLocale == "deDE" and "deDE" or "enUS"
 end
 
 function Locale.GetActive()
