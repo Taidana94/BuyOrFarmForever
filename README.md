@@ -1,4 +1,4 @@
-# Goldkompass
+# Gold Compass (Goldkompass)
 
 **Version 0.12.0 – Ziele mit dem günstigsten Weg, „Was lohnt sich?“ für deine Spielzeit, „Jetzt tun“ als
 Checkliste, Verkaufschance im AH, Einkaufsliste, Post für Twinks, Wochenrückblick, automatische
