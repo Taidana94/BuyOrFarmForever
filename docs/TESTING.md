@@ -268,6 +268,8 @@ Bugs found (screenshot):
 
 ### Checklist 0.12.0-alpha.11 (Classic Era, gold tools)
 
+Result 2026-10-24: all steps passed in game (user: "alles geklappt").
+
 1. `/bof shop` with a want bought on the AH: chat list; with Auctionator the list "BuyOrFarm"
    appears in its "Einkaufen" tab and searches each item exactly.
 2. Plan window: the button "Einkaufsliste" prints the same list.

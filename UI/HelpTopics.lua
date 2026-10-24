@@ -50,7 +50,7 @@ HelpTopics.LIST = {
 		{ "H_PROF_HEAD", { "H_PROF_1", "H_PROF_2" } },
 		{ "H_PROF_LIST_HEAD", { "H_PROF_LIST_1", "H_PROF_LIST_2", "H_PROF_LIST_3", "H_PROF_LIST_4" } },
 		{ "H_PROF_DETAIL_HEAD", { "H_PROF_DETAIL_1", "H_PROF_DETAIL_2", "H_PROF_DETAIL_3", "H_PROF_DETAIL_4" } },
-		{ "H_PROF_SKILLUP_HEAD", { "H_PROF_SKILLUP_1", "H_PROF_SKILLUP_2" } },
+		{ "H_PROF_SKILLUP_HEAD", { "H_PROF_SKILLUP_1", "H_PROF_SKILLUP_2", "H_PROF_SKILLUP_3" } },
 	}) },
 	{ id = "GOLD", label = "H_TOPIC_GOLD", lines = sections({
 		{ "H_GOLD_HEAD", { "H_GOLD_1", "H_GOLD_2" } },
@@ -62,7 +62,7 @@ HelpTopics.LIST = {
 		{ "H_PLAN_HEAD", { "H_PLAN_1", "H_PLAN_2", "H_PLAN_3", "H_PLAN_4", "H_PLAN_5" } },
 		{ "H_PLAN_SALES_HEAD", { "H_PLAN_SALES_1", "H_PLAN_SALES_2", "H_PLAN_SALES_3" } },
 		{ "H_PLAN_TIME_HEAD", { "H_PLAN_TIME_1", "H_PLAN_TIME_2" } },
-		{ "H_PLAN_VIEWS_HEAD", { "H_PLAN_VIEWS_1", "H_PLAN_VIEWS_2", "H_PLAN_VIEWS_3" } },
+		{ "H_PLAN_VIEWS_HEAD", { "H_PLAN_VIEWS_1", "H_PLAN_VIEWS_2", "H_PLAN_VIEWS_3", "H_PLAN_VIEWS_4" } },
 		{ "H_PLAN_NOW_HEAD", { "H_PLAN_NOW_1", "H_PLAN_NOW_2", "H_PLAN_NOW_3", "H_PLAN_NOW_4", "H_PLAN_NOW_5" } },
 		{ "H_PLAN_KEEP_HEAD", { "H_PLAN_KEEP_1", "H_PLAN_KEEP_2" } },
 	}) },

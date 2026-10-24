@@ -138,7 +138,22 @@ function Tab:UpdateIcons(professions, current)
 	end
 end
 
+function Tab:ShowSkillTooltip(bar)
+	local charData = ns.db and ns.charKey and ns.db.characters[ns.charKey]
+	if not (charData and self.skillProfession) then
+		return
+	end
+	GameTooltip:SetOwner(bar, "ANCHOR_BOTTOM")
+	GameTooltip:AddLine(L.SKILLUP_TOOLTIP)
+	local now = ns.Client:GetServerTime()
+	for _, line in ipairs(ns.SkillUpCommand.OptionLines(charData, self.skillProfession, now)) do
+		GameTooltip:AddLine(line, 1, 1, 1, true)
+	end
+	GameTooltip:Show()
+end
+
 function Tab:UpdateSkill(profession)
+	self.skillProfession = profession and profession.key
 	self.professionName:SetText(profession and professionName(profession.key) or "")
 	local skill = profession and profession.skill
 	self.skillBar:SetMinMaxValues(0, skill and math.max(skill.maxRank, 1) or 1)

@@ -17,7 +17,7 @@ ns.GoldPlanPanel = Panel
 local MAX_STEPS, MAX_SOURCES, MAX_LIST = 8, 4, 10
 local TIME_BUTTON_WIDTH, DURATION_BOX_WIDTH, VIEW_BUTTON_WIDTH, START_BUTTON_WIDTH, GAP = 60, 70, 80, 110, 6
 -- Views of the lower part, in button order; the view is not stored (the plan shows first).
-local VIEWS = { "PLAN", "COMPARE", "ACCOUNT" }
+local VIEWS = { "PLAN", "COMPARE", "ACCOUNT", "WEEK" }
 -- The view buttons get their own row: the time row shares its height with the Gold tab's mode buttons.
 local VIEW_ROW_Y, SUMMARY_Y, STEPS_Y, ALTERNATIVES_Y, SOURCES_HEADER_Y, SOURCES_Y = -32, -62, -92, -222, -244, -260
 -- Space between the summary (one or two lines) and the steps or list below it.
@@ -166,10 +166,21 @@ local function showView(panel)
 	end
 end
 
--- Comparison and account view: the first line as the summary, the rest as the list.
+local LIST_LINES = {
+	COMPARE = function(panel, charData)
+		return GoldPlanCommands.CompareLines(charData, panel.seconds)
+	end,
+	ACCOUNT = function()
+		return ns.AccountCommands.Lines()
+	end,
+	WEEK = function(_, charData)
+		return ns.WeekCommand.Lines(charData)
+	end,
+}
+
+-- Comparison, account and week view: the first line as the summary, the rest as the list.
 local function refreshList(panel, charData)
-	local lines = panel.view == "COMPARE" and GoldPlanCommands.CompareLines(charData, panel.seconds)
-		or ns.AccountCommands.Lines()
+	local lines = LIST_LINES[panel.view](panel, charData)
 	panel.summary:SetText(table.remove(lines, 1))
 	showLines(panel.list, lines)
 end

@@ -74,6 +74,12 @@ local function buildSkill(tab, frame)
 	background:SetColorTexture(BAR_BACKGROUND[1], BAR_BACKGROUND[2], BAR_BACKGROUND[3], BAR_BACKGROUND[4])
 	tab.skillText = tab.skillBar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 	tab.skillText:SetPoint("CENTER")
+	-- Hover: the cheapest recipes for the next skill point (/bof skillup).
+	tab.skillBar:EnableMouse(true)
+	tab.skillBar:SetScript("OnEnter", function(bar)
+		tab:ShowSkillTooltip(bar)
+	end)
+	tab.skillBar:SetScript("OnLeave", hideTooltip)
 end
 
 -- Search box with a grey "Suche" hint while it is empty; every typed character filters the list.

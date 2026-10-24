@@ -18,7 +18,7 @@ local REFRESH_SIGNALS = { "BAGS_CHANGED", "MONEY_CHANGED", "MERCHANT_CHANGED", "
 local KINDS = {
 	-- DISENCHANT at the merchant: a warning not to sell those items.
 	MERCHANT = { BUY_MERCHANT = true, SELL_VENDOR = true, BAGS_FULL = true, DISENCHANT = true },
-	AUCTION = { BUY_AUCTION = true, SELL_AUCTION = true, PRICES_SCAN = true, FULL_SCAN = true, DISENCHANT = true },
+	AUCTION = { BUY_AUCTION = true, SELL_AUCTION = true, PRICES_SCAN = true, FULL_SCAN = true, SHOP_LIST = true, DISENCHANT = true },
 	BANK = { BANK_TAKE = true },
 	MAIL = { MAIL_SEND = true, MAIL_ASK = true },
 }

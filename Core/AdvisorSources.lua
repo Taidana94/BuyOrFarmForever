@@ -15,7 +15,7 @@ AdvisorSources.FULL_SCAN_DUE_SECONDS = 3 * HOUR
 
 -- Priority per kind; HERE is used when the suggestion can be done in the open window.
 local PRIORITY = {
-	BUY_MERCHANT = 100, BANK_TAKE = 100, MAIL_SEND = 95, BAGS_FULL = 95, CRAFT_NOW = 85, PRICES_SCAN = 85, FULL_SCAN = 75,
+	BUY_MERCHANT = 100, BANK_TAKE = 100, MAIL_SEND = 95, BAGS_FULL = 95, CRAFT_NOW = 85, PRICES_SCAN = 85, FULL_SCAN = 75, SHOP_LIST = 92,
 	BUY_AUCTION = 90, COOLDOWN_READY = 80, SELL_VENDOR = 60, SELL_AUCTION = 55, DISENCHANT = 50, MAIL_ASK = 45,
 	SAVINGS = 40, PLAN_HOUR = 30,
 }
@@ -93,6 +93,11 @@ local function auctionSuggestions(env, out)
 	end
 	if unpriced > 0 then
 		out[#out + 1] = suggestion(env, "PRICES_SCAN", { count = unpriced, action = "SCAN" })
+	end
+	local steps = env.charData.activePlan and env.charData.activePlan.steps or {}
+	local shopping = ns.ShoppingList.Collect(steps, plan and ns.WantPlan.ToGet(plan) or {})
+	if #shopping > 0 then
+		out[#out + 1] = suggestion(env, "SHOP_LIST", { count = #shopping, action = "SHOP" })
 	end
 	local age = ns.MarketWatch.ScanAge(ns.db, ns.PriceCapture.CurrentRealmKey(), env.now)
 	if ns.db.settings.useSaleChance and not (age and age < AdvisorSources.FULL_SCAN_DUE_SECONDS) then

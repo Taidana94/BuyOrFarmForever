@@ -3,6 +3,13 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.12.0-alpha.12] – 2026-10-24 (Testversion)
+
+### Neu
+- Goldplaner: neue Ansicht **„Woche“** mit dem Wochenrückblick.
+- Tab „Berufe“: Maus über den Fertigkeitsbalken zeigt die günstigsten Rezepte für den nächsten Punkt.
+- Auktionshaus: Karte **„Einkaufsliste“** mit Knopf „Liste“ (wie `/bof shop`).
+
 ## [0.12.0-alpha.11] – 2026-10-24 (Testversion)
 
 ### Neu

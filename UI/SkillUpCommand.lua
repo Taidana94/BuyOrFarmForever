@@ -8,11 +8,23 @@ local Log = ns.Log
 local Money = ns.Money
 local UIShared = ns.UIShared
 
+local SkillUpCommand = {}
+ns.SkillUpCommand = SkillUpCommand
+
 local PERCENT = 100
 
 local function optionLine(option)
 	local cost = option.complete and Money.Format(option.perPoint) or L.SKILLUP_PRICE_MISSING
 	return Util.Format(L.SKILLUP_LINE, UIShared.ItemText(option.itemID), math.floor(option.chance * PERCENT + 0.5), cost)
+end
+
+-- The option lines of one profession ({ L.SKILLUP_NONE } without any).
+function SkillUpCommand.OptionLines(charData, professionKey, now)
+	local lines = {}
+	for i, option in ipairs(ns.SkillUp.Options(charData, professionKey, now)) do
+		lines[i] = optionLine(option)
+	end
+	return #lines > 0 and lines or { L.SKILLUP_NONE }
 end
 
 local function printProfession(charData, profession, now)
@@ -21,13 +33,9 @@ local function printProfession(charData, profession, now)
 		return false
 	end
 	local name = ns.Client:GetProfessionInfo(profession.key) or L.PROF_OTHER
-	local options = ns.SkillUp.Options(charData, profession.key, now)
 	Log.Print(Util.Format(L.SKILLUP_HEADER, name, skill and skill.rank or 0, skill and skill.maxRank or 0))
-	if #options == 0 then
-		Log.Print(L.SKILLUP_NONE)
-	end
-	for _, option in ipairs(options) do
-		Log.Print(optionLine(option))
+	for _, line in ipairs(SkillUpCommand.OptionLines(charData, profession.key, now)) do
+		Log.Print(line)
 	end
 	return true
 end

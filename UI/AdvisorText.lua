@@ -18,12 +18,12 @@ local MAX_TOOLTIP_ITEMS = 12
 -- Colour category of each kind: HERE (do it in this window), GOLD, INFO, WARN; NONE for empty rows.
 local CATEGORY = {
 	BUY_MERCHANT = "HERE", BANK_TAKE = "HERE", MAIL_SEND = "HERE", BUY_AUCTION = "HERE", PRICES_SCAN = "HERE",
-	FULL_SCAN = "HERE",
+	FULL_SCAN = "HERE", SHOP_LIST = "HERE",
 	SELL_VENDOR = "GOLD", SELL_AUCTION = "GOLD", DISENCHANT = "GOLD", PLAN_HOUR = "GOLD", COOLDOWN_READY = "GOLD",
 	CRAFT_NOW = "INFO", MAIL_ASK = "INFO", SAVINGS = "INFO", BAGS_FULL = "WARN", SUM_SELL = "GOLD", SUM_CRAFT = "GOLD",
 }
 local BUTTONS = {
-	SELL_VENDOR = "ADVISOR_BTN_SELL", BUY_MERCHANT = "ADVISOR_BTN_BUY", SCAN = "ADVISOR_BTN_SCAN",
+	SELL_VENDOR = "ADVISOR_BTN_SELL", BUY_MERCHANT = "ADVISOR_BTN_BUY", SCAN = "ADVISOR_BTN_SCAN", SHOP = "ADVISOR_BTN_SHOP",
 	OPEN_PLANNER = "ADVISOR_BTN_PLANNER", OPEN_SAVINGS = "ADVISOR_BTN_SAVINGS",
 }
 -- Texts of empty summary rows: kind -> reason -> { title, detail }.
@@ -108,6 +108,9 @@ local TEXTS = {
 	end,
 	PRICES_SCAN = function(s)
 		return Util.Format(L.ADVISOR_PRICES_SCAN, s.count), L.ADVISOR_PRICES_SCAN_DETAIL
+	end,
+	SHOP_LIST = function(s)
+		return Util.Format(L.ADVISOR_SHOP_LIST, s.count), L.ADVISOR_SHOP_LIST_DETAIL
 	end,
 	FULL_SCAN = function(s)
 		local title = s.seconds and Util.Format(L.ADVISOR_FULL_SCAN_OLD, Util.FormatDuration(s.seconds)) or L.ADVISOR_FULL_SCAN_NONE

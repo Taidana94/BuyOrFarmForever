@@ -80,6 +80,9 @@ local ACTIONS = {
 	SCAN = function()
 		Inputs.Run("price scan")
 	end,
+	SHOP = function()
+		Inputs.Run("shop")
+	end,
 	OPEN_PLANNER = function()
 		openGold("PLANNER")
 	end,
