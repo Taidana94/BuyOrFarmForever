@@ -3,28 +3,25 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.13.0-alpha.2] – 2026-10-24 (Testversion)
+## [0.13.0] – 2026-10-24
+
+Neuer Name und Englisch. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.
 
 ### Geändert
-- **Neuer Name: Gold Compass (deutsch „Goldkompass“).** Der Addon-Ordner heißt jetzt `GoldCompass`,
-  die Chatbefehle sind **`/gc`** und **`/gk`** (statt `/bof` und `/kof`).
-- Die Auctionator-Einkaufsliste heißt „GoldCompass“.
-- Tastenbelegungen stehen unter „Goldkompass“ und müssen einmal neu gesetzt werden.
+- **Neuer Name: Gold Compass (deutsch „Goldkompass“).** Der Addon-Ordner heißt `GoldCompass`, die
+  Chatbefehle sind **`/gc`** und **`/gk`** (statt `/bof` und `/kof`). Die Auctionator-Einkaufsliste
+  heißt „GoldCompass“; Tastenbelegungen stehen unter „Goldkompass“ und müssen einmal neu gesetzt
+  werden.
 
-### Deine Daten übernehmen
-- Spiel beenden. Im Ordner `WTF\Account\<Konto>\SavedVariables` die Datei `BuyOrFarmForever.lua`
-  kopieren und die Kopie in `GoldCompass.lua` umbenennen. Beim nächsten Start übernimmt das Addon
-  die Daten einmal von selbst.
+### Hinzugefügt
+- **Englisch:** Standard ist „wie das Spiel“ (deutscher Client Deutsch, jeder andere Englisch).
+  Umstellen in den Einstellungen (Knopf „Sprache“ unten neben „Debug-Modus“) oder mit
+  `/gc set language auto|de|en`; danach bietet das Addon ein `/reload` an.
+
+### Deine Daten übernehmen (Umstieg von „Kaufen oder farmen?“)
+- Spiel beenden. In `WTF\Account\<Konto>\SavedVariables` die Datei `BuyOrFarmForever.lua` kopieren
+  und die Kopie `GoldCompass.lua` nennen. Beim nächsten Start übernimmt das Addon die Daten einmal.
 - Den alten Ordner `Interface\AddOns\BuyOrFarmForever` löschen.
-
-## [0.13.0-alpha.1] – 2026-10-24 (Testversion)
-
-### Neu
-- **Englisch:** Das Addon gibt es jetzt auch auf Englisch. Standard ist „wie das Spiel“: ein deutscher
-  Client zeigt Deutsch, jeder andere Englisch. Wählbar in den Einstellungen (Knopf „Sprache“ unten
-  neben „Debug-Modus“) oder mit `/bof set language auto|de|en`; danach bietet das Addon ein `/reload` an, damit
-  alle Fenster die neue Sprache übernehmen.
-- Der Addon-Name in der Addon-Liste ist auf englischen Clients „Buy or Farm?“.
 
 ## [0.12.0] – 2026-10-24
 
