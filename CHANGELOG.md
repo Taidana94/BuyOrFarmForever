@@ -7,8 +7,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen 
 
 ### Neu
 - **Englisch:** Das Addon gibt es jetzt auch auf Englisch. Standard ist „wie das Spiel“: ein deutscher
-  Client zeigt Deutsch, jeder andere Englisch. Wählbar in den Einstellungen (Gruppe „Anzeige“, Knopf
-  „Sprache“) oder mit `/bof set language auto|de|en`; danach bietet das Addon ein `/reload` an, damit
+  Client zeigt Deutsch, jeder andere Englisch. Wählbar in den Einstellungen (Knopf „Sprache“ unten
+  neben „Debug-Modus“) oder mit `/bof set language auto|de|en`; danach bietet das Addon ein `/reload` an, damit
   alle Fenster die neue Sprache übernehmen.
 - Der Addon-Name in der Addon-Liste ist auf englischen Clients „Buy or Farm?“.
 

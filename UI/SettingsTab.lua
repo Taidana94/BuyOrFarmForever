@@ -17,6 +17,8 @@ local COLUMNS = { { "FARM", "MATERIAL", "ADVISOR" }, { "GOLD", "DISPLAY" } }
 local COLUMN_WIDTH = 370
 local ROW_HEIGHT, HEADER_HEIGHT, GROUP_GAP = 20, 20, 8
 local BOX_WIDTH, LABEL_GAP, CHOICE_WIDTH = 44, 6, 110
+-- The language button sits in the bottom row between "Debug-Modus" and the buttons on the right.
+local CHOICE_X = 170
 local BUTTON_WIDTH, BUTTON_GAP = 160, 10
 local WEIGHTS_Y, WEIGHT_BOX_WIDTH, WEIGHT_GAP, SUGGEST_WIDTH = 30, 32, 6, 100
 local STAT_WORDS = { STR = "str", AGI = "agi", STA = "sta", INT = "int", SPI = "spi", ARMOR = "armor", DPS = "dps" }
@@ -49,11 +51,12 @@ local function buildNumber(tab, frame, entry, x, y)
 	tab.boxes[entry.key] = box
 end
 
--- A choice setting: label text, then a button that switches to the next choice. Changing the
--- language offers a reload, so every window gets the new texts.
-local function buildChoice(tab, frame, entry, x, y)
+-- A choice setting in the bottom row (the columns are full): label text, then a button that
+-- switches to the next choice. Changing the language offers a reload, so every window gets the
+-- new texts.
+local function buildChoice(tab, frame, entry, x)
 	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	label:SetPoint("TOPLEFT", x + LABEL_GAP, y - LABEL_GAP)
+	label:SetPoint("BOTTOMLEFT", x, LABEL_GAP)
 	label:SetText(L[entry.label])
 	local button = Widgets.CreateButton(frame, "", CHOICE_WIDTH)
 	button:SetPoint("LEFT", label, "RIGHT", LABEL_GAP * 2, 0)
@@ -77,9 +80,6 @@ local function buildEntry(tab, frame, entry, x, y)
 	if entry.type == "number" then
 		buildNumber(tab, frame, entry, x, y)
 		return
-	elseif entry.type == "choice" then
-		buildChoice(tab, frame, entry, x, y)
-		return
 	end
 	local check = Widgets.CreateCheck(frame, L[entry.label], function(checked)
 		run("set " .. entry.key .. " " .. (checked and "on" or "off"))
@@ -97,8 +97,10 @@ local function buildColumn(tab, frame, groups, x)
 		header:SetText(groupLabel(group))
 		y = y - HEADER_HEIGHT
 		for _, entry in ipairs(Settings.InGroup(group)) do
-			buildEntry(tab, frame, entry, x, y)
-			y = y - ROW_HEIGHT
+			if entry.type ~= "choice" then
+				buildEntry(tab, frame, entry, x, y)
+				y = y - ROW_HEIGHT
+			end
 		end
 		y = y - GROUP_GAP
 	end
@@ -134,6 +136,11 @@ local function buildBottom(tab, frame)
 		run("debug")
 	end)
 	tab.debug:SetPoint("BOTTOMLEFT", 0, 0)
+	for _, entry in ipairs(Settings.SCHEMA) do
+		if entry.type == "choice" then
+			buildChoice(tab, frame, entry, CHOICE_X)
+		end
+	end
 	tab.perf = Widgets.CreateButton(frame, L.SET_SHOW_PERF, BUTTON_WIDTH)
 	tab.perf:SetPoint("BOTTOMLEFT", COLUMN_WIDTH, 0)
 	tab.perf:SetScript("OnClick", function()

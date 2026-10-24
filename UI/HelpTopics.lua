@@ -78,7 +78,7 @@ HelpTopics.LIST = {
 		{ "H_EXTRA_HINTS_HEAD", { "H_EXTRA_HINTS_1", "H_EXTRA_HINTS_2", "H_EXTRA_HINTS_3", "H_EXTRA_HINTS_4" } },
 	}) },
 	{ id = "SETTINGS", label = "H_TOPIC_SETTINGS", lines = sections({
-		{ "H_SET_HEAD", { "H_SET_1", "H_SET_2", "H_SET_3" } },
+		{ "H_SET_HEAD", { "H_SET_1", "H_SET_2", "H_SET_3", "H_SET_4" } },
 		{ "H_SET_GROUPS_HEAD", { "H_SET_GROUPS_1", "H_SET_GROUPS_2", "H_SET_GROUPS_3", "H_SET_GROUPS_4",
 			"H_SET_GROUPS_6", "H_SET_GROUPS_5" } },
 	}) },
