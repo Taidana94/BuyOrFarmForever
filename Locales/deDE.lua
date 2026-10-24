@@ -335,6 +335,7 @@ L.STRATEGY_NEEDS_FLIP = "kein Angebot deutlich unter dem üblichen Preis – im 
 L.STRATEGY_NEEDS_FARM_CRAFT = "kein gelerntes Rezept macht die Beute einer Route wertvoller"
 L.ROUTE_FISHING = "%1$s (Angeln)"
 L.ROUTE_CRAFTED = "%1$s, verarbeitet zu %2$s"
+L.ROUTE_CRAFTED_BY = "%1$s (auf %2$s)"
 L.GOLDPLAN_VIEW_PLAN = "Plan"
 L.GOLDPLAN_USE_AUCTION = "AH einplanen"
 L.SET_USE_SALE_CHANCE = "Verkaufschance im AH berücksichtigen"

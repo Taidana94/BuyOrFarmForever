@@ -32,6 +32,7 @@ local function convertLoot(route, convertOf)
 			change.craftSeconds = change.craftSeconds + perHour * conversion.secondsPerUnit
 			if sure + auction > change.gain then
 				change.gain, change.productItemID = sure + auction, conversion.productItemID
+				change.crafterKey = conversion.crafterKey
 			end
 		end
 	end
@@ -41,8 +42,8 @@ end
 local function craftedRoute(route, change, discountPercent)
 	local share = SECONDS_PER_HOUR / (SECONDS_PER_HOUR + change.craftSeconds)
 	local crafted = { key = route.key .. ":CRAFT", uiMapID = route.uiMapID, fishing = route.fishing, crafted = true,
-		productItemID = change.productItemID, items = route.items, runs = route.runs, activeSeconds = route.activeSeconds,
-		runsWithoutCoins = route.runsWithoutCoins, travelSeconds = route.travelSeconds,
+		productItemID = change.productItemID, crafterKey = change.crafterKey, items = route.items, runs = route.runs,
+		activeSeconds = route.activeSeconds, runsWithoutCoins = route.runsWithoutCoins, travelSeconds = route.travelSeconds,
 		surePerHour = (route.surePerHour + change.sure) * share, auctionPerHour = (route.auctionPerHour + change.auction) * share }
 	crafted.ratingPerHour = ns.GoldRoutes.Rating(crafted.surePerHour, crafted.auctionPerHour, discountPercent)
 	return crafted

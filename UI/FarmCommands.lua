@@ -30,7 +30,11 @@ end
 function FarmCommands.RouteName(route)
 	local name = mapName(route.uiMapID)
 	name = route.fishing and Util.Format(L.ROUTE_FISHING, name) or name
-	return route.crafted and Util.Format(L.ROUTE_CRAFTED, name, ns.UIShared.ItemText(route.productItemID)) or name
+	if not route.crafted then
+		return name
+	end
+	local crafted = Util.Format(L.ROUTE_CRAFTED, name, ns.UIShared.ItemText(route.productItemID))
+	return route.crafterKey and Util.Format(L.ROUTE_CRAFTED_BY, crafted, (ns.Stock.SplitKey(route.crafterKey))) or crafted
 end
 
 local function itemTotal(items)
