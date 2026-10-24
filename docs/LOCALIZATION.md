@@ -5,7 +5,7 @@
 | Locale | File | Status |
 |---|---|---|
 | deDE | `Locales/deDE.lua` | base language, complete |
-| enUS | – | planned (phase 2) |
+| enUS | `Locales/enUS.lua` | complete (0.13.0) |
 
 ## Rules
 
@@ -15,7 +15,14 @@
 - Placeholders: `%1$s`, `%2$d` by position, filled by `ns.Util.Format` (pure Lua, does not rely on the
   client's `string.format` extensions). Translations may reorder placeholders but must use the same set.
 - Fallback chain: active locale → `deDE` → the key itself (recorded in `ns.Locale.missing`).
-- The active locale is set once from `Client:GetLocale()` when the adapter registers.
+- Language choice (`Locale.Resolve`): setting `language` = `AUTO` (default), `deDE` or `enUS`. `AUTO`
+  gives German on a German client and English on every other client. The adapter sets the client's
+  choice when it registers; `Core/Main.lua` applies the setting once the saved variables are loaded,
+  and `/bof set language` switches at once (signal `LOCALE_CHANGED`; windows built before keep their
+  texts until `/reload`, the settings tab offers it).
+- Texts must not be captured while the files load (the setting is not known yet): slash commands
+  register their help line as a key (`Slash.AddCommand(name, handler, "HELP_LINE_X")`), the key
+  binding names are set again on `LOCALE_CHANGED`.
 - SavedVariables contain no localized text, only keys, IDs and user-entered text.
 - Files are UTF-8 without BOM.
 - Only characters the game font draws: ASCII, Latin-1 (umlauts, `ß`, `·`, `×`) and `–`, `„`, `“`

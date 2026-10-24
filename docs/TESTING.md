@@ -266,6 +266,15 @@ Bugs found (screenshot):
 2. "→" in the comparison line rendered as a box: the Classic Era font has no U+2192. Fixed in
    0.3.0-alpha.2 (text says "Unterschied"); level 1b now rejects characters outside the verified set.
 
+### Checklist 0.13.0-alpha.1 (Classic Era, English)
+
+1. German client, setting "wie das Spiel": everything German as before.
+2. Settings tab, button "Sprache": switches to "Deutsch", then "English"; each time the reload
+   question appears. After "Ja": all windows, help and chat commands in English.
+3. `/bof set language auto`: back to the client language after /reload.
+4. English texts fit their buttons and rows (window, settings tab, plan window, advisor cards).
+5. Key bindings menu: section and names in the chosen language.
+
 ### Result 0.12.0-alpha.12 (Classic Era, 2026-10-24)
 
 Week view, skill-up tooltip and shopping list card: passed in game (user: "Funktioniert alles").

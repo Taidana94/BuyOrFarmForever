@@ -1,9 +1,10 @@
 ## Interface: 11509
-## Title: Kaufen oder farmen?
-## Notes: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
+## Title: Buy or Farm?
+## Notes: Tells you the cheapest way to get an item (have, buy, farm or craft) and how to make the most gold in your time.
+## Title-deDE: Kaufen oder farmen?
 ## Author: Taidana (Zuerich3)
 ## Notes-deDE: Sagt dir, wie du ein Item am günstigsten bekommst: haben, kaufen, farmen oder herstellen.
-## Version: 0.12.0
+## Version: 0.13.0-alpha.1
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01
@@ -17,6 +18,7 @@
 Core\Init.lua
 Locales\Locale.lua
 Locales\deDE.lua
+Locales\enUS.lua
 Core\Util.lua
 Core\Money.lua
 Core\Log.lua

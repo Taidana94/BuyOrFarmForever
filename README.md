@@ -39,6 +39,11 @@ Weitere Teile:
 | WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet bis 0.12.0 (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
+## Sprache
+
+Deutsch und Englisch. Standard ist „wie das Spiel“: ein deutscher Client zeigt Deutsch, jeder andere
+Englisch. Umstellen im Reiter „Einstellungen“ (Knopf „Sprache“) oder mit `/bof set language auto|de|en`.
+
 ## Installation
 
 1. ZIP entpacken.

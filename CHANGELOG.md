@@ -3,6 +3,15 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.13.0-alpha.1] – 2026-10-24 (Testversion)
+
+### Neu
+- **Englisch:** Das Addon gibt es jetzt auch auf Englisch. Standard ist „wie das Spiel“: ein deutscher
+  Client zeigt Deutsch, jeder andere Englisch. Wählbar in den Einstellungen (Gruppe „Anzeige“, Knopf
+  „Sprache“) oder mit `/bof set language auto|de|en`; danach bietet das Addon ein `/reload` an, damit
+  alle Fenster die neue Sprache übernehmen.
+- Der Addon-Name in der Addon-Liste ist auf englischen Clients „Buy or Farm?“.
+
 ## [0.12.0] – 2026-10-24
 
 Gold-Werkzeuge, Verkaufschance und „Jetzt tun“. Getestet in WoW Classic Era 1.15.9; nicht in Forever
