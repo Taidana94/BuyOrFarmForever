@@ -18,7 +18,7 @@
 - Language choice (`Locale.Resolve`): setting `language` = `AUTO` (default), `deDE` or `enUS`. `AUTO`
   gives German on a German client and English on every other client. The adapter sets the client's
   choice when it registers; `Core/Main.lua` applies the setting once the saved variables are loaded,
-  and `/bof set language` switches at once (signal `LOCALE_CHANGED`; windows built before keep their
+  and `/gc set language` switches at once (signal `LOCALE_CHANGED`; windows built before keep their
   texts until `/reload`, the settings tab offers it).
 - Texts must not be captured while the files load (the setting is not known yet): slash commands
   register their help line as a key (`Slash.AddCommand(name, handler, "HELP_LINE_X")`), the key

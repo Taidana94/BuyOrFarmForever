@@ -1,4 +1,4 @@
--- /bof set [setting value]: lists or changes a setting of the schema (Core/Settings.lua). The
+-- /gc set [setting value]: lists or changes a setting of the schema (Core/Settings.lua). The
 -- settings tab uses the same command. Raises SETTINGS_CHANGED after a change.
 local _, ns = ...
 

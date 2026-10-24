@@ -1,4 +1,4 @@
--- /bof shop: the AH shopping list of the running plan ("Jetzt tun"; without one the gold plan of an
+-- /gc shop: the AH shopping list of the running plan ("Jetzt tun"; without one the gold plan of an
 -- hour) and the wants. Printed in the chat; with Auctionator also created as its shopping list, which
 -- it searches at the auction house (tab "Einkaufen").
 local _, ns = ...

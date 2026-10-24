@@ -1,5 +1,5 @@
--- /bof want: the wanted items and their plan (the cheapest way to get each, Core/WantPlan.lua);
--- /bof recipe: want what a recipe makes (the selected one in the profession window, or a stored one by
+-- /gc want: the wanted items and their plan (the cheapest way to get each, Core/WantPlan.lua);
+-- /gc recipe: want what a recipe makes (the selected one in the profession window, or a stored one by
 -- key, used by the professions tab). The plan texts are shared with the Wants tab.
 local _, ns = ...
 
@@ -198,7 +198,7 @@ local function wantCommand(argument)
 	end
 end
 
--- /bof recipe [crafts] | key <recipeKey> [crafts] ------------------------------------------
+-- /gc recipe [crafts] | key <recipeKey> [crafts] ------------------------------------------
 
 local function parseCrafts(text)
 	text = Util.Trim(text)

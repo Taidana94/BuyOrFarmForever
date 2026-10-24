@@ -1,6 +1,6 @@
--- luacheck configuration for BuyOrFarmForever.
+-- luacheck configuration for GoldCompass.
 -- Lua 5.1 semantics. read_globals is an allowlist: only WoW APIs that were checked for the
--- target client (see work/notes/BuyOrFarmForever-plan.md and work/notes/forever-facts.md).
+-- target client (see work/notes/GoldCompass-plan.md and work/notes/forever-facts.md).
 -- Add an API here only after it has been verified.
 
 std = "lua51"
@@ -12,15 +12,16 @@ self = false
 
 -- Globals the addon is allowed to create.
 globals = {
-	"BuyOrFarmForever", -- addon namespace (debugging)
-	"BuyOrFarmForeverDB", -- SavedVariables
-	"SLASH_BUYORFARMFOREVER1", -- /bof
-	"SLASH_BUYORFARMFOREVER2", -- /kof
-	SlashCmdList = { fields = { BUYORFARMFOREVER = { read_only = false } } },
+	"GoldCompass", -- addon namespace (debugging)
+	"GoldCompassDB", -- SavedVariables
+	"BuyOrFarmForeverDB", -- SavedVariables of the former name, taken over once (Core/Main.lua)
+	"SLASH_GOLDCOMPASS1", -- /gc
+	"SLASH_GOLDCOMPASS2", -- /gk
+	SlashCmdList = { fields = { GOLDCOMPASS = { read_only = false } } },
 	-- key binding names (Bindings.xml)
-	"BINDING_HEADER_BUYORFARMFOREVER",
-	"BINDING_NAME_BUYORFARMFOREVER_TOGGLE",
-	"BINDING_NAME_BUYORFARMFOREVER_FARM", "BINDING_NAME_BUYORFARMFOREVER_ADVISOR",
+	"BINDING_HEADER_GOLDCOMPASS",
+	"BINDING_NAME_GOLDCOMPASS_TOGGLE",
+	"BINDING_NAME_GOLDCOMPASS_FARM", "BINDING_NAME_GOLDCOMPASS_ADVISOR",
 }
 
 -- WoW API and Blizzard UI globals the addon is allowed to read.
@@ -146,7 +147,7 @@ read_globals = {
 	"GetAuctionItemInfo",
 	"CanSendAuctionQuery",
 	"QueryAuctionItems",
-	-- performance (/bof perf; documented in 70003, used by Blizzard_AddOnList)
+	-- performance (/gc perf; documented in 70003, used by Blizzard_AddOnList)
 	"UpdateAddOnMemoryUsage",
 	"GetAddOnMemoryUsage",
 	"debugprofilestop",

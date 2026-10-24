@@ -6,6 +6,25 @@ local L = ns.L
 local Log = ns.Log
 local Util = ns.Util
 
+-- Saved data of the addon's former name "BuyOrFarmForever" (until 0.13.0): the player copies its
+-- file WTF/.../SavedVariables/BuyOrFarmForever.lua to GoldCompass.lua; the TOC still lists the old
+-- variable, so it loads and is taken over once (and then saved under the new name only).
+local function takeOverLegacyData()
+	if GoldCompassDB == nil and type(BuyOrFarmForeverDB) == "table" then
+		GoldCompassDB = BuyOrFarmForeverDB
+		Log.Info("saved data taken over from BuyOrFarmForeverDB")
+	end
+	BuyOrFarmForeverDB = nil
+end
+
+-- The language of the setting (Locales/Locale.lua); data from a newer version is not validated, its
+-- settings may be missing.
+local function applyLanguage(db, client)
+	local settings = type(db.settings) == "table" and db.settings or {}
+	ns.Locale.SetActive(ns.Locale.Resolve(settings.language, client:GetLocale()))
+	ns.Events.Emit("LOCALE_CHANGED")
+end
+
 local function onAddonLoaded(event, loadedName)
 	if loadedName ~= addonName then
 		return
@@ -14,17 +33,15 @@ local function onAddonLoaded(event, loadedName)
 
 	local client = ns.Client
 	local version = client:GetAddOnVersion(addonName) or ""
-	local db, status, info = ns.DB.Load(BuyOrFarmForeverDB, {
+	takeOverLegacyData()
+	local db, status, info = ns.DB.Load(GoldCompassDB, {
 		client = client.id,
 		now = client:GetServerTime(),
 		addonVersion = version,
 	})
-	BuyOrFarmForeverDB = db
+	GoldCompassDB = db
 	ns.db = db
-	-- Data from a newer version is not validated: its settings may be missing.
-	local settings = type(db.settings) == "table" and db.settings or {}
-	ns.Locale.SetActive(ns.Locale.Resolve(settings.language, client:GetLocale()))
-	ns.Events.Emit("LOCALE_CHANGED")
+	applyLanguage(db, client)
 	ns.readOnly = (status == "newer" or status == "migration_failed")
 	Log.Flush()
 	Log.Info("loaded " .. addonName .. " " .. version .. ", database status " .. status)
@@ -34,7 +51,7 @@ local function onAddonLoaded(event, loadedName)
 		Log.Warn("stored schema " .. tostring(db.schemaVersion) .. " is newer than " .. ns.DB.SCHEMA_VERSION)
 	elseif status == "migration_failed" then
 		Log.Print(L.DB_MIGRATION_FAILED)
-		Log.ReportError("BuyOrFarmForever: " .. tostring(info.error))
+		Log.ReportError("GoldCompass: " .. tostring(info.error))
 	end
 	if #info.repairs > 0 then
 		Log.Print(Util.Format(L.DB_REPAIRED, #info.repairs))

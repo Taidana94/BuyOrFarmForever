@@ -1,4 +1,4 @@
--- /bof account: the account overview (Core/Account.lua) of the characters on the current realm:
+-- /gc account: the account overview (Core/Account.lua) of the characters on the current realm:
 -- gold, professions with skill and learned recipes, items in bags and bank. The lines are shared
 -- with the planner view of the Gold tab.
 local _, ns = ...

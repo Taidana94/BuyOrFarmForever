@@ -1,7 +1,7 @@
 -- Settings tab of the main window: one check box or number box per schema entry
 -- (Core/Settings.lua), grouped in two columns, the character's stat weights for the gear rating (with
 -- the suggestion for class and talents), plus debug mode, the performance output and a reset with
--- confirmation. Every change runs /bof set (or weights/debug/perf/reset), like the chat.
+-- confirmation. Every change runs /gc set (or weights/debug/perf/reset), like the chat.
 local _, ns = ...
 
 local L = ns.L

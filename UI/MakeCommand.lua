@@ -1,4 +1,4 @@
--- /bof make <recipe> [count | all]: crafts a learned recipe from the recipe book (used by the craft
+-- /gc make <recipe> [count | all]: crafts a learned recipe from the recipe book (used by the craft
 -- buttons of the professions tab). If the profession's recipe window is not open, the command opens it
 -- and asks for a second click: crafting right after the window opened would run outside the click,
 -- and whether the client allows that is not verified. The count is capped at what the bags allow.

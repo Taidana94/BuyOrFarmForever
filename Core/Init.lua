@@ -3,6 +3,6 @@ local addonName, ns = ...
 
 ns.ADDON_NAME = addonName
 
--- Expose the namespace for debugging (e.g. /dump BuyOrFarmForever.Client.id).
+-- Expose the namespace for debugging (e.g. /dump GoldCompass.Client.id).
 -- Besides the SavedVariables, this is the only global the addon creates.
-BuyOrFarmForever = ns
+GoldCompass = ns

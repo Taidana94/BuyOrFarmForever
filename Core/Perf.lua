@@ -1,4 +1,4 @@
--- Performance numbers for /bof perf: the addon's share of frame time (same formula as Blizzard's
+-- Performance numbers for /gc perf: the addon's share of frame time (same formula as Blizzard's
 -- addon list in Classic Era 70003) and the duration of key operations. Pure logic except for the
 -- client calls through ns.Client.
 local _, ns = ...

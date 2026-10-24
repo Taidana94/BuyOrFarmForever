@@ -1,4 +1,4 @@
--- /bof week: weekly review in the chat (Core/WeekReview.lua).
+-- /gc week: weekly review in the chat (Core/WeekReview.lua).
 local _, ns = ...
 
 local L = ns.L

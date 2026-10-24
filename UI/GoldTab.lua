@@ -1,7 +1,7 @@
 -- Gold tab of the main window, two views (buttons at the top right): the gold buffer
 -- (budget overview, the savings goals as editable rows, a row to create a goal, a purchase check,
 -- the net income, buttons to distribute the gold and to switch whether the sourcing plan may use
--- reserves) and the gold planner (UI/GoldPlanPanel.lua). Every input runs the same /bof command as
+-- reserves) and the gold planner (UI/GoldPlanPanel.lua). Every input runs the same /gc command as
 -- the chat.
 local _, ns = ...
 

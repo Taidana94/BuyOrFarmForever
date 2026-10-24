@@ -1,5 +1,5 @@
 -- Client adapter for WoW Classic Era (1.15.9, interface 11509).
--- APIs used here are listed with their verification status in work/notes/BuyOrFarmForever-plan.md.
+-- APIs used here are listed with their verification status in work/notes/GoldCompass-plan.md.
 local _, ns = ...
 
 local ClassicEra = {

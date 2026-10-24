@@ -129,7 +129,7 @@ local function syncWatching()
 	end
 end
 
--- True while the player state signals are registered (for tests and /bof perf reviews).
+-- True while the player state signals are registered (for tests and /gc perf reviews).
 function FarmAssist.IsWatching()
 	return watching
 end

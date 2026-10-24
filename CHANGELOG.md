@@ -3,6 +3,20 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.13.0-alpha.2] – 2026-10-24 (Testversion)
+
+### Geändert
+- **Neuer Name: Gold Compass (deutsch „Goldkompass“).** Der Addon-Ordner heißt jetzt `GoldCompass`,
+  die Chatbefehle sind **`/gc`** und **`/gk`** (statt `/bof` und `/kof`).
+- Die Auctionator-Einkaufsliste heißt „GoldCompass“.
+- Tastenbelegungen stehen unter „Goldkompass“ und müssen einmal neu gesetzt werden.
+
+### Deine Daten übernehmen
+- Spiel beenden. Im Ordner `WTF\Account\<Konto>\SavedVariables` die Datei `BuyOrFarmForever.lua`
+  kopieren und die Kopie in `GoldCompass.lua` umbenennen. Beim nächsten Start übernimmt das Addon
+  die Daten einmal von selbst.
+- Den alten Ordner `Interface\AddOns\BuyOrFarmForever` löschen.
+
 ## [0.13.0-alpha.1] – 2026-10-24 (Testversion)
 
 ### Neu

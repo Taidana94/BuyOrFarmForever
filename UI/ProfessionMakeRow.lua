@@ -1,6 +1,6 @@
 -- Craft buttons at the bottom of the professions tab's detail panel: a box for the number of crafts,
 -- "Herstellen", "Alle: n" (what the bags allow) and "Stapel: n" (one stack of the product). Every button
--- runs /bof make (UI/MakeCommand.lua). Recipes without reagents in the bags get disabled buttons;
+-- runs /gc make (UI/MakeCommand.lua). Recipes without reagents in the bags get disabled buttons;
 -- enchantments get a hint instead (they need a target item). Widgets are created once with the panel and
 -- refilled with Update.
 local _, ns = ...

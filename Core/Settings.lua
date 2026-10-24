@@ -1,6 +1,6 @@
 -- Settings schema: one entry per user setting with type, default, range, group and label key.
 -- The schema adds its defaults and ranges to DB.DEFAULTS.settings / DB.MIN / DB.MAX (so loading
--- validates them), drives the settings tab and /bof set. Account-wide, one profile (db.settings).
+-- validates them), drives the settings tab and /gc set. Account-wide, one profile (db.settings).
 -- Pure logic, no WoW API calls. Loaded right after Core/DB.lua.
 local _, ns = ...
 

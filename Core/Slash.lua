@@ -1,4 +1,4 @@
--- Slash commands /bof and /kof: help, version, debug, reset.
+-- Slash commands /gc and /gk: help, version, debug, reset.
 -- Subcommands are language-neutral; all output is localized.
 local addonName, ns = ...
 
@@ -141,7 +141,7 @@ function Slash.Handle(message)
 end
 
 function Slash.Register()
-	SLASH_BUYORFARMFOREVER1 = "/bof"
-	SLASH_BUYORFARMFOREVER2 = "/kof"
-	SlashCmdList.BUYORFARMFOREVER = Slash.Handle
+	SLASH_GOLDCOMPASS1 = "/gc"
+	SLASH_GOLDCOMPASS2 = "/gk"
+	SlashCmdList.GOLDCOMPASS = Slash.Handle
 end

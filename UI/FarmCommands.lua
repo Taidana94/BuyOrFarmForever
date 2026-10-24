@@ -1,4 +1,4 @@
--- /bof farm: start, pause, resume, travel and stop farm runs (the farm window's buttons run the same
+-- /gc farm: start, pause, resume, travel and stop farm runs (the farm window's buttons run the same
 -- commands), list runs. Stopping saves the run at once: only looted items count (user decision 0.10.0,
 -- no review step). Without a subcommand the farm window opens or closes.
 local _, ns = ...

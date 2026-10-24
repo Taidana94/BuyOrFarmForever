@@ -1,7 +1,7 @@
 -- Plan window ("Jetzt tun"): a small movable window with the steps of the active plan as a checklist
 -- (UI/PlanCommands.lua, Core/ActivePlan.lua). A click on a step ticks or unticks it by hand; the
 -- addon ticks steps itself when the game shows them done. Header: progress and gold since the start.
--- Buttons: "Starten", "Einkaufsliste" (/bof shop), "Beenden" ends the plan with its result.
+-- Buttons: "Starten", "Einkaufsliste" (/gc shop), "Beenden" ends the plan with its result.
 -- Created on first open, refreshed only while shown.
 local _, ns = ...
 

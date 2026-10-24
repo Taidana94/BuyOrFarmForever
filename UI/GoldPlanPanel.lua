@@ -1,8 +1,8 @@
 -- Planner view of the Gold tab: time buttons (1, 2, 4 hours) and a duration box, three view
 -- buttons, and below them either the plan for that time (summary, steps, alternatives, the farm
 -- routes with gold per hour), the comparison of the strategies, or the account overview; an item
--- slot for the keep list. Same lines as /bof goldplan, /bof goldsources, /bof compare and
--- /bof account; inputs run those commands.
+-- slot for the keep list. Same lines as /gc goldplan, /gc goldsources, /gc compare and
+-- /gc account; inputs run those commands.
 local _, ns = ...
 
 local L = ns.L

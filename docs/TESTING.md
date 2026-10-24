@@ -5,7 +5,7 @@
 One command runs levels 0, 1, 1b, 1c and 2:
 
 ```text
-py -3 -I work/tools/check.py outputs/BuyOrFarmForever
+py -3 -I work/tools/check.py outputs/GoldCompass
 ```
 
 | Level | Content |
@@ -32,8 +32,8 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 | 0.11.0 | 2026-10-23 | 303 checks passed, 0 failed; release build of 0.11.0-alpha.17 (alphas 5–17: keep list icons, about/how-to/help topics, minimap button, wants "Alle/Neu", tooltip recipe lines, profession read date, enchanting products by name, reagent toggle) |
 | 0.11.0-alpha.4 | 2026-10-23 | 297 checks passed, 0 failed; new tests: automatic farm start (not resting, target from missing loot, any loot, setting off), crafts on alts (task on the alt, plan text, not when known by the character), price history and resale (daily lows, units at the lowest price, median of earlier days, gain after the cut, stale listing, comparison line, pruning) |
 | 0.11.0-alpha.3 | 2026-10-23 | 294 checks passed, 0 failed; new tests: route cache (reuse, copy, rebuild on a saved run, a signal and age), mailbox stock (only read at the mailbox, attachments summed, gold in mail, own count, account total, taken mail removed) |
-| 0.11.0-alpha.1 | 2026-10-23 | 292 checks passed, 0 failed; new `test_strategies.lua` (gold per character, account rows and `/bof account`, fishing detection and fishing routes, crafted routes, comparison ranking and missing families, `/bof compare`, planner views) |
-| 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/bof want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
+| 0.11.0-alpha.1 | 2026-10-23 | 292 checks passed, 0 failed; new `test_strategies.lua` (gold per character, account rows and `/gc account`, fishing detection and fishing routes, crafted routes, comparison ranking and missing families, `/gc compare`, planner views) |
+| 0.10.0-alpha.1 | 2026-10-23 | 284 checks passed, 0 failed (266 unit tests); new `test_acquire.lua` (planner: stock first, buy vs. craft, recursive reagents, sale value of stock, hour value and ties, open items, shared pool, cycles) and `test_wants.lua` (model, validation, migration 1 -> 2, `/gc want`, plan with alts' stock and recipes, cache); farm, window, hints, advisor, gold and recipe tests rewritten for wants, the farm window and routes; sourcing, material input, alternatives and quest tests removed with their features |
 | 0.9.0-alpha.1 | 2026-10-23 | 324 checks passed, 0 failed (306 unit tests); 8 new tests in `test_make.lua` (craft counts, crafting in the open window with cap and "all", opening a closed or other window, combat/no reagents/unknown/enchantment refused, collapsed categories, smelting spell for Mining, detail buttons); mutation check: crafting in another profession's window fails 1 |
 | 0.8.0 | 2026-10-23 | 316 checks passed, 0 failed (298 unit tests); against 0.8.0-alpha.1: skill bar guard (with test; mutation check: removing the guard fails 1) and the fix for the user's in-game finding (linen bolt showed a loss because owned reagents counted at their buy price; now at their sale value after the cut, like `CraftTasks`; the new test fails without the fix), version and documentation |
 | 0.8.0-alpha.1 | 2026-10-23 | 315 checks passed, 0 failed; 14 new tests in `test_professions.lua` (book with profession/difficulty/skill, smelting as mining, enchantments kept, categories from facts, effect data keys, labels, grouping, reagent filter, search, economics, sanitizing, tab list/collapse/detail/filter/search, goal button, gear by stats); layout test includes the new tab; level 1c exempts `Data/` from the file length (data tables) |
@@ -53,8 +53,8 @@ the client does, functions or invalid keys fail the test), slash commands, the e
 
 ## In game
 
-Since 2026-10-18 the game folder `_classic_era_\Interface\AddOns\BuyOrFarmForever` is a junction to
-`outputs\BuyOrFarmForever` in the development folder: the client loads the files of the branch that
+Since 2026-10-18 the game folder `_classic_era_\Interface\AddOns\GoldCompass` is a junction to
+`outputs\GoldCompass` in the development folder: the client loads the files of the branch that
 is currently checked out. After a change, `/reload` is enough. Before a test, note the branch and
 commit (`git log -1 --oneline`).
 
@@ -88,7 +88,7 @@ Setup: only this addon + BugSack/BugGrabber. Character `CharA-RealmA` (Alliance)
 | Client detection in the real client | debug log: `client classic_era 1.15.9 (70003), interface 11509, locale deDE` | passed |
 | Character data on `PLAYER_LOGIN` | SavedVariables: character entry with defaults and faction | passed |
 | Debug mode persists over `/reload` | debug log: debug on, then load with status `ok` and login entries | passed |
-| `/bof debug` off/on, `/bof reset` + `confirm` | debug log + settings back to defaults, character data kept | passed |
+| `/gc debug` off/on, `/gc reset` + `confirm` | debug log + settings back to defaults, character data kept | passed |
 | Help, version line, reset prompt and timeout, unknown command, umlauts | confirmed by the user (chat output) | passed |
 | Combat (no `ADDON_ACTION_BLOCKED`) | confirmed by the user | passed |
 | Lua errors | BugGrabber: no errors recorded (session 7) | passed |
@@ -101,12 +101,12 @@ Not tested: other client languages, interaction with other addons.
 | Check | Evidence | Result |
 |---|---|---|
 | Goal created, item added via link, crafts | SavedVariables: goal 1 "Test", item 2589 × 4, crafts 3 | passed |
-| `/bof stock` bag and bank counts | confirmed by the user ("always correct") | passed |
+| `/gc stock` bag and bank counts | confirmed by the user ("always correct") | passed |
 | Bank snapshot taken on bank visit | SavedVariables: `stock.bank[2589] = 1`, `bankAt` 17:38 | passed |
 | **Q-T6:** live bank count with closed bank after `/reload` and after a full relog | confirmed by the user | passed |
 | Lua errors | BugGrabber: none | passed |
 | Snapshot comparison line (debug mode) | debug mode was off | not performed |
-| `/bof goal delete` | later SavedVariables: `materialGoals` empty, `nextGoalID` 2 (done before the 0.2.0-alpha.2 test) | passed |
+| `/gc goal delete` | later SavedVariables: `materialGoals` empty, `nextGoalID` 2 (done before the 0.2.0-alpha.2 test) | passed |
 
 ### Result 0.2.0-alpha.2 (Classic Era, 2026-10-18)
 
@@ -116,9 +116,9 @@ Setup: this addon + BugSack/BugGrabber. Characters `CharA` and `CharB`, both
 | Check | Evidence | Result |
 |---|---|---|
 | First attempt: alt counted | "Twinks 0"; SavedVariables: both characters `stock.bags[6948] = 0` although each has one; snapshots were taken on `PLAYER_LOGOUT` | **failed** (bug) |
-| Fix: no logout snapshot, `/bof stock` stores a snapshot | SavedVariables: CharA `bags[6948] = 1`, CharB `bags[6948] = 1` | passed |
-| `/bof stock` on CharA shows "Twinks 1" and the detail line for CharB | confirmed by the user | passed |
-| `/bof stock others` off and on | confirmed by the user; SavedVariables: `countOtherCharacters = true` at the end | passed |
+| Fix: no logout snapshot, `/gc stock` stores a snapshot | SavedVariables: CharA `bags[6948] = 1`, CharB `bags[6948] = 1` | passed |
+| `/gc stock` on CharA shows "Twinks 1" and the detail line for CharB | confirmed by the user | passed |
+| `/gc stock others` off and on | confirmed by the user; SavedVariables: `countOtherCharacters = true` at the end | passed |
 | Lua errors | `!BugGrabber.lua`: `errors` empty (session 23) | passed |
 | Other-faction alt shown but not counted, other-realm alt hidden | no such characters | not performed (out of game only) |
 
@@ -137,7 +137,7 @@ Setup: this addon + BugSack/BugGrabber. Character `CharA-RealmA`.
 | Recipe key from `GetTradeSkillRecipeLink` | the stored key is `item:`, so the trade skill recipe link gave no `enchant:`/`spell:` id (or nil) | observation |
 | Craft window (Enchanting), both windows open | no evidence in the data (no `spell:` recipe stored) | not performed |
 
-The stored goal has `crafts = 1`; the checklist asked for `/bof recipe 3`. The unit test covers the
+The stored goal has `crafts = 1`; the checklist asked for `/gc recipe 3`. The unit test covers the
 crafts argument; if the in-game command was entered with 3, this needs a recheck.
 
 ### Result 0.2.0-alpha.4 (Classic Era, 2026-10-18)
@@ -146,7 +146,7 @@ Checklist 0.2.0-alpha.4 (main window) confirmed by the user ("alles gepasst"): l
 automatic refresh, goal switching, all goals, tooltip with the other character, recipe import
 button, position after `/reload`, Escape and X, combat. SavedVariables: `settings.window` =
 CENTER 150/49 (position saved), recipe `item:2862` imported via the button. `!BugGrabber.lua`:
-no errors (session 27). Not tested: `/bof perf` (added after this test).
+no errors (session 27). Not tested: `/gc perf` (added after this test).
 
 ### Performance review (2026-10-18, before 0.2.0-alpha.5)
 
@@ -158,13 +158,13 @@ no errors (session 27). Not tested: `/bof perf` (added after this test).
 | `OnUpdate` / tickers | none | – |
 | Events while idle | `BAG_UPDATE_DELAYED`, bank, profession window open/close (rare, cheap) | window events only while shown |
 | Window | refresh coalesced to one per frame, only while visible; frames created once | – |
-| `UpdateAddOnMemoryUsage` | expensive (walks all addons) | only on `/bof perf`, at most every 15 s |
+| `UpdateAddOnMemoryUsage` | expensive (walks all addons) | only on `/gc perf`, at most every 15 s |
 
 In-game smoke test of 0.2.0-alpha.5 (after the refactoring): confirmed by the user ("passt");
 SavedVariables: `lastAddonVersion = 0.2.0-alpha.5`, goal "Perftest" with items 6948, 2589, 159;
 `!BugGrabber.lua`: no errors (session 30).
 
-`/bof perf` in game (Classic Era 70003, 2026-10-18, reported by the user; window state not stated):
+`/gc perf` in game (Classic Era 70003, 2026-10-18, reported by the user; window state not stated):
 
 | Metric | Value |
 |---|---|
@@ -271,7 +271,7 @@ Bugs found (screenshot):
 1. German client, setting "wie das Spiel": everything German as before.
 2. Settings tab, button "Sprache": switches to "Deutsch", then "English"; each time the reload
    question appears. After "Ja": all windows, help and chat commands in English.
-3. `/bof set language auto`: back to the client language after /reload.
+3. `/gc set language auto`: back to the client language after /reload.
 4. English texts fit their buttons and rows (window, settings tab, plan window, advisor cards).
 5. Key bindings menu: section and names in the chosen language.
 
@@ -283,19 +283,19 @@ Week view, skill-up tooltip and shopping list card: passed in game (user: "Funkt
 
 Result 2026-10-24: all steps passed in game (user: "alles geklappt").
 
-1. `/bof shop` with a want bought on the AH: chat list; with Auctionator the list "BuyOrFarm"
+1. `/gc shop` with a want bought on the AH: chat list; with Auctionator the list "GoldCompass"
    appears in its "Einkaufen" tab and searches each item exactly.
 2. Plan window: the button "Einkaufsliste" prints the same list.
-3. `/bof mail` on a character carrying something an alt wants: "An <Alt>:" with the items; at the
+3. `/gc mail` on a character carrying something an alt wants: "An <Alt>:" with the items; at the
    mailbox the card shows the same.
-4. `/bof week` after a finished plan: the plan counts as "1 beendet".
-5. `/bof skillup` after opening a profession window: up to three recipes per profession.
+4. `/gc week` after a finished plan: the plan counts as "1 beendet".
+5. `/gc skillup` after opening a profession window: up to three recipes per profession.
 6. At the auction house without a recent full scan: card "Vollscan fällig".
 7. Full scan with Auctionator on a busy realm: no long freeze; debug line "full scan: N auctions".
 
 ### Checklist 0.11.0-alpha.4 (Classic Era, automatic farm start, alt crafts, resale)
 
-1. `/reload`, `/bof version` → `0.11.0-alpha.4`. BugSack empty. Settings tab: new check box
+1. `/reload`, `/gc version` → `0.11.0-alpha.4`. BugSack empty. Settings tab: new check box
    "Farmrunde beim Looten automatisch starten" fits.
 2. In a city loot something (e.g. a quest item or a chest in an inn): no run starts. Outside, kill and
    loot a mob: the farm window opens with a running run. Stand still for the idle time: the run ends.
@@ -304,21 +304,21 @@ Result 2026-10-24: all steps passed in game (user: "alles geklappt").
 4. Resale needs AH searches on 3 different days for the same item; then a clearly cheaper listing
    shows "Im AH kaufen und neu einstellen" in "Vergleich". On day 1 the comparison names the
    missing data ("im AH an mindestens 3 Tagen suchen").
-5. `/bof perf` after browsing several AH pages.
+5. `/gc perf` after browsing several AH pages.
 
 ### Checklist 0.11.0-alpha.3 (Classic Era, mailbox stock, route cache)
 
-1. `/reload`, `/bof version` → `0.11.0-alpha.3`. BugSack empty.
+1. `/reload`, `/gc version` → `0.11.0-alpha.3`. BugSack empty.
 2. Send an alt some items and gold, log in the alt, open the mailbox, do not take anything: the tooltip
-   of a wanted item shows "Post n"; `/bof account` shows "(+ … in der Post)". Take the mail: the count
+   of a wanted item shows "Post n"; `/gc account` shows "(+ … in der Post)". Take the mail: the count
    moves from Post to Taschen.
-3. Advisor window open while looting for a minute, then `/bof perf`: peak lower than the 7.54 % of 0.8.0.
+3. Advisor window open while looting for a minute, then `/gc perf`: peak lower than the 7.54 % of 0.8.0.
 4. Then the checklist 0.11.0-alpha.1 below.
 
 ### Checklist 0.11.0-alpha.1 (Classic Era, strategy comparison, account, fishing)
 
-1. `/reload`, `/bof version` → `0.11.0-alpha.1`. BugSack empty.
-2. `/bof account` → header with the gold of the characters on the realm; this character with its
+1. `/reload`, `/gc version` → `0.11.0-alpha.1`. BugSack empty.
+2. `/gc account` → header with the gold of the characters on the realm; this character with its
    gold (matches the bag display), professions with skill and recipe count. Log an alt in and back:
    the alt appears with its gold.
 3. Tab "Goldpuffer" → "Goldplaner": buttons "Plan", "Vergleich", "Konto" fit; "Vergleich" lists the
@@ -330,13 +330,13 @@ Result 2026-10-24: all steps passed in game (user: "alles geklappt").
 5. With a learned recipe whose product sells better than its reagent (e.g. linen → bolt with an AH
    price for the bolt) and a farm route that loots the reagent: "Vergleich" shows "Farmen, Beute
    verarbeiten, verkaufen" and the plan line "…, verarbeitet zu …".
-6. `/bof perf` with the planner open on "Vergleich".
+6. `/gc perf` with the planner open on "Vergleich".
 
 ### Checklist 0.10.0-alpha.1 (Classic Era, wants, stock, farm window)
 
-Before: back up `WTF/.../SavedVariables/BuyOrFarmForever.lua` (the migration rewrites the goals).
+Before: back up `WTF/.../SavedVariables/GoldCompass.lua` (the migration rewrites the goals).
 
-1. `/reload`, `/bof version` → `0.10.0-alpha.1`. BugSack empty. Chat: no repair warnings beyond the
+1. `/reload`, `/gc version` → `0.10.0-alpha.1`. BugSack empty. Chat: no repair warnings beyond the
    migration. Tabs: Ziele, Farmen, Berufe, Goldpuffer, Einstellungen, Hilfe.
 2. Tab "Ziele": the old goals appear as wants (recipe goal → its product). Add Leinenstoffballen x5 via
    the slot: the tree shows "herstellen: 5×" with Leinenstoff below (hast du / kaufen / farmen), the
@@ -345,18 +345,18 @@ Before: back up `WTF/.../SavedVariables/BuyOrFarmForever.lua` (the migration rew
 4. Click "Herstellen" in the tree: tailoring window opens (first click) / crafts (second click).
 5. Bank: open and close the bank once, then `/reload`; a want covered by bank items shows "hast du".
    Log an alt in, wait 15 s, log the main in: the alt's bags count in the tooltip.
-6. Farm: `/bof farm` opens the small window; Start → status line counts; Beenden → "Farmrunde
+6. Farm: `/gc farm` opens the small window; Start → status line counts; Beenden → "Farmrunde
    gespeichert (nur Beute zählt)." and a row in tab "Farmen" with gold per hour. Right click on the
    minimap button opens the window / pauses.
-7. Settings tab: weight boxes and "Vorschlag" at the bottom; "1 Std. Farmen ist wert" box; `/bof set
+7. Settings tab: weight boxes and "Vorschlag" at the bottom; "1 Std. Farmen ist wert" box; `/gc set
    hourValueGold 2` changes the hour value line in "Ziele".
-8. `/bof perf` idle and with "Ziele" open; `/bof want` in chat.
+8. `/gc perf` idle and with "Ziele" open; `/gc want` in chat.
 9. Advisor at the merchant / bank: cards name items of the wants; sell suggestions leave wanted items
    and their reagents out.
 
 ### Checklist 0.9.0-alpha.1 (Classic Era, crafting from the professions tab)
 
-1. `/reload`, `/bof version` → `0.9.0-alpha.1`. BugSack empty.
+1. `/reload`, `/gc version` → `0.9.0-alpha.1`. BugSack empty.
 2. Tab "Berufe", Tailoring, select Leinenstoffballen with linen in the bags: bottom row "[1] Herstellen ·
    Alle: n · Stapel: n"; "Als Ziel anlegen" now right of "Zutaten".
 3. Profession window closed: click "Herstellen" → the tailoring window opens, chat asks for a second click,
@@ -382,7 +382,7 @@ Before: back up `WTF/.../SavedVariables/BuyOrFarmForever.lua` (the migration rew
 
 ### Performance review 0.8.0 (2026-10-23, before the release)
 
-In game (user, `/bof perf`, Classic Era 1.15.9, after testing the professions tab, window state at the
+In game (user, `/gc perf`, Classic Era 1.15.9, after testing the professions tab, window state at the
 time of the command not reported): memory 1640 KB; addon share of frame time: recent 0.00 %, average
 0.01 %, peak 7.54 %; "Bestand aller Ziele neu berechnen" 1.520 ms (18 items).
 
@@ -414,16 +414,16 @@ lowest listing itself. The auction deposit (8 for the bolt) is refunded on sale 
 ### Result 0.8.0-alpha.1 (Classic Era, 2026-10-23)
 
 User checked the professions tab (Cooking, Tailoring, Enchanting, First Aid on the test character) and
-confirmed: "Passt soweit!". No details reported on single checklist points. `/bof perf` numbers: see the
+confirmed: "Passt soweit!". No details reported on single checklist points. `/gc perf` numbers: see the
 performance review above. Not checked: Mining/Smelting, Alchemy, Leatherworking, Blacksmithing, Engineering,
 Poisons; the user said to assume they work as well (2026-10-23).
 
 ### Checklist 0.8.0-alpha.1 (Classic Era, professions tab)
 
-1. `/reload`, `/bof version` → `0.8.0-alpha.1`. BugSack empty.
+1. `/reload`, `/gc version` → `0.8.0-alpha.1`. BugSack empty.
 2. Facts to report: `/dump GetTradeSkillLine()` with the cooking window open, the same with the
    smelting window open (expected "Bergbau" or "Verhüttung"), `/dump C_TradeSkillUI.GetTradeSkillDisplayName(185)`.
-3. Open each profession window once (also Enchanting), then `/bof show` → tab "Berufe": one icon per
+3. Open each profession window once (also Enchanting), then `/gc show` → tab "Berufe": one icon per
    profession (correct icon, tooltip with the number of recipes); name and skill bar match the window.
    No profession ends up under "Sonstige" (question mark icon), except old entries until their window
    was opened.
@@ -437,7 +437,7 @@ Poisons; the user said to assume they work as well (2026-10-23).
 7. Detail: icon tooltip, reagent lines (bags/need, "+n in der Bank"), costs, value, profit; "Als Ziel
    anlegen" creates a goal (tab "Material"), a second click increases it.
 8. Mouse wheel scrolls a long list; nothing overlaps (screenshot welcome), the 8 tab buttons fit.
-9. `/bof perf` with the tab closed and open; report the numbers.
+9. `/gc perf` with the tab closed and open; report the numbers.
 
 ### Result 0.7.0-alpha.6 (Classic Era, 2026-10-19)
 
@@ -447,13 +447,13 @@ this addon (only an old `/dump` typo of session 44). The SavedVariables (written
 
 ### Checklist 0.7.0-alpha.6 (Classic Era, farmed reagents)
 
-1. `/bof version` → `0.7.0-alpha.6`. Checklists 0.7.0-alpha.5 and alpha.4 below still apply.
+1. `/gc version` → `0.7.0-alpha.6`. Checklists 0.7.0-alpha.5 and alpha.4 below still apply.
 2. A recipe whose reagent has no price but was farmed in a measured run (or dev samples via
-   `/bofdev seed`): Herstellen names it with "Zutaten farmen"; tooltip "Zutaten farmen: etwa …".
+   `/gcdev seed`): Herstellen names it with "Zutaten farmen"; tooltip "Zutaten farmen: etwa …".
 
 ### Checklist 0.7.0-alpha.5 (Classic Era, craft values)
 
-1. `/bof version` → `0.7.0-alpha.5`. Checklist 0.7.0-alpha.4 below still applies.
+1. `/gc version` → `0.7.0-alpha.5`. Checklist 0.7.0-alpha.4 below still applies.
 2. Profession character with a profitable recipe: Herstellen shows "Gewinn bis …"; the tooltip shows
    per recipe "Händler … · AH … · Zutaten …".
 3. Put the reagents for 2 crafts in the bags: "Herstellen: 2× …", "Zutaten vorhanden".
@@ -462,8 +462,8 @@ this addon (only an old `/dump` typo of session 44). The SavedVariables (written
 
 ### Checklist 0.7.0-alpha.4 (Classic Era, advisor rows)
 
-1. `/reload`, `/bof version` → `0.7.0-alpha.4`. BugSack empty.
-2. `/bof advisor`: rows in this order: Verkaufen, Entzaubern (enchanter only), Herstellen, Sparziel,
+1. `/reload`, `/gc version` → `0.7.0-alpha.4`. BugSack empty.
+2. `/gc advisor`: rows in this order: Verkaufen, Entzaubern (enchanter only), Herstellen, Sparziel,
    Deine beste Stunde. Empty rows grey with a reason. Nothing cut off.
 3. Verkaufen: "Händler: x · AH: y"; tooltip lists both. At a merchant a click sells only the vendor
    list (buyback tab).
@@ -495,8 +495,8 @@ User: everything works ("Der rest ist perfekt"), but the advisor window is far t
 
 ### Checklist 0.7.0-alpha.1 (Classic Era, advisor)
 
-1. `/reload`, `/bof version` → `0.7.0-alpha.1`. BugSack empty.
-2. Shift+click on the minimap button (or `/bof advisor`): window "Ratgeber" with cards (stripe,
+1. `/reload`, `/gc version` → `0.7.0-alpha.1`. BugSack empty.
+2. Shift+click on the minimap button (or `/gc advisor`): window "Ratgeber" with cards (stripe,
    icon, title, gold line, grey line); hover shows the item or the item list. Nothing cut off.
 3. Merchant: cards "Mach hier:" right of the merchant window. "Verkaufen" asks, then sells the list
    (check with the merchant's buyback tab). A missing goal material the merchant sells: "Kaufen"
@@ -511,8 +511,8 @@ User: everything works ("Der rest ist perfekt"), but the advisor window is far t
 ### Result 0.6.0-alpha.2 (Classic Era, 2026-10-19)
 
 User: new savings goal works again; everything else of the checklist passed ("Passt alles"). Farm
-routes (`/bof goldsources`, planner, "Anderer Weg") were tested with the sample runs of the
-developer addon `work/dev/BuyOrFarmForever_Dev` (`/bofdev seed`), not with real farm runs: the
+routes (`/gc goldsources`, planner, "Anderer Weg") were tested with the sample runs of the
+developer addon `work/dev/GoldCompass_Dev` (`/gcdev seed`), not with real farm runs: the
 looted-coin capture of real runs is covered by unit tests only.
 
 ### Release check 0.6.0 (2026-10-19)
@@ -524,8 +524,8 @@ looted-coin capture of real runs is covered by unit tests only.
 | In-game test (Forever) | none – the release must not be called Forever-compatible |
 | Version in TOC, CHANGELOG, README | 0.6.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged |
-| ZIP | built and inspected: top folder `BuyOrFarmForever/`, no dev files, developer addon not included |
-| Performance | static review below; in-game `/bof perf` not measured for 0.6.0 |
+| ZIP | built and inspected: top folder `GoldCompass/`, no dev files, developer addon not included |
+| Performance | static review below; in-game `/gc perf` not measured for 0.6.0 |
 | Tag | `v0.6.0`, only after the user's approval |
 
 ### Performance review before 0.6.0 (2026-10-19, static)
@@ -549,18 +549,18 @@ items. Both in 0.6.0-alpha.2.
 
 ### Checklist 0.6.0-alpha.1 (Classic Era, gold planner)
 
-1. `/reload`, `/bof version` → `0.6.0-alpha.1`. BugSack empty.
+1. `/reload`, `/gc version` → `0.6.0-alpha.1`. BugSack empty.
 2. `/dump C_SpellBook.IsSpellKnown(13262)` (true on an enchanter, false otherwise) and, with
    Auctionator, `/dump Auctionator.API.v1.GetDisenchantPriceByItemID("Test", <green item id>)`.
-3. Farm run with mobs (loot coins), save it: `/bof goldsources` shows the route "Gegner in <zone>"
+3. Farm run with mobs (loot coins), save it: `/gc goldsources` shows the route "Gegner in <zone>"
    with gold per hour (sure includes the coins). Runs from before 0.6.0 are marked "ohne Beutegold".
 4. Gold tab: buttons "Goldpuffer" / "Goldplaner" top right; "Einkauf prüfen" now right of the
    goal header; nothing overlaps. "Goldplaner": time buttons, duration box `1h 30m`, steps, routes.
 5. Bags with greys, a green item and stackable materials: steps "Beim Händler verkaufen", "Im AH
    einstellen", (enchanter) "Entzaubern …". Drag an item onto the keep slot → no longer suggested.
-6. Open a profession window: `/bof goldplan` lists profitable crafts ("Herstellen und verkaufen")
+6. Open a profession window: `/gc goldplan` lists profitable crafts ("Herstellen und verkaufen")
    when the product and reagents have prices; a recipe with a cooldown appears once ready.
-7. `/bof goldplan` without duration: plans for 1, 2 and 4 hours.
+7. `/gc goldplan` without duration: plans for 1, 2 and 4 hours.
 
 ### Result 0.5.0-alpha.1 (Classic Era, 2026-10-19, partial)
 
@@ -572,10 +572,10 @@ goal arrows; fixed in 0.5.0-alpha.2 (shared `Widgets.CreateGoalNavigation`, test
 
 ### Checklist 0.5.0-alpha.1 (Classic Era, Auctionator)
 
-1. Without Auctionator: `/reload`, `/bof version` → `0.5.0-alpha.1`; `/bof price` as before, BugSack empty.
+1. Without Auctionator: `/reload`, `/gc version` → `0.5.0-alpha.1`; `/gc price` as before, BugSack empty.
 2. Install Auctionator, scan at the auction house (full scan or search for the goal materials).
 3. `/dump Auctionator.API.v1.GetAuctionPriceByItemID("Test", 2589)` → a number (verify the API).
-4. `/bof price` and the Material tab price tooltip show "… (Auctionator, vor …)"; the plan uses it.
+4. `/gc price` and the Material tab price tooltip show "… (Auctionator, vor …)"; the plan uses it.
 5. Settings tab: switch "Preise von Auctionator verwenden" off → the Auctionator price disappears.
 6. Sourcing tab: "Zeitlimit" `10m` + Enter → limit line under the list; more is bought if gold allows.
    Empty + Enter clears it. Nine rows, nothing overlaps (route, limit, summary, reserve, time value).
@@ -591,7 +591,7 @@ goal arrows; fixed in 0.5.0-alpha.2 (shared `Widgets.CreateGoalNavigation`, test
 
 Things only the client can show are marked (verify): they rely on APIs whose details are unverified.
 
-1. `/reload`, `/bof version` → `0.4.0-alpha.1`. `/bof show`: title line above eight tab buttons, nothing
+1. `/reload`, `/gc version` → `0.4.0-alpha.1`. `/gc show`: title line above eight tab buttons, nothing
    overlaps. Minimap button visible (verify icon and border textures).
 2. Material tab: "Neues Ziel", type a name + Enter, "Herstellungen" 2 + Enter. Drag an item from the bags
    onto the slot at the bottom left (verify `GetCursorInfo`), count 3, "Hinzufügen". Shift-click another
@@ -617,22 +617,22 @@ Things only the client can show are marked (verify): they rely on APIs whose det
     warning. Auction house: hint about materials without a price.
 12. A quest with a reward for the slot of an item a goal crafts → bar "Merken" adds it (verify the quest
     reward APIs).
-13. Esc → Key Bindings → AddOns: two entries "Kaufen oder farmen?" (verify `Bindings.xml` loading); bind one.
+13. Esc → Key Bindings → AddOns: two entries "Goldkompass" (verify `Bindings.xml` loading); bind one.
 14. Log out, wait over a minute, log in → after about 5 s "Letzte Sitzung …".
-15. `/bof gold` → "Quellen" line (loot coins, merchant).
+15. `/gc gold` → "Quellen" line (loot coins, merchant).
 16. In combat: open the window, shift-click, hover items → no "Aktion blockiert"/taint message. BugSack empty.
-17. `/bof perf` with the window closed and with a run in the Farm tab.
+17. `/gc perf` with the window closed and with a run in the Farm tab.
 
 ### Checklist 0.3.0-alpha.3 (Classic Era, alternative details)
 
-1. `/reload`, `/bof version` → `0.3.0-alpha.3`. Select a goal from a wearable recipe.
-2. `/bof alt add <item link> planned Questbelohnung` → note the number n in the answer.
-3. `/bof alt cost n 1g 50s`, `/bof alt time n 1h 30m`, `/bof alt req n Stufe 20, Questreihe` → each
+1. `/reload`, `/gc version` → `0.3.0-alpha.3`. Select a goal from a wearable recipe.
+2. `/gc alt add <item link> planned Questbelohnung` → note the number n in the answer.
+3. `/gc alt cost n 1g 50s`, `/gc alt time n 1h 30m`, `/gc alt req n Stufe 20, Questreihe` → each
    answer shows the alternative and below it "Aufwand: Kosten 1g 50s, Zeit 1 Std. 30 Min.; Voraussetzung: …".
-4. `/bof craft` and tab "Craft" → below the alternative: "Aufwand: … (Craft: Kosten …, Farmzeit …)".
+4. `/gc craft` and tab "Craft" → below the alternative: "Aufwand: … (Craft: Kosten …, Farmzeit …)".
    Long lines wrap without overlapping.
-5. `/bof alt cost n clear` → "Kosten unbekannt". Errors: `/bof alt time n 90` (no unit),
-   `/bof alt cost 99 1g` (unknown number) → clear messages, nothing changes.
+5. `/gc alt cost n clear` → "Kosten unbekannt". Errors: `/gc alt time n 90` (no unit),
+   `/gc alt cost 99 1g` (unknown number) → clear messages, nothing changes.
 6. `/reload` → the details are kept. BugSack: no errors.
 
 ### Release check 0.5.0 (2026-10-19)
@@ -645,14 +645,14 @@ Things only the client can show are marked (verify): they rely on APIs whose det
 | Version in TOC, CHANGELOG, README | 0.5.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged |
 | Addon list metadata | `## Category` (free text, read by `Blizzard_AddOnList/AddonList.lua` in 70003), `## Category-deDE` (localized variant), `## IconTexture` (coin icon of the minimap button); confirmed in game 2026-10-19: group "Berufe", coin icon, version 0.5.0, no errors |
-| ZIP | built and inspected: 82 files, top folder `BuyOrFarmForever/`, no dev files |
-| Performance | static review below; in-game `/bof perf` not measured for 0.5.0 |
+| ZIP | built and inspected: 82 files, top folder `GoldCompass/`, no dev files |
+| Performance | static review below; in-game `/gc perf` not measured for 0.5.0 |
 | Tag | `v0.5.0`, only after the user's approval |
 
 ### Performance review before 0.5.0 (2026-10-19, static)
 
 No new events, tickers or `OnUpdate`. Auctionator is read on demand (price lookups while building a
-plan, a tab or `/bof price`), never in an event loop. The Sourcing tab now also runs
+plan, a tab or `/gc price`), never in an event loop. The Sourcing tab now also runs
 `FarmEstimates.Byproducts` per farmable missing material and `GoldRoutes.List` once per refresh
 (at most 500 runs; sale value looked up once per item); refreshes stay coalesced and only happen
 while the tab is shown. The time limit re-settles the plan at most once per plan line. Verdict: ok.
@@ -667,13 +667,13 @@ while the tab is shown. The time limit re-settles the plan at most once per plan
 | Version in TOC, CHANGELOG, README | 0.4.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged |
 | ZIP | built and inspected (see below) |
-| Performance | static review below; in-game `/bof perf` for 0.4.0 was not measured (release approved without it) |
+| Performance | static review below; in-game `/gc perf` for 0.4.0 was not measured (release approved without it) |
 | Tag | `v0.4.0`, pushed with `main` after the user's approval (2026-10-19) |
 
-ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 79 files, top folder `BuyOrFarmForever/`, `/` as
+ZIP `outputs/GoldCompass.zip` (2026-10-19): 79 files, top folder `GoldCompass/`, `/` as
 separator, no dev files; TOC `## Version: 0.4.0`, `## Interface: 11509`. Found during this check:
 `Bindings.xml` (not in the TOC) was missing from the ZIP; `work/tools/build_zip.py` now adds it
-(`.pkgmeta` does not exclude it). The 0.3.0 ZIP was moved to `work/backup/BuyOrFarmForever-0.3.0.zip`.
+(`.pkgmeta` does not exclude it). The 0.3.0 ZIP was moved to `work/backup/GoldCompass-0.3.0.zip`.
 
 ### Performance review before 0.4.0 (2026-10-19, static)
 
@@ -698,12 +698,12 @@ lookup per item tooltip after the first rebuild. Verdict: ok; no in-game numbers
 | Version in TOC, CHANGELOG, README | 0.3.0 |
 | Interface version | 11509 = client 1.15.9 (70003), unchanged since 2026-10-18 (debug log of the user's client) |
 | ZIP | built and inspected (see below) |
-| Performance | static review below; in game `/bof perf` idle and with a running farm run in the Farm tab: "quasi 0" (user, 2026-10-19; exact numbers not reported) |
+| Performance | static review below; in game `/gc perf` idle and with a running farm run in the Farm tab: "quasi 0" (user, 2026-10-19; exact numbers not reported) |
 | Tag | `v0.3.0` local only; push/publication only after the user's approval |
 
-ZIP `outputs/BuyOrFarmForever.zip` (2026-10-19): 56 files, top folder `BuyOrFarmForever/`, `/` as
+ZIP `outputs/GoldCompass.zip` (2026-10-19): 56 files, top folder `GoldCompass/`, `/` as
 separator, no `.git`, `docs/`, `.luacheckrc`, `.pkgmeta`; TOC `## Version: 0.3.0`, `## Interface: 11509`;
-includes the new `UI/AltCommands.lua`. The 0.2.0 ZIP was moved to `work/backup/BuyOrFarmForever-0.2.0.zip`.
+includes the new `UI/AltCommands.lua`. The 0.2.0 ZIP was moved to `work/backup/GoldCompass-0.2.0.zip`.
 
 ### Performance review before 0.3.0 (2026-10-19, static)
 
@@ -755,152 +755,152 @@ In game (0.2.0-alpha.5): 259 KB memory, peak 0.13 % of frame time. Open: memory 
 
 Setup: only this addon + BugSack/BugGrabber enabled. `/console scriptErrors 1`.
 
-1. First start without SavedVariables (delete `BuyOrFarmForever.lua` in SavedVariables if present):
+1. First start without SavedVariables (delete `GoldCompass.lua` in SavedVariables if present):
    log in, no chat message, no BugSack error.
-2. `/bof` → 5 lines of help. `/kof help` → same.
-3. `/bof version` → `Version 0.1.0 · Interface 11509 · Build 70003 (1.15.9) · Classic Era`.
-4. `/bof debug` → "Debug-Modus ist an …". `/reload`. `/bof debug` → "Debug-Modus ist aus.". `/bof debug` again (on).
-5. `/bof reset` → prompt with 30 seconds. `/bof reset confirm` → "… zurückgesetzt". Debug is off again.
-6. `/bof reset`, wait > 30 s, `/bof reset confirm` → "Es wartet kein Zurücksetzen …".
-7. `/bof fly` → "Unbekannter Befehl: „fly“ …".
-8. `/bof debug` (on), `/reload`, then log out completely and back in.
-9. Enter combat (training dummy or mob), run `/bof version` during combat → no `ADDON_ACTION_BLOCKED`.
+2. `/gc` → 5 lines of help. `/gk help` → same.
+3. `/gc version` → `Version 0.1.0 · Interface 11509 · Build 70003 (1.15.9) · Classic Era`.
+4. `/gc debug` → "Debug-Modus ist an …". `/reload`. `/gc debug` → "Debug-Modus ist aus.". `/gc debug` again (on).
+5. `/gc reset` → prompt with 30 seconds. `/gc reset confirm` → "… zurückgesetzt". Debug is off again.
+6. `/gc reset`, wait > 30 s, `/gc reset confirm` → "Es wartet kein Zurücksetzen …".
+7. `/gc fly` → "Unbekannter Befehl: „fly“ …".
+8. `/gc debug` (on), `/reload`, then log out completely and back in.
+9. Enter combat (training dummy or mob), run `/gc version` during combat → no `ADDON_ACTION_BLOCKED`.
 10. Umlauts in all messages display correctly.
 
 Report back: BugSack content (if any), and the file
-`WTF/Account/<ACCOUNT>/SavedVariables/BuyOrFarmForever.lua` (or read access to the folder).
+`WTF/Account/<ACCOUNT>/SavedVariables/GoldCompass.lua` (or read access to the folder).
 
 ### Checklist 0.2.0-alpha.1 (Classic Era, material goals)
 
-Use a character that has some linen cloth (or any item) in bags and bank. `/bof debug` on.
+Use a character that has some linen cloth (or any item) in bags and bank. `/gc debug` on.
 
-1. `/bof goal new Test` → "Ziel 1 „Test“ angelegt …".
-2. Open the chat line, type `/bof goal add `, shift-click linen cloth in the bags, type ` 4`, Enter →
+1. `/gc goal new Test` → "Ziel 1 „Test“ angelegt …".
+2. Open the chat line, type `/gc goal add `, shift-click linen cloth in the bags, type ` 4`, Enter →
    link shown, "jetzt 4 pro Herstellung".
-3. `/bof goal add 2592 2` (wool cloth by id) → link or "Gegenstand 2592" if not cached yet.
-4. `/bof goal crafts 3`, then `/bof stock` → need 12 / 6, bags and bank counts match what you see.
-5. `/bof stock` before any bank visit → "Bank seit Anlegen des Ziels noch nicht besucht."
-6. Visit the bank, close it, `/bof stock` → snapshot line "Bank beim letzten Besuch (gerade eben): …".
+3. `/gc goal add 2592 2` (wool cloth by id) → link or "Gegenstand 2592" if not cached yet.
+4. `/gc goal crafts 3`, then `/gc stock` → need 12 / 6, bags and bank counts match what you see.
+5. `/gc stock` before any bank visit → "Bank seit Anlegen des Ziels noch nicht besucht."
+6. Visit the bank, close it, `/gc stock` → snapshot line "Bank beim letzten Besuch (gerade eben): …".
 7. **Bank check (Q-T6):** move some linen from bags into the bank (bank open), close the bank,
-   `/reload`, `/bof stock` **without** opening the bank. Is the live bank value equal to the snapshot?
-   Then log out completely, log in, `/bof stock` again (still without the bank).
-8. `/bof goal`, `/bof goal set 2589 0`, `/bof goal delete 1`, `/bof goal delete 1 confirm`.
-9. Errors: `/bof goal add Leinenstoff 2`, `/bof goal add 2589 0`, `/bof goal crafts 0`.
-10. `/bof` shows 7 help lines; `/bof version` shows `0.2.0-alpha.1`.
+   `/reload`, `/gc stock` **without** opening the bank. Is the live bank value equal to the snapshot?
+   Then log out completely, log in, `/gc stock` again (still without the bank).
+8. `/gc goal`, `/gc goal set 2589 0`, `/gc goal delete 1`, `/gc goal delete 1 confirm`.
+9. Errors: `/gc goal add Leinenstoff 2`, `/gc goal add 2589 0`, `/gc goal crafts 0`.
+10. `/gc` shows 7 help lines; `/gc version` shows `0.2.0-alpha.1`.
 
 ### Checklist 0.2.0-alpha.2 (Classic Era, other characters)
 
 First attempt (2026-10-18) found a bug: snapshots taken on `PLAYER_LOGOUT` stored 0 for every
 item (both characters stored 0 hearthstones although each had one), so other characters always
-showed "Twinks 0". Logout snapshots were removed; `/bof stock` now also stores a snapshot.
+showed "Twinks 0". Logout snapshots were removed; `/gc stock` now also stores a snapshot.
 
 Uses the hearthstone (item 6948), which every character has.
 
-1. Main character: `/reload`, `/bof goal add 6948 5` (in a goal), `/bof stock`.
-2. Alt on the same realm: log in, `/bof stock` (stores its snapshot; "no goal selected" is fine), log out.
-3. Main character: `/bof stock` → "Ruhestein: benötigt 5, Taschen 1, Bank 0, Twinks 1 – fehlt 3" and
+1. Main character: `/reload`, `/gc goal add 6948 5` (in a goal), `/gc stock`.
+2. Alt on the same realm: log in, `/gc stock` (stores its snapshot; "no goal selected" is fine), log out.
+3. Main character: `/gc stock` → "Ruhestein: benötigt 5, Taschen 1, Bank 0, Twinks 1 – fehlt 3" and
    "    <Alt>: 1 (Taschen 1, Bank 0, Stand vor …)".
-4. `/bof stock others` → off, `/bof stock` → "fehlt 4" without "Twinks"; `/bof stock others` again → on.
+4. `/gc stock others` → off, `/gc stock` → "fehlt 4" without "Twinks"; `/gc stock others` again → on.
 5. If available: an alt of the other faction on the same realm → listed with
    "andere Fraktion, nicht mitgezählt". An alt on another realm → not listed.
-6. `/bof goal remove 6948` to clean up.
+6. `/gc goal remove 6948` to clean up.
 
 ### Checklist 0.2.0-alpha.3 (Classic Era, recipe import)
 
 Needs a character with a crafting profession; Enchanting additionally tests the craft window.
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.3`; `/bof` shows 8 help lines including `/bof recipe`.
-2. `/bof recipe` without a profession window → "Öffne zuerst ein Berufsfenster …".
-3. Open a profession (e.g. Tailoring), click a header line, `/bof recipe` → "… (keine Überschrift)".
-4. Click a recipe (e.g. a linen item), `/bof recipe 3` → "Ziel n „[Item]“ aus dem Rezept angelegt:
+1. `/reload`, `/gc version` → `0.2.0-alpha.3`; `/gc` shows 8 help lines including `/gc recipe`.
+2. `/gc recipe` without a profession window → "Öffne zuerst ein Berufsfenster …".
+3. Open a profession (e.g. Tailoring), click a header line, `/gc recipe` → "… (keine Überschrift)".
+4. Click a recipe (e.g. a linen item), `/gc recipe 3` → "Ziel n „[Item]“ aus dem Rezept angelegt:
    k Zutaten, 3× herstellen." The item name is a link (may be "Gegenstand <id>" if not cached yet).
-5. `/bof stock` → the reagents of the recipe with need = count × 3 and correct bag/bank counts.
+5. `/gc stock` → the reagents of the recipe with need = count × 3 and correct bag/bank counts.
 6. Compare the reagents and counts with the recipe in the window (report differences).
-7. Enchanting (if available): open it, click an enchantment, `/bof recipe` → goal named like the
+7. Enchanting (if available): open it, click an enchantment, `/gc recipe` → goal named like the
    enchantment (spell name). Report whether the name was the enchantment or a placeholder
    "Rezept <id>" (plan Q-T4).
-8. With both windows open (e.g. Enchanting and Tailoring): `/bof recipe` uses the one opened last.
-9. `/reload`, `/bof goal` → the recipe goals are listed with the recipe name.
-10. Errors: `/bof recipe 0`, `/bof recipe abc` → message about the number of crafts.
+8. With both windows open (e.g. Enchanting and Tailoring): `/gc recipe` uses the one opened last.
+9. `/reload`, `/gc goal` → the recipe goals are listed with the recipe name.
+10. Errors: `/gc recipe 0`, `/gc recipe abc` → message about the number of crafts.
 
 ### Checklist 0.2.0-alpha.4 (Classic Era, main window)
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.4`; `/bof` shows 9 help lines including `/bof show`.
-2. `/bof show` → window "Kaufen oder farmen?" in the middle of the screen. Header "Ziel n von m: … – k×
+1. `/reload`, `/gc version` → `0.2.0-alpha.4`; `/gc` shows 9 help lines including `/gc show`.
+2. `/gc show` → window "Goldkompass" in the middle of the screen. Header "Ziel n von m: … – k×
    herstellen", columns Material, Bedarf, Taschen, Bank, Twinks, Fehlt; icons and item names.
    Umlauts correct, no text cut off or overlapping (report what looks wrong).
-3. Numbers match `/bof stock`. "Fehlt" is red above 0, green at 0.
+3. Numbers match `/gc stock`. "Fehlt" is red above 0, green at 0.
 4. Move an item of the goal between bags or buy/sell one → the window updates by itself.
-5. `<` / `>` switch the goal (also in `/bof goal` the `*` moves). "Alle Ziele zusammen" shows all.
+5. `<` / `>` switch the goal (also in `/gc goal` the `*` moves). "Alle Ziele zusammen" shows all.
 6. Mouse over a row → item tooltip, below it the lines for other characters (e.g. CharB).
 7. Open a profession window, select a recipe, click "Rezept übernehmen" → chat message, new goal shown.
-8. Drag the window elsewhere, `/reload`, `/bof show` → same position. Escape closes it; the X too.
+8. Drag the window elsewhere, `/reload`, `/gc show` → same position. Escape closes it; the X too.
 9. In combat: open/close the window and click buttons → no error, no "Aktion blockiert".
-10. `/bof goal add <Item> 1` while the window is open → new row appears.
+10. `/gc goal add <Item> 1` while the window is open → new row appears.
 11. Performance: with the window closed nothing should happen; report anything unusual.
 
 ### Checklist 0.2.0-alpha.6 (Classic Era, prices)
 
-Goal with a vendor reagent and a cloth, e.g. `/bof goal new Preistest`, `/bof goal add 2320 2`
-(Grobes Garn, sold by tailoring vendors), `/bof goal add 2589 5` (Leinenstoff).
+Goal with a vendor reagent and a cloth, e.g. `/gc goal new Preistest`, `/gc goal add 2320 2`
+(Grobes Garn, sold by tailoring vendors), `/gc goal add 2589 5` (Leinenstoff).
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.6`; `/bof show` → column "Preis/Stück" with "–".
-2. `/bof price 2589 1s 20k` → "eigener Preis 1s 20k pro Stück gespeichert"; window shows 1s 20k.
-   `/bof price 2589 120` → message about the unit.
+1. `/reload`, `/gc version` → `0.2.0-alpha.6`; `/gc show` → column "Preis/Stück" with "–".
+2. `/gc price 2589 1s 20k` → "eigener Preis 1s 20k pro Stück gespeichert"; window shows 1s 20k.
+   `/gc price 2589 120` → message about the unit.
 3. Open a merchant that sells Grobes Garn (no need to buy) → window: price of Grobes Garn appears;
-   `/bof price` → "… (Händler)". Compare with the merchant's price per piece.
+   `/gc price` → "… (Händler)". Compare with the merchant's price per piece.
 4. Auction house: search "Leinenstoff" yourself → price "(AH, gerade eben)"; compare with the
    cheapest buyout per piece on the first page.
-5. Auction house: click "AH-Scan" in the window (and `/bof price scan`) → chat "suche …"; the AH shows
+5. Auction house: click "AH-Scan" in the window (and `/gc price scan`) → chat "suche …"; the AH shows
    the search, the price updates. Clicking again after all missing items were searched → "schon gesucht".
    Report whether the search worked or the client blocked it.
 6. Close the AH → "AH-Scan" is disabled. Mouse over a row → tooltip lists all price sources.
-7. `/bof price 2589 clear` → own price removed.
+7. `/gc price 2589 clear` → own price removed.
 8. `/reload` → prices kept. BugSack: no errors.
 
 ### Checklist 0.2.0-alpha.7 (Classic Era, last selected recipe)
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.7`.
+1. `/reload`, `/gc version` → `0.2.0-alpha.7`.
 2. Open Enchanting and Tailoring. Click a recipe in Tailoring, then one in Enchanting,
-   `/bof recipe` → goal from the enchantment.
-3. Click a recipe in Tailoring again (Enchanting stays open), `/bof recipe` → goal from the tailoring recipe.
-4. Close Tailoring, `/bof recipe` → enchantment again.
+   `/gc recipe` → goal from the enchantment.
+3. Click a recipe in Tailoring again (Enchanting stays open), `/gc recipe` → goal from the tailoring recipe.
+4. Close Tailoring, `/gc recipe` → enchantment again.
 5. `/reload` (so the results are saved), BugSack: no errors.
 
 ### Checklist 0.2.0-alpha.8 (Classic Era, farm runs)
 
 CharA (Mining) near copper veins, e.g. Dun Morogh. One command per line.
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.8`.
-2. `/bof farm travel` without a run → "Keine Farmrunde".
-3. `/bof farm start gather 2770` → "Farmrunde gestartet (Sammeln, <Zone>)". `/bof farm travel`, ride to
-   the veins, `/bof farm travel` again (arrival).
-4. Mine 2–3 veins (with and without autoloot if possible). `/bof farm` → copper ore and rough stone
+1. `/reload`, `/gc version` → `0.2.0-alpha.8`.
+2. `/gc farm travel` without a run → "Keine Farmrunde".
+3. `/gc farm start gather 2770` → "Farmrunde gestartet (Sammeln, <Zone>)". `/gc farm travel`, ride to
+   the veins, `/gc farm travel` again (arrival).
+4. Mine 2–3 veins (with and without autoloot if possible). `/gc farm` → copper ore and rough stone
    "geplündert", times plausible.
-5. `/bof farm pause`, wait a minute, `/bof farm resume` → farm time did not grow during the pause.
-6. Take something from the mailbox or bank, or buy an item → `/bof farm` shows it as "unklar".
-7. `/reload` during the run → `/bof farm` still "läuft", times continue.
-8. `/bof farm stop` → review hint. `/bof farm keep <item>` for one unclear item, `/bof farm save`.
-9. `/bof farm list` → the run. Goal with copper ore: `/bof goal new Erztest`, `/bof goal add 2770 40`,
-   `/bof farm estimate` → estimate with "aus 1 Runden".
-10. Optional: start a run, log out, log in after a few minutes → `/bof farm` "pausiert", the offline
-    minutes are not counted. `/bof farm discard`.
-11. `/bof perf` during a run (memory) and BugSack: no errors. `/reload` at the end.
+5. `/gc farm pause`, wait a minute, `/gc farm resume` → farm time did not grow during the pause.
+6. Take something from the mailbox or bank, or buy an item → `/gc farm` shows it as "unklar".
+7. `/reload` during the run → `/gc farm` still "läuft", times continue.
+8. `/gc farm stop` → review hint. `/gc farm keep <item>` for one unclear item, `/gc farm save`.
+9. `/gc farm list` → the run. Goal with copper ore: `/gc goal new Erztest`, `/gc goal add 2770 40`,
+   `/gc farm estimate` → estimate with "aus 1 Runden".
+10. Optional: start a run, log out, log in after a few minutes → `/gc farm` "pausiert", the offline
+    minutes are not counted. `/gc farm discard`.
+11. `/gc perf` during a run (memory) and BugSack: no errors. `/reload` at the end.
 
 ### Checklist 0.2.0-alpha.10 (Classic Era, sourcing plan)
 
 CharC: goal "Stofftest" (40 linen cloth, farm runs with linen exist). One command per line.
 
-1. `/reload`, `/bof version` → `0.2.0-alpha.10`; `/bof` lists `/bof plan`, `/bof strategy`, `/bof budget`.
-2. Add a second material with a price, e.g. `/bof goal add 2320 5` and `/bof price 2320 10k`;
-   set a linen price, e.g. `/bof price 2589 50k`.
-3. `/bof plan` → header with strategy and budget (your gold), one line per missing material
+1. `/reload`, `/gc version` → `0.2.0-alpha.10`; `/gc` lists `/gc plan`, `/gc strategy`, `/gc budget`.
+2. Add a second material with a price, e.g. `/gc goal add 2320 5` and `/gc price 2320 10k`;
+   set a linen price, e.g. `/gc price 2589 50k`.
+3. `/gc plan` → header with strategy and budget (your gold), one line per missing material
    (buy/farm amounts), sum line, time value note.
-4. `/bof budget 10s` → `/bof plan`: with the small budget part of the linen is bought, the rest farmed.
-   `/bof budget clear`.
-5. `/bof strategy gold` → `/bof plan`: linen farmed (there are runs), thread bought (no runs).
-   `/bof strategy farm` → nothing bought, thread "offen".
-6. `/bof show` → tabs "Material" and "Beschaffung" at the top left; the title is not covered.
+4. `/gc budget 10s` → `/gc plan`: with the small budget part of the linen is bought, the rest farmed.
+   `/gc budget clear`.
+5. `/gc strategy gold` → `/gc plan`: linen farmed (there are runs), thread bought (no runs).
+   `/gc strategy farm` → nothing bought, thread "offen".
+6. `/gc show` → tabs "Material" and "Beschaffung" at the top left; the title is not covered.
    "Beschaffung": strategy buttons (active one greyed), budget, table, sum. Click the strategies.
 7. Spend or receive a little gold with the tab open → the plan updates.
 8. Mouse over a row → price per piece and farm time for all of it.
@@ -911,27 +911,27 @@ CharC: goal "Stofftest" (40 linen cloth, farm runs with linen exist). One comman
 A character with a crafting profession that makes wearable items (Tailoring, Blacksmithing).
 One command per line.
 
-1. `/reload`, `/bof version` → `0.3.0-alpha.1`. The window title is on the right, the three tab buttons
+1. `/reload`, `/gc version` → `0.3.0-alpha.1`. The window title is on the right, the three tab buttons
    "Material", "Beschaffung", "Craft" on the left do not cover it.
-2. Profession window: select a wearable recipe (e.g. a cloth chest or bracers), `/bof recipe`.
-3. `/bof craft` → "[Item]: Wertung X – angelegt: [your item] (Y), Unterschied +/-Z", cost line, per-point line
+2. Profession window: select a wearable recipe (e.g. a cloth chest or bracers), `/gc recipe`.
+3. `/gc craft` → "[Item]: Wertung X – angelegt: [your item] (Y), Unterschied +/-Z", cost line, per-point line
    (if better), limits line, weights line. Check X and Y against the item tooltips (sum of STR, AGI,
    STA, INT, SPI with all weights 1).
-4. `/bof weights int 2` → the scores change; `/bof weights int 1` again.
-5. `/bof craft <link of an item in your bags>` → comparison with the equipped item of that slot.
+4. `/gc weights int 2` → the scores change; `/gc weights int 1` again.
+5. `/gc craft <link of an item in your bags>` → comparison with the equipped item of that slot.
    Rings/trinkets: compared with the weaker one. A material → "kann nicht angelegt werden".
-6. `/bof alt add <some item> planned Questbelohnung`, `/bof alt add <other item> drop` → `/bof craft`
-   shows both alternatives; `/bof alt remove 1`.
-7. `/bof show`, tab "Craft" → the same lines. Equip a different item in that slot → the tab updates.
+6. `/gc alt add <some item> planned Questbelohnung`, `/gc alt add <other item> drop` → `/gc craft`
+   shows both alternatives; `/gc alt remove 1`.
+7. `/gc show`, tab "Craft" → the same lines. Equip a different item in that slot → the tab updates.
 8. Owned materials: carry some reagents of the recipe → "Schon vorhanden: …" line with vendor value.
 9. Tab "Farmen": "Start: Gegner" → chat confirms, the time counts up every second; "Anreise" →
    button reads "Angekommen", click again; "Pause"/"Fortsetzen"; loot something; "Beenden" →
    "Unklare mitzählen", "Speichern" appear; "Speichern". Switch tabs/close the window during a run
    and reopen → time still right. Estimates for the selected goal are listed.
-10. Gold buffer: `/bof gold add 5g Reiten`, `/bof gold add 1g Training`, `/bof gold distribute`, `/bof gold`
-    → overview with reserves and free gold; `/bof gold check 3g` → reserve use. Tab "Goldpuffer":
+10. Gold buffer: `/gc gold add 5g Reiten`, `/gc gold add 1g Training`, `/gc gold distribute`, `/gc gold`
+    → overview with reserves and free gold; `/gc gold check 3g` → reserve use. Tab "Goldpuffer":
     same overview, buttons work, the 5 tab buttons do not overlap the title.
-11. Income: after login no fake income (`/bof gold` right after login: no big gain); sell something
+11. Income: after login no fake income (`/gc gold` right after login: no big gain); sell something
     → gain; repair/buy → spending. After 1 h of play: net per hour and the time value in the
     Sourcing tab.
 12. Tab "Hilfe": all commands, long lines wrap, mouse wheel scrolls. Window 720 px wide; the six

@@ -1,5 +1,5 @@
 -- About text (what the addon does, its version and its developer) and the how-to (how the addon
--- gets its data), both in sections with a colored heading. Shown by /bof about, /bof howto and the
+-- gets its data), both in sections with a colored heading. Shown by /gc about, /gc howto and the
 -- views of the Help tab (with an empty line between sections; the chat leaves those out).
 local addonName, ns = ...
 

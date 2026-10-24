@@ -1,6 +1,6 @@
 -- Gear rating: compares an item (a crafted or wanted item, or any item) with the gear the character
 -- wears, using the character's stat weights (shown in the professions detail, the item tooltip of
--- wanted gear and /bof craft <item>).
+-- wanted gear and /gc craft <item>).
 -- Rated stats: STR, AGI, STA, INT, SPI, ARMOR (points) and DPS (weapon damage per second); procs,
 -- other effects and set bonuses are not rated. ARMOR and DPS weigh 0 unless a template or the
 -- player sets them, so evaluations from before 0.5.0 stay the same.

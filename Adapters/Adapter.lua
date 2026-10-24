@@ -9,7 +9,7 @@ local Adapter = {}
 ns.Adapter = Adapter
 
 -- Fields every adapter must provide. This list grows with each stage of the plan
--- (see work/notes/BuyOrFarmForever-plan.md, section 6).
+-- (see work/notes/GoldCompass-plan.md, section 6).
 Adapter.REQUIRED = {
 	"IsCurrentClient", -- () -> bool: true if this adapter matches the running client
 	"GetBuildInfo", -- () -> { version, build, date, interface }

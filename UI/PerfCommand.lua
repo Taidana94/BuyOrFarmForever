@@ -1,4 +1,4 @@
--- /bof perf: memory, share of frame time and the duration of a stock refresh, for docs/TESTING.md.
+-- /gc perf: memory, share of frame time and the duration of a stock refresh, for docs/TESTING.md.
 local _, ns = ...
 
 local L = ns.L

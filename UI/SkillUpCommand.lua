@@ -1,4 +1,4 @@
--- /bof skillup: per profession that can still rise, the cheapest recipes for the next skill point
+-- /gc skillup: per profession that can still rise, the cheapest recipes for the next skill point
 -- (Core/SkillUp.lua). The colours are read when the profession window was last open.
 local _, ns = ...
 

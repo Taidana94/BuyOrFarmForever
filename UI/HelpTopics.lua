@@ -1,6 +1,6 @@
 -- Topics of the Help tab: every window, button, mouse action and chat command, grouped by area.
 -- A topic is a list of sections (a coloured heading and its lines, Locales/deDE.lua keys H_*); the
--- data and about topics reuse UI/About.lua, the command topic groups the /bof help lines by area.
+-- data and about topics reuse UI/About.lua, the command topic groups the /gc help lines by area.
 local _, ns = ...
 
 local L = ns.L

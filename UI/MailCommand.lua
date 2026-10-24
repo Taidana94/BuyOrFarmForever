@@ -1,4 +1,4 @@
--- /bof mail: what this character should mail to whom (Core/MailPrep.lua), grouped by recipient.
+-- /gc mail: what this character should mail to whom (Core/MailPrep.lua), grouped by recipient.
 -- At the mailbox the advisor card shows the same entries.
 local _, ns = ...
 

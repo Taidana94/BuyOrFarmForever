@@ -1,4 +1,4 @@
--- /bof craft <item>, /bof weights: an item rated against the equipped gear with the stat weights, and
+-- /gc craft <item>, /gc weights: an item rated against the equipped gear with the stat weights, and
 -- the weights themselves. CompareLine is shared with the professions detail.
 local _, ns = ...
 
@@ -56,7 +56,7 @@ function CraftCommands.WeightsLine(weights)
 		F(weights.ARMOR), F(weights.DPS))
 end
 
--- /bof craft <item> ------------------------------------------------------------------------
+-- /gc craft <item> ------------------------------------------------------------------------
 
 local function craftCommand(argument)
 	local charData = UIShared.Character()
@@ -77,14 +77,14 @@ local function craftCommand(argument)
 	Log.Print(CraftCommands.WeightsLine(charData.craftEval.weights))
 end
 
--- /bof weights [stat value] -----------------------------------------------------------------
+-- /gc weights [stat value] -----------------------------------------------------------------
 
 -- The suggested template for the player's class and talents, or nil.
 function CraftCommands.SuggestedTemplate()
 	return ns.WeightTemplates.Suggest(ns.Client:GetClass(), ns.Client:GetTalentPoints())
 end
 
--- /bof weights template <name> | suggest
+-- /gc weights template <name> | suggest
 local function applyTemplate(key)
 	local charData = UIShared.WritableCharacter()
 	if not charData then

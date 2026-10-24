@@ -1,4 +1,4 @@
--- /bof gold: gold buffer – savings goals, distribution of the current gold, budget overview,
+-- /gc gold: gold buffer – savings goals, distribution of the current gold, budget overview,
 -- check of a planned purchase against the reserves, and the net income. The text builders are
 -- shared with the Gold tab.
 local _, ns = ...
@@ -172,7 +172,7 @@ WRITE.up = byIndex(SavingsGoals.MoveUp, "GOLD_MOVED")
 WRITE.done = byIndex(SavingsGoals.Complete, "GOLD_COMPLETED")
 WRITE.delete = byIndex(SavingsGoals.Delete, "GOLD_DELETED")
 
--- Reserves before the last distribution (manual or automatic), for /bof gold undo. In memory only.
+-- Reserves before the last distribution (manual or automatic), for /gc gold undo. In memory only.
 local undoSnapshot
 
 -- Distributes the current gold and keeps the old reserves for undo. Returns the amount assigned.

@@ -1,7 +1,7 @@
 -- Automatic distribution of new gold to the savings goals (setting goldAutoDistribute, off by
 -- default): after each gold gain the current gold is distributed again in priority order, quietly
 -- (no chat line per coin). Spending does not redistribute, so purchases still show up as a reserve
--- warning. The previous reserves can be restored with "Rückgängig" (/bof gold undo).
+-- warning. The previous reserves can be restored with "Rückgängig" (/gc gold undo).
 local _, ns = ...
 
 local Events = ns.Events

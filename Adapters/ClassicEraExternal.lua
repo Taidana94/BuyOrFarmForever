@@ -8,7 +8,7 @@ local External = {}
 ns.ClassicEraExternal = External
 
 -- Auctionator wants the calling addon's name.
-local CALLER_ID = "BuyOrFarmForever"
+local CALLER_ID = "GoldCompass"
 
 local function api()
 	local v1 = Auctionator and Auctionator.API and Auctionator.API.v1

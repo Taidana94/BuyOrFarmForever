@@ -1,4 +1,4 @@
--- /bof plan: start the gold plan for a duration as a checklist ("Jetzt tun", Core/ActivePlan.lua),
+-- /gc plan: start the gold plan for a duration as a checklist ("Jetzt tun", Core/ActivePlan.lua),
 -- show or hide its window, tick a step by hand, stop it. While a plan is active its steps are checked
 -- after bag, zone and data changes; when every step is done the result is printed and the plan ends.
 local _, ns = ...

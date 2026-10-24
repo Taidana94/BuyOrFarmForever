@@ -1,12 +1,12 @@
 <Bindings>
 	<!-- Key bindings (Esc > Key Bindings > AddOns). Names: UI/MinimapButton.lua sets the BINDING_* strings. -->
-	<Binding name="BUYORFARMFOREVER_TOGGLE" header="BUYORFARMFOREVER" category="ADDONS">
-		BuyOrFarmForever.MainWindow.Toggle()
+	<Binding name="GOLDCOMPASS_TOGGLE" header="GOLDCOMPASS" category="ADDONS">
+		GoldCompass.MainWindow.Toggle()
 	</Binding>
-	<Binding name="BUYORFARMFOREVER_FARM" category="ADDONS">
-		BuyOrFarmForever.MinimapButton.ToggleFarmRun()
+	<Binding name="GOLDCOMPASS_FARM" category="ADDONS">
+		GoldCompass.MinimapButton.ToggleFarmRun()
 	</Binding>
-	<Binding name="BUYORFARMFOREVER_ADVISOR" category="ADDONS">
-		BuyOrFarmForever.AdvisorWindow.Toggle()
+	<Binding name="GOLDCOMPASS_ADVISOR" category="ADDONS">
+		GoldCompass.AdvisorWindow.Toggle()
 	</Binding>
 </Bindings>

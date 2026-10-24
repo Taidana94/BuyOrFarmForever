@@ -1,5 +1,5 @@
 -- Farm window: a small movable window with the run's status line and four buttons (Start,
--- Pause/Fortsetzen, Anreise/Angekommen, Beenden) that run the /bof farm commands (user request
+-- Pause/Fortsetzen, Anreise/Angekommen, Beenden) that run the /gc farm commands (user request
 -- 0.10.0: farm runs are controlled here, the Farm tab only lists the routes). Created on first open,
 -- refreshed only while shown; a 1-second ticker updates the times while shown and a run is running.
 local _, ns = ...

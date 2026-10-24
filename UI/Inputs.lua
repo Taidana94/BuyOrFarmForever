@@ -18,7 +18,7 @@ local DIALOG_WIDTH, DIALOG_HEIGHT = 340, 120
 local DIALOG_BUTTON_WIDTH, DIALOG_PADDING = 100, 20
 local SLOT_BACKGROUND = { 0, 0, 0, 0.5 }
 
--- Runs a /bof command line (without "/bof") like the chat does.
+-- Runs a /gc command line (without "/gc") like the chat does.
 function Inputs.Run(command)
 	ns.Slash.Handle(command)
 end

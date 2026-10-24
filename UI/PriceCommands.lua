@@ -1,4 +1,4 @@
--- /bof price: show the prices of the items the wants may need, set or clear an own price, and scan the
+-- /gc price: show the prices of the items the wants may need, set or clear an own price, and scan the
 -- auction house for items without a current price.
 local _, ns = ...
 
