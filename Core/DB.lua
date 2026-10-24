@@ -61,6 +61,7 @@ DB.CHARACTER_DEFAULTS = {
 	},
 	savingsGoals = {},
 	income = {},
+	planResults = {}, -- finished plans { { endedAt, seconds, earned, planned } } (Core/WeekReview.lua)
 	goldKeep = {}, -- { [itemID] = true }: never suggested for selling by the gold planner
 	-- { [recipeKey] = { cooldown = true?, readyAt?, profession?, difficulty? } }: recipes seen (Core/RecipeBook.lua)
 	recipeBook = {},

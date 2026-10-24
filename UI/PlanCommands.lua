@@ -50,6 +50,8 @@ function PlanCommands.ResultText(active)
 end
 
 local function finish(charData, text)
+	local now = ns.Client:GetServerTime()
+	ns.WeekReview.RecordPlan(charData, charData.activePlan, (ns.Client:GetMoney() or 0) - charData.activePlan.startMoney, now)
 	Log.Print(text .. " " .. PlanCommands.ResultText(charData.activePlan))
 	charData.activePlan = nil
 	Events.Emit("PLAN_CHANGED")

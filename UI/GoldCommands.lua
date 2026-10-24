@@ -89,9 +89,11 @@ local function amountsText(entry)
 	return table.concat(parts, "/")
 end
 
--- "Quellen (14 Tage): Beute +3g · Händler +1g/-50s …", or nil without data by source.
-function GoldCommands.SourcesLine(charData)
-	local totals = Income.SourceTotals(charData, ns.Client:GetServerTime(), GoldCommands.INCOME_DAYS)
+-- "Quellen (14 Tage): Beute +3g · Händler +1g/-50s …" over `days` (default INCOME_DAYS), or nil
+-- without data by source.
+function GoldCommands.SourcesLine(charData, days)
+	days = days or GoldCommands.INCOME_DAYS
+	local totals = Income.SourceTotals(charData, ns.Client:GetServerTime(), days)
 	local parts = {}
 	for _, source in ipairs(ns.MoneyContext.SOURCES) do
 		local entry = totals[source]
@@ -102,7 +104,7 @@ function GoldCommands.SourcesLine(charData)
 	if #parts == 0 then
 		return nil
 	end
-	return Util.Format(L.GOLD_SOURCES, GoldCommands.INCOME_DAYS, table.concat(parts, L.PRICE_SEPARATOR))
+	return Util.Format(L.GOLD_SOURCES, days, table.concat(parts, L.PRICE_SEPARATOR))
 end
 
 local function printOverview(charData)
