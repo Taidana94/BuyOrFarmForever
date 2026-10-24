@@ -6,17 +6,6 @@ local L = ns.L
 local Log = ns.Log
 local Util = ns.Util
 
--- Saved data of the addon's former name "BuyOrFarmForever" (until 0.13.0): the player copies its
--- file WTF/.../SavedVariables/BuyOrFarmForever.lua to GoldCompass.lua; the TOC still lists the old
--- variable, so it loads and is taken over once (and then saved under the new name only).
-local function takeOverLegacyData()
-	if GoldCompassDB == nil and type(BuyOrFarmForeverDB) == "table" then
-		GoldCompassDB = BuyOrFarmForeverDB
-		Log.Info("saved data taken over from BuyOrFarmForeverDB")
-	end
-	BuyOrFarmForeverDB = nil
-end
-
 -- The language of the setting (Locales/Locale.lua); data from a newer version is not validated, its
 -- settings may be missing.
 local function applyLanguage(db, client)
@@ -33,7 +22,6 @@ local function onAddonLoaded(event, loadedName)
 
 	local client = ns.Client
 	local version = client:GetAddOnVersion(addonName) or ""
-	takeOverLegacyData()
 	local db, status, info = ns.DB.Load(GoldCompassDB, {
 		client = client.id,
 		now = client:GetServerTime(),

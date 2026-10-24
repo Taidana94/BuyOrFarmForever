@@ -8,7 +8,7 @@
 ## Category: Professions
 ## Category-deDE: Berufe
 ## IconTexture: Interface\Icons\INV_Misc_Coin_01
-## SavedVariables: GoldCompassDB, BuyOrFarmForeverDB
+## SavedVariables: GoldCompassDB
 ## OptionalDeps: Auctionator
 ## X-License: MIT
 

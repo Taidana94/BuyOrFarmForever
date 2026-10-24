@@ -14,7 +14,6 @@ self = false
 globals = {
 	"GoldCompass", -- addon namespace (debugging)
 	"GoldCompassDB", -- SavedVariables
-	"BuyOrFarmForeverDB", -- SavedVariables of the former name, taken over once (Core/Main.lua)
 	"SLASH_GOLDCOMPASS1", -- /gc
 	"SLASH_GOLDCOMPASS2", -- /gk
 	SlashCmdList = { fields = { GOLDCOMPASS = { read_only = false } } },

@@ -9,7 +9,7 @@ Neuer Name und Englisch. Getestet in WoW Classic Era 1.15.9; nicht in Forever ge
 
 ### Geändert
 - **Neuer Name: Gold Compass (deutsch „Goldkompass“).** Der Addon-Ordner heißt `GoldCompass`, die
-  Chatbefehle sind **`/gc`** und **`/gk`** (statt `/bof` und `/kof`). Die Auctionator-Einkaufsliste
+  Chatbefehle sind **`/gc`** und **`/gk`**. Die Auctionator-Einkaufsliste
   heißt „GoldCompass“; Tastenbelegungen stehen unter „Goldkompass“ und müssen einmal neu gesetzt
   werden.
 
@@ -17,11 +17,6 @@ Neuer Name und Englisch. Getestet in WoW Classic Era 1.15.9; nicht in Forever ge
 - **Englisch:** Standard ist „wie das Spiel“ (deutscher Client Deutsch, jeder andere Englisch).
   Umstellen in den Einstellungen (Knopf „Sprache“ unten neben „Debug-Modus“) oder mit
   `/gc set language auto|de|en`; danach bietet das Addon ein `/reload` an.
-
-### Deine Daten übernehmen (Umstieg von „Kaufen oder farmen?“)
-- Spiel beenden. In `WTF\Account\<Konto>\SavedVariables` die Datei `BuyOrFarmForever.lua` kopieren
-  und die Kopie `GoldCompass.lua` nennen. Beim nächsten Start übernimmt das Addon die Daten einmal.
-- Den alten Ordner `Interface\AddOns\BuyOrFarmForever` löschen.
 
 ## [0.12.0] – 2026-10-24
 
@@ -32,18 +27,18 @@ getestet.
 
 - **„Jetzt tun“:** Der Goldplan für die gewählte Zeit läuft als Checkliste in einem kleinen Fenster.
   Erledigtes hakt das Addon selbst ab (verkauft, hergestellt, in der Zone, Farmrunde gespeichert), mit
-  Fortschritt, Gold seit dem Start und Ergebnis gegen den Plan. `/bof plan`.
+  Fortschritt, Gold seit dem Start und Ergebnis gegen den Plan. `/gc plan`.
 - **Verkaufschance im AH:** aus deinen eigenen AH-Briefen (verkauft/abgelaufen) und aus dem Vergleich
   von zwei Vollscans (Verkäufe aller Spieler auf dem Realm, ohne Desktop-App und ohne Login). AH-Erlöse
   zählen nur mit dieser Chance; ohne gesehene Verkäufe plant der Goldplaner nur **1 Stück als Test**,
   mit Verkäufen höchstens so viel, wie am Tag verkauft wird. Tooltip „AH-Absatz: …“.
-- **AH-Einkaufsliste** (`/bof shop`, Knopf in „Jetzt tun“, Karte im Auktionshaus); mit Auctionator als
-  dessen Einkaufsliste „BuyOrFarm“.
-- **Post vorbereiten** (`/bof mail`, Karte am Briefkasten): was an welchen Twink geht, für seine Ziele
+- **AH-Einkaufsliste** (`/gc shop`, Knopf in „Jetzt tun“, Karte im Auktionshaus); mit Auctionator als
+  dessen Einkaufsliste „GoldCompass“.
+- **Post vorbereiten** (`/gc mail`, Karte am Briefkasten): was an welchen Twink geht, für seine Ziele
   und als Zutaten für Herstell-Schritte im Plan.
-- **Wochenrückblick** (`/bof week`, Ansicht „Woche“ im Goldplaner): Gold gegen die Vorwoche, Quellen,
+- **Wochenrückblick** (`/gc week`, Ansicht „Woche“ im Goldplaner): Gold gegen die Vorwoche, Quellen,
   Pläne gegen ihr Ergebnis, Farmrunden.
-- **Berufe leveln** (`/bof skillup`, Tooltip am Fertigkeitsbalken): die günstigsten Rezepte für den
+- **Berufe leveln** (`/gc skillup`, Tooltip am Fertigkeitsbalken): die günstigsten Rezepte für den
   nächsten Skillpunkt.
 - **Twink-Rezepte beim Verarbeiten** von Gefarmtem; die Route nennt den Twink.
 - **„Vollscan fällig“** im Auktionshaus, wenn der letzte Vollscan älter als 3 Stunden ist.
@@ -81,22 +76,22 @@ enthalten.
   Post, Twinks), kaufen, farmen oder herstellen kannst, und zeigt den günstigsten Weg – für Zutaten
   genauso. Farmzeit zählt mit dem Gold pro Stunde deiner besten Route. „Herstellen“ und „Farmen“ starten
   direkt aus dem Plan. Pro Ziel wählbar: **„Alle“** (ganzer Bestand zählt) oder **„Neu“** (nur, was ab
-  jetzt dazukommt). Im Chat: `/bof want`.
+  jetzt dazukommt). Im Chat: `/gc want`.
 - **Bestand automatisch:** alle Items in Taschen, Bank und Post jedes Charakters, ohne Eintragen.
 - **Goldplaner „Was lohnt sich?“:** Zeit wählen, dann **Plan** (beste Schritte), **Vergleich** (alle Wege
   nebeneinander: Taschen verkaufen/entzaubern, Herstellen – auch auf Twinks –, Farmen, Angeln, Farmen
   und Beute verarbeiten, im AH günstig kaufen und wieder einstellen, alles kombiniert) und **Konto**
-  (Gold, Berufe und Gegenstände aller Charaktere). `/bof compare`, `/bof account`.
+  (Gold, Berufe und Gegenstände aller Charaktere). `/gc compare`, `/gc account`.
 - **Farmen automatisch:** Runden starten beim Looten außerhalb von Städten von selbst und enden nach der
   Leerlaufzeit; Angeln wird erkannt und eigene Route. Farmfenster mit Start, Pause, Anreise, Beenden.
 - **AH-Preisverlauf:** jede Suche merkt sich Tiefstpreise (14 Tage); daraus erkennt der Goldplaner
   Angebote deutlich unter dem üblichen Preis.
-- **Herstellen im Reiter „Berufe“:** Anzahl, „Herstellen“, „Alle: n“, „Stapel: n“ (`/bof make`). Der
+- **Herstellen im Reiter „Berufe“:** Anzahl, „Herstellen“, „Alle: n“, „Stapel: n“ (`/gc make`). Der
   Tooltip der Berufssymbole zeigt, wann der Beruf zuletzt eingelesen wurde.
 - **Herstellung im Gegenstands-Tooltip:** Beruf, wer das Rezept kennt, jede Zutat mit Anzahl und Kosten
   in Münzen, Gesamtkosten. Block und Zutatenliste einzeln abschaltbar.
 - **Neue Hilfe:** Themen links (Schnellstart, jeder Reiter, Ratgeber, Minimap & Tasten, Einstellungen,
-  Datenerfassung, Chatbefehle, Über), gegliederte Erklärung rechts. `/bof howto`, `/bof about`.
+  Datenerfassung, Chatbefehle, Über), gegliederte Erklärung rechts. `/gc howto`, `/gc about`.
 - **Behalten-Liste** im Goldplaner mit Symbolen; Rechtsklick nimmt ein Item wieder herunter.
 
 ### Geändert
@@ -114,7 +109,7 @@ enthalten.
 ### Entfernt
 
 - Strategien, Budget und Zeitlimit der alten Beschaffung, Alternativen und Questbelohnungen der
-  Craft-Bewertung, `/bof goal`, `/bof stock`, `/bof plan`, `/bof alt`, `/bof gold reserves` und die
+  Craft-Bewertung, `/gc goal`, `/gc stock`, `/gc plan`, `/gc alt`, `/gc gold reserves` und die
   zugehörigen Einstellungen.
 
 ## [0.8.0] – 2026-10-23
@@ -132,7 +127,7 @@ Ratgeber und Berufsansicht. Getestet in WoW Classic Era 1.15.9; nicht in Forever
   Rechts: Zutaten mit Taschen/Bedarf und Bank, wie oft du es herstellen kannst, was die Zutaten wert sind
   (aus der Tasche zum Verkaufswert nach AH-Gebühr, fehlende zum Kaufpreis – wie beim Ratgeber), Wert beim
   Händler und im AH, Gewinn pro Herstellung und „Als Ziel anlegen“.
-- **Ratgeber** (`/bof advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): ein kleines Fenster mit
+- **Ratgeber** (`/gc advisor`, Umschalt+Klick auf den Minimap-Knopf, Taste): ein kleines Fenster mit
   festen Zeilen **Verkaufen**, **Entzaubern** (nur wenn dein Charakter entzaubern kann), **Herstellen**,
   **Sparziel** und **Deine beste Stunde**; ein Klick auf eine Zeile führt sie aus. Gibt es nichts zu tun,
   sagt die Zeile, warum. Öffnet sich nach dem Login, wenn etwas Wichtiges ansteht.
@@ -140,7 +135,7 @@ Ratgeber und Berufsansicht. Getestet in WoW Classic Era 1.15.9; nicht in Forever
   entzaubern“), Auktionshaus (laut Plan kaufen, einstellen, Preise scannen), Bank (Material für deine
   Ziele mitnehmen), Briefkasten (Material an Twinks schicken).
 - **Verkaufen und Kaufen auf Knopfdruck** beim Händler, jeweils nach Bestätigung.
-- `/bof recipe key <Rezept> [Anzahl]`: Ziel aus einem gemerkten Rezept (nutzt der Knopf im Reiter „Berufe“).
+- `/gc recipe key <Rezept> [Anzahl]`: Ziel aus einem gemerkten Rezept (nutzt der Knopf im Reiter „Berufe“).
 
 ### Geändert
 
@@ -158,14 +153,14 @@ Goldplaner: wie du in deiner verfügbaren Zeit am meisten Gold machst. Getestet 
 
 ### Hinzugefügt
 
-- **Goldplaner** (`/bof goldplan [Dauer]`, Ansicht „Goldplaner“ im Tab „Goldpuffer“): was du in 1, 2,
+- **Goldplaner** (`/gc goldplan [Dauer]`, Ansicht „Goldplaner“ im Tab „Goldpuffer“): was du in 1, 2,
   4 Stunden oder einer eigenen Zeit am besten tust – Taschen beim Händler oder im Auktionshaus
   verkaufen, entzaubern, mit Gewinn herstellen, Abklingzeiten nutzen, die beste Farmroute farmen.
   Anreise wird verrechnet; Gold aus dem Auktionshaus steht getrennt und zählt für die Reihenfolge
   mit einem Abschlag (Einstellung, Standard 25 %).
-- **Farmrouten** (`/bof goldsources`): Zone + Art + Zielmaterial, mit Gold pro Stunde (sicher und im
+- **Farmrouten** (`/gc goldsources`): Zone + Art + Zielmaterial, mit Gold pro Stunde (sicher und im
   AH) und Anreise. Farmrunden erfassen jetzt auch das gelootete Gold.
-- **Behalten-Liste** (`/bof goldkeep`, Feld im Goldplaner): Gegenstände, die nie zum Verkauf
+- **Behalten-Liste** (`/gc goldkeep`, Feld im Goldplaner): Gegenstände, die nie zum Verkauf
   vorgeschlagen werden.
 - **Rezeptbuch:** Beim Öffnen eines Berufsfensters merkt sich das Addon alle Rezepte; bereite
   Abklingzeiten stehen in der Login-Zusammenfassung.
@@ -187,7 +182,7 @@ Auctionator. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.
 
 ### Hinzugefügt
 
-- **Zeitlimit für die Beschaffung:** Feld „Zeitlimit“ im Tab „Beschaffung“ oder `/bof timelimit 2h`.
+- **Zeitlimit für die Beschaffung:** Feld „Zeitlimit“ im Tab „Beschaffung“ oder `/gc timelimit 2h`.
   Passt die Farmzeit nicht hinein, plant das Addon mehr Zukauf ein (zuerst, was pro Gold am meisten
   Zeit spart), soweit das Budget reicht; sonst sagt es, um wie viel das Limit überschritten wird.
 - **Nebenbei gefarmt:** Materialien, die in denselben Farmrunden zusammen anfallen, werden gemeinsam
@@ -198,16 +193,16 @@ Auctionator. Getestet in WoW Classic Era 1.15.9; nicht in Forever getestet.
   Plan und Tab „Beschaffung“ zeigen, wie lange du mit der besten Route für den Kauf aller fehlenden
   Materialien brauchst.
 - **Rüstung und Waffen-DPS in der Craft-Bewertung:** zwei neue Gewichte (Standard 0, die Vorlagen
-  setzen passende Werte), z. B. `/bof weights armor 0,05`. Die Gewichte im Tab „Craft“ haben kurze
+  setzen passende Werte), z. B. `/gc weights armor 0,05`. Die Gewichte im Tab „Craft“ haben kurze
   Namen (Stä, Bew, Ausd, Int, Wil, Rüst, DPS).
 - **Geplanter Ersatz:** Für jede eingeplante Alternative sagt die Bewertung, ob der Craft auch danach
   besser bleibt oder nur die Zeit bis dahin überbrückt.
 - **Stufe:** Gegenstände, die du noch nicht tragen kannst, sind mit „tragbar ab Stufe …“ markiert.
 - **Auctionator als Preisquelle (optional):** Ist Auctionator installiert, liest das Addon dessen
-  zuletzt gesehene Auktionspreise. Sie erscheinen als „Auctionator“ bei `/bof price`, im Tab
+  zuletzt gesehene Auktionspreise. Sie erscheinen als „Auctionator“ bei `/gc price`, im Tab
   „Material“ und fließen in Beschaffung und Craft-Bewertung ein. Preise ohne Altersangabe (älter als
   21 Tage) gelten als veraltet. Gespeichert wird davon nichts. Abschaltbar im Tab „Einstellungen“
-  („Preise von Auctionator verwenden“) oder mit `/bof set useAuctionator off`.
+  („Preise von Auctionator verwenden“) oder mit `/gc set useAuctionator off`.
 - Pfeile `<` `>` zum Wechseln des Ziels jetzt auch im Tab „Beschaffung“.
 - In der Addon-Liste steht das Addon in der Kategorie „Berufe“ und zeigt eine Goldmünze statt eines
   Fragezeichens.
@@ -242,13 +237,13 @@ in Forever getestet.
   Quelle (Beute, Quests, Händler, Lehrer, Post, Auktionshaus, Handel, Sonstiges).
 - Minimap-Knopf (Links: Fenster, Rechts: Farmrunde pausieren/fortsetzen), Tastenbelegungen für
   Fenster und Farmrunde, Rückblick auf die letzte Sitzung beim Login.
-- Neue Chat-Befehle als Reserve: `/bof set`, `/bof goal name`, `/bof recipe new`,
-  `/bof weights template|suggest`, `/bof alt kind`, `/bof gold name|undo`.
+- Neue Chat-Befehle als Reserve: `/gc set`, `/gc goal name`, `/gc recipe new`,
+  `/gc weights template|suggest`, `/gc alt kind`, `/gc gold name|undo`.
 
 ### Geändert
 
 - Ein Rezept, das schon ein Ziel hat, erhöht beim Übernehmen dieses Ziel, statt ein doppeltes
-  anzulegen (`/bof recipe new` legt trotzdem ein neues an).
+  anzulegen (`/gc recipe new` legt trotzdem ein neues an).
 - Alte Händler- und Auktionshauspreise werden nach 60 Tagen gelöscht (einstellbar); eigene Preise bleiben.
 - Das Fenster hat eine Titelzeile über acht Tab-Knöpfen und ist etwas größer.
 
@@ -259,23 +254,23 @@ Forever getestet.
 
 ### Hinzugefügt
 
-- **Craft-Bewertung** (`/bof craft`, Tab „Craft“): hergestellter Gegenstand gegen deine angelegte
+- **Craft-Bewertung** (`/gc craft`, Tab „Craft“): hergestellter Gegenstand gegen deine angelegte
   Ausrüstung nach deinen Gewichten, mit dem verglichenen Platz (z. B. „Brust“, „Finger 1“),
   Beschaffungskosten und Farmzeit, Kosten pro Wertungspunkt und Wert vorhandener Zutaten. Der Tab
   hat eigene Knöpfe `<` und `>` und erklärt, warum ein Ziel nichts zu vergleichen hat.
-- `/bof craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
-- Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/bof weights`).
-- **Alternativen** zum Craft (`/bof alt`): eingeplant oder möglicher Drop, mit Quelle/Notiz,
-  Kosten, Zeitaufwand und Voraussetzung (`/bof alt cost|time|req <Nr.> …`, `clear` löscht einen
+- `/gc craft <Gegenstand>` vergleicht einen beliebigen Gegenstand mit deiner Ausrüstung.
+- Gewichte für Stärke, Beweglichkeit, Ausdauer, Intelligenz, Willenskraft (`/gc weights`).
+- **Alternativen** zum Craft (`/gc alt`): eingeplant oder möglicher Drop, mit Quelle/Notiz,
+  Kosten, Zeitaufwand und Voraussetzung (`/gc alt cost|time|req <Nr.> …`, `clear` löscht einen
   Wert); die Craft-Bewertung zeigt sie neben Kosten und Farmzeit des Crafts.
-- **Goldpuffer** (`/bof gold`, Tab „Goldpuffer“): Sparziele mit Priorität, Gold einmalig verteilen,
+- **Goldpuffer** (`/gc gold`, Tab „Goldpuffer“): Sparziele mit Priorität, Gold einmalig verteilen,
   Rücklagen, freies Gold und ungedeckte Ziele, Prüfung eines Einkaufs gegen die Rücklagen,
   Nettoerlös pro Stunde (inklusive Verlusten).
 - Beschaffung: Zeitgegenwert der Kosten aus deinem Nettoerlös, Hinweis auf Rücklagen-Nutzung;
-  wahlweise nur mit freiem Gold planen (`/bof gold reserves`).
+  wahlweise nur mit freiem Gold planen (`/gc gold reserves`).
 - Tab „Farmen“: Farmrunde per Knopf starten, pausieren, Anreise umschalten, beenden, prüfen und
   speichern; laufende Zeit und geschätzte Farmzeit.
-- `/bof farm keep all` zählt alle unklaren Zugänge mit.
+- `/gc farm keep all` zählt alle unklaren Zugänge mit.
 - Tab „Hilfe“ mit allen Befehlen.
 
 ### Geändert
@@ -289,22 +284,22 @@ Materialbeschaffung. Getestet in WoW Classic Era 1.15.9; nicht in Forever getest
 ### Hinzugefügt
 
 - **Materialziele** pro Charakter: Zutaten pro Herstellung, Anzahl Herstellungen, gleiche Zutaten
-  werden zusammengefasst (`/bof goal …`).
-- **Rezeptimport** aus dem Berufs- und Verzauberungsfenster (`/bof recipe [Anzahl]`, Knopf „Rezept
+  werden zusammengefasst (`/gc goal …`).
+- **Rezeptimport** aus dem Berufs- und Verzauberungsfenster (`/gc recipe [Anzahl]`, Knopf „Rezept
   übernehmen“). Sind beide Fenster offen, zählt das zuletzt angeklickte Rezept. Das Ziel trägt den
   Namen des Rezepts.
-- **Bestand** in Taschen und Bank und Fehlmenge (`/bof stock [all]`); Bestand deiner anderen
-  Charaktere auf demselben Realm und derselben Fraktion wird mitgezählt (`/bof stock others`).
-- **Fenster** (`/bof show`) mit den Tabs „Material“ und „Beschaffung“; verschiebbar, Position und
+- **Bestand** in Taschen und Bank und Fehlmenge (`/gc stock [all]`); Bestand deiner anderen
+  Charaktere auf demselben Realm und derselben Fraktion wird mitgezählt (`/gc stock others`).
+- **Fenster** (`/gc show`) mit den Tabs „Material“ und „Beschaffung“; verschiebbar, Position und
   Tab werden gespeichert, schließt mit Escape.
-- **Preise** pro Stück aus eigener Eingabe (`/bof price`), von Händlern und aus dem Auktionshaus
+- **Preise** pro Stück aus eigener Eingabe (`/gc price`), von Händlern und aus dem Auktionshaus
   (automatisch und per AH-Scan), getrennt nach Realm und Fraktion; veraltete Preise werden markiert.
-- **Farmrunden** (`/bof farm …`): starten, pausieren, Anreise getrennt erfassen, beenden, unklare
+- **Farmrunden** (`/gc farm …`): starten, pausieren, Anreise getrennt erfassen, beenden, unklare
   Zugänge prüfen, speichern; geschätzte Farmzeit mit Spanne und Datenbasis.
-- **Vergleich Kaufen/Farmen** (`/bof plan`, Tab „Beschaffung“): Kauf-, Farm- und Teilkaufmengen,
+- **Vergleich Kaufen/Farmen** (`/gc plan`, Tab „Beschaffung“): Kauf-, Farm- und Teilkaufmengen,
   Kosten, Farmzeit und Restbudget nach den Strategien „Zeit sparen“, „Gold sparen“, „Selbst farmen“
-  (`/bof strategy`), mit gemeinsamem Budget (`/bof budget`, sonst dein aktuelles Gold).
-- `/bof perf` zeigt Speicher, Anteil an der Frame-Zeit und Rechenzeit.
+  (`/gc strategy`), mit gemeinsamem Budget (`/gc budget`, sonst dein aktuelles Gold).
+- `/gc perf` zeigt Speicher, Anteil an der Frame-Zeit und Rechenzeit.
 
 ### Geändert
 
@@ -313,10 +308,10 @@ Materialbeschaffung. Getestet in WoW Classic Era 1.15.9; nicht in Forever getest
 ### Behoben
 
 - Der gespeicherte Bestand wurde beim Ausloggen mit Nullen überschrieben (das Spiel meldet dann
-  keine Gegenstände mehr); er wird jetzt nur bei Taschenänderungen, Bankbesuch und `/bof stock`
+  keine Gegenstände mehr); er wird jetzt nur bei Taschenänderungen, Bankbesuch und `/gc stock`
   gespeichert.
-- Stammen die gespeicherten Daten aus einer neueren Addon-Version, lösten `/bof stock` und
-  `/bof goal` einen Lua-Fehler aus; jetzt erscheint ein Hinweis.
+- Stammen die gespeicherten Daten aus einer neueren Addon-Version, lösten `/gc stock` und
+  `/gc goal` einen Lua-Fehler aus; jetzt erscheint ein Hinweis.
 
 ## [0.1.0] – 2026-10-18 (noch nicht veröffentlicht)
 
@@ -325,5 +320,5 @@ Materialbeschaffung. Getestet in WoW Classic Era 1.15.9; nicht in Forever getest
 - Grundgerüst für WoW Classic Era 1.15.9 (Interface 11509).
 - Gespeicherte Einstellungen mit Standardwerten, Prüfung beschädigter Werte und Schema-Version.
 - Debug-Modus mit Protokoll (höchstens 200 Einträge).
-- Befehle `/bof` und `/kof`: `help`, `version`, `debug`, `reset`.
+- Befehle `/gc` und `/gk`: `help`, `version`, `debug`, `reset`.
 - Deutsche Texte.
