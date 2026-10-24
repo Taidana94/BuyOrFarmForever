@@ -3,182 +3,51 @@
 Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach
 [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.12.0-alpha.12] – 2026-10-24 (Testversion)
+## [0.12.0] – 2026-10-24
 
-### Neu
-- Goldplaner: neue Ansicht **„Woche“** mit dem Wochenrückblick.
-- Tab „Berufe“: Maus über den Fertigkeitsbalken zeigt die günstigsten Rezepte für den nächsten Punkt.
-- Auktionshaus: Karte **„Einkaufsliste“** mit Knopf „Liste“ (wie `/bof shop`).
-
-## [0.12.0-alpha.11] – 2026-10-24 (Testversion)
-
-### Neu
-- **AH-Einkaufsliste** (`/bof shop`, Knopf „Einkaufsliste“ im Fenster „Jetzt tun“): was der laufende
-  Plan (vorher kaufen, Weiterverkauf) und deine Ziele im Auktionshaus kaufen. Mit Auctionator wird
-  daraus dessen Einkaufsliste „BuyOrFarm“, die Auctionator im AH unter „Einkaufen“ sucht.
-- **Post vorbereiten** (`/bof mail`): was du an welchen Twink schickst, für seine Ziele und als
-  Zutaten, wenn er im laufenden Plan etwas herstellt. Die Karte am Briefkasten zeigt das ebenso.
-- **Wochenrückblick** (`/bof week`): Netto-Gold der letzten 7 Tage gegen die Vorwoche, Spielzeit,
-  Gold pro Stunde, Quellen, beendete Pläne gegen ihr Ergebnis und Farmrunden.
-- **Twink-Rezepte beim Verarbeiten**: Gefarmtes kann auch mit dem Rezept eines Twinks verarbeitet
-  werden; die Route nennt den Twink („… (auf Name)“).
-- **Berufe leveln** (`/bof skillup`): je Beruf die drei günstigsten Rezepte für den nächsten Punkt.
-- **„Vollscan fällig“** am Auktionshaus, wenn der letzte Vollscan älter als 3 Stunden ist.
-- Plan-Schritte mit Testmenge sagen es: „nur 1 Stück als Test: noch keine Verkäufe gesehen“.
-- Hilfe: neue Abschnitte „Verkaufschance und Testmengen“, „Wochenrückblick“, „Berufe leveln“ und
-  die neuen Befehle.
-
-### Geändert
-- Vollscans werden in einem Durchgang gelesen; nur beobachtete Items bekommen pro Angebot einen
-  Eintrag (weniger Speicher und kürzere Ruckler bei großen Auktionshäusern).
-- Code aufgeräumt: ungenutzte Funktionen und Texte entfernt, gemeinsame Hilfsfunktion statt
-  sechsfach gleichem Code, ein Funktionsparameter-Schalter in zwei Funktionen aufgeteilt; neue Tests
-  für das Layout von „Jetzt tun“ und den ganzen Vollscan-Ablauf.
-
-## [0.12.0-alpha.10] – 2026-10-24 (Testversion)
-
-### Geändert
-- Ohne gesehene Verkäufe (eigene AH-Briefe oder zwei verglichene Vollscans) plant der Goldplaner
-  pro Item nur noch **1 Stück als Test** für das Auktionshaus statt der vollen Menge.
-- Weiterverkauf (günstig kaufen, teurer einstellen) wird erst vorgeschlagen, wenn für das Item
-  Verkäufe gesehen wurden.
-
-### Behoben
-- Ein einzelner Vollscan zählte schon als beobachteter Tag mit 0 Verkäufen.
-
- – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+Gold-Werkzeuge, Verkaufschance und „Jetzt tun“. Getestet in WoW Classic Era 1.15.9; nicht in Forever
+getestet.
 
 ### Hinzugefügt
 
-- **Verkäufe aller Spieler auf deinem Realm** (ohne Desktop-App, ohne Login): Nach jedem AH-Vollscan
-  (z. B. mit Auctionator) vergleicht das Addon die Angebote der Items, die es interessieren (deine Ziele,
-  Rezepte, Taschen), mit dem letzten Vollscan. Ein Angebot, das verschwunden ist, obwohl seine Restlaufzeit
-  noch nicht um sein konnte, zählt als verkauft (mit Menge und Preis), sonst als abgelaufen. Daraus
-  entstehen Verkaufsrate und „verkauft pro Tag“. Zurückgezogene Angebote sehen wie Verkäufe aus – es bleibt
-  eine Schätzung, die mit jedem Scan besser wird.
-- Die Verkaufschance nutzt diese Realm-Verkäufe zusammen mit deinen eigenen; Herstellen und
-  AH-Weiterverkauf planen höchstens so viele Stück, wie am Tag verkauft werden. Tooltip: „AH-Absatz: etwa
-  60 % – auf dem Realm 6 von 10 Angeboten weg, ca. 3 Stück/Tag“.
-
-## [0.12.0-alpha.8] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- „Jetzt tun“ übersichtlicher: pro Schritt ein Häkchen, ein kurzer Titel („Herstellen: 2× [Leinenumhang]“),
-  das Gold rechtsbündig und darunter eine kleine graue Zeile mit Zeit, Verkaufschance, „vorher kaufen …“
-  und Fortschritt.
-
-### Behoben
-
-- Die Ratgeber-Karte am Briefkasten (und an Händler, Bank, AH) blieb manchmal nach dem Schließen stehen;
-  sie verschwindet jetzt mit dem Fenster des Spiels, auch ohne Schließen-Ereignis.
-
-## [0.12.0-alpha.7] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **Verkaufschance im AH:** Das Spiel liefert keine Verkaufszahlen anderer Spieler; das Addon schätzt
-  deshalb selbst: aus deinen eigenen AH-Ergebnissen (Briefkasten: „Auktion erfolgreich“ / „abgelaufen“,
-  automatisch, Mails bleiben ungelesen, jede Mail zählt einmal) und aus der Angebotsmenge bei deinen
-  AH-Suchen (viele Stück im Angebot = geringe Chance). Ohne Daten gelten vorsichtig 40 %.
-  AH-Erlöse zählen nur mit dieser Chance (was nicht verkauft wird, geht an den Händler); Herstellen und
-  Weiterverkauf planen entsprechend weniger Stück; Plan-Schritte nennen die Chance; der
-  Gegenstands-Tooltip zeigt „AH-Absatz: …“. Abschaltbar (Einstellungen → Gold).
-- **„AH einplanen“** (Haken im Goldplaner): ohne Haken plant der Goldplaner nur Händlerverkäufe,
-  Herstellen für den Händler und Farmen.
-- **Ausreißer-Schutz:** Ein einzelnes überteuertes Angebot zählt höchstens 1,5× den üblichen Preis
-  (sobald 3 Tage Preisverlauf da sind).
-
-## [0.12.0-alpha.6] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Behoben
-
-- „Jetzt tun“: Mehrzeilige Schritte überlappten sich und wurden abgeschnitten. Jede Zeile ist jetzt so
-  hoch wie ihr Text, mit etwas Abstand zur nächsten; das Fenster ist breiter und wächst mit.
-
-## [0.12.0-alpha.5] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Behoben
-
-- **Berufswerkzeuge** (Runenverzierte Ruten, Bogenlichtschraubenschlüssel, Zunderkästchen, Spitzhacke,
-  Kürschnermesser, Schmiedehammer, Angelrute) werden nie mehr zum Verkauf vorgeschlagen.
-- „Jetzt tun“: Verkaufs-, Einstell- und Entzauber-Schritte zeigen ihren Fortschritt („5/10 erledigt“) und
-  haken sich ab, wenn alle geplanten Items weg sind.
-- Herstellen-Schritte (Plan und „Jetzt tun“) nennen, was vorher zu kaufen ist („vorher kaufen: 5×
-  Grober Faden“); bisher sah es aus, als lägen die Zutaten schon bereit.
-
-## [0.12.0-alpha.4] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Behoben
-
-- Ratgeber, Farmfenster und „Jetzt tun“ vermischten sich, wenn sie übereinander lagen (Hintergrund des
-  einen hinter, Texte vor dem anderen). Jedes Fenster hat jetzt einen eigenen Höhenbereich: „Jetzt tun“
-  oben, das Farmfenster darunter, der Ratgeber unten.
-
-## [0.12.0-alpha.3] – 2026-10-24 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Hinzugefügt
-
-- **„Jetzt tun“:** Im Goldplaner startet „Plan starten“ den Plan für die gewählte Zeit als Checkliste in
-  einem kleinen Fenster. Erledigte Schritte hakt das Addon selbst ab: verkaufte, eingestellte oder
-  entzauberte Items sind aus den Taschen, hergestellte oder im AH gekaufte sind drin, du bist in der Zone
-  der Route, eine Farmrunde dort wurde gespeichert. Ein Klick auf einen Schritt hakt ihn von Hand ab oder
-  auf. Oben stehen Fortschritt und Gold seit dem Start; ist alles erledigt (oder bei „Beenden“), meldet
-  der Chat das Ergebnis gegen den Plan. Im Chat: `/bof plan`, `/bof plan start [Dauer]`,
-  `/bof plan <Nr.>`, `/bof plan stop`.
-
-## [0.12.0-alpha.2] – 2026-10-24 (Testversion, im Spiel bestätigt)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
+- **„Jetzt tun“:** Der Goldplan für die gewählte Zeit läuft als Checkliste in einem kleinen Fenster.
+  Erledigtes hakt das Addon selbst ab (verkauft, hergestellt, in der Zone, Farmrunde gespeichert), mit
+  Fortschritt, Gold seit dem Start und Ergebnis gegen den Plan. `/bof plan`.
+- **Verkaufschance im AH:** aus deinen eigenen AH-Briefen (verkauft/abgelaufen) und aus dem Vergleich
+  von zwei Vollscans (Verkäufe aller Spieler auf dem Realm, ohne Desktop-App und ohne Login). AH-Erlöse
+  zählen nur mit dieser Chance; ohne gesehene Verkäufe plant der Goldplaner nur **1 Stück als Test**,
+  mit Verkäufen höchstens so viel, wie am Tag verkauft wird. Tooltip „AH-Absatz: …“.
+- **AH-Einkaufsliste** (`/bof shop`, Knopf in „Jetzt tun“, Karte im Auktionshaus); mit Auctionator als
+  dessen Einkaufsliste „BuyOrFarm“.
+- **Post vorbereiten** (`/bof mail`, Karte am Briefkasten): was an welchen Twink geht, für seine Ziele
+  und als Zutaten für Herstell-Schritte im Plan.
+- **Wochenrückblick** (`/bof week`, Ansicht „Woche“ im Goldplaner): Gold gegen die Vorwoche, Quellen,
+  Pläne gegen ihr Ergebnis, Farmrunden.
+- **Berufe leveln** (`/bof skillup`, Tooltip am Fertigkeitsbalken): die günstigsten Rezepte für den
+  nächsten Skillpunkt.
+- **Twink-Rezepte beim Verarbeiten** von Gefarmtem; die Route nennt den Twink.
+- **„Vollscan fällig“** im Auktionshaus, wenn der letzte Vollscan älter als 3 Stunden ist.
+- **Startkapital:** Einkäufe plant der Goldplaner nur, soweit dein freies Gold reicht.
+- **Zuverlässigkeit der Farmrouten** („noch unsicher“, „schwankt stark“) und Schutz vor Glücksläufen
+  und überteuerten Einzelangeboten.
+- **Alte Preise sichtbar** im Herstellungs-Tooltip und im Goldplaner.
+- Haken **„AH einplanen“** im Goldplaner: ohne ihn nur Händlerverkäufe, Herstellen und Farmen.
 
 ### Geändert
 
-- Der Reiter „Goldpuffer“ heißt jetzt **„Gold“**, mit den Ansichten **„Sparziele“** und **„Goldplaner“**
-  (auch in Hilfe, Einstellungen, Ratgeber, Befehlstexten und README).
-- Goldplaner: Die Schritte stehen mit etwas Abstand unter der Zusammenfassung und rücken mit, wenn sie
-  zweizeilig ist.
+- Der Reiter „Goldpuffer“ heißt **„Gold“** (Ansichten „Sparziele“ und „Goldplaner“).
+- Die Ratgeber-Haken sind in den Reiter „Einstellungen“ umgezogen.
+- Herstell-Schritte nennen, was vorher zu kaufen ist; Verkaufsschritte zeigen ihren Fortschritt.
+- Vollscans werden in einem Durchgang gelesen (weniger Speicher, kürzere Ruckler).
+- Code aufgeräumt und mehr Tests (Layout von „Jetzt tun“, ganzer Vollscan-Ablauf).
 
-## [0.12.0-alpha.1] – 2026-10-23 (Testversion, im Spiel bestätigt 2026-10-24)
+### Behoben
 
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-Enthält 0.11.1-alpha.1 (unten).
-
-### Hinzugefügt
-
-- **Startkapital im Goldplaner:** Einkäufe (Zutaten zum Herstellen, AH-Weiterverkauf) plant er nur,
-  soweit dein freies Gold (Gold minus Sparrücklagen) reicht. Die Zusammenfassung nennt den „Einsatz
-  vorab“ und wie viele Schritte ausgelassen wurden und wie viel Gold sie bräuchten. Gilt auch für den
-  Vergleich und „Deine beste Stunde“ im Ratgeber.
-- **Zuverlässigkeit der Farmrouten:** Routen mit weniger als 3 Runden heißen „noch unsicher“, stark
-  schwankende „schwankt stark“ (Goldplaner-Routen und Tooltip im Reiter „Farmen“). Ein Lauf mit
-  seltenem Drop zählt höchstens doppelt so viel wie der Median, damit ein Glückslauf den Plan nicht
-  verzerrt.
-- **Alte Preise sichtbar:** Im Herstellungs-Tooltip steht neben einem veralteten Zutatenpreis sein Alter
-  („vor 9 Tagen“); der Goldplaner nennt, wie viele Preise im Plan älter als die eingestellte Grenze sind.
-
-## [0.11.1-alpha.1] – 2026-10-23 (Testversion)
-
-Nur außerhalb des Spiels geprüft; kein echter In-Game-Test durchgeführt. Nicht in Forever getestet.
-
-### Geändert
-
-- Die beiden Haken unten im Ratgeber-Fenster sind in den Reiter „Einstellungen“ umgezogen (neue Gruppe
-  „Ratgeber“ links unten); das Ratgeber-Fenster ist dadurch kürzer. Die Einstellungszeilen stehen etwas
-  enger, damit alles Platz hat.
+- Berufswerkzeuge (Ruten, Spitzhacke, Kürschnermesser, Angelrute …) werden nie mehr zum Verkauf
+  vorgeschlagen.
+- Ratgeber, Farmfenster und „Jetzt tun“ vermischten sich nicht mehr, wenn sie übereinander liegen.
+- Ratgeber-Karten verschwinden mit dem Fenster des Spiels (z. B. Briefkasten).
+- Mehrzeilige Plan-Schritte überlappen nicht mehr.
 
 ## [0.11.0] – 2026-10-23
 

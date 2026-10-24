@@ -1,7 +1,8 @@
 # Kaufen oder farmen?
 
-**Version 0.11.0 – Ziele mit dem günstigsten Weg, „Was lohnt sich?“ für deine Spielzeit, automatische
-Farmrouten, Berufsansicht mit Herstellen, Sparziele, Goldplaner und Ratgeber. Getestet in WoW Classic
+**Version 0.12.0 – Ziele mit dem günstigsten Weg, „Was lohnt sich?“ für deine Spielzeit, „Jetzt tun“ als
+Checkliste, Verkaufschance im AH, Einkaufsliste, Post für Twinks, Wochenrückblick, automatische
+Farmrouten, Berufsansicht mit Herstellen, Sparziele und Ratgeber. Getestet in WoW Classic
 Era 1.15.9. Nicht in Forever getestet.**
 
 „Kaufen oder farmen?“ sagt dir, wie du ein Item **am günstigsten** bekommst. Du nimmst ein Item in
@@ -35,7 +36,7 @@ Weitere Teile:
 
 | Client | Version | Status |
 |---|---|---|
-| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet bis 0.11.0 (deutscher Client) |
+| WoW Classic Era | 1.15.9 (Build 70003, Interface 11509) | im Spiel getestet bis 0.12.0 (deutscher Client) |
 | WoW Forever | – | geplant, **nicht in Forever getestet** |
 
 ## Installation
@@ -351,7 +352,7 @@ Entwickelt von **Taidana** aka **Zuerich3**. Fragen, Wünsche, Fehler oder Verbe
 
 ## Version
 
-0.11.0 – siehe [CHANGELOG.md](CHANGELOG.md).
+0.12.0 – siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz
 
